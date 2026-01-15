@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
-import {roundToPixel} from '../constants/pixel-perfect';
+import {roundToPixel, PP_SHADOWS} from '../constants/pixel-perfect';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -875,17 +875,7 @@ const styles = StyleSheet.create({
   badgeGradient: {
     alignItems: 'center',
     justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#6366F1',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 6,
-      },
-    }),
+    ...PP_SHADOWS.primary(BRAND_COLORS.primary),
   },
 });
 
