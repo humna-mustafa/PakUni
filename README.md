@@ -486,15 +486,6 @@ We welcome contributions! Please follow these guidelines:
 - [ ] Push notifications
 - [ ] Result prediction game
 
-### 🔜 Planned (v2.0)
-- [ ] AR campus tours
-- [ ] Voice assistant integration
-- [ ] Parent portal
-- [ ] Web application
-- [ ] Chatbot support
-- [ ] Blockchain certificates
-- [ ] Metaverse campus tours
-
 ---
 
 ## 📄 License
