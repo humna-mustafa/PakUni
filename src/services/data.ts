@@ -23,9 +23,9 @@ import {cache, CACHE_KEYS, CACHE_TTL} from './cache';
 import {UNIVERSITIES, UniversityData} from '../data/universities';
 import {SCHOLARSHIPS, ScholarshipData} from '../data/scholarships';
 import {ENTRY_TESTS_DATA} from '../data/entryTests';
-import {CAREERS_DATA} from '../data/careers';
+import {CAREER_FIELDS} from '../data/careers';
 import {MERIT_FORMULAS} from '../data/meritFormulas';
-import {PROGRAMS_DATA} from '../data/programs';
+import {PROGRAMS} from '../data/programs';
 
 // ============================================================================
 // TYPES
@@ -206,7 +206,7 @@ class DataService {
    * Get careers data
    */
   getCareers() {
-    return CAREERS_DATA;
+    return CAREER_FIELDS;
   }
 
   /**
@@ -220,7 +220,7 @@ class DataService {
    * Get programs data
    */
   getPrograms() {
-    return PROGRAMS_DATA;
+    return PROGRAMS;
   }
 
   // -------------------------------------------------------------------------

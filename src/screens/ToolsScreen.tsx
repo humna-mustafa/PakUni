@@ -14,6 +14,9 @@ import {
   Animated,
   Dimensions,
   StatusBar,
+  Alert,
+  TextInput,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
