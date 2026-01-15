@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
@@ -277,6 +278,7 @@ const CareerResultCard = ({
 
 const PremiumInterestQuizScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{[key: number]: number}>({});
   const [showResults, setShowResults] = useState(false);
@@ -434,6 +436,12 @@ const PremiumInterestQuizScreen = () => {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}
       edges={['top']}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
       {/* Header */}
       <LinearGradient
         colors={isDark ? ['#9b59b6', '#8e44ad'] : ['#a569bd', '#9b59b6']}
@@ -506,6 +514,18 @@ const PremiumInterestQuizScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   header: {
     paddingTop: SPACING.lg,

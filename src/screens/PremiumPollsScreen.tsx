@@ -15,19 +15,27 @@ import {
   StatusBar,
   Alert,
   Platform,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
-import {PollResultCard} from '../components/ShareableCard';
 import {sharePollResults} from '../services/share';
 import {Haptics} from '../utils/haptics';
-import {POLLS_DATA, POLL_CATEGORIES, Poll, PollOption} from '../data/polls';
+import {
+  fetchPolls,
+  submitVote,
+  getCachedVotes,
+  convertToLegacyFormat,
+  POLL_CATEGORIES,
+  LegacyPoll,
+} from '../services/polls';
+import {POLLS_DATA, Poll, PollOption} from '../data/polls';
 
 const {width} = Dimensions.get('window');
 const VOTED_POLLS_KEY = '@pakuni_voted_polls';
@@ -369,23 +377,63 @@ const PremiumPollsScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [votedPolls, setVotedPolls] = useState<Record<string, string>>({});
   const [polls, setPolls] = useState<Poll[]>(POLLS_DATA);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const headerAnim = useRef(new Animated.Value(0)).current;
 
-  // Load voted polls from storage
+  // Load polls from Supabase
+  const loadPolls = useCallback(async () => {
+    try {
+      setError(null);
+      const {data, error: pollsError} = await fetchPolls();
+      
+      if (pollsError) {
+        console.log('Using fallback data:', pollsError.message);
+        // Continue with local data
+      }
+      
+      if (data && data.length > 0) {
+        // Convert from Supabase format to local format
+        const convertedPolls: Poll[] = data.map(poll => ({
+          id: poll.id,
+          question: poll.question,
+          description: poll.description || '',
+          category: poll.category,
+          options: poll.options.map(opt => ({
+            id: opt.id,
+            name: opt.name,
+            shortName: opt.short_name || undefined,
+            votes: opt.votes,
+          })),
+          totalVotes: poll.total_votes,
+          isActive: poll.is_active,
+          createdAt: poll.created_at,
+        }));
+        setPolls(convertedPolls);
+      }
+      // If no data from Supabase, use local POLLS_DATA (already set as default)
+    } catch (err) {
+      console.log('Error loading polls, using local data');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Load voted polls from cache
   useEffect(() => {
     const loadVotedPolls = async () => {
       try {
-        const saved = await AsyncStorage.getItem(VOTED_POLLS_KEY);
-        if (saved) {
-          setVotedPolls(JSON.parse(saved));
-        }
+        const cached = await getCachedVotes();
+        setVotedPolls(cached);
       } catch (error) {
         console.log('Failed to load voted polls');
       }
     };
     loadVotedPolls();
-  }, []);
+    loadPolls();
+  }, [loadPolls]);
 
   // Animate header
   useEffect(() => {
@@ -395,6 +443,15 @@ const PremiumPollsScreen = () => {
       useNativeDriver: true,
     }).start();
   }, []);
+
+  // Pull to refresh
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    Haptics.refreshThreshold();
+    await loadPolls();
+    setRefreshing(false);
+    Haptics.success();
+  }, [loadPolls]);
 
   // Filter polls by category
   const filteredPolls = useMemo(() => {
@@ -406,7 +463,7 @@ const PremiumPollsScreen = () => {
   const handleVote = useCallback(
     async (pollId: string, optionId: string) => {
       // Check if user is authenticated
-      if (!isAuthenticated) {
+      if (!isAuthenticated || !user) {
         Alert.alert(
           'Login Required',
           'Please sign in to vote in polls. This helps us prevent spam and ensure fair voting.',
@@ -427,11 +484,19 @@ const PremiumPollsScreen = () => {
         return;
       }
 
+      // Submit vote to Supabase
+      const {success, error: voteError} = await submitVote(pollId, optionId, user.id);
+      
+      if (!success) {
+        // If Supabase fails, still update locally for UX
+        console.log('Vote submission error:', voteError?.message);
+      }
+
       // Update local state
       const newVotedPolls = {...votedPolls, [pollId]: optionId};
       setVotedPolls(newVotedPolls);
 
-      // Update poll votes (in production, this would be a server call)
+      // Update poll votes locally
       setPolls(prevPolls =>
         prevPolls.map(poll => {
           if (poll.id === pollId) {
@@ -449,16 +514,9 @@ const PremiumPollsScreen = () => {
         }),
       );
 
-      // Save to storage
-      try {
-        await AsyncStorage.setItem(VOTED_POLLS_KEY, JSON.stringify(newVotedPolls));
-      } catch (error) {
-        console.log('Failed to save vote');
-      }
-
       Haptics.success();
     },
-    [isAuthenticated, votedPolls, navigation],
+    [isAuthenticated, user, votedPolls, navigation],
   );
 
   // Handle sharing poll results
@@ -481,6 +539,16 @@ const PremiumPollsScreen = () => {
       options: sortedOptions,
     });
   }, []);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.loadingContainer, {backgroundColor: colors.background}]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={[styles.loadingText, {color: colors.textSecondary}]}>Loading polls...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -536,7 +604,16 @@ const PremiumPollsScreen = () => {
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}>
+          contentContainerStyle={styles.scrollContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              progressBackgroundColor={colors.card}
+            />
+          }>
           
           {/* Category Filter */}
           <ScrollView
@@ -641,6 +718,15 @@ const PremiumPollsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: SPACING.md,
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '500',
   },
   safeArea: {
     flex: 1,

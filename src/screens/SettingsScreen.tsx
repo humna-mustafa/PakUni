@@ -395,8 +395,47 @@ const SettingsScreen: React.FC = () => {
             />
           </Section>
 
+          {/* Help & Support - Prominent Section */}
+          <Section title="HELP & SUPPORT" colors={colors}>
+            <SettingItem
+              icon="chatbubbles-outline"
+              iconColor="#1A7AEB"
+              title="Contact & Support Center"
+              subtitle="Report issues, suggest features, share resources"
+              colors={colors}
+              onPress={() => navigation.navigate('ContactSupport' as never)}
+            />
+            <View style={[styles.divider, {backgroundColor: colors.border}]} />
+            <SettingItem
+              icon="bug-outline"
+              iconColor="#EF4444"
+              title="Report an Issue"
+              subtitle="Found a bug? Let us know"
+              colors={colors}
+              onPress={() => navigation.navigate('ContactSupport' as never)}
+            />
+            <View style={[styles.divider, {backgroundColor: colors.border}]} />
+            <SettingItem
+              icon="bulb-outline"
+              iconColor="#F59E0B"
+              title="Suggest a Feature"
+              subtitle="Help us improve the app"
+              colors={colors}
+              onPress={() => navigation.navigate('ContactSupport' as never)}
+            />
+            <View style={[styles.divider, {backgroundColor: colors.border}]} />
+            <SettingItem
+              icon="document-attach-outline"
+              iconColor="#10B981"
+              title="Submit Resources"
+              subtitle="Share merit lists, past papers & more"
+              colors={colors}
+              onPress={() => navigation.navigate('ContactSupport' as never)}
+            />
+          </Section>
+
           {/* Support */}
-          <Section title="SUPPORT" colors={colors}>
+          <Section title="MORE" colors={colors}>
             <SettingItem
               icon="star-outline"
               iconColor="#F59E0B"
@@ -420,7 +459,7 @@ const SettingsScreen: React.FC = () => {
               iconColor="#6366F1"
               title="Help & FAQ"
               colors={colors}
-              onPress={() => Linking.openURL('mailto:support@pakuni.app')}
+              onPress={() => navigation.navigate('Guides' as never)}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -428,7 +467,7 @@ const SettingsScreen: React.FC = () => {
               iconColor="#8B5CF6"
               title="Privacy Policy"
               colors={colors}
-              onPress={() => Linking.openURL('https://pakuni.app/privacy')}
+              onPress={() => navigation.navigate('PrivacyPolicy' as never)}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -436,7 +475,7 @@ const SettingsScreen: React.FC = () => {
               iconColor="#14B8A6"
               title="Terms of Service"
               colors={colors}
-              onPress={() => Linking.openURL('https://pakuni.app/terms')}
+              onPress={() => navigation.navigate('TermsOfService' as never)}
             />
           </Section>
 

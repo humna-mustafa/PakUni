@@ -986,7 +986,10 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
                   <View style={detailStyles.stepExpanded}>
                     {step.tips && step.tips.length > 0 && (
                       <View style={detailStyles.stepSection}>
-                        <Text style={[detailStyles.stepSectionTitle, {color: colors.text}]}>💡 Tips</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+                          <Icon name="bulb-outline" size={16} color="#F59E0B" />
+                          <Text style={[detailStyles.stepSectionTitle, {color: colors.text, marginLeft: 6}]}>Tips</Text>
+                        </View>
                         {step.tips.map((tip, i) => (
                           <View key={i} style={detailStyles.tipItem}>
                             <Icon name="checkmark-circle" size={14} color="#10B981" />
@@ -997,7 +1000,10 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
                     )}
                     {step.documents && step.documents.length > 0 && (
                       <View style={detailStyles.stepSection}>
-                        <Text style={[detailStyles.stepSectionTitle, {color: colors.text}]}>📄 Documents</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+                          <Icon name="document-text-outline" size={16} color={category?.color || '#6366F1'} />
+                          <Text style={[detailStyles.stepSectionTitle, {color: colors.text, marginLeft: 6}]}>Documents</Text>
+                        </View>
                         {step.documents.map((doc, i) => (
                           <View key={i} style={detailStyles.docItem}>
                             <Icon name="document-outline" size={14} color={category?.color || '#6366F1'} />
@@ -1016,7 +1022,10 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
         {/* Tips (if available) */}
         {guide.tips && guide.tips.length > 0 && (
           <View style={detailStyles.section}>
-            <Text style={[detailStyles.sectionTitle, {color: colors.text}]}>💡 Key Tips</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+              <Icon name="bulb-outline" size={20} color="#F59E0B" />
+              <Text style={[detailStyles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Key Tips</Text>
+            </View>
             <View style={[detailStyles.tipsCard, {backgroundColor: colors.card}]}>
               {guide.tips.map((tip, index) => (
                 <View key={index} style={detailStyles.tipRow}>
@@ -1033,7 +1042,10 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
         {/* Resources (if available) */}
         {guide.resources && guide.resources.length > 0 && (
           <View style={detailStyles.section}>
-            <Text style={[detailStyles.sectionTitle, {color: colors.text}]}>📚 Resources</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+              <Icon name="library-outline" size={20} color={category?.color || '#6366F1'} />
+              <Text style={[detailStyles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Resources</Text>
+            </View>
             {guide.resources.map((resource, index) => (
               <View key={index} style={[detailStyles.resourceCard, {backgroundColor: colors.card}]}>
                 <Icon name="link-outline" size={18} color={category?.color || '#6366F1'} />
@@ -1045,7 +1057,10 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
 
         {/* Tags */}
         <View style={detailStyles.section}>
-          <Text style={[detailStyles.sectionTitle, {color: colors.text}]}>🏷️ Tags</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+            <Icon name="pricetags-outline" size={20} color={category?.color || '#6366F1'} />
+            <Text style={[detailStyles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Tags</Text>
+          </View>
           <View style={detailStyles.tagsGrid}>
             {guide.tags.map((tag, index) => (
               <View key={index} style={[detailStyles.tagChip, {backgroundColor: (category?.color || '#6366F1') + '15'}]}>
@@ -1393,7 +1408,10 @@ const GuidesScreen: React.FC = () => {
           {/* Categories Section */}
           {!selectedCategory && (
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, {color: colors.text}]}>📚 Categories</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+                <Icon name="library-outline" size={20} color={colors.primary} />
+                <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Categories</Text>
+              </View>
               <View style={styles.categoriesGrid}>
                 {GUIDE_CATEGORIES.map(category => (
                   <CategoryCard
@@ -1425,9 +1443,12 @@ const GuidesScreen: React.FC = () => {
           {/* Guides List */}
           <View style={styles.section}>
             {!selectedCategory && (
-              <Text style={[styles.sectionTitle, {color: colors.text}]}>
-                📖 {searchQuery ? 'Search Results' : 'Popular Guides'}
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+                <Icon name="book-outline" size={20} color={colors.primary} />
+                <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
+                  {searchQuery ? 'Search Results' : 'Popular Guides'}
+                </Text>
+              </View>
             )}
             {filteredGuides.length > 0 ? (
               filteredGuides.map(guide => (

@@ -16,7 +16,8 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 import type {RouteProp} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION, GRADIENTS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
-import {UNIVERSITIES, PROGRAMS, MERIT_FORMULAS, getScholarshipsForUniversity} from '../data';
+import {UNIVERSITIES, PROGRAMS, MERIT_FORMULAS, getScholarshipsForUniversity, MERIT_RECORDS} from '../data';
+import {getUniversityMeritSummaryByShortName} from '../services/meritLists';
 import type {ScholarshipData} from '../data';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon, FeatureIcon} from '../components/icons';
@@ -42,7 +43,7 @@ const HEADER_MAX_HEIGHT = 280;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-type TabType = 'overview' | 'programs' | 'admission' | 'scholarships';
+type TabType = 'overview' | 'programs' | 'admission' | 'scholarships' | 'merits';
 
 // Animated Tab Component
 const AnimatedTab = ({
@@ -336,6 +337,7 @@ const PremiumUniversityDetailScreen = () => {
   const tabs: {key: TabType; label: string; iconName: string}[] = [
     {key: 'overview', label: 'Overview', iconName: 'clipboard-outline'},
     {key: 'programs', label: 'Programs', iconName: 'library-outline'},
+    {key: 'merits', label: 'Merits', iconName: 'trending-up-outline'},
     {key: 'admission', label: 'Admission', iconName: 'document-text-outline'},
     {key: 'scholarships', label: 'Aid', iconName: 'wallet-outline'},
   ];
@@ -662,6 +664,117 @@ const PremiumUniversityDetailScreen = () => {
     </View>
   );
 
+  // Get university merit summary for the Merits tab
+  const meritSummary = useMemo(() => {
+    return getUniversityMeritSummaryByShortName(MERIT_RECORDS, university.short_name);
+  }, [university.short_name]);
+
+  const renderMeritsTab = () => (
+    <View style={styles.tabContent}>
+      {/* Merit Summary Header */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Icon name="trending-up-outline" family="Ionicons" size={22} color={colors.primary} />
+          <Text style={[styles.sectionTitle, {color: colors.text}]}>Merit History</Text>
+        </View>
+        
+        {meritSummary.programs.length === 0 ? (
+          <View style={[styles.emptyScholarships, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
+            <Icon name="analytics-outline" family="Ionicons" size={48} color={colors.textMuted} />
+            <Text style={[styles.emptyText, {color: colors.text}]}>No merit data available</Text>
+            <Text style={[styles.emptySubtext, {color: colors.textSecondary}]}>
+              Merit records for this university are not yet in our database
+            </Text>
+          </View>
+        ) : (
+          <>
+            {/* Overall Stats */}
+            <View style={[styles.aboutCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card, marginBottom: SPACING.md}]}>
+              <View style={styles.meritStatsRow}>
+                <View style={styles.meritStatItem}>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.programs.length}</Text>
+                  <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Programs</Text>
+                </View>
+                <View style={styles.meritStatItem}>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.years.length}</Text>
+                  <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Years Data</Text>
+                </View>
+                <View style={styles.meritStatItem}>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.totalRecords}</Text>
+                  <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Records</Text>
+                </View>
+              </View>
+              
+              {meritSummary.trend && (
+                <View style={styles.trendBadgeContainer}>
+                  <LinearGradient
+                    colors={meritSummary.trend === 'increasing' ? ['#EF4444', '#F87171'] : meritSummary.trend === 'decreasing' ? ['#10B981', '#34D399'] : ['#6B7280', '#9CA3AF']}
+                    style={styles.trendBadge}>
+                    <Icon 
+                      name={meritSummary.trend === 'increasing' ? 'trending-up' : meritSummary.trend === 'decreasing' ? 'trending-down' : 'remove'} 
+                      family="Ionicons" 
+                      size={14} 
+                      color="#FFFFFF" 
+                    />
+                    <Text style={styles.trendBadgeText}>
+                      {meritSummary.trend === 'increasing' ? 'Merit Rising' : meritSummary.trend === 'decreasing' ? 'Merit Dropping' : 'Stable'}
+                    </Text>
+                  </LinearGradient>
+                </View>
+              )}
+            </View>
+
+            {/* Program-wise Merit List */}
+            {meritSummary.programs.map((program) => (
+              <View 
+                key={program.programName} 
+                style={[styles.meritProgramCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
+                <View style={styles.meritProgramHeader}>
+                  <View style={[styles.programIconBg, {backgroundColor: `${colors.primary}15`}]}>
+                    <Icon name="school-outline" family="Ionicons" size={20} color={colors.primary} />
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={[styles.meritProgramName, {color: colors.text}]}>{program.programName}</Text>
+                    <Text style={[styles.meritProgramMeta, {color: colors.textSecondary}]}>
+                      {program.category} • {program.years.length} years data
+                    </Text>
+                  </View>
+                </View>
+                
+                {/* Year-wise merits */}
+                <View style={styles.yearMeritsContainer}>
+                  {program.years.sort((a, b) => b.year - a.year).slice(0, 5).map((yearData, idx) => (
+                    <View key={yearData.year} style={styles.yearMeritRow}>
+                      <Text style={[styles.yearLabel, {color: colors.textSecondary}]}>{yearData.year}</Text>
+                      <View style={styles.meritValuesRow}>
+                        <View style={styles.meritValueItem}>
+                          <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 1</Text>
+                          <Text style={[styles.meritValue, {color: colors.text}]}>{yearData.closingMerit.toFixed(1)}%</Text>
+                        </View>
+                        {yearData.list2Merit && (
+                          <View style={styles.meritValueItem}>
+                            <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 2</Text>
+                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list2Merit.toFixed(1)}%</Text>
+                          </View>
+                        )}
+                        {yearData.list3Merit && (
+                          <View style={styles.meritValueItem}>
+                            <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 3</Text>
+                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list3Merit.toFixed(1)}%</Text>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            ))}
+          </>
+        )}
+      </View>
+    </View>
+  );
+
   const renderScholarshipsTab = () => (
     <View style={styles.tabContent}>
       <View style={styles.scholarshipsHeader}>
@@ -886,6 +999,7 @@ const PremiumUniversityDetailScreen = () => {
         scrollEventThrottle={16}>
         {activeTab === 'overview' && renderOverviewTab()}
         {activeTab === 'programs' && renderProgramsTab()}
+        {activeTab === 'merits' && renderMeritsTab()}
         {activeTab === 'admission' && renderAdmissionTab()}
         {activeTab === 'scholarships' && renderScholarshipsTab()}
         <View style={{height: 100}} />
@@ -1556,6 +1670,102 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+  // Merit Tab Styles
+  meritStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: SPACING.md,
+  },
+  meritStatItem: {
+    alignItems: 'center',
+  },
+  meritStatValue: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '700',
+  },
+  meritStatLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: 4,
+  },
+  trendBadgeContainer: {
+    alignItems: 'center',
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(128,128,128,0.2)',
+  },
+  trendBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.full,
+    gap: 4,
+  },
+  trendBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  meritProgramCard: {
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  meritProgramHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  programIconBg: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+  },
+  meritProgramName: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+  },
+  meritProgramMeta: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginTop: 2,
+  },
+  yearMeritsContainer: {
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(128,128,128,0.15)',
+    paddingTop: SPACING.sm,
+  },
+  yearMeritRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.xs,
+  },
+  yearLabel: {
+    width: 50,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+  meritValuesRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: SPACING.md,
+  },
+  meritValueItem: {
+    alignItems: 'center',
+    minWidth: 50,
+  },
+  meritValueLabel: {
+    fontSize: 10,
+    marginBottom: 2,
+  },
+  meritValue: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
   },
 });
 

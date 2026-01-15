@@ -15,6 +15,8 @@ import {
   StatusBar,
   TextInput,
   Platform,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,12 +26,16 @@ import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
 import {Haptics} from '../utils/haptics';
 import {
-  MERIT_RECORDS,
-  MERIT_CATEGORIES,
+  fetchMeritLists,
+  getMeritInsights,
+  getYearlyTrendData,
   AVAILABLE_YEARS,
+  MERIT_CATEGORIES,
+} from '../services/meritLists';
+import {
+  MERIT_RECORDS,
   MeritRecord,
   getYearlyChange,
-  searchMeritRecords,
 } from '../data/meritArchive';
 
 const {width} = Dimensions.get('window');
@@ -317,8 +323,33 @@ const PremiumMeritArchiveScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'merit' | 'name' | 'city'>('merit');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [meritRecords, setMeritRecords] = useState<MeritRecord[]>(MERIT_RECORDS);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [dataSource, setDataSource] = useState<'supabase' | 'local'>('local');
 
   const headerAnim = useRef(new Animated.Value(0)).current;
+
+  // Load merit data
+  const loadMeritData = useCallback(async () => {
+    try {
+      const {data, error, source} = await fetchMeritLists();
+      if (data && data.length > 0) {
+        setMeritRecords(data);
+        setDataSource(source);
+      }
+      // If no data from Supabase, use local MERIT_RECORDS (already set as default)
+    } catch (err) {
+      console.log('Error loading merit data, using local data');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    loadMeritData();
+  }, [loadMeritData]);
 
   // Animate header
   useEffect(() => {
@@ -329,9 +360,18 @@ const PremiumMeritArchiveScreen = () => {
     }).start();
   }, []);
 
+  // Pull to refresh
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    Haptics.refreshThreshold();
+    await loadMeritData();
+    setRefreshing(false);
+    Haptics.success();
+  }, [loadMeritData]);
+
   // Filter and sort records
   const filteredRecords = useMemo(() => {
-    let records = MERIT_RECORDS.filter(r => r.year === selectedYear);
+    let records = meritRecords.filter(r => r.year === selectedYear);
 
     // Category filter
     if (selectedCategory !== 'all') {
@@ -367,41 +407,17 @@ const PremiumMeritArchiveScreen = () => {
     });
 
     return records;
-  }, [selectedYear, selectedCategory, searchQuery, sortBy, sortOrder]);
+  }, [meritRecords, selectedYear, selectedCategory, searchQuery, sortBy, sortOrder]);
 
   // Insights
   const insights = useMemo(() => {
-    const yearRecords = MERIT_RECORDS.filter(r => r.year === selectedYear);
-    if (yearRecords.length === 0) return null;
-
-    const avgMerit = yearRecords.reduce((sum, r) => sum + r.closingMerit, 0) / yearRecords.length;
-    const highestMerit = Math.max(...yearRecords.map(r => r.closingMerit));
-    const lowestMerit = Math.min(...yearRecords.map(r => r.closingMerit));
-    const totalPrograms = yearRecords.length;
-
-    const highestProgram = yearRecords.find(r => r.closingMerit === highestMerit);
-    const lowestProgram = yearRecords.find(r => r.closingMerit === lowestMerit);
-
-    return {
-      avgMerit,
-      highestMerit,
-      lowestMerit,
-      totalPrograms,
-      highestProgram,
-      lowestProgram,
-    };
-  }, [selectedYear]);
+    return getMeritInsights(meritRecords, selectedYear);
+  }, [meritRecords, selectedYear]);
 
   // Historical Trend Data (all years average)
   const trendData = useMemo(() => {
-    return AVAILABLE_YEARS.map(year => {
-      const yearRecords = MERIT_RECORDS.filter(r => r.year === year);
-      if (yearRecords.length === 0) return { year, avgMerit: 0, count: 0 };
-      
-      const avgMerit = yearRecords.reduce((sum, r) => sum + r.closingMerit, 0) / yearRecords.length;
-      return { year, avgMerit: parseFloat(avgMerit.toFixed(1)), count: yearRecords.length };
-    }).filter(d => d.count > 0);
-  }, []);
+    return getYearlyTrendData(meritRecords);
+  }, [meritRecords]);
 
   // Handle sort toggle
   const handleSort = useCallback((column: 'merit' | 'name' | 'city') => {
@@ -486,7 +502,15 @@ const PremiumMeritArchiveScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
-          stickyHeaderIndices={[3]}>
+          stickyHeaderIndices={[3]}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={['#059669']}
+              tintColor="#059669"
+            />
+          }>
 
           {/* Year Selector */}
           <ScrollView

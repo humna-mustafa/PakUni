@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon} from '../components/icons';
 import {adminService, UserRole} from '../services/admin';
+import {UNIVERSITIES, SCHOLARSHIPS} from '../data';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -100,11 +101,7 @@ const INITIAL_PROFILE: UserProfile = {
   interests: [],
 };
 
-const SAMPLE_SAVED: SavedItem[] = [
-  {id: '1', type: 'university', name: 'NUST Islamabad', addedAt: '2025-01-10'},
-  {id: '2', type: 'university', name: 'LUMS Lahore', addedAt: '2025-01-08'},
-  {id: '3', type: 'scholarship', name: 'HEC Need Based', addedAt: '2025-01-05'},
-];
+// No more sample data - we use real favorites from AuthContext
 
 // Animated Tab Component
 const AnimatedTab = ({
@@ -185,9 +182,9 @@ const StatsCard = ({
 const PremiumProfileScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark, themeMode, setThemeMode} = useTheme();
-  const {user, signOut, isGuest} = useAuth();
+  const {user, signOut, isGuest, isFavorite, removeFavorite} = useAuth();
   const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
-  const [savedItems, setSavedItems] = useState<SavedItem[]>(SAMPLE_SAVED);
+  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [activeTab, setActiveTab] = useState<'profile' | 'marks' | 'saved' | 'settings'>('profile');
   const [showEditModal, setShowEditModal] = useState(false);
   const [showThemeModal, setShowThemeModal] = useState(false);
@@ -195,24 +192,93 @@ const PremiumProfileScreen = () => {
   const [userRole, setUserRole] = useState<UserRole>('user');
   const headerAnim = useRef(new Animated.Value(0)).current;
 
+  // Build real saved items from user favorites
+  const buildSavedItems = useCallback(() => {
+    if (!user) return [];
+    
+    const items: SavedItem[] = [];
+    
+    // Add favorite universities
+    (user.favoriteUniversities || []).forEach((shortName: string) => {
+      const uni = UNIVERSITIES.find(u => u.short_name === shortName);
+      if (uni) {
+        items.push({
+          id: shortName,
+          type: 'university',
+          name: uni.name,
+          addedAt: new Date().toISOString(),
+        });
+      }
+    });
+    
+    // Add favorite scholarships
+    (user.favoriteScholarships || []).forEach((scholarshipId: string) => {
+      const scholarship = SCHOLARSHIPS.find((s: any) => s.id === scholarshipId);
+      if (scholarship) {
+        items.push({
+          id: scholarshipId,
+          type: 'scholarship',
+          name: scholarship.name,
+          addedAt: new Date().toISOString(),
+        });
+      }
+    });
+    
+    // Add favorite programs
+    (user.favoritePrograms || []).forEach((programId: string) => {
+      items.push({
+        id: programId,
+        type: 'program',
+        name: programId, // Programs should have proper lookup
+        addedAt: new Date().toISOString(),
+      });
+    });
+    
+    return items;
+  }, [user]);
+
   useEffect(() => {
     Animated.spring(headerAnim, {toValue: 1, ...ANIMATION.spring.gentle, useNativeDriver: true}).start();
-    // Check user role for admin access
-    checkUserRole();
     // Load user profile from auth context
     if (user) {
+      // Use the role from the user object (loaded from profiles table)
+      if (user.role) {
+        setUserRole(user.role as UserRole);
+      } else {
+        // Fallback: fetch from admin service if not in user object
+        checkUserRole();
+      }
+      
       setProfile(prev => ({
         ...prev,
-        name: user.name || '',
+        name: user.fullName || '',  // Use fullName from AuthContext
         email: user.email || '',
+        phone: user.phone || '',
+        city: user.city || 'Lahore',
+        currentClass: user.currentClass || '2nd Year (FSc/FA)',
+        board: user.board || 'Punjab Board',
+        school: user.school || '',
+        matricMarks: user.matricMarks || null,
+        interMarks: user.interMarks || null,
+        entryTestScore: user.entryTestScore || null,
+        targetField: user.targetField || 'Not Decided',
+        targetUniversity: user.targetUniversity || '',
+        interests: user.interests || [],
       }));
+      
+      // Build real saved items from favorites
+      setSavedItems(buildSavedItems());
+      
+      console.log('[Profile] User loaded:', user.email, 'Role:', user.role);
     }
-  }, [user]);
+  }, [user, buildSavedItems]);
 
   const checkUserRole = async () => {
     try {
       const role = await adminService.getCurrentUserRole();
-      setUserRole(role);
+      if (role) {
+        setUserRole(role);
+      }
     } catch (error) {
       console.log('Error checking user role:', error);
     }
@@ -232,10 +298,17 @@ const PremiumProfileScreen = () => {
     }
   };
 
-  const removeSavedItem = (id: string) => {
-    Alert.alert('Remove Item', 'Remove this saved item?', [
+  const removeSavedItem = (item: SavedItem) => {
+    Alert.alert('Remove Item', `Remove ${item.name} from favorites?`, [
       {text: 'Cancel', style: 'cancel'},
-      {text: 'Remove', style: 'destructive', onPress: () => setSavedItems(savedItems.filter(item => item.id !== id))},
+      {
+        text: 'Remove',
+        style: 'destructive',
+        onPress: async () => {
+          await removeFavorite(item.id, item.type);
+          setSavedItems(prev => prev.filter(i => i.id !== item.id));
+        },
+      },
     ]);
   };
 
@@ -569,7 +642,7 @@ const PremiumProfileScreen = () => {
                   {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                 </Text>
               </View>
-              <TouchableOpacity style={[styles.removeBtn, {backgroundColor: colors.error + '15'}]} onPress={() => removeSavedItem(item.id)}>
+              <TouchableOpacity style={[styles.removeBtn, {backgroundColor: colors.error + '15'}]} onPress={() => removeSavedItem(item)}>
                 <Icon name="close" family="Ionicons" size={16} color={colors.error} />
               </TouchableOpacity>
             </Animated.View>
@@ -665,6 +738,47 @@ const PremiumProfileScreen = () => {
           <View style={styles.settingInfo}>
             <Text style={[styles.settingLabel, {color: colors.text}]}>All Settings</Text>
             <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Notifications, privacy & more</Text>
+          </View>
+          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Help & Support Section */}
+      <View style={styles.section}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+          <Icon name="chatbubbles-outline" family="Ionicons" size={18} color={colors.primary} />
+          <Text style={[styles.sectionTitle, {color: colors.text}]}>Help & Support</Text>
+        </View>
+        
+        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card, borderLeftWidth: 4, borderLeftColor: '#1A7AEB'}]} onPress={() => navigation.navigate('ContactSupport')}>
+          <View style={[styles.settingIconBg, {backgroundColor: '#DBEAFE'}]}>
+            <Icon name="headset-outline" family="Ionicons" size={20} color="#1A7AEB" />
+          </View>
+          <View style={styles.settingInfo}>
+            <Text style={[styles.settingLabel, {color: colors.text}]}>Contact & Support</Text>
+            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Report issues, suggest features, get help</Text>
+          </View>
+          <Icon name="chevron-forward" family="Ionicons" size={18} color="#1A7AEB" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('ContactSupport')}>
+          <View style={[styles.settingIconBg, {backgroundColor: '#FEF3C7'}]}>
+            <Icon name="bulb-outline" family="Ionicons" size={20} color="#F59E0B" />
+          </View>
+          <View style={styles.settingInfo}>
+            <Text style={[styles.settingLabel, {color: colors.text}]}>Suggest a Feature</Text>
+            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Help us improve PakUni</Text>
+          </View>
+          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('ContactSupport')}>
+          <View style={[styles.settingIconBg, {backgroundColor: '#D1FAE5'}]}>
+            <Icon name="document-attach-outline" family="Ionicons" size={20} color="#10B981" />
+          </View>
+          <View style={styles.settingInfo}>
+            <Text style={[styles.settingLabel, {color: colors.text}]}>Share Resources</Text>
+            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Merit lists, past papers & more</Text>
           </View>
           <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
         </TouchableOpacity>

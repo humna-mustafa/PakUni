@@ -10,6 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
@@ -469,6 +470,7 @@ const TimelineStep = ({
 
 const PremiumCareerRoadmapsScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
   const [selectedRoadmap, setSelectedRoadmap] = useState<CareerRoadmap | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
@@ -491,6 +493,12 @@ const PremiumCareerRoadmapsScreen = () => {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}
       edges={['top']}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Animated.View
@@ -675,6 +683,18 @@ const PremiumCareerRoadmapsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerContainer: {},
   header: {

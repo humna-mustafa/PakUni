@@ -49,8 +49,15 @@ const UniversityLogo = memo(({
   const [imageReady, setImageReady] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
+  // DISABLED: External logo URLs can be unreliable. Always use initials fallback.
+  // To re-enable logos, set this to true and ensure URLs are valid
+  const ENABLE_EXTERNAL_LOGOS = false;
+
   // Get logo URL - prefer direct URL, then lookup by shortName
   const logoUrl = useMemo(() => {
+    if (!ENABLE_EXTERNAL_LOGOS) {
+      return null; // Always show initials fallback
+    }
     if (directLogoUrl) {
       return directLogoUrl;
     }

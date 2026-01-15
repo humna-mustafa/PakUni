@@ -289,16 +289,19 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
               <Text style={styles.resultValue}>{result.toFixed(2)}%</Text>
             </LinearGradient>
             <Text style={[styles.resultHint, {color: colors.textSecondary}]}>
-              {result >= 75 ? '🎉 Excellent! Top university material!' : 
-               result >= 60 ? '👍 Good score! Keep improving!' : 
-               '💪 Keep working hard!'}
+              {result >= 75 ? 'Excellent! Top university material!' : 
+               result >= 60 ? 'Good score! Keep improving!' : 
+               'Keep working hard!'}
             </Text>
           </View>
         )}
 
         {/* Quick Tips */}
         <View style={[styles.tipsCard, {backgroundColor: colors.card}]}>
-          <Text style={[styles.tipsTitle, {color: colors.text}]}>💡 Quick Tips</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+            <Icon name="bulb-outline" family="Ionicons" size={20} color="#F59E0B" style={{marginRight: 8}} />
+            <Text style={[styles.tipsTitle, {color: colors.text}]}>Quick Tips</Text>
+          </View>
           <View style={styles.tipItem}>
             <Icon name="checkmark-circle" size={16} color="#10B981" />
             <Text style={[styles.tipText, {color: colors.textSecondary}]}>

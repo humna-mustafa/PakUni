@@ -98,6 +98,19 @@ export interface UserFeedback {
   responded_by: string | null;
   responded_at: string | null;
   created_at: string;
+  metadata?: {
+    feedbackType?: string;
+    severity?: string;
+    contentType?: string;
+    materialType?: string;
+    universityName?: string;
+    scholarshipName?: string;
+    materialUrl?: string;
+    wouldRecommend?: boolean;
+    deviceInfo?: string;
+    appVersion?: string;
+    submittedAt?: string;
+  };
 }
 
 export interface AppSetting {

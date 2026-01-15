@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
@@ -329,6 +330,7 @@ const ResultCard = ({
 
 const PremiumRecommendationsScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
   const [currentStep, setCurrentStep] = useState(1);
   const [showResults, setShowResults] = useState(false);
   
@@ -483,6 +485,12 @@ const PremiumRecommendationsScreen = () => {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}
       edges={['top']}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
       {/* Header */}
       <Animated.View
         style={[
@@ -751,6 +759,18 @@ const PremiumRecommendationsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerContainer: {},
   header: {

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 import {SPACING, FONTS} from '../constants/theme';
 import {Icon} from '../components/icons';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
@@ -275,6 +276,7 @@ const CareerCard = ({
 
 const PremiumCareerGuidanceScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedCareer, setSelectedCareer] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -344,6 +346,14 @@ const PremiumCareerGuidanceScreen = () => {
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />
           <View style={styles.headerDecoration3} />
+          
+          {/* Back Button */}
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          
           <View style={styles.headerEmojiContainer}>
             <Icon name="compass-outline" family="Ionicons" size={48} color="#fff" />
           </View>
@@ -624,6 +634,18 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerEmojiContainer: {
     width: 80,

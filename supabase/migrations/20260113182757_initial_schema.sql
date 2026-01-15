@@ -5,6 +5,7 @@
 -- ENUMS
 -- ============================================
 
+
 CREATE TYPE education_system AS ENUM (
   'fsc_pre_medical',
   'fsc_pre_engineering', 

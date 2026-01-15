@@ -304,6 +304,12 @@ const PremiumKidsHubScreen = () => {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}
       edges={['top']}>
+      {/* Back Button */}
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Animated Header */}
         <Animated.View
@@ -552,6 +558,18 @@ const PremiumKidsHubScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerContainer: {},
   header: {

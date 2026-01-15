@@ -1,22 +1,343 @@
 /**
- * Achievement & Badge System Service
- * Tracks user milestones and generates shareable badges
+ * My Achievements - Simple Local Achievement Cards
+ * 
+ * DESIGN PHILOSOPHY:
+ * - User self-reports achievements (no tracking overhead)
+ * - 100% Local Storage (no DB read/write)
+ * - Simple shareable cards (user chooses what to share)
+ * - No unlock detection complexity
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Share, Platform} from 'react-native';
+import {Share} from 'react-native';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-export type BadgeCategory = 
-  | 'preparation' 
-  | 'admission' 
-  | 'achievement' 
-  | 'contribution' 
-  | 'milestone';
+export type AchievementType = 
+  | 'entry_test'      // Completed entry test
+  | 'merit_list'      // Got on merit list
+  | 'admission'       // Secured admission
+  | 'scholarship'     // Got scholarship
+  | 'result'          // Got result/marks
+  | 'custom';         // Custom achievement
 
+export interface MyAchievement {
+  id: string;
+  type: AchievementType;
+  title: string;
+  description: string;
+  icon: string;
+  universityName?: string;
+  programName?: string;
+  testName?: string;
+  scholarshipName?: string;
+  score?: string;
+  percentage?: string;
+  date: string;
+  createdAt: string;
+  gradientColors: string[];
+}
+
+// ============================================================================
+// ACHIEVEMENT TEMPLATES - User picks one and fills details
+// ============================================================================
+
+export interface AchievementTemplate {
+  type: AchievementType;
+  title: string;
+  icon: string;
+  placeholder: string;
+  gradientColors: string[];
+  shareTemplate: string;
+  fields: {
+    key: string;
+    label: string;
+    placeholder: string;
+    required: boolean;
+  }[];
+}
+
+export const ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
+  {
+    type: 'entry_test',
+    title: 'Entry Test Completed',
+    icon: '📝',
+    placeholder: 'I completed my entry test!',
+    gradientColors: ['#3B82F6', '#1D4ED8'],
+    shareTemplate: "I completed {testName}! 📝 Score: {score} 🎯\n\n#PakUni",
+    fields: [
+      {key: 'testName', label: 'Test Name', placeholder: 'e.g., ECAT, MDCAT, NET, NTS', required: true},
+      {key: 'score', label: 'Score (optional)', placeholder: 'e.g., 85/100, 156/200', required: false},
+      {key: 'date', label: 'Test Date', placeholder: 'When did you take it?', required: false},
+    ],
+  },
+  {
+    type: 'merit_list',
+    title: 'Made Merit List',
+    icon: '📜',
+    placeholder: 'I got on the merit list!',
+    gradientColors: ['#FFD700', '#FFA500'],
+    shareTemplate: "I made the Merit List at {universityName}! 📜✨\nProgram: {programName}\n\n#PakUni #MeritList",
+    fields: [
+      {key: 'universityName', label: 'University', placeholder: 'e.g., NUST, FAST, LUMS', required: true},
+      {key: 'programName', label: 'Program', placeholder: 'e.g., Computer Science, MBBS', required: false},
+      {key: 'date', label: 'Merit List Date', placeholder: 'When was it announced?', required: false},
+    ],
+  },
+  {
+    type: 'admission',
+    title: 'Admission Secured!',
+    icon: '🎉',
+    placeholder: 'I got admission!',
+    gradientColors: ['#10B981', '#047857'],
+    shareTemplate: "I SECURED MY ADMISSION! 🎉🎓\n🏛️ {universityName}\n📚 {programName}\n\nDreams coming true! #PakUni",
+    fields: [
+      {key: 'universityName', label: 'University', placeholder: 'e.g., NUST, FAST, LUMS', required: true},
+      {key: 'programName', label: 'Program', placeholder: 'e.g., BS Computer Science', required: true},
+      {key: 'date', label: 'Admission Date', placeholder: 'When did you get it?', required: false},
+    ],
+  },
+  {
+    type: 'scholarship',
+    title: 'Got Scholarship!',
+    icon: '🏆',
+    placeholder: 'I got a scholarship!',
+    gradientColors: ['#F59E0B', '#D97706'],
+    shareTemplate: "I got {scholarshipName}! 🏆💰\n🏛️ {universityName}\nPercentage: {percentage}\n\n#PakUni #Scholarship",
+    fields: [
+      {key: 'scholarshipName', label: 'Scholarship Name', placeholder: 'e.g., 100% Merit Scholarship', required: true},
+      {key: 'universityName', label: 'University', placeholder: 'e.g., LUMS, IBA', required: false},
+      {key: 'percentage', label: 'Scholarship %', placeholder: 'e.g., 100%, 50%', required: false},
+      {key: 'date', label: 'Award Date', placeholder: 'When did you get it?', required: false},
+    ],
+  },
+  {
+    type: 'result',
+    title: 'Got My Result!',
+    icon: '📊',
+    placeholder: 'I got my result!',
+    gradientColors: ['#8B5CF6', '#7C3AED'],
+    shareTemplate: "Got my {testName} result! 📊\nScore: {score} | {percentage}\n\n#PakUni #Result",
+    fields: [
+      {key: 'testName', label: 'Exam Name', placeholder: 'e.g., Matric, Inter, ECAT', required: true},
+      {key: 'score', label: 'Marks/Score', placeholder: 'e.g., 1050/1100', required: false},
+      {key: 'percentage', label: 'Percentage/Grade', placeholder: 'e.g., 95.4%, A+', required: false},
+      {key: 'date', label: 'Result Date', placeholder: 'When was it announced?', required: false},
+    ],
+  },
+  {
+    type: 'custom',
+    title: 'Custom Achievement',
+    icon: '⭐',
+    placeholder: 'Add your own achievement!',
+    gradientColors: ['#EC4899', '#DB2777'],
+    shareTemplate: "{title} ⭐\n{description}\n\n#PakUni #Achievement",
+    fields: [
+      {key: 'title', label: 'Achievement Title', placeholder: 'What did you achieve?', required: true},
+      {key: 'description', label: 'Description', placeholder: 'Tell us more about it!', required: false},
+      {key: 'date', label: 'Date', placeholder: 'When did it happen?', required: false},
+    ],
+  },
+];
+
+// Storage key
+const MY_ACHIEVEMENTS_KEY = '@pakuni_my_achievements';
+
+// ============================================================================
+// STORAGE FUNCTIONS (100% Local)
+// ============================================================================
+
+export const loadMyAchievements = async (): Promise<MyAchievement[]> => {
+  try {
+    const stored = await AsyncStorage.getItem(MY_ACHIEVEMENTS_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('Failed to load achievements:', error);
+  }
+  return [];
+};
+
+export const saveMyAchievements = async (achievements: MyAchievement[]): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(MY_ACHIEVEMENTS_KEY, JSON.stringify(achievements));
+  } catch (error) {
+    console.error('Failed to save achievements:', error);
+  }
+};
+
+// ============================================================================
+// CRUD FUNCTIONS
+// ============================================================================
+
+export const addAchievement = async (
+  template: AchievementTemplate,
+  data: Record<string, string>
+): Promise<MyAchievement> => {
+  const achievements = await loadMyAchievements();
+  
+  const newAchievement: MyAchievement = {
+    id: `ach_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    type: template.type,
+    title: data.title || template.title,
+    description: data.description || '',
+    icon: template.icon,
+    universityName: data.universityName,
+    programName: data.programName,
+    testName: data.testName,
+    scholarshipName: data.scholarshipName,
+    score: data.score,
+    percentage: data.percentage,
+    date: data.date || new Date().toLocaleDateString('en-PK'),
+    createdAt: new Date().toISOString(),
+    gradientColors: template.gradientColors,
+  };
+
+  achievements.unshift(newAchievement); // Add to beginning
+  await saveMyAchievements(achievements);
+  
+  return newAchievement;
+};
+
+export const deleteAchievement = async (id: string): Promise<void> => {
+  const achievements = await loadMyAchievements();
+  const filtered = achievements.filter(a => a.id !== id);
+  await saveMyAchievements(filtered);
+};
+
+export const updateAchievement = async (
+  id: string,
+  updates: Partial<MyAchievement>
+): Promise<void> => {
+  const achievements = await loadMyAchievements();
+  const index = achievements.findIndex(a => a.id === id);
+  if (index !== -1) {
+    achievements[index] = {...achievements[index], ...updates};
+    await saveMyAchievements(achievements);
+  }
+};
+
+// ============================================================================
+// SHARE FUNCTIONS
+// ============================================================================
+
+const buildShareMessage = (achievement: MyAchievement): string => {
+  const template = ACHIEVEMENT_TEMPLATES.find(t => t.type === achievement.type);
+  if (!template) {
+    return `${achievement.title} ${achievement.icon}\n\n📱 PakUni App\nhttps://pakuni.app`;
+  }
+
+  let message = template.shareTemplate;
+  
+  // Replace all placeholders
+  message = message.replace('{title}', achievement.title || '');
+  message = message.replace('{description}', achievement.description || '');
+  message = message.replace('{universityName}', achievement.universityName || 'My University');
+  message = message.replace('{programName}', achievement.programName || 'My Program');
+  message = message.replace('{testName}', achievement.testName || 'My Test');
+  message = message.replace('{scholarshipName}', achievement.scholarshipName || 'Scholarship');
+  message = message.replace('{score}', achievement.score || '');
+  message = message.replace('{percentage}', achievement.percentage || '');
+  
+  // Clean up empty placeholders
+  message = message.replace(/\s*Score:\s*$/m, '');
+  message = message.replace(/\s*Percentage:\s*$/m, '');
+  message = message.replace(/\s*\|\s*$/m, '');
+  
+  return `${message}\n\n📱 Download PakUni App!\nhttps://pakuni.app`;
+};
+
+export const shareAchievement = async (achievement: MyAchievement): Promise<boolean> => {
+  try {
+    const message = buildShareMessage(achievement);
+    const result = await Share.share({message});
+    return result.action === Share.sharedAction;
+  } catch (error) {
+    console.error('Failed to share achievement:', error);
+    return false;
+  }
+};
+
+// Quick share card for common scenarios
+export const shareQuickCard = async (
+  type: 'merit_success' | 'acceptance' | 'test_complete',
+  data: {
+    universityName?: string;
+    programName?: string;
+    testName?: string;
+    score?: string;
+    percentage?: string;
+  }
+): Promise<boolean> => {
+  try {
+    let message = '';
+    
+    switch (type) {
+      case 'merit_success':
+        message = `🎯 Merit Calculation Result!\n\n🏛️ ${data.universityName || 'University'}\n📚 ${data.programName || 'Program'}\n📊 Aggregate: ${data.percentage || 'Calculated'}\n\nCalculated using PakUni App! 📱\n\n#PakUni #MeritCalculator`;
+        break;
+      case 'acceptance':
+        message = `🎉 ADMISSION CONFIRMED!\n\n🏛️ ${data.universityName}\n📚 ${data.programName}\n\nDreams coming true! 🌟\n\n#PakUni #Admission`;
+        break;
+      case 'test_complete':
+        message = `📝 Entry Test Done!\n\n${data.testName} ✅${data.score ? `\nScore: ${data.score}` : ''}\n\n#PakUni #EntryTest`;
+        break;
+    }
+    
+    const result = await Share.share({
+      message: `${message}\n\n📱 Download PakUni App!\nhttps://pakuni.app`,
+    });
+    return result.action === Share.sharedAction;
+  } catch (error) {
+    console.error('Failed to share quick card:', error);
+    return false;
+  }
+};
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+export const getAchievementsByType = async (type: AchievementType): Promise<MyAchievement[]> => {
+  const achievements = await loadMyAchievements();
+  return achievements.filter(a => a.type === type);
+};
+
+export const getAchievementStats = async (): Promise<{
+  total: number;
+  byType: Record<AchievementType, number>;
+}> => {
+  const achievements = await loadMyAchievements();
+  
+  const byType: Record<AchievementType, number> = {
+    entry_test: 0,
+    merit_list: 0,
+    admission: 0,
+    scholarship: 0,
+    result: 0,
+    custom: 0,
+  };
+  
+  achievements.forEach(a => {
+    byType[a.type] = (byType[a.type] || 0) + 1;
+  });
+  
+  return {total: achievements.length, byType};
+};
+
+export const getTemplateByType = (type: AchievementType): AchievementTemplate | undefined => {
+  return ACHIEVEMENT_TEMPLATES.find(t => t.type === type);
+};
+
+// ============================================================================
+// LEGACY COMPATIBILITY (for any old code still using these)
+// ============================================================================
+
+// These are no-op functions for backwards compatibility
+export type BadgeCategory = 'preparation' | 'admission' | 'achievement' | 'contribution' | 'milestone';
 export type BadgeRarity = 'common' | 'rare' | 'epic' | 'legendary';
 
 export interface Badge {
@@ -33,559 +354,55 @@ export interface Badge {
 }
 
 export interface UserAchievements {
-  badges: string[]; // Array of badge IDs
-  stats: {
-    calculationsPerformed: number;
-    universitiesViewed: number;
-    scholarshipsViewed: number;
-    quizzesTaken: number;
-    pollsVoted: number;
-    comparisons: number;
-    appOpenStreak: number;
-    lastOpenDate: string;
-    totalTimeSpent: number; // in minutes
-    profileCompleteness: number;
-  };
-  admissions: {
-    appliedTo: string[];
-    acceptedAt: string[];
-    entryTestsTaken: string[];
-    meritListedAt: string[];
-  };
+  badges: string[];
+  stats: Record<string, number>;
+  admissions: Record<string, string[]>;
 }
 
-// ============================================================================
-// BADGE DEFINITIONS
-// ============================================================================
+// Empty badge list - we don't use these anymore
+export const BADGES: Badge[] = [];
 
-export const BADGES: Badge[] = [
-  // PREPARATION BADGES
-  {
-    id: 'entry_test_ready',
-    name: 'Entry Test Ready!',
-    description: 'Prepared for your entry test',
-    icon: '📝',
-    category: 'preparation',
-    rarity: 'common',
-    condition: 'Viewed 5 entry test guides',
-    gradientColors: ['#3B82F6', '#1D4ED8'],
-    shareMessage: "I'm Entry Test Ready! 📝 Preparing for my future with PakUni App 🚀",
-  },
-  {
-    id: 'calculator_pro',
-    name: 'Calculator Pro',
-    description: 'Mastered merit calculation',
-    icon: '🧮',
-    category: 'preparation',
-    rarity: 'common',
-    condition: 'Calculated merit 10 times',
-    gradientColors: ['#10B981', '#059669'],
-    shareMessage: "I'm a Calculator Pro! 🧮 Calculated my university chances on PakUni App 📊",
-  },
-  {
-    id: 'scholar_hunter',
-    name: 'Scholarship Hunter',
-    description: 'Explored scholarship opportunities',
-    icon: '🎓',
-    category: 'preparation',
-    rarity: 'rare',
-    condition: 'Viewed 20 scholarships',
-    gradientColors: ['#F59E0B', '#D97706'],
-    shareMessage: "I'm a Scholarship Hunter! 🎓 Finding opportunities on PakUni App 💰",
-  },
-  {
-    id: 'university_explorer',
-    name: 'University Explorer',
-    description: 'Researched many universities',
-    icon: '🏛️',
-    category: 'preparation',
-    rarity: 'common',
-    condition: 'Viewed 25 universities',
-    gradientColors: ['#8B5CF6', '#7C3AED'],
-    shareMessage: "I'm a University Explorer! 🏛️ Researching my options on PakUni App 🔍",
-  },
-  {
-    id: 'career_navigator',
-    name: 'Career Navigator',
-    description: 'Found your career direction',
-    icon: '🧭',
-    category: 'preparation',
-    rarity: 'rare',
-    condition: 'Completed career quiz and viewed 10 careers',
-    gradientColors: ['#EC4899', '#DB2777'],
-    shareMessage: "I'm a Career Navigator! 🧭 Found my path on PakUni App 🎯",
-  },
-  {
-    id: 'compare_master',
-    name: 'Compare Master',
-    description: 'Expert at comparing universities',
-    icon: '⚖️',
-    category: 'preparation',
-    rarity: 'common',
-    condition: 'Made 5 university comparisons',
-    gradientColors: ['#06B6D4', '#0891B2'],
-    shareMessage: "I'm a Compare Master! ⚖️ Making informed decisions with PakUni App 📈",
-  },
-
-  // ADMISSION BADGES
-  {
-    id: 'test_warrior',
-    name: 'Test Warrior',
-    description: 'Completed an entry test',
-    icon: '⚔️',
-    category: 'admission',
-    rarity: 'rare',
-    condition: 'Marked entry test as completed',
-    gradientColors: ['#EF4444', '#DC2626'],
-    shareMessage: "I'm a Test Warrior! ⚔️ Completed my entry test! 💪 #PakUni",
-  },
-  {
-    id: 'merit_listed',
-    name: 'Merit Listed',
-    description: 'Made it to a merit list!',
-    icon: '📜',
-    category: 'admission',
-    rarity: 'epic',
-    condition: 'User marked as merit listed',
-    gradientColors: ['#FFD700', '#FFA500'],
-    shareMessage: "I made the Merit List! 📜✨ One step closer to my dream! #PakUni 🎯",
-  },
-  {
-    id: 'admission_secured',
-    name: 'Admission Secured!',
-    description: 'Got admission in a university!',
-    icon: '🎉',
-    category: 'admission',
-    rarity: 'legendary',
-    condition: 'User marked admission as secured',
-    gradientColors: ['#10B981', '#047857'],
-    shareMessage: "I SECURED MY ADMISSION! 🎉🎓 Dreams coming true! Thank you PakUni! 🚀",
-  },
-  {
-    id: 'double_admit',
-    name: 'Double Admit',
-    description: 'Got into 2+ universities!',
-    icon: '🌟',
-    category: 'admission',
-    rarity: 'legendary',
-    condition: 'Admitted to 2 or more universities',
-    gradientColors: ['#7C3AED', '#5B21B6'],
-    shareMessage: "Got admission in MULTIPLE universities! 🌟🌟 Choices, choices! #PakUni",
-  },
-
-  // ACHIEVEMENT BADGES
-  {
-    id: 'early_bird',
-    name: 'Early Bird',
-    description: 'Started preparing early',
-    icon: '🐦',
-    category: 'achievement',
-    rarity: 'common',
-    condition: 'Used app before admission season',
-    gradientColors: ['#FB923C', '#EA580C'],
-    shareMessage: "Early bird gets the admission! 🐦 Preparing ahead with PakUni App! 📚",
-  },
-  {
-    id: 'streak_champion',
-    name: 'Streak Champion',
-    description: '7-day app usage streak',
-    icon: '🔥',
-    category: 'achievement',
-    rarity: 'rare',
-    condition: 'Used app 7 days in a row',
-    gradientColors: ['#F97316', '#C2410C'],
-    shareMessage: "7-day streak! 🔥 Staying focused on my goals with PakUni App! 💯",
-  },
-  {
-    id: 'power_user',
-    name: 'Power User',
-    description: 'Used all major features',
-    icon: '⚡',
-    category: 'achievement',
-    rarity: 'epic',
-    condition: 'Used calculator, explorer, compare, career quiz',
-    gradientColors: ['#FBBF24', '#F59E0B'],
-    shareMessage: "I'm a PakUni Power User! ⚡ Using every tool to succeed! 🎯",
-  },
-
-  // CONTRIBUTION BADGES
-  {
-    id: 'poll_participant',
-    name: 'Poll Participant',
-    description: 'Active community member',
-    icon: '🗳️',
-    category: 'contribution',
-    rarity: 'common',
-    condition: 'Voted in 10 polls',
-    gradientColors: ['#6366F1', '#4F46E5'],
-    shareMessage: "Making my voice heard! 🗳️ Active in PakUni community polls! 📊",
-  },
-  {
-    id: 'top_contributor',
-    name: 'Top Contributor',
-    description: 'Valuable community member',
-    icon: '👑',
-    category: 'contribution',
-    rarity: 'legendary',
-    condition: 'Voted in 50 polls and shared 10 results',
-    gradientColors: ['#FFD700', '#B8860B'],
-    shareMessage: "I'm a Top Contributor! 👑 Helping the PakUni community grow! 🌟",
-  },
-  {
-    id: 'social_butterfly',
-    name: 'Social Butterfly',
-    description: 'Sharing is caring!',
-    icon: '🦋',
-    category: 'contribution',
-    rarity: 'rare',
-    condition: 'Shared content 5 times',
-    gradientColors: ['#A855F7', '#9333EA'],
-    shareMessage: "Spreading the word about PakUni! 🦋 Join me on the journey! 🚀",
-  },
-
-  // MILESTONE BADGES
-  {
-    id: 'first_step',
-    name: 'First Step',
-    description: 'Started your journey',
-    icon: '👣',
-    category: 'milestone',
-    rarity: 'common',
-    condition: 'Completed first merit calculation',
-    gradientColors: ['#64748B', '#475569'],
-    shareMessage: "Taking my First Step! 👣 Started my university journey on PakUni! 🌱",
-  },
-  {
-    id: 'profile_complete',
-    name: 'Profile Complete',
-    description: 'Set up your profile',
-    icon: '✅',
-    category: 'milestone',
-    rarity: 'common',
-    condition: 'Completed profile setup',
-    gradientColors: ['#22C55E', '#16A34A'],
-    shareMessage: "Profile Complete! ✅ Ready to explore universities on PakUni! 🎯",
-  },
-  {
-    id: 'goal_setter',
-    name: 'Goal Setter',
-    description: 'Set your target university',
-    icon: '🎯',
-    category: 'milestone',
-    rarity: 'common',
-    condition: 'Set a goal in the app',
-    gradientColors: ['#EF4444', '#B91C1C'],
-    shareMessage: "Goals Set! 🎯 Working towards my dream university with PakUni! 💪",
-  },
-  {
-    id: 'century_club',
-    name: 'Century Club',
-    description: '100 days of using PakUni',
-    icon: '💯',
-    category: 'milestone',
-    rarity: 'legendary',
-    condition: 'Used app for 100 days',
-    gradientColors: ['#DC2626', '#991B1B'],
-    shareMessage: "100 Days Strong! 💯 Dedicated to my future with PakUni! 🏆",
-  },
-];
-
-// Storage key
-const ACHIEVEMENTS_KEY = '@pakuni_achievements';
-
-// ============================================================================
-// DEFAULT STATE
-// ============================================================================
-
-const getDefaultAchievements = (): UserAchievements => ({
+// Legacy functions - return empty/default values
+export const loadAchievements = async (): Promise<UserAchievements> => ({
   badges: [],
-  stats: {
-    calculationsPerformed: 0,
-    universitiesViewed: 0,
-    scholarshipsViewed: 0,
-    quizzesTaken: 0,
-    pollsVoted: 0,
-    comparisons: 0,
-    appOpenStreak: 0,
-    lastOpenDate: '',
-    totalTimeSpent: 0,
-    profileCompleteness: 0,
-  },
-  admissions: {
-    appliedTo: [],
-    acceptedAt: [],
-    entryTestsTaken: [],
-    meritListedAt: [],
-  },
+  stats: {},
+  admissions: {},
 });
 
-// ============================================================================
-// STORAGE FUNCTIONS
-// ============================================================================
-
-export const loadAchievements = async (): Promise<UserAchievements> => {
-  try {
-    const stored = await AsyncStorage.getItem(ACHIEVEMENTS_KEY);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-  } catch (error) {
-    console.error('Failed to load achievements:', error);
-  }
-  return getDefaultAchievements();
-};
-
-export const saveAchievements = async (achievements: UserAchievements): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(achievements));
-  } catch (error) {
-    console.error('Failed to save achievements:', error);
-  }
-};
-
-// ============================================================================
-// BADGE CHECK FUNCTIONS
-// ============================================================================
-
-export const checkAndUnlockBadges = async (
-  achievements: UserAchievements
-): Promise<{newBadges: Badge[]; updatedAchievements: UserAchievements}> => {
-  const newBadges: Badge[] = [];
-  const now = new Date().toISOString();
-
-  // Check each badge condition
-  for (const badge of BADGES) {
-    if (achievements.badges.includes(badge.id)) continue;
-
-    let shouldUnlock = false;
-
-    switch (badge.id) {
-      case 'first_step':
-        shouldUnlock = achievements.stats.calculationsPerformed >= 1;
-        break;
-      case 'calculator_pro':
-        shouldUnlock = achievements.stats.calculationsPerformed >= 10;
-        break;
-      case 'university_explorer':
-        shouldUnlock = achievements.stats.universitiesViewed >= 25;
-        break;
-      case 'scholar_hunter':
-        shouldUnlock = achievements.stats.scholarshipsViewed >= 20;
-        break;
-      case 'compare_master':
-        shouldUnlock = achievements.stats.comparisons >= 5;
-        break;
-      case 'poll_participant':
-        shouldUnlock = achievements.stats.pollsVoted >= 10;
-        break;
-      case 'top_contributor':
-        shouldUnlock = achievements.stats.pollsVoted >= 50;
-        break;
-      case 'streak_champion':
-        shouldUnlock = achievements.stats.appOpenStreak >= 7;
-        break;
-      case 'career_navigator':
-        shouldUnlock = achievements.stats.quizzesTaken >= 1;
-        break;
-      case 'entry_test_ready':
-        shouldUnlock = achievements.stats.universitiesViewed >= 5;
-        break;
-      case 'test_warrior':
-        shouldUnlock = achievements.admissions.entryTestsTaken.length >= 1;
-        break;
-      case 'merit_listed':
-        shouldUnlock = achievements.admissions.meritListedAt.length >= 1;
-        break;
-      case 'admission_secured':
-        shouldUnlock = achievements.admissions.acceptedAt.length >= 1;
-        break;
-      case 'double_admit':
-        shouldUnlock = achievements.admissions.acceptedAt.length >= 2;
-        break;
-      case 'profile_complete':
-        shouldUnlock = achievements.stats.profileCompleteness >= 100;
-        break;
-      case 'power_user':
-        shouldUnlock = 
-          achievements.stats.calculationsPerformed >= 1 &&
-          achievements.stats.universitiesViewed >= 10 &&
-          achievements.stats.comparisons >= 1 &&
-          achievements.stats.quizzesTaken >= 1;
-        break;
-    }
-
-    if (shouldUnlock) {
-      newBadges.push({...badge, unlockedAt: now});
-      achievements.badges.push(badge.id);
-    }
-  }
-
-  if (newBadges.length > 0) {
-    await saveAchievements(achievements);
-  }
-
-  return {newBadges, updatedAchievements: achievements};
-};
-
-// ============================================================================
-// TRACKING FUNCTIONS
-// ============================================================================
-
-export const trackCalculation = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.calculationsPerformed += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackUniversityView = async (universityId: string): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.universitiesViewed += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackScholarshipView = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.scholarshipsViewed += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackComparison = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.comparisons += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackPollVote = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.pollsVoted += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackQuizCompletion = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  achievements.stats.quizzesTaken += 1;
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const trackAppOpen = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  const today = new Date().toDateString();
-  
-  if (achievements.stats.lastOpenDate !== today) {
-    const lastDate = new Date(achievements.stats.lastOpenDate);
-    const todayDate = new Date(today);
-    const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) {
-      achievements.stats.appOpenStreak += 1;
-    } else if (diffDays > 1) {
-      achievements.stats.appOpenStreak = 1;
-    }
-    
-    achievements.stats.lastOpenDate = today;
-  }
-  
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-// ============================================================================
-// ADMISSION TRACKING
-// ============================================================================
-
-export const markEntryTestCompleted = async (testId: string): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  if (!achievements.admissions.entryTestsTaken.includes(testId)) {
-    achievements.admissions.entryTestsTaken.push(testId);
-  }
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const markMeritListed = async (universityId: string): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  if (!achievements.admissions.meritListedAt.includes(universityId)) {
-    achievements.admissions.meritListedAt.push(universityId);
-  }
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-export const markAdmissionSecured = async (universityId: string): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  if (!achievements.admissions.acceptedAt.includes(universityId)) {
-    achievements.admissions.acceptedAt.push(universityId);
-  }
-  const {newBadges} = await checkAndUnlockBadges(achievements);
-  return newBadges;
-};
-
-// ============================================================================
-// SHARE FUNCTIONS
-// ============================================================================
-
-export const shareBadge = async (badge: Badge): Promise<boolean> => {
-  try {
-    const result = await Share.share({
-      message: `${badge.shareMessage}\n\n📱 Download PakUni - Your University Guide!\nhttps://pakuni.app`,
-    });
-    return result.action === Share.sharedAction;
-  } catch (error) {
-    console.error('Failed to share badge:', error);
-    return false;
-  }
-};
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-
-export const getBadgeById = (id: string): Badge | undefined => {
-  return BADGES.find(b => b.id === id);
-};
-
-export const getUserBadges = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  return achievements.badges
-    .map(id => getBadgeById(id))
-    .filter((b): b is Badge => b !== undefined);
-};
-
-export const getLockedBadges = async (): Promise<Badge[]> => {
-  const achievements = await loadAchievements();
-  return BADGES.filter(b => !achievements.badges.includes(b.id));
-};
-
-export const getBadgesByCategory = (category: BadgeCategory): Badge[] => {
-  return BADGES.filter(b => b.category === category);
-};
-
-export const getBadgesByRarity = (rarity: BadgeRarity): Badge[] => {
-  return BADGES.filter(b => b.rarity === rarity);
-};
-
-export const getProgress = async (): Promise<{
-  total: number;
-  unlocked: number;
-  percentage: number;
-}> => {
-  const achievements = await loadAchievements();
-  const total = BADGES.length;
-  const unlocked = achievements.badges.length;
-  return {
-    total,
-    unlocked,
-    percentage: Math.round((unlocked / total) * 100),
-  };
-};
+export const saveAchievements = async (_: UserAchievements): Promise<void> => {};
+export const checkAndUnlockBadges = async (a: UserAchievements) => ({newBadges: [], updatedAchievements: a});
+export const trackCalculation = async (): Promise<Badge[]> => [];
+export const trackUniversityView = async (_: string): Promise<Badge[]> => [];
+export const trackScholarshipView = async (): Promise<Badge[]> => [];
+export const trackComparison = async (): Promise<Badge[]> => [];
+export const trackPollVote = async (): Promise<Badge[]> => [];
+export const trackQuizCompletion = async (): Promise<Badge[]> => [];
+export const trackAppOpen = async (): Promise<Badge[]> => [];
+export const markEntryTestCompleted = async (_: string): Promise<Badge[]> => [];
+export const markMeritListed = async (_: string): Promise<Badge[]> => [];
+export const markAdmissionSecured = async (_: string): Promise<Badge[]> => [];
+export const shareBadge = async (_: Badge): Promise<boolean> => false;
+export const getBadgeById = (_: string): Badge | undefined => undefined;
+export const getUserBadges = async (): Promise<Badge[]> => [];
+export const getLockedBadges = async (): Promise<Badge[]> => [];
+export const getBadgesByCategory = (_: BadgeCategory): Badge[] => [];
+export const getBadgesByRarity = (_: BadgeRarity): Badge[] => [];
+export const getProgress = async () => ({total: 0, unlocked: 0, percentage: 0});
 
 export default {
+  // New API
+  ACHIEVEMENT_TEMPLATES,
+  loadMyAchievements,
+  saveMyAchievements,
+  addAchievement,
+  deleteAchievement,
+  updateAchievement,
+  shareAchievement,
+  shareQuickCard,
+  getAchievementsByType,
+  getAchievementStats,
+  getTemplateByType,
+  // Legacy (no-op)
   BADGES,
   loadAchievements,
   saveAchievements,

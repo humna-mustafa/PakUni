@@ -3,6 +3,7 @@ import {View, Text} from 'react-native';
 import {NavigationContainer, DefaultTheme, DarkTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator, type BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import {Icon} from '../components';
 
 // Auth & Onboarding Screens
 import AuthScreen from '../screens/AuthScreen';
@@ -48,6 +49,7 @@ import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ContactSupportScreen from '../screens/ContactSupportScreen';
 
 // Admin Screens
 import {
@@ -112,6 +114,7 @@ export type RootStackParamList = {
   Notifications: undefined;
   Favorites: undefined;
   Settings: undefined;
+  ContactSupport: undefined;
   // Admin Screens
   AdminDashboard: undefined;
   AdminUsers: undefined;
@@ -226,7 +229,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background}}>
         <View style={{width: 80, height: 80, borderRadius: 24, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', marginBottom: 16}}>
-          <Text style={{fontSize: 32, color: '#FFFFFF'}}>🎓</Text>
+          <Icon name="school-outline" family="Ionicons" size={36} color="#FFFFFF" />
         </View>
         <Text style={{fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 8}}>PakUni</Text>
         <Text style={{fontSize: 14, color: colors.textSecondary}}>Loading...</Text>
@@ -394,6 +397,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ContactSupport"
+            component={ContactSupportScreen}
             options={{headerShown: false}}
           />
           {/* Admin Screens */}

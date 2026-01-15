@@ -33,7 +33,8 @@ import {
   HAIRLINE_WIDTH,
 } from '../constants/pixel-perfect';
 import {useTheme} from '../contexts/ThemeContext';
-import {UNIVERSITIES, SCHOLARSHIPS, ENTRY_TESTS_DATA} from '../data';
+import {useAuth} from '../contexts/AuthContext';
+import {UNIVERSITIES, SCHOLARSHIPS, ENTRY_TESTS_DATA, getUpcomingDeadlines} from '../data';
 import {Icon} from '../components/icons';
 import UniversityLogo from '../components/UniversityLogo';
 import {
@@ -261,6 +262,358 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
 });
 
 // ============================================================================
+// DASHBOARD WIDGETS - Real Data with Animations
+// ============================================================================
+
+interface DashboardWidgetsProps {
+  user: any;
+  colors: any;
+  isDark: boolean;
+  onNavigate: (screen: string) => void;
+}
+
+const DashboardWidgets = memo<DashboardWidgetsProps>(({user, colors, isDark, onNavigate}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
+  
+  // Get real data
+  const upcomingDeadlines = getUpcomingDeadlines(3);
+  const favoriteCount = (user?.favoriteUniversities?.length || 0) + 
+                        (user?.favoriteScholarships?.length || 0);
+  
+  // Calculate real profile completion
+  const getProfileCompletion = () => {
+    if (!user) return 0;
+    let completed = 0;
+    const fields = ['fullName', 'email', 'city', 'currentClass', 'board', 'targetField'];
+    fields.forEach(field => { if (user[field]) completed++; });
+    if (user.matricMarks) completed++;
+    if (user.interests?.length > 0) completed++;
+    return Math.round((completed / 8) * 100);
+  };
+  
+  const profileCompletion = getProfileCompletion();
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        delay: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(progressAnim, {
+        toValue: profileCompletion,
+        duration: 1200,
+        delay: 500,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  }, [profileCompletion]);
+
+  const widgetBg = isDark ? '#1E293B' : '#FFFFFF';
+
+  return (
+    <Animated.View
+      style={[
+        widgetStyles.container,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}],
+        },
+      ]}>
+      {/* Profile Completion Widget */}
+      <TouchableOpacity
+        style={[widgetStyles.profileWidget, {backgroundColor: widgetBg}]}
+        onPress={() => onNavigate('Profile')}
+        activeOpacity={0.9}>
+        <LinearGradient
+          colors={isDark ? ['rgba(99, 102, 241, 0.15)', 'rgba(99, 102, 241, 0.05)'] : ['rgba(99, 102, 241, 0.1)', 'rgba(99, 102, 241, 0.02)']}
+          style={StyleSheet.absoluteFillObject}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+        />
+        <View style={widgetStyles.profileHeader}>
+          <View style={[widgetStyles.profileIconBg, {backgroundColor: colors.primaryLight}]}>
+            <Icon name="person" family="Ionicons" size={18} color={colors.primary} />
+          </View>
+          <View style={widgetStyles.profileInfo}>
+            <Text style={[widgetStyles.profileTitle, {color: colors.text}]}>Profile</Text>
+            <Text style={[widgetStyles.profileSubtitle, {color: colors.textSecondary}]}>
+              {profileCompletion}% complete
+            </Text>
+          </View>
+          <View style={[widgetStyles.profileBadge, {backgroundColor: profileCompletion >= 80 ? '#10B98120' : colors.warningLight}]}>
+            <Text style={[widgetStyles.profileBadgeText, {color: profileCompletion >= 80 ? '#10B981' : colors.warning}]}>
+              {profileCompletion >= 80 ? '✓' : '!'}
+            </Text>
+          </View>
+        </View>
+        <View style={[widgetStyles.progressBar, {backgroundColor: colors.border}]}>
+          <Animated.View
+            style={[
+              widgetStyles.progressFill,
+              {
+                backgroundColor: profileCompletion >= 80 ? '#10B981' : colors.primary,
+                width: progressAnim.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: ['0%', '100%'],
+                }),
+              },
+            ]}
+          />
+        </View>
+      </TouchableOpacity>
+
+      {/* Stats Row */}
+      <View style={widgetStyles.statsRow}>
+        {/* Favorites Widget */}
+        <TouchableOpacity
+          style={[widgetStyles.statWidget, {backgroundColor: widgetBg}]}
+          onPress={() => onNavigate('Favorites')}
+          activeOpacity={0.9}>
+          <LinearGradient
+            colors={['rgba(239, 68, 68, 0.1)', 'transparent']}
+            style={widgetStyles.statGradient}>
+            <Icon name="heart" family="Ionicons" size={20} color="#EF4444" />
+            <Text style={[widgetStyles.statValue, {color: colors.text}]}>{favoriteCount}</Text>
+            <Text style={[widgetStyles.statLabel, {color: colors.textSecondary}]}>Saved</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Universities Widget */}
+        <TouchableOpacity
+          style={[widgetStyles.statWidget, {backgroundColor: widgetBg}]}
+          onPress={() => onNavigate('Universities')}
+          activeOpacity={0.9}>
+          <LinearGradient
+            colors={['rgba(59, 130, 246, 0.1)', 'transparent']}
+            style={widgetStyles.statGradient}>
+            <Icon name="school" family="Ionicons" size={20} color="#3B82F6" />
+            <Text style={[widgetStyles.statValue, {color: colors.text}]}>{UNIVERSITIES.length}+</Text>
+            <Text style={[widgetStyles.statLabel, {color: colors.textSecondary}]}>Unis</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Deadlines Widget */}
+        <TouchableOpacity
+          style={[widgetStyles.statWidget, {backgroundColor: widgetBg}]}
+          onPress={() => onNavigate('Deadlines')}
+          activeOpacity={0.9}>
+          <LinearGradient
+            colors={['rgba(245, 158, 11, 0.1)', 'transparent']}
+            style={widgetStyles.statGradient}>
+            <Icon name="calendar" family="Ionicons" size={20} color="#F59E0B" />
+            <Text style={[widgetStyles.statValue, {color: colors.text}]}>{upcomingDeadlines.length}</Text>
+            <Text style={[widgetStyles.statLabel, {color: colors.textSecondary}]}>Soon</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Achievements Widget */}
+        <TouchableOpacity
+          style={[widgetStyles.statWidget, {backgroundColor: widgetBg}]}
+          onPress={() => onNavigate('Achievements')}
+          activeOpacity={0.9}>
+          <LinearGradient
+            colors={['rgba(139, 92, 246, 0.1)', 'transparent']}
+            style={widgetStyles.statGradient}>
+            <Icon name="trophy" family="Ionicons" size={20} color="#8B5CF6" />
+            <Text style={[widgetStyles.statValue, {color: colors.text}]}>🏆</Text>
+            <Text style={[widgetStyles.statLabel, {color: colors.textSecondary}]}>Track</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+
+      {/* Upcoming Deadlines Preview */}
+      {upcomingDeadlines.length > 0 && (
+        <TouchableOpacity
+          style={[widgetStyles.deadlineWidget, {backgroundColor: widgetBg}]}
+          onPress={() => onNavigate('Deadlines')}
+          activeOpacity={0.9}>
+          <View style={widgetStyles.deadlineHeader}>
+            <View style={[widgetStyles.deadlineIconBg, {backgroundColor: '#F59E0B20'}]}>
+              <Icon name="time" family="Ionicons" size={16} color="#F59E0B" />
+            </View>
+            <Text style={[widgetStyles.deadlineTitle, {color: colors.text}]}>Upcoming Deadlines</Text>
+            <Icon name="chevron-forward" family="Ionicons" size={16} color={colors.textSecondary} />
+          </View>
+          <View style={widgetStyles.deadlineList}>
+            {upcomingDeadlines.slice(0, 2).map((deadline, index) => (
+              <View key={deadline.id} style={[widgetStyles.deadlineItem, index > 0 && {marginTop: 8}]}>
+                <View style={[widgetStyles.deadlineDot, {backgroundColor: deadline.status === 'closing-soon' ? '#EF4444' : '#10B981'}]} />
+                <View style={widgetStyles.deadlineInfo}>
+                  <Text style={[widgetStyles.deadlineName, {color: colors.text}]} numberOfLines={1}>
+                    {deadline.universityShortName} - {deadline.title.slice(0, 25)}...
+                  </Text>
+                  <Text style={[widgetStyles.deadlineDate, {color: colors.textSecondary}]}>
+                    {new Date(deadline.applicationDeadline).toLocaleDateString('en-PK', {month: 'short', day: 'numeric'})}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </TouchableOpacity>
+      )}
+    </Animated.View>
+  );
+});
+
+const widgetStyles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  profileWidget: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    overflow: 'hidden',
+  },
+  profileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  profileIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  profileTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  profileSubtitle: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  profileBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  progressBar: {
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 12,
+  },
+  statWidget: {
+    flex: 1,
+    borderRadius: 14,
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+  },
+  statGradient: {
+    padding: 12,
+    alignItems: 'center',
+    minHeight: 80,
+    justifyContent: 'center',
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginTop: 6,
+  },
+  statLabel: {
+    fontSize: 10,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  deadlineWidget: {
+    borderRadius: 16,
+    padding: 14,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+  },
+  deadlineHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  deadlineIconBg: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deadlineTitle: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  deadlineList: {},
+  deadlineItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  deadlineDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  deadlineInfo: {
+    flex: 1,
+    marginLeft: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  deadlineName: {
+    fontSize: 13,
+    fontWeight: '500',
+    flex: 1,
+  },
+  deadlineDate: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginLeft: 8,
+  },
+});
+
+// ============================================================================
 // QUICK ACTION CARD - Clean, minimal design
 // ============================================================================
 
@@ -411,6 +764,7 @@ const UniversityCard = ({
 const PremiumHomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark} = useTheme();
+  const {user} = useAuth();
   const scrollY = useRef(new Animated.Value(0)).current;
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -423,22 +777,23 @@ const PremiumHomeScreen = () => {
     (s: {type: string}) => s.type === 'government',
   ).slice(0, 3);
 
-  // Clean, simple quick actions
+  // Clean, simple quick actions with improved UX labels
   const quickActions = [
     {id: '1', iconName: 'school', title: 'Universities', screen: 'Universities'},
-    {id: '2', iconName: 'calculator', title: 'Merit Calc', screen: 'Calculator'},
+    {id: '2', iconName: 'calculator', title: 'Calculate Merit', screen: 'Calculator'},
     {id: '3', iconName: 'ribbon', title: 'Scholarships', screen: 'Scholarships'},
     {id: '4', iconName: 'clipboard', title: 'Entry Tests', screen: 'EntryTests'},
     {id: '5', iconName: 'sparkles', title: 'AI Match', screen: 'Recommendations'},
-    {id: '6', iconName: 'navigate', title: 'Careers', screen: 'CareerGuidance'},
-    {id: '7', iconName: 'book', title: 'Guides', screen: 'Guides'},
-    {id: '8', iconName: 'construct', title: 'Tools', screen: 'Tools'},
-    {id: '9', iconName: 'game-controller', title: 'Fun Game', screen: 'ResultGame'},
-    {id: '10', iconName: 'podium', title: 'Polls', screen: 'Polls'},
-    {id: '11', iconName: 'time', title: 'Deadlines', screen: 'Deadlines'},
-    {id: '12', iconName: 'archive', title: 'Merit Lists', screen: 'MeritArchive'},
+    {id: '6', iconName: 'compass', title: 'Career Guide', screen: 'CareerGuidance'},
+    {id: '7', iconName: 'library', title: 'Study Guides', screen: 'Guides'},
+    {id: '8', iconName: 'apps', title: 'Useful Tools', screen: 'Tools'},
+    {id: '9', iconName: 'game-controller', title: 'Score Game', screen: 'ResultGame'},
+    {id: '10', iconName: 'stats-chart', title: 'Live Polls', screen: 'Polls'},
+    {id: '11', iconName: 'calendar', title: 'Deadlines', screen: 'Deadlines'},
+    {id: '12', iconName: 'documents', title: 'Merit Lists', screen: 'MeritArchive'},
     {id: '13', iconName: 'trophy', title: 'Achievements', screen: 'Achievements'},
-    {id: '14', iconName: 'happy', title: 'For Kids', screen: 'KidsHub'},
+    {id: '14', iconName: 'happy', title: 'Kids Zone', screen: 'KidsHub'},
+    {id: '15', iconName: 'chatbubbles', title: 'Help & Support', screen: 'ContactSupport'},
   ];
 
   const handleNavigate = useCallback((screen: string) => {
@@ -484,6 +839,15 @@ const PremiumHomeScreen = () => {
         break;
       case 'Achievements':
         navigation.navigate('Achievements');
+        break;
+      case 'ContactSupport':
+        navigation.navigate('ContactSupport');
+        break;
+      case 'Profile':
+        navigation.navigate('MainTabs', {screen: 'Profile'});
+        break;
+      case 'Favorites':
+        navigation.navigate('MainTabs', {screen: 'Profile'});
         break;
       case 'Universities':
         navigation.navigate('MainTabs', {screen: 'Universities'});
@@ -567,9 +931,17 @@ const PremiumHomeScreen = () => {
             isDark={isDark}
           />
 
+          {/* Dashboard Widgets with Real Data */}
+          <DashboardWidgets
+            user={user}
+            colors={colors}
+            isDark={isDark}
+            onNavigate={handleNavigate}
+          />
+
           {/* Quick Actions */}
           <View style={styles.section}>
-            <ModernSectionHeader title="Quick Actions" subtitle="Explore features" />
+            <ModernSectionHeader title="What would you like to do?" subtitle="Your tools & resources" />
             <View style={styles.actionsGrid}>
               {quickActions.map((action, index) => (
                 <QuickActionCard

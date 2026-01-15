@@ -366,7 +366,7 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
           ]}
         />
 
-        {/* Tassel Fringe */}
+        {/* Tassel Fringe - Fixed heights for consistent rendering */}
         <View
           style={[
             iconStyles.tasselFringe,
@@ -376,14 +376,14 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
             },
           ]}
         >
-          {[0, 1, 2, 3, 4].map((i) => (
+          {[0.9, 1.1, 1.0, 1.15, 0.85].map((heightMultiplier, i) => (
             <View
               key={i}
               style={[
                 iconStyles.fringeStrand,
                 {
                   width: tasselWidth * 0.3,
-                  height: tasselLength * (0.8 + Math.random() * 0.4),
+                  height: tasselLength * heightMultiplier,
                   backgroundColor: i % 2 === 0 ? BRAND_COLORS.gold : BRAND_COLORS.goldLight,
                   borderRadius: tasselWidth * 0.15,
                   marginHorizontal: tasselWidth * 0.05,

@@ -108,11 +108,11 @@ const TestCountdownWidget = ({
         </View>
         <View style={styles.countdownContent}>
           <Text style={[styles.countdownLabel, {color: colors.textSecondary}]}>
-            {daysUntil <= 7 ? '⚠️ Time is running out!' : daysUntil <= 30 ? '📅 Coming up soon!' : '✅ On track'}
+            {daysUntil <= 7 ? 'Time is running out!' : daysUntil <= 30 ? 'Coming up soon!' : 'On track'}
           </Text>
           <Text style={[styles.countdownDate, {color: colors.text}]}>{displayDate}</Text>
           {customDate && (
-            <Text style={[styles.customDateLabel, {color: urgencyColor}]}>📝 Custom date</Text>
+            <Text style={[styles.customDateLabel, {color: urgencyColor}]}>Custom date</Text>
           )}
         </View>
         <Icon name="pencil-outline" family="Ionicons" size={18} color={urgencyColor} />
@@ -726,7 +726,7 @@ const PremiumEntryTestsScreen = () => {
             />
 
             <Text style={[styles.dateHint, {color: colors.textSecondary}]}>
-              💡 Tip: Set your personal test date if official dates haven't been announced yet, or if you want to track a specific session.
+              Tip: Set your personal test date if official dates haven't been announced yet, or if you want to track a specific session.
             </Text>
 
             <View style={styles.dateModalButtons}>

@@ -23,6 +23,8 @@ import {supabase} from '../services/supabase';
 
 export type AuthProvider = 'google' | 'email' | 'guest';
 
+export type UserRole = 'user' | 'moderator' | 'content_editor' | 'admin' | 'super_admin';
+
 export interface UserProfile {
   id: string;
   email: string | null;
@@ -49,6 +51,10 @@ export interface UserProfile {
   favoriteScholarships: string[];
   favoritePrograms: string[];
   recentlyViewed: {id: string; type: string; viewedAt: string}[];
+  // Role-based access
+  role: UserRole;
+  isVerified: boolean;
+  isBanned: boolean;
 }
 
 export interface AuthState {
@@ -130,6 +136,10 @@ const DEFAULT_USER: UserProfile = {
   favoriteScholarships: [],
   favoritePrograms: [],
   recentlyViewed: [],
+  // Role defaults
+  role: 'user',
+  isVerified: false,
+  isBanned: false,
 };
 
 const DEFAULT_STATE: AuthState = {
@@ -208,9 +218,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const loadUserProfile = async (userId: string, provider: AuthProvider) => {
     try {
-      // Try to fetch from Supabase
+      // Try to fetch from Supabase 'profiles' table (matches database schema)
       const {data, error} = await supabase
-        .from('user_profiles')
+        .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
@@ -218,16 +228,54 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       let profile: UserProfile;
 
       if (data && !error) {
+        // Map database field names (snake_case) to app field names (camelCase)
         profile = {
           ...DEFAULT_USER,
-          ...data,
+          id: data.id,
+          email: data.email,
+          fullName: data.full_name || 'Student',
+          avatarUrl: data.avatar_url,
+          phone: data.phone,
+          city: data.city,
+          currentClass: data.current_class,
+          board: data.board,
+          school: data.school,
+          matricMarks: data.matric_marks,
+          interMarks: data.inter_marks,
+          entryTestScore: data.entry_test_score,
+          targetField: data.target_field,
+          targetUniversity: data.target_university,
+          interests: data.interests || [],
           provider,
           isGuest: false,
+          createdAt: data.created_at,
           lastLoginAt: new Date().toISOString(),
+          onboardingCompleted: data.onboarding_completed || false,
+          notificationsEnabled: data.notifications_enabled ?? true,
+          favoriteUniversities: data.favorite_universities || [],
+          favoriteScholarships: data.favorite_scholarships || [],
+          favoritePrograms: data.favorite_programs || [],
+          recentlyViewed: data.recently_viewed || [],
+          // Role-based fields from profiles table
+          role: data.role || 'user',
+          isVerified: data.is_verified || false,
+          isBanned: data.is_banned || false,
         };
+
+        // Update last login in database
+        await supabase
+          .from('profiles')
+          .update({
+            last_login_at: new Date().toISOString(),
+            login_count: (data.login_count || 0) + 1,
+          })
+          .eq('id', userId);
       } else {
-        // Create new profile
+        // Profile doesn't exist - the trigger should have created it on signup
+        // but if not, create one now
         const {data: authUser} = await supabase.auth.getUser();
+        const now = new Date().toISOString();
+        
         profile = {
           ...DEFAULT_USER,
           id: userId,
@@ -236,10 +284,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           avatarUrl: authUser?.user?.user_metadata?.avatar_url || null,
           provider,
           isGuest: false,
+          createdAt: now,
+          lastLoginAt: now,
+          role: authUser?.user?.user_metadata?.role || 'user',
         };
         
-        // Save to Supabase
-        await supabase.from('user_profiles').upsert(profile);
+        // Save to Supabase profiles table (using snake_case for database)
+        await supabase.from('profiles').upsert({
+          id: profile.id,
+          email: profile.email,
+          full_name: profile.fullName,
+          avatar_url: profile.avatarUrl,
+          role: profile.role,
+          created_at: now,
+          updated_at: now,
+          last_login_at: now,
+          login_count: 1,
+        });
       }
 
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
@@ -252,6 +313,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         isGuest: false,
         hasCompletedOnboarding: profile.onboardingCompleted,
       }));
+
+      console.log('[Auth] Profile loaded:', profile.email, 'Role:', profile.role);
     } catch (error) {
       console.error('Load profile error:', error);
       setState(prev => ({...prev, isLoading: false}));
@@ -347,6 +410,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       }
 
       if (data.user) {
+        const now = new Date().toISOString();
         // Create initial profile
         const profile: UserProfile = {
           ...DEFAULT_USER,
@@ -355,9 +419,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           fullName: name,
           provider: 'email',
           isGuest: false,
+          createdAt: now,
+          lastLoginAt: now,
         };
 
-        await supabase.from('user_profiles').insert(profile);
+        // Insert into 'profiles' table with snake_case field names
+        await supabase.from('profiles').upsert({
+          id: profile.id,
+          email: profile.email,
+          full_name: profile.fullName,
+          role: 'user',
+          created_at: now,
+          updated_at: now,
+          last_login_at: now,
+          login_count: 1,
+        });
+        
         await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
 
         setState(prev => ({
@@ -486,9 +563,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       // Update local storage
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(updatedProfile));
 
-      // Update Supabase if not guest
+      // Update Supabase if not guest - convert to snake_case for database
       if (!state.isGuest) {
-        await supabase.from('user_profiles').upsert(updatedProfile);
+        const dbUpdates: Record<string, any> = {
+          updated_at: new Date().toISOString(),
+        };
+        
+        // Map camelCase to snake_case for database
+        if (updates.fullName !== undefined) dbUpdates.full_name = updates.fullName;
+        if (updates.avatarUrl !== undefined) dbUpdates.avatar_url = updates.avatarUrl;
+        if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
+        if (updates.city !== undefined) dbUpdates.city = updates.city;
+        if (updates.currentClass !== undefined) dbUpdates.current_class = updates.currentClass;
+        if (updates.board !== undefined) dbUpdates.board = updates.board;
+        if (updates.school !== undefined) dbUpdates.school = updates.school;
+        if (updates.matricMarks !== undefined) dbUpdates.matric_marks = updates.matricMarks;
+        if (updates.interMarks !== undefined) dbUpdates.inter_marks = updates.interMarks;
+        if (updates.entryTestScore !== undefined) dbUpdates.entry_test_score = updates.entryTestScore;
+        if (updates.targetField !== undefined) dbUpdates.target_field = updates.targetField;
+        if (updates.targetUniversity !== undefined) dbUpdates.target_university = updates.targetUniversity;
+        if (updates.interests !== undefined) dbUpdates.interests = updates.interests;
+        if (updates.onboardingCompleted !== undefined) dbUpdates.onboarding_completed = updates.onboardingCompleted;
+        if (updates.notificationsEnabled !== undefined) dbUpdates.notifications_enabled = updates.notificationsEnabled;
+        if (updates.favoriteUniversities !== undefined) dbUpdates.favorite_universities = updates.favoriteUniversities;
+        if (updates.favoriteScholarships !== undefined) dbUpdates.favorite_scholarships = updates.favoriteScholarships;
+        if (updates.favoritePrograms !== undefined) dbUpdates.favorite_programs = updates.favoritePrograms;
+        if (updates.recentlyViewed !== undefined) dbUpdates.recently_viewed = updates.recentlyViewed;
+
+        await supabase
+          .from('profiles')
+          .update(dbUpdates)
+          .eq('id', state.user.id);
       }
 
       setState(prev => ({

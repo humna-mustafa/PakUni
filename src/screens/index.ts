@@ -35,6 +35,7 @@ export {default as SplashScreen} from './PremiumSplashScreen';
 export {default as NotificationsScreen} from './NotificationsScreen';
 export {default as FavoritesScreen} from './FavoritesScreen';
 export {default as SettingsScreen} from './SettingsScreen';
+export {default as ContactSupportScreen} from './ContactSupportScreen';
 
 // New Feature screens
 export {default as GuidesScreen} from './GuidesScreen';

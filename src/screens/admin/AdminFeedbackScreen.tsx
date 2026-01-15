@@ -37,10 +37,10 @@ try {
 }
 
 const CATEGORY_CONFIG: Record<FeedbackCategory, {label: string; icon: string; color: string}> = {
-  bug: {label: 'Bug', icon: 'bug-outline', color: '#EF4444'},
-  feature: {label: 'Feature', icon: 'bulb-outline', color: '#8B5CF6'},
+  bug: {label: 'Bug Report', icon: 'bug-outline', color: '#EF4444'},
+  feature: {label: 'Feature Request', icon: 'bulb-outline', color: '#8B5CF6'},
   improvement: {label: 'Improvement', icon: 'trending-up-outline', color: '#3B82F6'},
-  content: {label: 'Content', icon: 'document-text-outline', color: '#10B981'},
+  content: {label: 'Content/Resource', icon: 'document-attach-outline', color: '#10B981'},
   other: {label: 'Other', icon: 'chatbubble-outline', color: '#6B7280'},
 };
 
@@ -393,12 +393,115 @@ const AdminFeedbackScreen: React.FC = () => {
                     </View>
                   </View>
 
+                  {/* Metadata Details - Material/Content Specific */}
+                  {(selectedFeedback as any).metadata && (
+                    <View style={[styles.metadataBlock, {backgroundColor: colors.background}]}>
+                      <Text style={[styles.metadataTitle, {color: colors.text}]}>📋 Submission Details</Text>
+                      
+                      {(selectedFeedback as any).metadata.feedbackType && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Type:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.text}]}>
+                            {(selectedFeedback as any).metadata.feedbackType?.replace('_', ' ').toUpperCase()}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.severity && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Severity:</Text>
+                          <Text style={[
+                            styles.metadataValue, 
+                            {color: (selectedFeedback as any).metadata.severity === 'critical' ? '#EF4444' :
+                                   (selectedFeedback as any).metadata.severity === 'high' ? '#F97316' :
+                                   (selectedFeedback as any).metadata.severity === 'medium' ? '#F59E0B' : '#10B981'}
+                          ]}>
+                            {(selectedFeedback as any).metadata.severity?.toUpperCase()}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.contentType && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Content Type:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.text}]}>
+                            {(selectedFeedback as any).metadata.contentType?.replace('_', ' ')}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.materialType && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Material Type:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.text}]}>
+                            {(selectedFeedback as any).metadata.materialType?.replace('_', ' ')}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.universityName && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>University:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.text}]}>
+                            {(selectedFeedback as any).metadata.universityName}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.scholarshipName && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Scholarship:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.text}]}>
+                            {(selectedFeedback as any).metadata.scholarshipName}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.materialUrl && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Material URL:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.primary}]} numberOfLines={2}>
+                            {(selectedFeedback as any).metadata.materialUrl}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.wouldRecommend !== undefined && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Would Recommend:</Text>
+                          <Text style={[styles.metadataValue, {color: (selectedFeedback as any).metadata.wouldRecommend ? '#10B981' : '#EF4444'}]}>
+                            {(selectedFeedback as any).metadata.wouldRecommend ? '👍 Yes' : '👎 No'}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {(selectedFeedback as any).metadata.deviceInfo && (
+                        <View style={styles.metadataRow}>
+                          <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Device:</Text>
+                          <Text style={[styles.metadataValue, {color: colors.textSecondary}]}>
+                            {(selectedFeedback as any).metadata.deviceInfo} • v{(selectedFeedback as any).metadata.appVersion || '1.0.0'}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+
                   {/* Title */}
                   {selectedFeedback.title && (
                     <View style={styles.detailBlock}>
                       <Text style={[styles.detailLabel, {color: colors.textSecondary}]}>Title</Text>
                       <Text style={[styles.detailTitle, {color: colors.text}]}>
                         {selectedFeedback.title}
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Contact Email */}
+                  {selectedFeedback.contact_email && (
+                    <View style={styles.detailRow}>
+                      <Text style={[styles.detailLabel, {color: colors.textSecondary}]}>Contact Email</Text>
+                      <Text style={[styles.detailValue, {color: colors.primary}]}>
+                        {selectedFeedback.contact_email}
                       </Text>
                     </View>
                   )}
@@ -736,6 +839,30 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   categoryBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  metadataBlock: {
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+  },
+  metadataTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 12,
+  },
+  metadataRow: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  metadataLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    width: 100,
+  },
+  metadataValue: {
+    flex: 1,
     fontSize: 12,
     fontWeight: '600',
   },

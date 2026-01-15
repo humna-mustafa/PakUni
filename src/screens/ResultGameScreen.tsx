@@ -348,7 +348,7 @@ const ResultGameScreen: React.FC = () => {
                 </LinearGradient>
               </Animated.View>
               <Text style={[styles.loadingText, {color: colors.text}]}>
-                Consulting the stars... ✨
+                Consulting the stars...
               </Text>
               <Text style={[styles.loadingSubtext, {color: colors.textSecondary}]}>
                 Building suspense...
@@ -358,9 +358,12 @@ const ResultGameScreen: React.FC = () => {
             <>
               {/* Prediction Options */}
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, {color: colors.text}]}>
-                  🎯 Make Your Prediction
-                </Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+                  <Icon name="analytics-outline" size={24} color="#6366F1" />
+                  <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
+                    Make Your Prediction
+                  </Text>
+                </View>
                 <Text style={[styles.sectionSubtitle, {color: colors.textSecondary}]}>
                   What do you think your result will be?
                 </Text>
@@ -413,7 +416,10 @@ const ResultGameScreen: React.FC = () => {
 
           {/* Fun Facts */}
           <View style={[styles.factsCard, {backgroundColor: colors.card}]}>
-            <Text style={[styles.factsTitle, {color: colors.text}]}>💡 Did You Know?</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+              <Icon name="bulb-outline" size={20} color="#F59E0B" />
+              <Text style={[styles.factsTitle, {color: colors.text, marginLeft: 8}]}>Did You Know?</Text>
+            </View>
             <View style={styles.factItem}>
               <Icon name="bulb-outline" size={16} color="#F59E0B" />
               <Text style={[styles.factText, {color: colors.textSecondary}]}>

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 import {SPACING, FONTS} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS, ANIMATION, GRADIENTS, GLASS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
@@ -245,6 +246,7 @@ const ComparisonRow = ({
 
 const PremiumCompareScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
   const [selectedUniversities, setSelectedUniversities] = useState<
     (UniversityData | null)[]
   >([null, null, null]);
@@ -358,6 +360,14 @@ const PremiumCompareScreen = () => {
           style={styles.header}>
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />
+          
+          {/* Back Button */}
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          
           <View style={styles.headerIconContainer}>
             <Icon name="git-compare-outline" family="Ionicons" size={50} color="#FFFFFF" />
           </View>
@@ -606,6 +616,18 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  backBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerIconContainer: {
     marginBottom: SPACING.xs,
