@@ -105,12 +105,12 @@ export const CleanCard: React.FC<CleanCardProps> = memo(({
     
     Animated.parallel([
       Animated.spring(scaleAnim, {
-        toValue: 0.98,
+        toValue: 0.99,
         useNativeDriver: true,
         ...CLEAN_MOTION.spring.snappy,
       }),
       Animated.timing(opacityAnim, {
-        toValue: 0.85,
+        toValue: 0.9,
         duration: CLEAN_MOTION.duration.fast,
         useNativeDriver: true,
       }),

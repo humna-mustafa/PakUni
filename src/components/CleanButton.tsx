@@ -93,24 +93,24 @@ interface SizeConfig {
 
 const SIZE_CONFIGS: Record<ButtonSize, SizeConfig> = {
   sm: {
-    height: 36,
+    height: 34,
     paddingHorizontal: CLEAN_SPACING[3],
     fontSize: CLEAN_TYPOGRAPHY.size.sm,
     iconSize: 16,
     borderRadius: CLEAN_RADIUS.sm,
   },
   md: {
-    height: 44,
+    height: 42,
     paddingHorizontal: CLEAN_SPACING[4],
     fontSize: CLEAN_TYPOGRAPHY.size.base,
-    iconSize: 20,
+    iconSize: 18,
     borderRadius: CLEAN_RADIUS.sm,
   },
   lg: {
-    height: 52,
+    height: 48,
     paddingHorizontal: CLEAN_SPACING[6],
     fontSize: CLEAN_TYPOGRAPHY.size.md,
-    iconSize: 22,
+    iconSize: 20,
     borderRadius: CLEAN_RADIUS.md,
   },
 };
@@ -152,12 +152,12 @@ export const CleanButton: React.FC<CleanButtonProps> = memo(({
     
     Animated.parallel([
       Animated.spring(scaleAnim, {
-        toValue: 0.97,
+        toValue: 0.98,
         useNativeDriver: true,
         ...CLEAN_MOTION.spring.snappy,
       }),
       Animated.timing(opacityAnim, {
-        toValue: 0.85,
+        toValue: 0.9,
         duration: CLEAN_MOTION.duration.fast,
         useNativeDriver: true,
       }),

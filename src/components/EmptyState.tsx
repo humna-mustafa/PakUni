@@ -32,7 +32,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <View style={[styles.container, compact && styles.compact]}>
       <View style={[styles.iconContainer, compact && styles.iconCompact]}>
-        <Icon name={iconName} family="Ionicons" size={compact ? 40 : 64} color={colors.textSecondary} />
+        <Icon name={iconName} family="Ionicons" size={compact ? 36 : 56} color={colors.textSecondary} />
       </View>
       <Text style={[styles.title, compact && styles.titleCompact, {color: colors.text}]}>{title}</Text>
       {subtitle && <Text style={[styles.subtitle, {color: colors.textSecondary}]}>{subtitle}</Text>}
@@ -51,44 +51,47 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: SPACING.xxl,
+    padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
   },
   compact: {
-    padding: SPACING.lg,
+    padding: 20,
   },
   iconContainer: {
-    marginBottom: SPACING.md,
+    marginBottom: 14,
+    opacity: 0.5,
   },
   iconCompact: {
-    marginBottom: SPACING.sm,
+    marginBottom: 10,
   },
   title: {
-    fontSize: FONTS.sizes.lg,
+    fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: SPACING.xs,
+    marginBottom: 4,
+    letterSpacing: -0.2,
   },
   titleCompact: {
-    fontSize: FONTS.sizes.md,
+    fontSize: 15,
   },
   subtitle: {
-    fontSize: FONTS.sizes.md,
+    fontSize: 14,
     textAlign: 'center',
-    marginBottom: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    lineHeight: 22,
+    marginBottom: 14,
+    paddingHorizontal: 12,
+    lineHeight: 20,
+    opacity: 0.85,
   },
   actionButton: {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    borderRadius: BORDER_RADIUS.md,
-    marginTop: SPACING.sm,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 8,
   },
   actionText: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

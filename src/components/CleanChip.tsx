@@ -61,22 +61,22 @@ interface ChipSizeConfig {
 
 const CHIP_SIZES: Record<ChipSize, ChipSizeConfig> = {
   sm: {
-    height: 28,
+    height: 26,
     paddingHorizontal: CLEAN_SPACING[2],
     fontSize: CLEAN_TYPOGRAPHY.size.xs,
-    iconSize: 14,
+    iconSize: 13,
   },
   md: {
-    height: 34,
+    height: 32,
     paddingHorizontal: CLEAN_SPACING[3],
     fontSize: CLEAN_TYPOGRAPHY.size.sm,
-    iconSize: 16,
+    iconSize: 15,
   },
   lg: {
-    height: 40,
+    height: 38,
     paddingHorizontal: CLEAN_SPACING[4],
     fontSize: CLEAN_TYPOGRAPHY.size.base,
-    iconSize: 18,
+    iconSize: 17,
   },
 };
 
@@ -107,9 +107,10 @@ export const CleanChip: React.FC<CleanChipProps> = memo(({
 
   const handlePressIn = useCallback(() => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: 0.97,
       useNativeDriver: true,
-      ...CLEAN_MOTION.spring.snappy,
+      tension: 300,
+      friction: 20,
     }).start();
   }, [scaleAnim]);
 
@@ -117,7 +118,8 @@ export const CleanChip: React.FC<CleanChipProps> = memo(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      ...CLEAN_MOTION.spring.snappy,
+      tension: 300,
+      friction: 20,
     }).start();
   }, [scaleAnim]);
 

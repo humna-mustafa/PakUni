@@ -33,9 +33,9 @@ interface PremiumSearchBarProps {
 }
 
 const SIZE_CONFIG = {
-  sm: {height: 40, fontSize: TYPOGRAPHY.scale.subhead, iconSize: 16, padding: SPACING[3]},
-  md: {height: 48, fontSize: TYPOGRAPHY.scale.callout, iconSize: 18, padding: SPACING[4]},
-  lg: {height: 56, fontSize: TYPOGRAPHY.scale.body, iconSize: 20, padding: SPACING[5]},
+  sm: {height: 38, fontSize: TYPOGRAPHY.scale.subhead, iconSize: 15, padding: SPACING[3]},
+  md: {height: 44, fontSize: TYPOGRAPHY.scale.callout, iconSize: 17, padding: SPACING[4]},
+  lg: {height: 50, fontSize: TYPOGRAPHY.scale.body, iconSize: 19, padding: SPACING[5]},
 };
 
 export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
@@ -62,15 +62,16 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
   const handleFocus = useCallback(() => {
     setIsFocused(true);
     Animated.parallel([
-      Animated.spring(focusAnim, {
+      Animated.timing(focusAnim, {
         toValue: 1,
+        duration: 150,
         useNativeDriver: false,
-        ...ANIMATION.spring.snappy,
       }),
       Animated.spring(scaleAnim, {
-        toValue: 1.01,
+        toValue: 1.005,
         useNativeDriver: true,
-        ...ANIMATION.spring.gentle,
+        tension: 300,
+        friction: 20,
       }),
     ]).start();
     onFocus?.();
@@ -79,15 +80,16 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
   const handleBlur = useCallback(() => {
     setIsFocused(false);
     Animated.parallel([
-      Animated.spring(focusAnim, {
+      Animated.timing(focusAnim, {
         toValue: 0,
+        duration: 150,
         useNativeDriver: false,
-        ...ANIMATION.spring.snappy,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
         useNativeDriver: true,
-        ...ANIMATION.spring.gentle,
+        tension: 300,
+        friction: 20,
       }),
     ]).start();
     onBlur?.();

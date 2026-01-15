@@ -170,10 +170,10 @@ const NotificationItem = memo<NotificationItemProps>(({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
+      toValue: 0.99,
       useNativeDriver: true,
-      tension: 300,
-      friction: 10,
+      tension: 400,
+      friction: 20,
     }).start();
   };
 
@@ -181,8 +181,8 @@ const NotificationItem = memo<NotificationItemProps>(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 200,
-      friction: 8,
+      tension: 300,
+      friction: 15,
     }).start();
   };
 
@@ -585,19 +585,19 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
+    top: -1,
+    right: -1,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 4,
+    paddingHorizontal: 3,
   },
   badgeText: {
     color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: '700',
+    fontSize: 9,
+    fontWeight: '600',
   },
 
   // Dropdown Panel
@@ -606,14 +606,14 @@ const styles = StyleSheet.create({
   },
   backdropInner: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
   },
   panelContainer: {
     position: 'absolute',
     width: SCREEN_WIDTH - MODERN_SPACING.lg * 2,
-    maxWidth: 380,
-    maxHeight: SCREEN_HEIGHT * 0.6,
-    borderRadius: MODERN_RADIUS.xl,
+    maxWidth: 360,
+    maxHeight: SCREEN_HEIGHT * 0.55,
+    borderRadius: 14,
     overflow: 'hidden',
   },
   panelHeader: {
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: MODERN_SPACING.lg,
-    paddingVertical: MODERN_SPACING.md,
+    paddingVertical: MODERN_SPACING.md - 2,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   panelTitleRow: {
@@ -630,37 +630,37 @@ const styles = StyleSheet.create({
     gap: MODERN_SPACING.sm,
   },
   panelTitle: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '600',
   },
   unreadBadge: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    borderRadius: 10,
+    borderRadius: 8,
   },
   unreadBadgeText: {
     color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  clearAllText: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.sm,
+    fontSize: 10,
     fontWeight: '600',
   },
+  clearAllText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
   notificationList: {
-    maxHeight: SCREEN_HEIGHT * 0.4,
+    maxHeight: SCREEN_HEIGHT * 0.38,
   },
   panelFooter: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: MODERN_SPACING.md,
+    paddingVertical: MODERN_SPACING.md - 2,
     borderTopWidth: StyleSheet.hairlineWidth,
     gap: MODERN_SPACING.xs,
   },
   seeAllText: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '500',
   },
 
   // Notification Item
@@ -668,13 +668,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: MODERN_SPACING.lg,
-    paddingVertical: MODERN_SPACING.md,
+    paddingVertical: MODERN_SPACING.md - 2,
     gap: MODERN_SPACING.sm,
   },
   notificationIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -684,25 +684,25 @@ const styles = StyleSheet.create({
   notificationHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
   },
   notificationTitle: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.sm,
+    fontSize: 14,
     flex: 1,
   },
   unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   notificationMessage: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.xs,
+    fontSize: 12,
     marginTop: 2,
     lineHeight: 16,
   },
   notificationTime: {
-    fontSize: 11,
-    marginTop: 4,
+    fontSize: 10,
+    marginTop: 3,
   },
 
   // Empty State
@@ -712,16 +712,16 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: MODERN_SPACING.xl * 2,
+    paddingVertical: MODERN_SPACING.xl * 1.5,
   },
   emptyTitle: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.md,
+    fontSize: 15,
     fontWeight: '600',
     marginTop: MODERN_SPACING.md,
   },
   emptyMessage: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.sm,
-    marginTop: MODERN_SPACING.xs,
+    fontSize: 13,
+    marginTop: 4,
   },
 });
 

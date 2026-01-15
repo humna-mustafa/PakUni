@@ -22,19 +22,19 @@ interface BadgeProps {
 }
 
 const VARIANT_COLORS: Record<BadgeVariant, {bg: string; text: string; border: string}> = {
-  default: {bg: COLORS.gray200, text: COLORS.gray700, border: COLORS.gray300},
-  success: {bg: '#E8F5E9', text: '#2E7D32', border: '#81C784'},
-  warning: {bg: '#FFF3E0', text: '#E65100', border: '#FFB74D'},
-  error: {bg: '#FFEBEE', text: '#C62828', border: '#EF5350'},
-  info: {bg: '#E3F2FD', text: '#1565C0', border: '#64B5F6'},
-  primary: {bg: COLORS.primaryLight, text: COLORS.primaryDark, border: COLORS.primary},
-  secondary: {bg: '#E0F2F1', text: COLORS.secondary, border: COLORS.secondary},
+  default: {bg: '#F4F4F5', text: '#52525B', border: '#E4E4E7'},
+  success: {bg: '#ECFDF5', text: '#047857', border: '#A7F3D0'},
+  warning: {bg: '#FFFBEB', text: '#B45309', border: '#FDE68A'},
+  error: {bg: '#FEF2F2', text: '#B91C1C', border: '#FECACA'},
+  info: {bg: '#EFF6FF', text: '#1D4ED8', border: '#BFDBFE'},
+  primary: {bg: '#EEF2FF', text: '#4338CA', border: '#C7D2FE'},
+  secondary: {bg: '#F0FDFA', text: '#0F766E', border: '#99F6E4'},
 };
 
 const SIZE_STYLES: Record<BadgeSize, {paddingH: number; paddingV: number; fontSize: number}> = {
-  sm: {paddingH: SPACING.xs, paddingV: 2, fontSize: FONTS.sizes.xs - 1},
-  md: {paddingH: SPACING.sm, paddingV: SPACING.xs, fontSize: FONTS.sizes.xs},
-  lg: {paddingH: SPACING.md, paddingV: SPACING.sm, fontSize: FONTS.sizes.sm},
+  sm: {paddingH: 6, paddingV: 2, fontSize: 10},
+  md: {paddingH: 8, paddingV: 3, fontSize: 11},
+  lg: {paddingH: 10, paddingV: 4, fontSize: 12},
 };
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   icon: {
-    marginRight: 4,
-    fontSize: 12,
+    marginRight: 3,
+    fontSize: 11,
   },
   text: {
-    fontWeight: '600',
+    fontWeight: '500',
     textTransform: 'capitalize',
   },
 });

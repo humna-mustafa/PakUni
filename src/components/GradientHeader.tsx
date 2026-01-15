@@ -73,20 +73,20 @@ export const GradientHeader: React.FC<GradientHeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    paddingBottom: SPACING.lg,
-    paddingHorizontal: SPACING.md,
+    paddingBottom: 20,
+    paddingHorizontal: 16,
   },
   compact: {
-    paddingBottom: SPACING.md,
+    paddingBottom: 14,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: SPACING.sm,
+    marginTop: 8,
   },
   leftSection: {
-    width: 44,
+    width: 40,
     alignItems: 'flex-start',
   },
   centerSection: {
@@ -94,29 +94,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightSection: {
-    width: 44,
+    width: 40,
     alignItems: 'flex-end',
   },
   iconButton: {
-    padding: SPACING.xs,
+    padding: 4,
   },
   iconText: {
-    fontSize: 24,
+    fontSize: 22,
     color: COLORS.white,
   },
   title: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
     color: COLORS.white,
     textAlign: 'center',
+    letterSpacing: -0.2,
   },
   titleCompact: {
-    fontSize: FONTS.sizes.lg,
+    fontSize: 17,
   },
   subtitle: {
-    fontSize: FONTS.sizes.sm,
-    color: 'rgba(255, 255, 255, 0.8)',
-    marginTop: 4,
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.75)',
+    marginTop: 3,
     textAlign: 'center',
   },
 });

@@ -409,21 +409,15 @@ const AuthScreen: React.FC = () => {
 
       {/* Login Button */}
       <TouchableOpacity
-        style={styles.primaryButton}
+        style={[styles.primaryButton, styles.primaryGradient, {backgroundColor: colors.primary}]}
         onPress={handleEmailLogin}
-        activeOpacity={0.9}
+        activeOpacity={0.85}
         disabled={isLoading || localLoading === 'email'}>
-        <LinearGradient
-          colors={[colors.primary, '#4F46E5']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.primaryGradient}>
-          {localLoading === 'email' ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          ) : (
-            <Text style={styles.primaryButtonText}>Sign In</Text>
-          )}
-        </LinearGradient>
+        {localLoading === 'email' ? (
+          <ActivityIndicator size="small" color="#FFFFFF" />
+        ) : (
+          <Text style={styles.primaryButtonText}>Sign In</Text>
+        )}
       </TouchableOpacity>
 
       {/* Sign Up Link */}
@@ -548,21 +542,15 @@ const AuthScreen: React.FC = () => {
 
       {/* Sign Up Button */}
       <TouchableOpacity
-        style={styles.primaryButton}
+        style={[styles.primaryButton, styles.primaryGradient, {backgroundColor: colors.primary}]}
         onPress={handleEmailSignUp}
-        activeOpacity={0.9}
+        activeOpacity={0.85}
         disabled={isLoading || localLoading === 'signup'}>
-        <LinearGradient
-          colors={[colors.primary, '#4F46E5']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.primaryGradient}>
-          {localLoading === 'signup' ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          ) : (
-            <Text style={styles.primaryButtonText}>Create Account</Text>
-          )}
-        </LinearGradient>
+        {localLoading === 'signup' ? (
+          <ActivityIndicator size="small" color="#FFFFFF" />
+        ) : (
+          <Text style={styles.primaryButtonText}>Create Account</Text>
+        )}
       </TouchableOpacity>
 
       {/* Login Link */}
@@ -615,21 +603,15 @@ const AuthScreen: React.FC = () => {
 
       {/* Reset Button */}
       <TouchableOpacity
-        style={styles.primaryButton}
+        style={[styles.primaryButton, styles.primaryGradient, {backgroundColor: colors.primary}]}
         onPress={handleForgotPassword}
-        activeOpacity={0.9}
+        activeOpacity={0.85}
         disabled={localLoading === 'forgot'}>
-        <LinearGradient
-          colors={[colors.primary, '#4F46E5']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.primaryGradient}>
-          {localLoading === 'forgot' ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          ) : (
-            <Text style={styles.primaryButtonText}>Send Reset Link</Text>
-          )}
-        </LinearGradient>
+        {localLoading === 'forgot' ? (
+          <ActivityIndicator size="small" color="#FFFFFF" />
+        ) : (
+          <Text style={styles.primaryButtonText}>Send Reset Link</Text>
+        )}
       </TouchableOpacity>
 
       {/* Back to Login */}
@@ -665,13 +647,13 @@ const AuthScreen: React.FC = () => {
                 styles.logoSection,
                 {transform: [{scale: logoScale}]},
               ]}>
-              <LinearGradient
-                colors={[colors.primary, '#4F46E5']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
-                style={styles.logoContainer}>
-                <Icon name="school" family="Ionicons" size={40} color="#FFFFFF" />
-              </LinearGradient>
+              <View
+                style={[
+                  styles.logoContainer,
+                  {backgroundColor: colors.primary},
+                ]}>
+                <Icon name="school" family="Ionicons" size={36} color="#FFFFFF" />
+              </View>
               <Text style={[styles.logoText, {color: colors.text}]}>PakUni</Text>
               <Text style={[styles.logoSubtext, {color: colors.textSecondary}]}>
                 Your University Guide
@@ -711,35 +693,36 @@ const styles = StyleSheet.create({
   logoSection: {
     alignItems: 'center',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 40 : 20,
-    paddingBottom: 32,
+    paddingBottom: 28,
   },
   logoContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
+    width: 72,
+    height: 72,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 14,
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
-        shadowOffset: {width: 0, height: 8},
-        shadowOpacity: 0.3,
-        shadowRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.12,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 8,
+        elevation: 4,
       },
     }),
   },
   logoText: {
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: -0.5,
+    fontSize: 26,
+    fontWeight: '700',
+    letterSpacing: -0.3,
   },
   logoSubtext: {
-    fontSize: 14,
+    fontSize: 13,
     marginTop: 4,
+    fontWeight: '400',
   },
   contentContainer: {
     flex: 1,
@@ -750,44 +733,44 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   welcomeTitle: {
-    fontSize: 26,
-    fontWeight: '800',
+    fontSize: 24,
+    fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: -0.5,
+    marginBottom: 10,
+    letterSpacing: -0.3,
   },
   welcomeSubtitle: {
-    fontSize: 15,
+    fontSize: 14,
     textAlign: 'center',
-    lineHeight: 22,
-    maxWidth: 300,
+    lineHeight: 21,
+    maxWidth: 280,
   },
   authOptions: {
-    gap: 12,
+    gap: 10,
     marginBottom: 24,
   },
   socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 14,
-    gap: 12,
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 10,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 2,
+        elevation: 1,
       },
     }),
   },
   socialButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '500',
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -806,91 +789,91 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 14,
-    borderWidth: 1.5,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
     gap: 8,
   },
   guestButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
   },
   termsText: {
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 17,
   },
   termsLink: {
-    fontWeight: '600',
+    fontWeight: '500',
   },
   formContainer: {
     flex: 1,
   },
   backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   formTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    marginBottom: 8,
-    letterSpacing: -0.5,
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 6,
+    letterSpacing: -0.3,
   },
   formSubtitle: {
-    fontSize: 15,
-    marginBottom: 32,
-    lineHeight: 22,
+    fontSize: 14,
+    marginBottom: 28,
+    lineHeight: 21,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 2,
+    borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 16,
-    gap: 12,
+    marginBottom: 14,
+    gap: 10,
   },
   input: {
     flex: 1,
-    paddingVertical: 14,
+    paddingVertical: 12,
     fontSize: 15,
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: 24,
-  },
-  forgotText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  primaryButton: {
     marginBottom: 20,
   },
+  forgotText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  primaryButton: {
+    marginBottom: 18,
+  },
   primaryGradient: {
-    paddingVertical: 16,
-    borderRadius: 14,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
-        shadowOffset: {width: 0, height: 6},
-        shadowOpacity: 0.35,
-        shadowRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 6,
+        elevation: 3,
       },
     }),
   },
   primaryButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
   },
   switchContainer: {
     flexDirection: 'row',
@@ -898,19 +881,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   switchText: {
-    fontSize: 14,
+    fontSize: 13,
   },
   switchLink: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
   },
   backToLoginButton: {
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 14,
   },
   backToLoginText: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 
