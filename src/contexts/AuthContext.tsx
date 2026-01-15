@@ -271,10 +271,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           })
           .eq('id', userId);
       } else {
-        // Profile doesn't exist - the trigger should have created it on signup
-        // but if not, create one now
+        // Profile doesn't exist - create one now
         const {data: authUser} = await supabase.auth.getUser();
         const now = new Date().toISOString();
+        
+        console.log('[Auth] Creating missing profile for user:', userId);
         
         profile = {
           ...DEFAULT_USER,
@@ -284,23 +285,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           avatarUrl: authUser?.user?.user_metadata?.avatar_url || null,
           provider,
           isGuest: false,
+          isVerified: !!authUser?.user?.confirmed_at,  // ✅ Add verification check
+          isBanned: false,
           createdAt: now,
           lastLoginAt: now,
           role: authUser?.user?.user_metadata?.role || 'user',
         };
         
         // Save to Supabase profiles table (using snake_case for database)
-        await supabase.from('profiles').upsert({
+        const {error: createError} = await supabase.from('profiles').upsert({
           id: profile.id,
           email: profile.email,
           full_name: profile.fullName,
           avatar_url: profile.avatarUrl,
           role: profile.role,
+          is_verified: profile.isVerified,  // ✅ Add verification status
+          is_banned: profile.isBanned,      // ✅ Add ban status
           created_at: now,
           updated_at: now,
           last_login_at: now,
           login_count: 1,
         });
+
+        if (createError) {
+          console.error('[Auth] Failed to create profile:', createError);
+          throw createError;
+        }
+
+        console.log('[Auth] Profile created successfully for:', profile.email);
       }
 
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
@@ -371,6 +383,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       }
 
       if (data.user) {
+        // Check if user email is confirmed
+        if (!data.user.confirmed_at) {
+          throw new Error(
+            'Email not verified. Please check your inbox for the verification link.'
+          );
+        }
+
         await loadUserProfile(data.user.id, 'email');
         return true;
       }
@@ -411,7 +430,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       if (data.user) {
         const now = new Date().toISOString();
-        // Create initial profile
+        
+        // Create profile with all required fields
+        const {error: profileError} = await supabase.from('profiles').upsert({
+          id: data.user.id,
+          email: data.user.email || null,
+          full_name: name,
+          role: 'user',
+          is_verified: !!data.user.confirmed_at,  // ✅ Add verification status
+          is_banned: false,                         // ✅ Add ban status
+          avatar_url: null,                         // ✅ Add avatar field
+          created_at: now,
+          updated_at: now,
+          last_login_at: now,
+          login_count: 1,
+        });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          throw new Error(`Failed to create profile: ${profileError.message}`);
+        }
+
+        // Create initial profile object
         const profile: UserProfile = {
           ...DEFAULT_USER,
           id: data.user.id,
@@ -419,21 +459,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           fullName: name,
           provider: 'email',
           isGuest: false,
+          isVerified: !!data.user.confirmed_at,
+          isBanned: false,
           createdAt: now,
           lastLoginAt: now,
         };
-
-        // Insert into 'profiles' table with snake_case field names
-        await supabase.from('profiles').upsert({
-          id: profile.id,
-          email: profile.email,
-          full_name: profile.fullName,
-          role: 'user',
-          created_at: now,
-          updated_at: now,
-          last_login_at: now,
-          login_count: 1,
-        });
         
         await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
 
@@ -448,7 +478,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         return true;
       }
 
-      return false;
+      throw new Error('User creation failed: No user returned');
     } catch (error: any) {
       console.error('Email sign-up error:', error);
       setState(prev => ({
