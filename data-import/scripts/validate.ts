@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import csv from 'csv-parse';
+import { parse } from 'csv-parse';
 
 interface ValidationResult {
   valid: boolean;
@@ -175,8 +175,8 @@ class DataValidator {
       const rows: any[] = [];
       await new Promise((resolve, reject) => {
         fs.createReadStream(filePath)
-          .pipe(csv.parse({ columns: true }))
-          .on('data', (row) => rows.push(row))
+          .pipe(parse({ columns: true }))
+          .on('data', (row: any) => rows.push(row))
           .on('error', reject)
           .on('end', resolve);
       });

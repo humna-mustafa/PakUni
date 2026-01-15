@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import csv from 'csv-parse';
+import { parse } from 'csv-parse';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -209,8 +209,8 @@ class DataImporter {
       const rows: UniversityCsvRow[] = [];
       await new Promise((resolve, reject) => {
         fs.createReadStream(filePath)
-          .pipe(csv.parse({ columns: true }))
-          .on('data', (row) => rows.push(row))
+          .pipe(parse({ columns: true }))
+          .on('data', (row: UniversityCsvRow) => rows.push(row))
           .on('error', reject)
           .on('end', resolve);
       });
