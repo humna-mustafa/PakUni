@@ -1,0 +1,17 @@
+-- Migration: University Logos (DEPRECATED - NOT NEEDED)
+-- ============================================================
+-- 
+-- NOTE: This migration is NO LONGER USED.
+-- 
+-- University logos are now loaded from direct URLs (Wikipedia, 
+-- university websites) instead of Supabase Storage to avoid:
+-- - Egress bandwidth costs
+-- - API rate limits  
+-- - Storage management overhead
+--
+-- Logo URLs are defined in: src/utils/universityLogos.ts
+--
+-- This file is kept for historical reference only.
+-- ============================================================
+
+-- No migration needed - logos loaded from external URLs

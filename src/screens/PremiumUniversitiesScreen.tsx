@@ -1,0 +1,1000 @@
+import React, {useState, useMemo, useCallback, useRef, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  Dimensions,
+  Animated,
+  StatusBar,
+  Platform,
+  RefreshControl,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import LinearGradient from 'react-native-linear-gradient';
+import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
+import {useTheme} from '../contexts/ThemeContext';
+import {RootStackParamList} from '../navigation/AppNavigator';
+import {UNIVERSITIES, PROVINCES} from '../data';
+import type {UniversityData} from '../data';
+import {useDebouncedValue} from '../hooks/useDebounce';
+import {Haptics} from '../utils/haptics';
+import {Icon} from '../components/icons';
+import UniversityLogo from '../components/UniversityLogo';
+import {analytics} from '../services/analytics';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+const {width} = Dimensions.get('window');
+
+const SORT_OPTIONS = [
+  {value: 'ranking', label: 'Ranking', iconName: 'trophy-outline'},
+  {value: 'name', label: 'Name', iconName: 'text-outline'},
+  {value: 'established', label: 'Oldest', iconName: 'calendar-outline'},
+];
+
+// Animated Search Bar Component
+const AnimatedSearchBar = ({
+  value,
+  onChangeText,
+  onClear,
+  colors,
+  isDark,
+}: {
+  value: string;
+  onChangeText: (text: string) => void;
+  onClear: () => void;
+  colors: any;
+  isDark: boolean;
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const focusAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.spring(focusAnim, {
+      toValue: isFocused ? 1 : 0,
+      ...ANIMATION.spring.gentle,
+      useNativeDriver: false,
+    }).start();
+  }, [isFocused]);
+
+  const borderColor = focusAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.border, colors.primary],
+  });
+
+  const shadowOpacity = focusAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.15],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.searchBar,
+        {
+          backgroundColor: colors.card,
+          borderColor,
+          shadowColor: colors.primary,
+          shadowOpacity,
+        },
+      ]}>
+      <Icon name="search-outline" family="Ionicons" size={20} color={colors.textSecondary} />
+      <TextInput
+        style={[styles.searchInput, {color: colors.text}]}
+        placeholder="Search universities, cities..."
+        placeholderTextColor={colors.textSecondary}
+        value={value}
+        onChangeText={onChangeText}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
+      {value.length > 0 && (
+        <TouchableOpacity onPress={onClear} style={styles.clearButton}>
+          <View style={[styles.clearCircle, {backgroundColor: colors.textSecondary + '30'}]}>
+            <Icon name="close" family="Ionicons" size={14} color={colors.textSecondary} />
+          </View>
+        </TouchableOpacity>
+      )}
+    </Animated.View>
+  );
+};
+
+// Filter Chip Component
+const FilterChip = ({
+  label,
+  isSelected,
+  onPress,
+  colors,
+  variant = 'default',
+}: {
+  label: string;
+  isSelected: boolean;
+  onPress: () => void;
+  colors: any;
+  variant?: 'default' | 'primary' | 'secondary';
+}) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.95,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const getColors = () => {
+    if (!isSelected) {
+      return {
+        bg: colors.card,
+        text: colors.text,
+        border: colors.border,
+      };
+    }
+    switch (variant) {
+      case 'primary':
+        return {
+          bg: colors.primary,
+          text: '#FFFFFF',
+          border: colors.primary,
+        };
+      case 'secondary':
+        return {
+          bg: colors.secondary,
+          text: '#FFFFFF',
+          border: colors.secondary,
+        };
+      default:
+        return {
+          bg: `${colors.primary}15`,
+          text: colors.primary,
+          border: colors.primary,
+        };
+    }
+  };
+
+  const chipColors = getColors();
+
+  return (
+    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={`${label} filter${isSelected ? ', selected' : ''}`}
+        accessibilityState={{selected: isSelected}}
+        style={[
+          styles.filterChip,
+          {
+            backgroundColor: chipColors.bg,
+            borderColor: chipColors.border,
+          },
+        ]}>
+        <Text
+          style={[
+            styles.filterChipText,
+            {
+              color: chipColors.text,
+              fontWeight: isSelected ? '600' : '500',
+            },
+          ]}>
+          {label}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+// University Card Component
+const UniversityCard = ({
+  item,
+  onPress,
+  colors,
+  isDark,
+  index,
+}: {
+  item: UniversityData;
+  onPress: () => void;
+  colors: any;
+  isDark: boolean;
+  index: number;
+}) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 50,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        delay: index * 50,
+        ...ANIMATION.spring.gentle,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.98,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const getRankColor = (rank: number | undefined) => {
+    if (!rank) return [colors.primary, colors.primaryLight];
+    if (rank === 1) return ['#FFD700', '#FFA500'];
+    if (rank === 2) return ['#C0C0C0', '#A0A0A0'];
+    if (rank === 3) return ['#CD7F32', '#8B4513'];
+    if (rank <= 10) return [colors.primary, colors.secondary];
+    return [colors.primary, colors.primaryLight];
+  };
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{scale: scaleAnim}, {translateY: slideAnim}],
+        },
+      ]}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name}, ${item.type} university in ${item.city}${item.ranking_national ? `, ranked number ${item.ranking_national} nationally` : ''}`}
+        accessibilityHint="Double tap to view university details">
+        <View style={[styles.universityCard, {backgroundColor: colors.card}]}>
+          {/* Header Row */}
+          <View style={styles.cardHeader}>
+            {/* Logo - Using UniversityLogo for static Supabase storage */}
+            <UniversityLogo
+              shortName={item.short_name}
+              universityName={item.name}
+              size={56}
+              borderRadius={12}
+              style={styles.logoContainer}
+            />
+
+            {/* Info */}
+            <View style={styles.headerInfo}>
+              <Text style={[styles.universityName, {color: colors.text}]} numberOfLines={2}>
+                {item.name}
+              </Text>
+              <View style={styles.shortNameRow}>
+                <Text style={[styles.shortName, {color: colors.textSecondary}]}>
+                  {item.short_name}
+                </Text>
+                {item.is_hec_recognized && (
+                  <View style={[styles.hecBadge, {backgroundColor: `${colors.success}15`, flexDirection: 'row', alignItems: 'center', gap: 3}]}>
+                    <Icon name="checkmark-circle" family="Ionicons" size={12} color={colors.success} />
+                    <Text style={[styles.hecText, {color: colors.success}]}>HEC</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+
+            {/* Rank Badge */}
+            {item.ranking_national && (
+              <LinearGradient
+                colors={getRankColor(item.ranking_national)}
+                style={styles.rankBadge}>
+                <Text style={styles.rankText}>#{item.ranking_national}</Text>
+              </LinearGradient>
+            )}
+          </View>
+
+          {/* Details Section */}
+          <View style={[styles.cardDetails, {borderTopColor: `${colors.border}`}]}>
+            <View style={styles.detailItem}>
+              <Icon name="location-outline" family="Ionicons" size={14} color={colors.textSecondary} />
+              <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+                {item.city}
+              </Text>
+            </View>
+            <View style={styles.detailDivider} />
+            <View style={styles.detailItem}>
+              <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.textSecondary} />
+              <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+                Est. {item.established_year}
+              </Text>
+            </View>
+            {item.campuses.length > 1 && (
+              <>
+                <View style={styles.detailDivider} />
+                <View style={styles.detailItem}>
+                  <Icon name="business-outline" family="Ionicons" size={14} color={colors.textSecondary} />
+                  <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+                    {item.campuses.length} Campuses
+                  </Text>
+                </View>
+              </>
+            )}
+          </View>
+
+          {/* Footer Badges */}
+          <View style={styles.cardFooter}>
+            <View
+              style={[
+                styles.typeBadge,
+                {
+                  backgroundColor: item.type === 'public' 
+                    ? `${colors.success}12` 
+                    : `${colors.primary}12`,
+                },
+              ]}>
+              <View
+                style={[
+                  styles.typeDot,
+                  {
+                    backgroundColor: item.type === 'public' ? colors.success : colors.primary,
+                  },
+                ]}
+              />
+              <Text
+                style={[
+                  styles.typeText,
+                  {color: item.type === 'public' ? colors.success : colors.primary},
+                ]}>
+                {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+              </Text>
+            </View>
+
+          <View style={styles.viewMore} accessibilityElementsHidden>
+              <Text style={[styles.viewMoreText, {color: colors.primary}]}>View Details</Text>
+              <Icon name="chevron-forward" family="Ionicons" size={16} color={colors.primary} />
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+const PremiumUniversitiesScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+  const {colors, isDark} = useTheme();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState('all');
+  const [selectedType, setSelectedType] = useState<'all' | 'public' | 'private'>('all');
+  const [sortBy, setSortBy] = useState('ranking');
+  const [refreshing, setRefreshing] = useState(false);
+  const headerAnim = useRef(new Animated.Value(0)).current;
+
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+
+  // Track search queries for analytics
+  useEffect(() => {
+    if (debouncedSearchQuery.trim().length >= 2) {
+      // Track search after debounce
+      analytics.trackSearch(debouncedSearchQuery.trim(), undefined, 'universities');
+    }
+  }, [debouncedSearchQuery]);
+
+  // Pull to refresh handler
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    Haptics.refreshThreshold();
+    // Simulate data refresh (in real app, this would fetch from API)
+    await new Promise<void>(resolve => setTimeout(() => resolve(), 800));
+    setRefreshing(false);
+    Haptics.success();
+  }, []);
+
+  // FlatList optimization: getItemLayout for fixed height items
+  const ITEM_HEIGHT = 180; // Approximate card height
+  const getItemLayout = useCallback(
+    (_data: ArrayLike<UniversityData> | null | undefined, index: number) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }),
+    [],
+  );
+
+  const filteredUniversities = useMemo(() => {
+    let result = [...UNIVERSITIES];
+
+    // Search filter - use debounced query
+    if (debouncedSearchQuery.trim()) {
+      const query = debouncedSearchQuery.toLowerCase();
+      result = result.filter(
+        u =>
+          u.name.toLowerCase().includes(query) ||
+          u.short_name.toLowerCase().includes(query) ||
+          u.city.toLowerCase().includes(query),
+      );
+    }
+
+    // Province filter
+    if (selectedProvince !== 'all') {
+      result = result.filter(u => u.province === selectedProvince);
+    }
+
+    // Type filter
+    if (selectedType !== 'all') {
+      result = result.filter(u => u.type === selectedType);
+    }
+
+    // Sorting
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case 'ranking':
+          return (a.ranking_national || 999) - (b.ranking_national || 999);
+        case 'established':
+          return a.established_year - b.established_year;
+        case 'name':
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+
+    return result;
+  }, [searchQuery, selectedProvince, selectedType, sortBy]);
+
+  const handleUniversityPress = useCallback(
+    (university: UniversityData) => {
+      navigation.navigate('UniversityDetail', {universityId: university.short_name});
+    },
+    [navigation],
+  );
+
+  const renderHeader = () => (
+    <View style={styles.listHeader}>
+      {/* Header Title with Gradient */}
+      <LinearGradient
+        colors={isDark ? ['#0F172A', '#1E3A5F', '#10B981'] : ['#10B981', '#059669', '#047857']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={styles.headerGradient}>
+        <View style={styles.headerDecoCircle1} />
+        <View style={styles.headerDecoCircle2} />
+        <View style={styles.headerContent}>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.screenTitle}>Universities</Text>
+            <Text style={styles.screenSubtitle}>
+              Explore 200+ Pakistani institutions
+            </Text>
+          </View>
+          <View style={styles.countBadge}>
+            <Text style={styles.countText}>
+              {filteredUniversities.length}
+            </Text>
+          </View>
+        </View>
+      </LinearGradient>
+
+      {/* Search Bar */}
+      <AnimatedSearchBar
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onClear={() => setSearchQuery('')}
+        colors={colors}
+        isDark={isDark}
+      />
+
+      {/* Sort Options */}
+      <View style={styles.sortSection}>
+        <Text style={[styles.sortLabel, {color: colors.textSecondary}]}>Sort by</Text>
+        <View style={styles.sortOptions}>
+          {SORT_OPTIONS.map(opt => (
+            <FilterChip
+              key={opt.value}
+              label={opt.label}
+              isSelected={sortBy === opt.value}
+              onPress={() => setSortBy(opt.value)}
+              colors={colors}
+            />
+          ))}
+        </View>
+      </View>
+
+      {/* Province Filter */}
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={PROVINCES}
+        keyExtractor={item => item.value}
+        style={styles.provinceList}
+        contentContainerStyle={styles.provinceListContent}
+        renderItem={({item}) => (
+          <FilterChip
+            label={item.label}
+            isSelected={selectedProvince === item.value}
+            onPress={() => setSelectedProvince(item.value)}
+            colors={colors}
+            variant="primary"
+          />
+        )}
+      />
+
+      {/* Type Filter */}
+      <View style={styles.typeFilter}>
+        {(['all', 'public', 'private'] as const).map(type => (
+          <TouchableOpacity
+            key={type}
+            style={[
+              styles.typeBtn,
+              {
+                backgroundColor: selectedType === type 
+                  ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
+                  : colors.card,
+                borderColor: selectedType === type 
+                  ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
+                  : colors.border,
+              },
+            ]}
+            onPress={() => setSelectedType(type)}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <Icon 
+                name={type === 'all' ? 'school-outline' : type === 'public' ? 'business-outline' : 'briefcase-outline'} 
+                family="Ionicons" 
+                size={14} 
+                color={selectedType === type ? '#FFFFFF' : colors.text} 
+              />
+              <Text
+                style={[
+                  styles.typeBtnText,
+                  {
+                    color: selectedType === type ? '#FFFFFF' : colors.text,
+                    fontWeight: selectedType === type ? '700' : '500',
+                  },
+                ]}>
+                {type === 'all' ? 'All' : type === 'public' ? 'Public' : 'Private'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+
+  const renderUniversityCard = useCallback(
+    ({item, index}: {item: UniversityData; index: number}) => (
+      <UniversityCard
+        item={item}
+        onPress={() => handleUniversityPress(item)}
+        colors={colors}
+        isDark={isDark}
+        index={index}
+      />
+    ),
+    [handleUniversityPress, colors, isDark],
+  );
+
+  return (
+    <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor="transparent"
+        translucent
+      />
+      
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <FlatList
+          data={filteredUniversities}
+          keyExtractor={item => item.short_name}
+          renderItem={renderUniversityCard}
+          ListHeaderComponent={renderHeader}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={8}
+          maxToRenderPerBatch={10}
+          windowSize={5}
+          removeClippedSubviews={Platform.OS === 'android'}
+          getItemLayout={getItemLayout}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              progressBackgroundColor={colors.card}
+            />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <View style={[styles.emptyIconBg, {backgroundColor: `${colors.primary}10`}]}>
+                <Icon name="school-outline" family="Ionicons" size={48} color={colors.primary} />
+              </View>
+              <Text style={[styles.emptyTitle, {color: colors.text}]}>
+                No universities found
+              </Text>
+              <Text style={[styles.emptySubtitle, {color: colors.textSecondary}]}>
+                Try adjusting your filters or search query
+              </Text>
+              <TouchableOpacity
+                style={[styles.resetBtn, {backgroundColor: colors.primary}]}
+                onPress={() => {
+                  setSearchQuery('');
+                  setSelectedProvince('all');
+                  setSelectedType('all');
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Reset all filters to show all universities">
+                <Text style={styles.resetBtnText}>Reset Filters</Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      </SafeAreaView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  listHeader: {
+    paddingBottom: SPACING.md,
+  },
+  headerGradient: {
+    margin: SPACING.lg,
+    marginBottom: SPACING.lg,
+    padding: SPACING.lg,
+    borderRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    elevation: 8,
+    shadowColor: '#10B981',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+  },
+  headerDecoCircle1: {
+    position: 'absolute',
+    top: -30,
+    right: -30,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  headerDecoCircle2: {
+    position: 'absolute',
+    bottom: -20,
+    left: -20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTextContainer: {
+    flex: 1,
+    marginRight: SPACING.md,
+  },
+  screenTitle: {
+    fontSize: TYPOGRAPHY.sizes.xxl,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 4,
+  },
+  screenSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginTop: 6,
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.9)',
+    letterSpacing: 0.2,
+  },
+  countBadge: {
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.xl,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  countText: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    borderRadius: RADIUS.xl,
+    borderWidth: 1.5,
+    elevation: 2,
+    shadowOffset: {width: 0, height: 4},
+    shadowRadius: 12,
+  },
+  searchIcon: {
+    fontSize: 18,
+    marginRight: SPACING.sm,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: SPACING.md,
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '500',
+  },
+  clearButton: {
+    padding: SPACING.xs,
+  },
+  clearCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  clearIcon: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  sortSection: {
+    paddingHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+  },
+  sortLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+    marginBottom: SPACING.sm,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  sortOptions: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+  },
+  filterChip: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.full,
+    borderWidth: 1.5,
+  },
+  filterChipText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  provinceList: {
+    marginBottom: SPACING.md,
+  },
+  provinceListContent: {
+    paddingHorizontal: SPACING.lg,
+    gap: SPACING.sm,
+  },
+  typeFilter: {
+    flexDirection: 'row',
+    paddingHorizontal: SPACING.lg,
+    gap: SPACING.sm,
+  },
+  typeBtn: {
+    flex: 1,
+    paddingVertical: SPACING.sm + 2,
+    alignItems: 'center',
+    borderRadius: RADIUS.lg,
+    borderWidth: 1.5,
+  },
+  typeBtnText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  listContent: {
+    paddingHorizontal: SPACING.lg,
+    paddingBottom: 120,
+  },
+  universityCard: {
+    borderRadius: RADIUS.xl,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  logoContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  logoPlaceholder: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoText: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '800',
+  },
+  headerInfo: {
+    flex: 1,
+    marginLeft: SPACING.md,
+    marginRight: SPACING.sm,
+  },
+  universityName: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    lineHeight: 22,
+    marginBottom: 4,
+  },
+  shortNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  shortName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+  hecBadge: {
+    paddingHorizontal: SPACING.xs + 2,
+    paddingVertical: 2,
+    borderRadius: RADIUS.sm,
+  },
+  hecText: {
+    fontSize: TYPOGRAPHY.sizes.xs - 1,
+    fontWeight: '700',
+  },
+  rankBadge: {
+    paddingHorizontal: SPACING.sm + 2,
+    paddingVertical: SPACING.xs + 2,
+    borderRadius: RADIUS.md,
+    elevation: 2,
+  },
+  rankText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  cardDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.sm + 2,
+    marginTop: SPACING.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detailIcon: {
+    fontSize: 14,
+    marginRight: 4,
+  },
+  detailText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+  },
+  detailDivider: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#CBD5E1',
+    marginHorizontal: SPACING.sm,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SPACING.sm,
+  },
+  typeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm + 2,
+    paddingVertical: SPACING.xs + 2,
+    borderRadius: RADIUS.md,
+    gap: 6,
+  },
+  typeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  typeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
+    textTransform: 'capitalize',
+  },
+  viewMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  viewMoreText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+  viewMoreArrow: {
+    fontSize: 16,
+  },
+  emptyContainer: {
+    padding: SPACING.xxxl,
+    alignItems: 'center',
+  },
+  emptyIconBg: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+  },
+  emptyIcon: {
+    fontSize: 48,
+  },
+  emptyTitle: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '700',
+    marginBottom: SPACING.xs,
+  },
+  emptySubtitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    textAlign: 'center',
+    marginBottom: SPACING.lg,
+  },
+  resetBtn: {
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.sm + 2,
+    borderRadius: RADIUS.full,
+  },
+  resetBtnText: {
+    color: '#FFFFFF',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+  },
+});
+
+export default PremiumUniversitiesScreen;

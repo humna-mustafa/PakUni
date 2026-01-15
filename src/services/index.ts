@@ -1,0 +1,193 @@
+/**
+ * Services Index
+ * Central export for all application services
+ * 
+ * OPTIMIZED FOR SUPABASE FREE TIER:
+ * - No real-time subscriptions
+ * - Cache-first data access
+ * - Minimal egress usage
+ */
+
+// ============================================================================
+// CACHE SERVICE - Critical for minimizing egress
+// ============================================================================
+
+export {
+  cache,
+  cache as cacheService,
+  CACHE_KEYS,
+  CACHE_TTL,
+} from './cache';
+export type {
+  CacheConfig,
+  CacheEntry,
+  CacheStats,
+} from './cache';
+
+// ============================================================================
+// DATA SERVICE - Unified data access with caching
+// ============================================================================
+
+export {
+  dataService,
+  dataService as data,
+} from './data';
+export type {
+  DataSyncStatus,
+  AnnouncementData,
+  UserFavorite,
+  UserCalculation,
+  UserGoal,
+} from './data';
+
+// ============================================================================
+// ANALYTICS SERVICE
+// ============================================================================
+
+export {
+  analytics,
+  analytics as analyticsService,
+  ANALYTICS_EVENTS,
+  useAnalyticsScreen,
+  useScreenTime,
+  useTrackedCallback,
+} from './analytics';
+export type { AnalyticsUser, AnalyticsEvent, ScreenView, ErrorReport, LogLevel } from './analytics';
+
+// ============================================================================
+// NETWORK SERVICE
+// ============================================================================
+
+export {
+  network,
+  network as networkService,
+  useNetworkState,
+  useIsOnline,
+  useFetch,
+  ERROR_CODES,
+} from './network';
+export type {
+  RequestConfig,
+  ApiResponse,
+  ApiError,
+  NetworkState,
+} from './network';
+
+// ============================================================================
+// CONFIGURATION SERVICE
+// ============================================================================
+
+export {
+  config,
+  config as configService,
+  useConfig,
+  useFeatureFlag,
+  useConfigSection,
+} from './config';
+export type {
+  AppConfig,
+} from './config';
+
+// ============================================================================
+// INTERNATIONALIZATION SERVICE
+// ============================================================================
+
+export {
+  i18n,
+  i18n as i18nService,
+  useTranslations,
+  useTranslation,
+  useLanguage,
+} from './i18n';
+export type {
+  Language,
+  TranslationStrings,
+} from './i18n';
+
+// ============================================================================
+// SUPABASE SERVICE
+// ============================================================================
+
+export {supabase} from './supabase';
+
+// ============================================================================
+// ADMIN SERVICE
+// ============================================================================
+
+export {
+  adminService,
+} from './admin';
+export type {
+  UserRole,
+  UserProfile,
+  AdminUser,
+  DashboardStats,
+  AppSetting,
+  Announcement,
+  AnnouncementType,
+  ContentReport,
+  ReportStatus,
+  AuditLog,
+  UserFeedback,
+  FeedbackType,
+  FeedbackCategory,
+  FeedbackStatus,
+  AnalyticsSummary,
+} from './admin';
+
+// ============================================================================
+// SHARE SERVICE
+// ============================================================================
+
+export {
+  shareContent,
+  shareUniversity,
+  shareScholarship,
+  shareProgram,
+  shareApp,
+  shareMeritResults,
+  shareQuizResults,
+} from './share';
+export type {
+  ShareContent,
+  UniversityShareData,
+  ScholarshipShareData,
+  ProgramShareData,
+} from './share';
+
+// ============================================================================
+// APP RATING SERVICE
+// ============================================================================
+
+export {
+  appRatingService,
+  useAppRating,
+} from './rating';
+
+// ============================================================================
+// NOTIFICATION SERVICE
+// ============================================================================
+
+export {
+  notificationService,
+  useNotifications,
+} from './notifications';
+export type {
+  NotificationPreferences,
+  LocalNotification,
+} from './notifications';
+
+// ============================================================================
+// OFFLINE SERVICE
+// ============================================================================
+
+export {
+  offlineService,
+  useOfflineStatus,
+  useIsOffline,
+} from './offline';
+export type {
+  OfflineAction,
+  SyncStatus,
+  DataModule,
+} from './offline';

@@ -1,0 +1,33 @@
+## 🎯 1. Viral & Social Features
+*Turn every user into a promoter*
+
+| # | Feature | Description | Viral Mechanism |
+|---|---------|-------------|-----------------|
+| 1.1 | **Merit Success Cards** | Generate shareable image after aggregate calculation: "85% chance at NUST!" | WhatsApp/Instagram Stories |
+| 1.2 | **Acceptance Celebration Cards** | "I got into FAST! 🎉" shareable graphics | Social media shares |
+| 1.6 | **Achievement Badges** | Shareable badges: "Entry Test Ready!", "Top Contributor" | Pride sharing |
+get name in merit list etc done entry test . sceure amdission in 2 uni merit becomes  etc
+| 2.2 | **Entry Test Countdown Widget** | Home screen widget for ECAT/MDCAT/NET | Daily visibility | but proivde if fcailty to adjust date of test to user bacuse may be our date feed frm admin portal etc old or need updation etc so accroidng that users can adjust it with real 
+| 2.12 | **Birthday Wishes** | Personalized birthday message | Emotional connection |
+| 2.13 | **Exam Day Wishes** | "Good luck for your MDCAT today!" | Timely care |
+| 2.14 | **Result Prediction Game** | Predict your result, reveal after | Suspense retention |
+
+| 3.3 | **Filter Engine** | City, Fee Range, Programs, Sector, Ranking, Hostel availability |
+| 4.2 | **Custom Formula Builder** | Enter any university's weightage manually |
+| 4.4 | **CGPA to Percentage** | For transfer students |
+| 4.5 | **Percentage to CGPA** | Reverse calculation |
+| 4.6 | **O/A Level Equivalence** | Cambridge to Pakistani system |
+| 4.8 | **Target Calculator** | "To get into NUST, you need 87% in entry test" |
+| 4.9 | **What-If Simulator** | "If I score 80 in NET, my aggregate becomes..." |
+| 4.15 | **Historical Merit Graph** | Visualize merit trends over 5 years |
+| 7.2 | **Career Explorer** | Detailed career profiles (Software Engineer, Doctor, etc.) |
+| 7.3 | **Salary Insights** | Average salaries by profession in Pakistan |
+| 7.4 | **Job Market Trends** | "IT sector growing 25% annually" |
+| 7.5 | **Career Roadmaps** | Step-by-step path: School → University → Job |
+| 10.17 | **Admission Guide** | Step-by-step admission process |
+and some other type if guides etc for help students add this laos if you fele msiing somthing inguide send us guides in emial we will add them all andif need some imprevemnt aslo send we iwll selcome and add htem 
+| 14.8 | **Widget Support** | Home screen widgets |
+| 18.1 | **Google Calendar Sync** | Deadlines in Google Calendar |
+| 18.2 | **Google Maps** | Directions to universities |
+| 18.10 | **HEC Portal Link** | Direct links to official sources |
+| 18.11 | **University Portal Links** | One-click to apply |
