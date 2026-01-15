@@ -202,16 +202,14 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Matric Marks</Text>
               <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <Text style={{color: colors.text, fontSize: 16}}>
-                  <TouchableOpacity onPress={() => {
-                    const value = prompt('Enter Matric marks (out of 1100 or percentage)');
-                    if (value) setMatricMarks(value);
-                  }}>
-                    <Text style={{color: matricMarks ? colors.text : colors.textSecondary}}>
-                      {matricMarks || 'Enter marks...'}
-                    </Text>
-                  </TouchableOpacity>
-                </Text>
+                <TextInput
+                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                  placeholder="Enter marks..."
+                  placeholderTextColor={colors.textSecondary}
+                  keyboardType="numeric"
+                  value={matricMarks}
+                  onChangeText={setMatricMarks}
+                />
               </View>
             </View>
           </View>
@@ -227,16 +225,14 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Inter Marks</Text>
               <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <Text style={{color: colors.text, fontSize: 16}}>
-                  <TouchableOpacity onPress={() => {
-                    const value = prompt('Enter Inter marks (out of 1100 or percentage)');
-                    if (value) setInterMarks(value);
-                  }}>
-                    <Text style={{color: interMarks ? colors.text : colors.textSecondary}}>
-                      {interMarks || 'Enter marks...'}
-                    </Text>
-                  </TouchableOpacity>
-                </Text>
+                <TextInput
+                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                  placeholder="Enter marks..."
+                  placeholderTextColor={colors.textSecondary}
+                  keyboardType="numeric"
+                  value={interMarks}
+                  onChangeText={setInterMarks}
+                />
               </View>
             </View>
           </View>
@@ -252,16 +248,14 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Entry Test Marks</Text>
               <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <Text style={{color: colors.text, fontSize: 16}}>
-                  <TouchableOpacity onPress={() => {
-                    const value = prompt('Enter Entry Test marks (or percentage)');
-                    if (value) setTestMarks(value);
-                  }}>
-                    <Text style={{color: testMarks ? colors.text : colors.textSecondary}}>
-                      {testMarks || 'Enter marks...'}
-                    </Text>
-                  </TouchableOpacity>
-                </Text>
+                <TextInput
+                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                  placeholder="Enter marks..."
+                  placeholderTextColor={colors.textSecondary}
+                  keyboardType="numeric"
+                  value={testMarks}
+                  onChangeText={setTestMarks}
+                />
               </View>
             </View>
           </View>
