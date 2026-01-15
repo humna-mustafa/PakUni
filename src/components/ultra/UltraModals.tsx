@@ -31,6 +31,7 @@ import {
   pixelPerfect,
 } from '../../constants/ultra-design';
 import { Icon } from '../icons';
+import type { IconFamily } from '../icons';
 import { Haptics } from '../../utils/haptics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -606,10 +607,9 @@ export const UltraActionSheet = memo<UltraActionSheetProps>(({
                 {action.icon && (
                   <Icon
                     name={action.icon}
-                    family={action.iconFamily || 'Ionicons'}
+                    family={(action.iconFamily || 'Ionicons') as IconFamily}
                     size={pixelPerfect(22)}
                     color={action.destructive ? colors.error : colors.primary}
-                    style={{ marginRight: ULTRA_SPACING[3] }}
                   />
                 )}
                 <Text
@@ -672,8 +672,8 @@ const styles = StyleSheet.create({
 
   // Bottom Sheet
   bottomSheet: {
-    borderTopLeftRadius: ULTRA_RADIUS.xxl,
-    borderTopRightRadius: ULTRA_RADIUS.xxl,
+    borderTopLeftRadius: ULTRA_RADIUS['2xl'],
+    borderTopRightRadius: ULTRA_RADIUS['2xl'],
     overflow: 'hidden',
   },
   handleContainer: {

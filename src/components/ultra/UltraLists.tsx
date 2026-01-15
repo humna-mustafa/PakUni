@@ -432,7 +432,7 @@ export function UltraAnimatedList<T>({
   }, [loading, ListEmptyComponent]);
 
   return (
-    <Animated.FlatList
+    <FlatList
       data={data}
       renderItem={animatedRenderItem}
       keyExtractor={keyExtractor}

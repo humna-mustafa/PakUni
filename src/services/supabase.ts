@@ -2,12 +2,29 @@ import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createClient} from '@supabase/supabase-js';
 import Config from 'react-native-config';
+import {logger} from '../utils/logger';
 
 // Load from environment variables for security
-const supabaseUrl = Config.SUPABASE_URL || 'https://therewjnnidxlddgkaca.supabase.co';
-const supabaseAnonKey = Config.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoZXJld2pubmlkeGxkZGdrYWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgzMjMxMjEsImV4cCI6MjA4Mzg5OTEyMX0.h5wPplUUJFIErD6S765UW-L4x4j1Lskcbq-9x4ztH5k';
+// IMPORTANT: In production builds, set these in .env file
+// Never commit actual API keys to version control
+const supabaseUrl = Config.SUPABASE_URL;
+const supabaseAnonKey = Config.SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// Validate configuration
+if (!supabaseUrl || !supabaseAnonKey) {
+  logger.warn(
+    'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env file.',
+    undefined,
+    'Supabase'
+  );
+}
+
+// Use fallback empty values to prevent crash during development
+// App will work in offline mode with bundled data
+const safeSupabaseUrl = supabaseUrl || 'https://placeholder.supabase.co';
+const safeSupabaseAnonKey = supabaseAnonKey || 'placeholder_key';
+
+export const supabase = createClient(safeSupabaseUrl, safeSupabaseAnonKey, {
   auth: {
     storage: AsyncStorage,
     autoRefreshToken: true,

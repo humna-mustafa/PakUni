@@ -72,27 +72,27 @@ const HeroCard = memo<HeroCardProps>(({
   isDark,
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(20)).current;
+  const slideAnim = useRef(new Animated.Value(12)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 600,
+        duration: 350,
         useNativeDriver: true,
       }),
       Animated.spring(slideAnim, {
         toValue: 0,
-        tension: 50,
-        friction: 8,
+        tension: 80,
+        friction: 12,
         useNativeDriver: true,
       }),
     ]).start();
   }, []);
 
-  // Refined color palette based on primary
-  const accentLight = isDark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.08)';
-  const cardBg = isDark ? '#1A1F2E' : '#FFFFFF';
+  // Clean, refined styling
+  const accentLight = isDark ? 'rgba(129, 140, 248, 0.12)' : 'rgba(79, 70, 229, 0.06)';
+  const cardBg = isDark ? '#1F1F23' : '#FFFFFF';
 
   return (
     <Animated.View 
@@ -105,65 +105,56 @@ const HeroCard = memo<HeroCardProps>(({
       ]}
     >
       <View style={[heroStyles.heroCard, {backgroundColor: cardBg}]}>
-        {/* Subtle gradient overlay at top */}
-        <LinearGradient
-          colors={[
-            isDark ? 'rgba(99, 102, 241, 0.12)' : 'rgba(99, 102, 241, 0.06)',
-            'transparent',
-          ]}
-          style={heroStyles.heroGradientOverlay}
-        />
+        {/* Subtle background accent */}
+        <View style={[heroStyles.heroAccentBg, {backgroundColor: accentLight}]} />
 
         {/* Main Content */}
         <View style={heroStyles.heroContent}>
-          {/* Top Row: Icon + Badge */}
+          {/* Compact status row */}
           <View style={heroStyles.heroTopRow}>
-            <View style={[heroStyles.heroIconWrap, {backgroundColor: colors.primary}]}>
-              <Icon name="school" family="Ionicons" size={20} color="#FFFFFF" />
-            </View>
             <View style={[heroStyles.heroBadge, {backgroundColor: accentLight}]}>
               <View style={[heroStyles.heroBadgeDot, {backgroundColor: colors.primary}]} />
               <Text style={[heroStyles.heroBadgeText, {color: colors.primary}]}>
-                Smart Matching
+                AI-Powered Matching
               </Text>
             </View>
           </View>
 
-          {/* Title Section */}
+          {/* Title Section - Clean typography */}
           <View style={heroStyles.heroTitleSection}>
-            <Text style={[heroStyles.heroTitle, {color: colors.text}]}>
-              Discover Your
+            <Text style={[heroStyles.heroTitle, {color: colors.textSecondary}]}>
+              Find Your Ideal
             </Text>
-            <Text style={[heroStyles.heroTitleAccent, {color: colors.primary}]}>
-              Perfect University
+            <Text style={[heroStyles.heroTitleAccent, {color: colors.text}]}>
+              University Match
             </Text>
           </View>
 
-          {/* Description */}
+          {/* Description - Concise */}
           <Text style={[heroStyles.heroDescription, {color: colors.textSecondary}]}>
-            Explore 200+ universities with AI-powered recommendations tailored to your academic profile
+            Explore 200+ Pakistani universities with personalized recommendations
           </Text>
 
-          {/* Action Row */}
+          {/* Action Row - Clean buttons */}
           <View style={heroStyles.heroActionRow}>
             <TouchableOpacity
               style={[heroStyles.heroPrimaryAction, {backgroundColor: colors.primary}]}
               onPress={onExplorePress}
-              activeOpacity={0.9}
+              activeOpacity={0.8}
             >
-              <Text style={heroStyles.heroPrimaryText}>Explore Universities</Text>
-              <View style={heroStyles.heroArrowWrap}>
-                <Icon name="arrow-forward" family="Ionicons" size={16} color="#FFFFFF" />
-              </View>
+              <Text style={heroStyles.heroPrimaryText}>Browse Universities</Text>
+              <Icon name="arrow-forward" family="Ionicons" size={16} color="#FFFFFF" />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[
                 heroStyles.heroSecondaryAction,
-                {borderColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}
+                {
+                  backgroundColor: accentLight,
+                }
               ]}
               onPress={onAIMatchPress}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
               <Icon name="sparkles" family="Ionicons" size={18} color={colors.primary} />
             </TouchableOpacity>
@@ -193,10 +184,10 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.985,
+      toValue: 0.98,
       useNativeDriver: true,
-      tension: 300,
-      friction: 10,
+      tension: 400,
+      friction: 15,
     }).start();
   };
 
@@ -204,8 +195,8 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 200,
-      friction: 8,
+      tension: 300,
+      friction: 12,
     }).start();
   };
 
@@ -218,33 +209,32 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
         onPressOut={handlePressOut}
       >
         <LinearGradient
-          colors={[
-            colors.primary,
-            `${colors.primary}F2`,
-            `${colors.primary}E0`,
-          ]}
+          colors={isDark 
+            ? [colors.primary, '#6366F1']
+            : [colors.primary, '#6366F1']
+          }
           start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
+          end={{x: 1, y: 0.5}}
           style={journeyStyles.ctaCard}
         >
-          {/* Subtle decorative circle */}
+          {/* Subtle decorative element */}
           <View style={journeyStyles.ctaDecoCircle} />
 
-          {/* Content Layout - Horizontal for cleaner look */}
+          {/* Content Layout */}
           <View style={journeyStyles.ctaLayout}>
             {/* Left: Icon */}
             <View style={journeyStyles.ctaIconSection}>
               <View style={journeyStyles.ctaIconCircle}>
-                <Icon name="calculator" family="Ionicons" size={24} color="#FFFFFF" />
+                <Icon name="calculator" family="Ionicons" size={22} color="#FFFFFF" />
               </View>
             </View>
 
             {/* Center: Text */}
             <View style={journeyStyles.ctaTextSection}>
-              <Text style={journeyStyles.ctaEyebrow}>MERIT CALCULATOR</Text>
+              <Text style={journeyStyles.ctaEyebrow}>Merit Calculator</Text>
               <Text style={journeyStyles.ctaHeadline}>Calculate Your Score</Text>
               <Text style={journeyStyles.ctaCaption}>
-                Find universities matching your profile
+                Find matching universities
               </Text>
             </View>
 
@@ -469,88 +459,86 @@ const DashboardWidgets = memo<DashboardWidgetsProps>(({user, colors, isDark, onN
 const widgetStyles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    marginBottom: 16,
+    marginBottom: 12,
   },
   profileWidget: {
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
     overflow: 'hidden',
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   profileIconBg: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 34,
+    height: 34,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileInfo: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 10,
   },
   profileTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
   },
   profileSubtitle: {
     fontSize: 12,
-    marginTop: 2,
+    marginTop: 1,
   },
   profileBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileBadgeText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 11,
+    fontWeight: '600',
   },
   progressBar: {
-    height: 6,
-    borderRadius: 3,
+    height: 4,
+    borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 2,
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 12,
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 10,
+    justifyContent: 'space-between',
   },
   statWidget: {
     flex: 1,
-    borderRadius: 14,
+    minWidth: (SCREEN_WIDTH - 40 - 24) / 4,
+    maxWidth: (SCREEN_WIDTH - 40 - 24) / 2,
+    borderRadius: 12,
     overflow: 'hidden',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
   },
   statGradient: {
-    padding: 12,
+    padding: 10,
     alignItems: 'center',
-    minHeight: 80,
+    minHeight: 72,
     justifyContent: 'center',
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    marginTop: 6,
+    marginTop: 4,
   },
   statLabel: {
     fontSize: 10,
@@ -558,31 +546,28 @@ const widgetStyles = StyleSheet.create({
     marginTop: 2,
   },
   deadlineWidget: {
-    borderRadius: 16,
-    padding: 14,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
   },
   deadlineHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   deadlineIconBg: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   deadlineTitle: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    marginLeft: 10,
+    marginLeft: 8,
   },
   deadlineList: {},
   deadlineItem: {
@@ -590,13 +575,13 @@ const widgetStyles = StyleSheet.create({
     alignItems: 'center',
   },
   deadlineDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   deadlineInfo: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -1104,36 +1089,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: MODERN_SPACING.lg,
-    paddingTop: MODERN_SPACING.md,
-    paddingBottom: MODERN_SPACING.sm,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 8,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: MODERN_SPACING.sm,
+    gap: 10,
   },
   headerTextContainer: {
-    marginLeft: 4,
+    marginLeft: 2,
   },
   greeting: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '400',
   },
   appName: {
-    fontSize: MODERN_TYPOGRAPHY.sizes.xl,
+    fontSize: 18,
     fontWeight: '600',
-    marginTop: 2,
+    marginTop: 1,
+    letterSpacing: -0.3,
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: MODERN_SPACING.sm,
+    gap: 8,
   },
   profileBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 38,
+    height: 38,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1208,61 +1194,67 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: MODERN_SPACING.xl,
   },
-  // Quick Actions Grid
+  // Quick Actions Grid - Cleaner sizing
   actionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: MODERN_SPACING.lg,
-    gap: MODERN_SPACING.sm,
+    gap: 8,
+    justifyContent: 'flex-start',
   },
   actionCardWrapper: {
-    width: (SCREEN_WIDTH - MODERN_SPACING.lg * 2 - MODERN_SPACING.sm * 3) / 4,
+    width: Math.max((SCREEN_WIDTH - MODERN_SPACING.lg * 2 - 24) / 4, 72),
+    minWidth: 72,
   },
   actionCard: {
-    borderRadius: MODERN_RADIUS.lg,
+    borderRadius: 12,
     padding: MODERN_SPACING.sm,
-    paddingVertical: MODERN_SPACING.md,
+    paddingVertical: 14,
     alignItems: 'center',
-    minHeight: 88,
+    minHeight: 84,
     justifyContent: 'center',
-    ...MODERN_SHADOWS.xs,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
   },
   actionIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: MODERN_RADIUS.md,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: MODERN_SPACING.xs,
+    marginBottom: 6,
   },
   actionTitle: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '500',
     textAlign: 'center',
   },
-  // University Carousel
+  // University Carousel - Refined cards
   uniCarousel: {
     paddingHorizontal: MODERN_SPACING.lg,
-    gap: MODERN_SPACING.sm,
+    gap: 10,
   },
   uniCard: {
-    width: SCREEN_WIDTH * 0.38,
-    borderRadius: MODERN_RADIUS.lg,
-    padding: MODERN_SPACING.sm,
+    width: Math.max(SCREEN_WIDTH * 0.36, 136),
+    minWidth: 136,
+    maxWidth: 170,
+    borderRadius: 14,
+    padding: 12,
     alignItems: 'center',
-    ...MODERN_SHADOWS.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
   },
   uniRankBadge: {
     position: 'absolute',
-    top: MODERN_SPACING.xs,
-    left: MODERN_SPACING.xs,
-    paddingHorizontal: MODERN_SPACING.xs + 2,
+    top: 8,
+    left: 8,
+    paddingHorizontal: 7,
     paddingVertical: 3,
-    borderRadius: MODERN_RADIUS.sm,
+    borderRadius: 6,
   },
   uniRankText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#FFFFFF',
   },
   uniLogoContainer: {
@@ -1411,20 +1403,22 @@ const styles = StyleSheet.create({
 const heroStyles = StyleSheet.create({
   heroWrapper: {
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   heroCard: {
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.04)',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 4,
+        elevation: 2,
       },
     }),
   },
@@ -1433,93 +1427,15 @@ const heroStyles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 120,
-  },
-  heroContent: {
-    padding: 24,
-  },
-  heroTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    height: 100,
   },
   heroIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  heroBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    gap: 6,
-  },
-  heroBadgeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  heroBadgeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-  },
-  heroTitleSection: {
-    marginBottom: 12,
-  },
-  heroTitle: {
-    fontSize: 28,
-    fontWeight: '300',
-    letterSpacing: -0.5,
-    lineHeight: 34,
-  },
-  heroTitleAccent: {
-    fontSize: 28,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-    lineHeight: 34,
-  },
-  heroDescription: {
-    fontSize: 15,
-    fontWeight: '400',
-    lineHeight: 22,
-    marginBottom: 16,
-  },
-  heroActionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  heroPrimaryAction: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 52,
-    borderRadius: 14,
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#6366F1',
-        shadowOffset: {width: 0, height: 6},
-        shadowOpacity: 0.35,
-        shadowRadius: 12,
-      },
-      android: {
-        elevation: 6,
-      },
-    }),
-  },
-  heroPrimaryText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-    letterSpacing: 0.2,
+    marginRight: 12,
   },
   heroArrowWrap: {
     width: 24,
@@ -1529,18 +1445,92 @@ const heroStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  heroAccentBg: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 200,
+    height: 200,
+    borderBottomLeftRadius: 200,
+  },
+  heroContent: {
+    padding: 20,
+  },
+  heroTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  heroBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    gap: 6,
+  },
+  heroBadgeDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+  },
+  heroBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+  },
+  heroTitleSection: {
+    marginBottom: 8,
+  },
+  heroTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 20,
+  },
+  heroTitleAccent: {
+    fontSize: 24,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    lineHeight: 30,
+  },
+  heroDescription: {
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  heroActionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  heroPrimaryAction: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 48,
+    borderRadius: 12,
+    gap: 8,
+  },
+  heroPrimaryText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+    letterSpacing: 0.1,
+  },
   heroSecondaryAction: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    borderWidth: 1.5,
+    width: 48,
+    height: 48,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
 // ============================================================================
-// REFINED JOURNEY CTA STYLES - Clean, Horizontal Layout
+// REFINED JOURNEY CTA STYLES - Professional, Minimal Design
 // ============================================================================
 
 const journeyStyles = StyleSheet.create({
@@ -1550,42 +1540,31 @@ const journeyStyles = StyleSheet.create({
     marginBottom: 24,
   },
   ctaCard: {
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 14,
+    padding: 18,
     overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#6366F1',
-        shadowOffset: {width: 0, height: 8},
-        shadowOpacity: 0.3,
-        shadowRadius: 16,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
   },
   ctaDecoCircle: {
     position: 'absolute',
-    top: -40,
-    right: -40,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    top: -60,
+    right: -60,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
   ctaLayout: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   ctaIconSection: {
-    marginRight: 16,
+    marginRight: 14,
   },
   ctaIconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.18)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1594,45 +1573,35 @@ const journeyStyles = StyleSheet.create({
   },
   ctaEyebrow: {
     fontSize: 10,
-    fontWeight: '700',
-    color: 'rgba(255,255,255,0.7)',
-    letterSpacing: 1.2,
-    marginBottom: 4,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.65)',
+    letterSpacing: 0.8,
+    marginBottom: 2,
+    textTransform: 'uppercase',
   },
   ctaHeadline: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '600',
     color: '#FFFFFF',
-    letterSpacing: -0.3,
-    marginBottom: 4,
+    letterSpacing: -0.2,
+    marginBottom: 2,
   },
   ctaCaption: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '400',
-    color: 'rgba(255,255,255,0.85)',
-    lineHeight: 18,
+    color: 'rgba(255,255,255,0.75)',
+    lineHeight: 16,
   },
   ctaArrowSection: {
-    marginLeft: 12,
+    marginLeft: 10,
   },
   ctaArrowCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.95)',
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
   },
 });
 

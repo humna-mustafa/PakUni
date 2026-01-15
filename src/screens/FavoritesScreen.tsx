@@ -2,7 +2,7 @@
  * FavoritesScreen - Display and manage user's favorite items
  */
 
-import React, {useState, useCallback, memo} from 'react';
+import React, {useState, useCallback, memo, useRef} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   StatusBar,
   Platform,
   Animated,
+  Modal,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -22,6 +23,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {UNIVERSITIES, SCHOLARSHIPS, PROGRAMS} from '../data';
 import type {RootStackParamList} from '../navigation/AppNavigator';
+import {Haptics} from '../utils/haptics';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -156,6 +158,12 @@ const FavoritesScreen: React.FC = () => {
   const {colors, isDark} = useTheme();
   const {user, removeFavorite} = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('universities');
+  
+  // Remove confirmation modal state
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState<{id: string; type: TabType; name: string} | null>(null);
+  const modalScaleAnim = useRef(new Animated.Value(0.8)).current;
+  const modalOpacityAnim = useRef(new Animated.Value(0)).current;
 
   // Get favorite items
   const getFavoriteItems = useCallback((): FavoriteItem[] => {
@@ -217,14 +225,76 @@ const FavoritesScreen: React.FC = () => {
     // Add navigation for other types as needed
   }, [navigation]);
 
-  const handleRemove = useCallback((id: string, type: TabType) => {
-    const favoriteType = type === 'universities' 
+  // Show confirmation modal before removing
+  const showRemoveConfirmation = useCallback((id: string, type: TabType, name: string) => {
+    Haptics.light();
+    setItemToRemove({id, type, name});
+    setShowRemoveModal(true);
+    
+    // Animate modal in
+    Animated.parallel([
+      Animated.spring(modalScaleAnim, {
+        toValue: 1,
+        tension: 65,
+        friction: 10,
+        useNativeDriver: true,
+      }),
+      Animated.timing(modalOpacityAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [modalScaleAnim, modalOpacityAnim]);
+
+  // Close modal with animation
+  const closeRemoveModal = useCallback(() => {
+    Animated.parallel([
+      Animated.timing(modalScaleAnim, {
+        toValue: 0.8,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(modalOpacityAnim, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowRemoveModal(false);
+      setItemToRemove(null);
+    });
+  }, [modalScaleAnim, modalOpacityAnim]);
+
+  // Confirm removal
+  const confirmRemove = useCallback(() => {
+    if (!itemToRemove) return;
+    
+    Haptics.success();
+    const favoriteType = itemToRemove.type === 'universities' 
       ? 'university' 
-      : type === 'scholarships' 
+      : itemToRemove.type === 'scholarships' 
         ? 'scholarship' 
         : 'program';
-    removeFavorite(id, favoriteType);
-  }, [removeFavorite]);
+    removeFavorite(itemToRemove.id, favoriteType);
+    closeRemoveModal();
+  }, [itemToRemove, removeFavorite, closeRemoveModal]);
+
+  const handleRemove = useCallback((id: string, type: TabType) => {
+    // Find the item name for display in modal
+    let name = '';
+    if (type === 'universities') {
+      const uni = UNIVERSITIES.find(u => u.short_name === id);
+      name = uni?.name || id;
+    } else if (type === 'scholarships') {
+      const sch = SCHOLARSHIPS.find((s: any) => s.id === id);
+      name = sch?.name || id;
+    } else {
+      const prog = PROGRAMS.find((p: any) => p.id === id);
+      name = prog?.name || id;
+    }
+    showRemoveConfirmation(id, type, name);
+  }, [showRemoveConfirmation]);
 
   const renderItem = useCallback(({item}: {item: FavoriteItem}) => (
     <FavoriteItemCard
@@ -321,6 +391,73 @@ const FavoritesScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmpty}
         />
+
+        {/* Remove Confirmation Modal */}
+        <Modal
+          visible={showRemoveModal}
+          transparent={true}
+          animationType="none"
+          onRequestClose={closeRemoveModal}>
+          <Animated.View 
+            style={[
+              styles.modalOverlay, 
+              {opacity: modalOpacityAnim}
+            ]}>
+            <TouchableOpacity 
+              style={StyleSheet.absoluteFill} 
+              activeOpacity={1} 
+              onPress={closeRemoveModal} 
+            />
+            <Animated.View 
+              style={[
+                styles.modalContent, 
+                {
+                  backgroundColor: colors.card,
+                  transform: [{scale: modalScaleAnim}],
+                }
+              ]}>
+              {/* Warning Icon */}
+              <View style={[styles.modalIconContainer, {backgroundColor: `${colors.error}15`}]}>
+                <Icon name="heart-dislike" family="Ionicons" size={32} color={colors.error} />
+              </View>
+              
+              {/* Title & Message */}
+              <Text style={[styles.modalTitle, {color: colors.text}]}>
+                Remove from Favorites?
+              </Text>
+              <Text style={[styles.modalMessage, {color: colors.textSecondary}]}>
+                Are you sure you want to remove{' '}
+                <Text style={{fontWeight: '600', color: colors.text}}>
+                  {itemToRemove?.name}
+                </Text>{' '}
+                from your saved {itemToRemove?.type === 'universities' ? 'universities' : 
+                  itemToRemove?.type === 'scholarships' ? 'scholarships' : 'programs'}?
+              </Text>
+              
+              {/* Action Buttons */}
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton, {backgroundColor: colors.background, borderColor: colors.border}]}
+                  onPress={closeRemoveModal}
+                  activeOpacity={0.8}>
+                  <Text style={[styles.cancelButtonText, {color: colors.text}]}>Keep</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.removeConfirmButton]}
+                  onPress={confirmRemove}
+                  activeOpacity={0.8}>
+                  <LinearGradient
+                    colors={['#EF4444', '#DC2626']}
+                    style={styles.removeGradient}>
+                    <Icon name="trash-outline" family="Ionicons" size={18} color="#FFFFFF" />
+                    <Text style={styles.removeButtonText}>Remove</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          </Animated.View>
+        </Modal>
       </SafeAreaView>
     </View>
   );
@@ -473,6 +610,87 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   exploreButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  // Remove Confirmation Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 340,
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 8},
+        shadowOpacity: 0.25,
+        shadowRadius: 24,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  modalIconContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalMessage: {
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  modalButton: {
+    flex: 1,
+    height: 48,
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+  cancelButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+  },
+  cancelButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  removeConfirmButton: {
+    overflow: 'hidden',
+  },
+  removeGradient: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+  },
+  removeButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',

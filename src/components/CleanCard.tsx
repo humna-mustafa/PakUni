@@ -49,7 +49,7 @@ interface CleanCardProps {
   size?: CardSize;
   onPress?: () => void;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   contentStyle?: ViewStyle;
   /** Whether to animate on press (default: true for interactive) */
   animated?: boolean;
@@ -291,8 +291,8 @@ export const ListItemCard: React.FC<ListItemCardProps> = memo(({
     borderRadius="md"
     style={[
       style,
-      !isLastItem && { marginBottom: CLEAN_SPACING.listItemGap },
-    ]}
+      !isLastItem ? { marginBottom: CLEAN_SPACING.listItemGap } : undefined,
+    ].filter(Boolean) as ViewStyle[]}
   />
 ));
 
@@ -320,11 +320,11 @@ export const FeatureCard: React.FC<FeatureCardProps> = memo(({
       borderRadius="xl"
       style={[
         style,
-        accentColor && {
+        accentColor ? {
           borderLeftWidth: 3,
           borderLeftColor: accentColor,
-        },
-      ]}
+        } : undefined,
+      ].filter(Boolean) as ViewStyle[]}
     >
       {children}
     </CleanCard>

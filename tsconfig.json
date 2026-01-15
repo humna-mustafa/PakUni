@@ -15,5 +15,5 @@
     "moduleResolution": "bundler"
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods", "**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/_legacy/**"]
+  "exclude": ["**/node_modules", "**/Pods", "**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/_legacy/**", "**/data-import/**"]
 }

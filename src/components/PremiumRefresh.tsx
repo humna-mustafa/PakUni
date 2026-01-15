@@ -426,7 +426,8 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   indicatorEmoji: {
-    fontSize: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   footer: {
     paddingVertical: SPACING[4],

@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     padding: SPACING.md,
   },
-  backBtn: {
+  modalBackBtn: {
     paddingVertical: SPACING.xs,
   },
   backBtnText: {

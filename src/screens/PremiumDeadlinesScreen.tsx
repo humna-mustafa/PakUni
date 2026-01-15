@@ -325,7 +325,7 @@ const PremiumDeadlinesScreen = () => {
 
     // Sort by deadline date
     return deadlines.sort((a, b) => {
-      const statusOrder = {
+      const statusOrder: Record<string, number> = {
         'closing-soon': 0,
         'open': 1,
         'upcoming': 2,

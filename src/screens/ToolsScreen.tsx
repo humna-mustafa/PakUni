@@ -299,8 +299,8 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         {/* Quick Tips */}
         <View style={[styles.tipsCard, {backgroundColor: colors.card}]}>
           <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-            <Icon name="bulb-outline" family="Ionicons" size={20} color="#F59E0B" style={{marginRight: 8}} />
-            <Text style={[styles.tipsTitle, {color: colors.text}]}>Quick Tips</Text>
+            <Icon name="bulb-outline" size={20} color="#F59E0B" />
+            <Text style={[styles.tipsTitle, {color: colors.text, marginLeft: 8}]}>Quick Tips</Text>
           </View>
           <View style={styles.tipItem}>
             <Icon name="checkmark-circle" size={16} color="#10B981" />

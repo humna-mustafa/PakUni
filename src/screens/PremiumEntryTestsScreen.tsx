@@ -77,7 +77,7 @@ const TestCountdownWidget = ({
   colors: any;
   isDark: boolean;
 }) => {
-  const displayDate = customDate || test.test_date || test.date;
+  const displayDate = customDate || test.test_date;
   const daysUntil = getDaysUntil(displayDate || '');
   
   if (daysUntil === null || daysUntil < 0) {

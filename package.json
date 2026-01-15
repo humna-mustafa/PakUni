@@ -10,7 +10,11 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "clean": "cd android && gradlew clean && cd .."
+    "clean": "cd android && gradlew clean && cd ..",
+    "import-data": "npx ts-node data-import/scripts/import.ts",
+    "export-data": "npx ts-node data-import/scripts/export.ts",
+    "validate-data": "npx ts-node data-import/scripts/validate.ts",
+    "view-import-logs": "node -e \"const fs = require('fs'); console.log(fs.readFileSync('data-import/logs/history.json', 'utf8'))\""
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
@@ -35,6 +39,7 @@
     "react-native-vector-icons": "^10.3.0"
   },
   "devDependencies": {
+    "csv-parse": "^5.5.5",
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",

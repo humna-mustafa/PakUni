@@ -10,6 +10,7 @@ import {
   Dimensions,
   Animated,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute, useNavigation} from '@react-navigation/native';
@@ -296,9 +297,40 @@ const PremiumUniversityDetailScreen = () => {
     [university]
   );
 
-  const openLink = (url?: string) => {
-    if (url) {
-      Linking.openURL(url);
+  const openLink = async (url?: string) => {
+    if (!url) {
+      Alert.alert(
+        'Link Not Available',
+        'This link is not available at the moment. Please try again later or visit the university website directly.',
+        [{text: 'OK'}]
+      );
+      return;
+    }
+    
+    try {
+      // Ensure URL has proper protocol
+      let formattedUrl = url;
+      if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('mailto:') && !url.startsWith('tel:')) {
+        formattedUrl = 'https://' + url;
+      }
+      
+      const canOpen = await Linking.canOpenURL(formattedUrl);
+      if (canOpen) {
+        await Linking.openURL(formattedUrl);
+      } else {
+        Alert.alert(
+          'Unable to Open Link',
+          'Could not open this link. Please try copying it manually or check your internet connection.',
+          [{text: 'OK'}]
+        );
+      }
+    } catch (error) {
+      console.error('Error opening URL:', error);
+      Alert.alert(
+        'Error Opening Link',
+        'There was a problem opening this link. Please try again.',
+        [{text: 'OK'}]
+      );
     }
   };
 

@@ -154,7 +154,7 @@ const Confetti: React.FC<{show: boolean}> = ({show}) => {
             useNativeDriver: true,
           }),
           Animated.timing(piece.x, {
-            toValue: piece.x._value + (Math.random() - 0.5) * 200,
+            toValue: (Math.random() * SCREEN_WIDTH) + (Math.random() - 0.5) * 200,
             duration,
             delay,
             easing: Easing.linear,

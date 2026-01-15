@@ -23,6 +23,10 @@ import {CAREER_FIELDS, CAREER_PATHS} from '../data/careers';
 import {POLLS_DATA} from '../data/polls';
 import {ADMISSION_DEADLINES} from '../data/deadlines';
 import {MERIT_RECORDS} from '../data/meritArchive';
+import {logger} from '../utils/logger';
+
+// Scoped logger for offline service
+const log = logger.scope('Offline');
 
 // ============================================================================
 // TYPES
@@ -198,9 +202,9 @@ class OfflineService {
       const state = await NetInfo.fetch();
       this.handleNetworkChange(state);
 
-      console.log('[Offline] Service initialized');
+      log.info('Service initialized');
     } catch (error) {
-      console.error('[Offline] Initialization error:', error);
+      log.error('Initialization error', error);
     }
   }
 
@@ -217,13 +221,13 @@ class OfflineService {
 
     // Coming back online - sync pending actions
     if (!wasOnline && this.isOnline) {
-      console.log('[Offline] Back online - syncing pending actions');
+      log.info('Back online - syncing pending actions');
       this.syncPendingActions();
     }
 
     // Going offline
     if (wasOnline && !this.isOnline) {
-      console.log('[Offline] Gone offline');
+      log.info('Gone offline');
     }
   }
 
@@ -246,11 +250,11 @@ class OfflineService {
       // Check if already loaded
       const loaded = await AsyncStorage.getItem(OFFLINE_KEYS.INITIAL_LOAD_COMPLETE);
       if (loaded === 'true') {
-        console.log('[Offline] Initial load already complete');
+        log.debug('Initial load already complete');
         return true;
       }
 
-      console.log('[Offline] Performing initial data load...');
+      log.info('Performing initial data load...');
       
       this.syncStatus.isSyncing = true;
       this.syncStatus.syncProgress = 0;
@@ -267,7 +271,7 @@ class OfflineService {
           this.syncStatus.syncProgress = (loadedModules / totalModules) * 100;
           this.notifyListeners();
         } catch (error) {
-          console.error(`[Offline] Failed to cache ${module.name}:`, error);
+          log.error(`Failed to cache ${module.name}`, error);
           if (module.isCritical) {
             throw error;
           }
@@ -283,10 +287,10 @@ class OfflineService {
       this.notifyListeners();
       await this.saveSyncStatus();
 
-      console.log('[Offline] Initial load complete');
+      log.info('Initial load complete');
       return true;
     } catch (error) {
-      console.error('[Offline] Initial load failed:', error);
+      log.error('Initial load failed', error);
       this.syncStatus.isSyncing = false;
       this.notifyListeners();
       return false;
@@ -298,17 +302,17 @@ class OfflineService {
    */
   async syncAllData(): Promise<boolean> {
     if (this.syncStatus.isSyncing) {
-      console.log('[Offline] Sync already in progress');
+      log.debug('Sync already in progress');
       return false;
     }
 
     if (!this.isOnline) {
-      console.log('[Offline] Cannot sync - device is offline');
+      log.warn('Cannot sync - device is offline');
       return false;
     }
 
     try {
-      console.log('[Offline] Starting full data sync...');
+      log.info('Starting full data sync...');
       
       this.syncStatus.isSyncing = true;
       this.syncStatus.syncProgress = 0;
@@ -325,7 +329,7 @@ class OfflineService {
           this.syncStatus.syncProgress = (syncedModules / totalModules) * 100;
           this.notifyListeners();
         } catch (error) {
-          console.error(`[Offline] Failed to sync ${module.name}:`, error);
+          log.error(`Failed to sync ${module.name}`, error);
         }
       }
 
@@ -338,10 +342,10 @@ class OfflineService {
       this.notifyListeners();
       await this.saveSyncStatus();
 
-      console.log('[Offline] Full sync complete');
+      log.info('Full sync complete');
       return true;
     } catch (error) {
-      console.error('[Offline] Sync failed:', error);
+      log.error('Sync failed', error);
       this.syncStatus.isSyncing = false;
       this.notifyListeners();
       return false;
@@ -385,7 +389,7 @@ class OfflineService {
       return;
     }
 
-    console.log(`[Offline] Syncing ${this.offlineQueue.length} pending actions...`);
+    log.info(`Syncing ${this.offlineQueue.length} pending actions...`);
 
     const actionsToRemove: string[] = [];
 
@@ -395,29 +399,29 @@ class OfflineService {
         switch (action.type) {
           case 'vote':
             // In production: await api.submitVote(action.payload);
-            console.log('[Offline] Syncing vote:', action.payload);
+            log.debug('Syncing vote', action.payload);
             break;
           case 'follow':
             // In production: await api.updateFollow(action.payload);
-            console.log('[Offline] Syncing follow:', action.payload);
+            log.debug('Syncing follow', action.payload);
             break;
           case 'calculation':
             // In production: await api.saveCalculation(action.payload);
-            console.log('[Offline] Syncing calculation:', action.payload);
+            log.debug('Syncing calculation', action.payload);
             break;
           case 'favorite':
             // In production: await api.updateFavorite(action.payload);
-            console.log('[Offline] Syncing favorite:', action.payload);
+            log.debug('Syncing favorite', action.payload);
             break;
           case 'feedback':
             // In production: await api.submitFeedback(action.payload);
-            console.log('[Offline] Syncing feedback:', action.payload);
+            log.debug('Syncing feedback', action.payload);
             break;
         }
         
         actionsToRemove.push(action.id);
       } catch (error) {
-        console.error(`[Offline] Failed to sync action ${action.id}:`, error);
+        log.error(`Failed to sync action ${action.id}`, error);
         action.retryCount++;
         
         // Remove after 3 retries
@@ -433,7 +437,7 @@ class OfflineService {
     this.notifyListeners();
     await this.saveQueue();
 
-    console.log('[Offline] Pending actions synced');
+    log.info('Pending actions synced');
   }
 
   /**
@@ -531,7 +535,7 @@ class OfflineService {
         JSON.stringify(this.offlineQueue)
       );
     } catch (error) {
-      console.error('[Offline] Failed to save queue:', error);
+      log.error('Failed to save queue', error);
     }
   }
 
@@ -545,7 +549,7 @@ class OfflineService {
         })
       );
     } catch (error) {
-      console.error('[Offline] Failed to save sync status:', error);
+      log.error('Failed to save sync status', error);
     }
   }
 

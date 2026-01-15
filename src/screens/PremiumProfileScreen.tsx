@@ -891,9 +891,9 @@ const PremiumProfileScreen = () => {
               </TouchableOpacity>
               
               <View style={[styles.avatarContainer, {backgroundColor: colors.card}]}>
-                {(user?.name || profile.name) ? (
+                {(user?.fullName || profile.name) ? (
                   <Text style={[styles.avatarText, {color: colors.primary}]}>
-                    {(user?.name || profile.name).charAt(0).toUpperCase()}
+                    {(user?.fullName || profile.name).charAt(0).toUpperCase()}
                   </Text>
                 ) : isGuest ? (
                   <Icon name="person-outline" family="Ionicons" size={32} color={colors.primary} />
@@ -902,7 +902,7 @@ const PremiumProfileScreen = () => {
                 )}
               </View>
               <Text style={styles.profileName}>
-                {isGuest ? 'Guest User' : (user?.name || profile.name || 'Your Profile')}
+                {isGuest ? 'Guest User' : (user?.fullName || profile.name || 'Your Profile')}
               </Text>
               <Text style={styles.profileClass}>
                 {isGuest ? 'Sign in for full features' : (user?.email || profile.currentClass)}

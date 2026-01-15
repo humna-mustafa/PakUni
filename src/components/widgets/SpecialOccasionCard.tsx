@@ -220,8 +220,8 @@ const SpecialOccasionCard: React.FC<SpecialOccasionCardProps> = ({
 
         {/* PakUni branding */}
         <View style={styles.branding}>
-          <Icon name="school-outline" family="Ionicons" size={14} color="rgba(255,255,255,0.6)" style={{marginRight: 4}} />
-          <Text style={styles.brandingText}>PakUni</Text>
+          <Icon name="school-outline" family="Ionicons" size={14} color="rgba(255,255,255,0.6)" />
+          <Text style={[styles.brandingText, {marginLeft: 4}]}>PakUni</Text>
         </View>
       </LinearGradient>
     </Animated.View>

@@ -41,7 +41,7 @@ interface CleanChipProps {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle;
   /** Color for selected state */
   selectedColor?: string;
@@ -285,7 +285,7 @@ export const CleanChipGroup: React.FC<ChipGroupProps> = memo(({
           onPress={() => onSelect?.(option.value)}
           variant={variant}
           size={size}
-          style={[styles.groupChip, chipStyle]}
+          style={[styles.groupChip, chipStyle].filter(Boolean) as ViewStyle[]}
         />
       ))}
     </View>

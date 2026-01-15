@@ -300,9 +300,13 @@ export const ModernSectionHeader: React.FC<ModernSectionHeaderProps> = ({
       {action && (
         <Pressable 
           onPress={onActionPress}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           accessibilityRole="button"
-          accessibilityLabel={action}>
+          accessibilityLabel={action}
+          style={({ pressed }) => [
+            styles.sectionActionBtn,
+            { opacity: pressed ? 0.7 : 1 }
+          ]}>
           <Text style={[styles.sectionAction, { color: colors.primary }]}>
             {action}
           </Text>
@@ -645,7 +649,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 
-  // Section Header
+  // Section Header - Professional typography
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -657,17 +661,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    fontSize: MODERN_TYPOGRAPHY.size.title3,
-    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
+    fontSize: 17,
+    fontWeight: '600',
     letterSpacing: -0.3,
   },
   sectionSubtitle: {
-    fontSize: MODERN_TYPOGRAPHY.size.body2,
+    fontSize: 13,
     marginTop: 2,
+    fontWeight: '400',
   },
   sectionAction: {
-    fontSize: MODERN_TYPOGRAPHY.size.body2,
-    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  sectionActionBtn: {
+    paddingVertical: 4,
+    paddingHorizontal: 2,
   },
 
   // Chip

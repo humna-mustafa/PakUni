@@ -440,6 +440,7 @@ const PremiumRecommendationsScreen = () => {
               key={uni.short_name || uni.name}
               university={uni}
               matchScore={uni.matchScore}
+              matchReasons={uni.matchReasons || []}
               index={index}
               colors={colors}
             />

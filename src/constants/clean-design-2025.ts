@@ -29,30 +29,30 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
  * - Never use color purely for decoration
  */
 export const CLEAN_COLORS = {
-  // Brand Primary - Single accent color, used sparingly
+  // Brand Primary - Refined indigo, sophisticated and modern
   primary: {
-    50: '#F0F7FF',     // Subtle backgrounds
-    100: '#E0EFFF',    // Hover states, badges
-    200: '#BAD9FF',    // Light accents
-    500: '#0066DC',    // Primary action color
-    600: '#0052B0',    // Pressed/active states
-    700: '#003D84',    // Dark text on light primary bg
+    50: '#EEF2FF',     // Subtle backgrounds
+    100: '#E0E7FF',    // Hover states, badges
+    200: '#C7D2FE',    // Light accents
+    500: '#4F46E5',    // Primary action color
+    600: '#4338CA',    // Pressed/active states
+    700: '#3730A3',    // Dark text on light primary bg
   },
 
-  // Neutral Palette - The backbone of clean UI
+  // Neutral Palette - Zinc-based for clean look
   neutral: {
     0: '#FFFFFF',      // Pure white - card backgrounds
-    25: '#FCFCFD',     // Off-white - page background alternative
-    50: '#F9FAFB',     // Light gray - page background
-    100: '#F3F4F6',    // Subtle backgrounds, surfaces
-    200: '#E5E7EB',    // Borders, dividers
-    300: '#D1D5DB',    // Disabled borders
-    400: '#9CA3AF',    // Placeholder text, icons
-    500: '#6B7280',    // Secondary text
-    600: '#4B5563',    // Body text
-    700: '#374151',    // Primary text
-    800: '#1F2937',    // Headlines, emphasis
-    900: '#111827',    // High contrast text
+    25: '#FAFAFA',     // Off-white - page background alternative
+    50: '#F4F4F5',     // Light gray - page background
+    100: '#E4E4E7',    // Subtle backgrounds, surfaces
+    200: '#D4D4D8',    // Borders, dividers
+    300: '#A1A1AA',    // Disabled borders
+    400: '#71717A',    // Placeholder text, icons
+    500: '#52525B',    // Secondary text
+    600: '#3F3F46',    // Body text
+    700: '#27272A',    // Primary text
+    800: '#18181B',    // Headlines, emphasis
+    900: '#09090B',    // High contrast text
     950: '#030712',    // Maximum contrast
   },
 

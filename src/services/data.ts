@@ -139,7 +139,7 @@ class DataService {
     if (filters?.province && filters.province !== 'all') {
       results = results.filter(u => u.province === filters.province);
     }
-    if (filters?.type && filters.type !== 'all') {
+    if (filters?.type) {
       results = results.filter(u => u.type === filters.type);
     }
     if (filters?.isHecRecognized !== undefined) {
@@ -185,8 +185,8 @@ class DataService {
     if (filters?.type && filters.type !== 'all') {
       results = results.filter(s => s.type === filters.type);
     }
-    if (filters?.minCoverage) {
-      results = results.filter(s => s.coverage_percentage >= filters.minCoverage);
+    if (filters?.minCoverage !== undefined) {
+      results = results.filter(s => s.coverage_percentage >= filters.minCoverage!);
     }
     if (filters?.hasStipend) {
       results = results.filter(s => s.monthly_stipend !== null && s.monthly_stipend > 0);

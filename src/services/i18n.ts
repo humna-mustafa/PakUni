@@ -281,7 +281,6 @@ const en: TranslationStrings = {
     heroSubtitle: 'Explore 200+ universities, calculate merit,\nand discover scholarships',
     getStarted: 'Get Started',
     quickActions: 'What would you like to do?',
-    quickActionsSubtitle: 'Your tools & resources',
     topUniversities: 'Top Universities',
     highestRanked: 'Highest ranked institutions',
     featuredScholarships: 'Featured Scholarships',

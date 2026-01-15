@@ -80,7 +80,7 @@ export const UltraSearchBar = memo<UltraSearchBarProps>(({
   const sizeConfig = SEARCH_SIZE[size];
   const shadowStyle = isDark ? ULTRA_SHADOWS.dark : ULTRA_SHADOWS.light;
 
-  const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  const handleFocus = useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(true);
     Haptics.light();
     
@@ -100,7 +100,7 @@ export const UltraSearchBar = memo<UltraSearchBarProps>(({
     onFocus?.();
   }, [focusAnim, scaleAnim, onFocus]);
 
-  const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  const handleBlur = useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(false);
     
     Animated.parallel([
@@ -205,8 +205,8 @@ export const UltraSearchBar = memo<UltraSearchBarProps>(({
         autoFocus={autoFocus}
         autoCapitalize="none"
         autoCorrect={false}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={() => handleFocus()}
+        onBlur={() => handleBlur()}
         onSubmitEditing={onSubmit}
         returnKeyType="search"
         editable={!disabled}
@@ -290,7 +290,7 @@ export const UltraTextInput = memo(forwardRef<TextInput, UltraTextInputProps>(({
   const shadowStyle = isDark ? ULTRA_SHADOWS.dark : ULTRA_SHADOWS.light;
   const hasError = !!error;
 
-  const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  const handleFocus = useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(true);
     Haptics.light();
     
@@ -300,10 +300,10 @@ export const UltraTextInput = memo(forwardRef<TextInput, UltraTextInputProps>(({
       ...ULTRA_MOTION.spring.snappy,
     }).start();
     
-    textInputProps.onFocus?.(e);
+    if (e) textInputProps.onFocus?.(e);
   }, [focusAnim, textInputProps]);
 
-  const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+  const handleBlur = useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(false);
     
     Animated.spring(focusAnim, {
@@ -312,7 +312,7 @@ export const UltraTextInput = memo(forwardRef<TextInput, UltraTextInputProps>(({
       ...ULTRA_MOTION.spring.snappy,
     }).start();
     
-    textInputProps.onBlur?.(e);
+    if (e) textInputProps.onBlur?.(e);
   }, [focusAnim, textInputProps]);
 
   // Get border color
@@ -411,8 +411,8 @@ export const UltraTextInput = memo(forwardRef<TextInput, UltraTextInputProps>(({
           placeholderTextColor={colors.placeholder}
           editable={!disabled}
           selectionColor={colors.primary}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={() => handleFocus()}
+          onBlur={() => handleBlur()}
           {...textInputProps}
         />
 

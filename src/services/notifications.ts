@@ -4,6 +4,10 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform, Alert} from 'react-native';
+import {logger} from '../utils/logger';
+
+// Scoped logger for notification service
+const log = logger.scope('Notifications');
 
 // ============================================================================
 // TYPES
@@ -83,7 +87,7 @@ class NotificationService {
       // Clean old notifications
       await this.cleanOldNotifications();
     } catch (error) {
-      console.error('Notification service init error:', error);
+      log.error('Service init error', error);
       this.isInitialized = true;
     }
   }
@@ -98,7 +102,7 @@ class NotificationService {
         JSON.stringify(this.preferences)
       );
     } catch (error) {
-      console.error('Save preferences error:', error);
+      log.error('Save preferences error', error);
     }
   }
 
@@ -112,7 +116,7 @@ class NotificationService {
         JSON.stringify(this.notifications)
       );
     } catch (error) {
-      console.error('Save notifications error:', error);
+      log.error('Save notifications error', error);
     }
   }
 
@@ -466,29 +470,47 @@ class NotificationService {
       // For now, we'll just simulate permission granted
       return true;
     } catch (error) {
-      console.error('Request permissions error:', error);
+      log.error('Request permissions error', error);
       return false;
     }
   }
 
   /**
-   * Register for push notifications (placeholder)
+   * Register for push notifications
+   * Note: In production, integrate with Firebase Cloud Messaging (FCM)
+   * Install: npm install @react-native-firebase/app @react-native-firebase/messaging
    */
   async registerForPushNotifications(): Promise<string | null> {
     try {
-      // In a real implementation, you would:
-      // 1. Request permissions
-      // 2. Get the push token from Firebase/APNS
-      // 3. Send the token to your backend
+      // TODO: Implement Firebase Cloud Messaging integration
+      // Example with @react-native-firebase/messaging:
+      // 
+      // import messaging from '@react-native-firebase/messaging';
+      // 
+      // const authStatus = await messaging().requestPermission();
+      // const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+      // 
+      // if (enabled) {
+      //   const token = await messaging().getToken();
+      //   this.pushToken = token;
+      //   await AsyncStorage.setItem(STORAGE_KEYS.PUSH_TOKEN, token);
+      //   return token;
+      // }
       
-      // For now, return a mock token
-      const mockToken = `mock_token_${Platform.OS}_${Date.now()}`;
-      this.pushToken = mockToken;
-      await AsyncStorage.setItem(STORAGE_KEYS.PUSH_TOKEN, mockToken);
+      // For development: Return device-specific identifier
+      // Push notifications will use local notifications until FCM is integrated
+      const deviceId = `${Platform.OS}_${Platform.Version}_${Date.now()}`;
+      this.pushToken = deviceId;
+      await AsyncStorage.setItem(STORAGE_KEYS.PUSH_TOKEN, deviceId);
       
-      return mockToken;
+      // Log for development awareness
+      if (__DEV__) {
+        log.info('Push notifications: Using local-only mode. Integrate FCM for production.');
+      }
+      
+      return deviceId;
     } catch (error) {
-      console.error('Register push error:', error);
+      log.warn('Push notification registration error', error);
       return null;
     }
   }

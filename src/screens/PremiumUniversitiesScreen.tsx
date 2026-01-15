@@ -475,28 +475,29 @@ const PremiumUniversitiesScreen = () => {
 
   const renderHeader = () => (
     <View style={styles.listHeader}>
-      {/* Header Title with Gradient */}
-      <LinearGradient
-        colors={isDark ? ['#0F172A', '#1E3A5F', '#10B981'] : ['#10B981', '#059669', '#047857']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={styles.headerGradient}>
-        <View style={styles.headerDecoCircle1} />
-        <View style={styles.headerDecoCircle2} />
+      {/* Header Title - Clean, professional design */}
+      <View 
+        style={[
+          styles.headerCard, 
+          {
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+          }
+        ]}>
         <View style={styles.headerContent}>
           <View style={styles.headerTextContainer}>
-            <Text style={styles.screenTitle}>Universities</Text>
-            <Text style={styles.screenSubtitle}>
-              Explore 200+ Pakistani institutions
+            <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
+            <Text style={[styles.screenSubtitle, {color: colors.textSecondary}]}>
+              Explore Pakistani institutions
             </Text>
           </View>
-          <View style={styles.countBadge}>
-            <Text style={styles.countText}>
+          <View style={[styles.countBadge, {backgroundColor: colors.primaryLight}]}>
+            <Text style={[styles.countText, {color: colors.primary}]}>
               {filteredUniversities.length}
             </Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Search Bar */}
       <AnimatedSearchBar
@@ -668,35 +669,12 @@ const styles = StyleSheet.create({
   listHeader: {
     paddingBottom: SPACING.md,
   },
-  headerGradient: {
+  headerCard: {
     margin: SPACING.lg,
     marginBottom: SPACING.lg,
     padding: SPACING.lg,
-    borderRadius: RADIUS.xxl,
-    overflow: 'hidden',
-    elevation: 8,
-    shadowColor: '#10B981',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-  },
-  headerDecoCircle1: {
-    position: 'absolute',
-    top: -30,
-    right: -30,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-  },
-  headerDecoCircle2: {
-    position: 'absolute',
-    bottom: -20,
-    left: -20,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: RADIUS.xl,
+    borderWidth: 1,
   },
   headerContent: {
     flexDirection: 'row',
@@ -708,33 +686,23 @@ const styles = StyleSheet.create({
     marginRight: SPACING.md,
   },
   screenTitle: {
-    fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '800',
+    fontSize: 24,
+    fontWeight: '700',
     letterSpacing: -0.5,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: {width: 0, height: 1},
-    textShadowRadius: 4,
   },
   screenSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: 6,
-    fontWeight: '500',
-    color: 'rgba(255,255,255,0.9)',
-    letterSpacing: 0.2,
+    fontSize: 14,
+    marginTop: 4,
+    fontWeight: '400',
   },
   countBadge: {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.md,
-    borderRadius: RADIUS.xl,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.lg,
   },
   countText: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '700',
   },
   searchBar: {
     flexDirection: 'row',

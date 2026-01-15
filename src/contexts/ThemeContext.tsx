@@ -90,152 +90,152 @@ export interface ThemeColors {
   black: string;
 }
 
-// Light theme colors - Premium, refined, and accessible
+// Light theme colors - Refined corporate palette inspired by Stripe, Linear, Notion
 export const lightColors: ThemeColors = {
-  // Primary - Premium blue with depth
-  primary: '#1A7AEB',
-  primaryLight: '#EEF6FF',
-  primaryDark: '#0F62CC',
-  secondary: '#14B8AA',
-  secondaryLight: '#EEFDFB',
+  // Primary - Refined indigo-blue, sophisticated and trustworthy
+  primary: '#4F46E5',
+  primaryLight: '#EEF2FF',
+  primaryDark: '#4338CA',
+  secondary: '#0D9488',
+  secondaryLight: '#F0FDFA',
   
-  // Status colors with refined light variants
-  success: '#10B981',
+  // Status colors - Muted, professional tones
+  success: '#059669',
   successLight: '#ECFDF5',
-  warning: '#F59E0B',
+  warning: '#D97706',
   warningLight: '#FFFBEB',
-  error: '#EF4444',
+  error: '#DC2626',
   errorLight: '#FEF2F2',
-  info: '#3B97FF',
-  infoLight: '#EEF6FF',
+  info: '#0284C7',
+  infoLight: '#F0F9FF',
   
-  // Background - Refined neutral with subtle warmth
-  background: '#F8FAFC',
+  // Background - Pure, clean whites with subtle warmth
+  background: '#FAFAFA',
   backgroundSecondary: '#FFFFFF',
   surface: '#FFFFFF',
   card: '#FFFFFF',
   cardElevated: '#FFFFFF',
   
-  // Text - Carefully balanced contrast
-  text: '#0F172A',
-  textSecondary: '#475569',
-  textMuted: '#94A3B8',
+  // Text - High contrast, readable
+  text: '#18181B',
+  textSecondary: '#52525B',
+  textMuted: '#A1A1AA',
   textInverse: '#FFFFFF',
   textOnPrimary: '#FFFFFF',
   
-  // Borders - Subtle but defined
-  border: '#E2E8F0',
-  borderLight: '#F1F5F9',
-  borderFocused: '#1A7AEB',
+  // Borders - Barely visible, elegant
+  border: '#E4E4E7',
+  borderLight: '#F4F4F5',
+  borderFocused: '#4F46E5',
   
   // Semantic
-  overlay: 'rgba(15, 23, 42, 0.6)',
-  shadow: 'rgba(15, 23, 42, 0.08)',
-  divider: '#E2E8F0',
-  highlight: '#FEF3C7',
+  overlay: 'rgba(0, 0, 0, 0.4)',
+  shadow: 'rgba(0, 0, 0, 0.04)',
+  divider: '#E4E4E7',
+  highlight: '#FEF9C3',
   
-  // Gradients - Premium
-  gradientStart: '#1A7AEB',
-  gradientEnd: '#0F62CC',
+  // Gradients - Subtle, professional
+  gradientStart: '#4F46E5',
+  gradientEnd: '#6366F1',
   
-  // Tab bar - Refined
+  // Tab bar - Clean, minimal
   tabBarBackground: '#FFFFFF',
-  tabBarActive: '#1A7AEB',
-  tabBarInactive: '#94A3B8',
+  tabBarActive: '#4F46E5',
+  tabBarInactive: '#A1A1AA',
   
-  // Input - Clean
-  inputBackground: '#FFFFFF',
-  inputBorder: '#E2E8F0',
-  inputText: '#0F172A',
-  placeholder: '#94A3B8',
+  // Input - Refined
+  inputBackground: '#FAFAFA',
+  inputBorder: '#E4E4E7',
+  inputText: '#18181B',
+  placeholder: '#A1A1AA',
   
-  // Skeleton - Smooth shimmer
-  skeletonBase: '#E2E8F0',
-  skeletonHighlight: '#F1F5F9',
+  // Skeleton - Subtle animation
+  skeletonBase: '#F4F4F5',
+  skeletonHighlight: '#FAFAFA',
   
-  // Badge
-  badgeBackground: '#EF4444',
+  // Badge - Muted red
+  badgeBackground: '#DC2626',
   badgeText: '#FFFFFF',
   
-  // Header - Premium gradient ready
-  headerBackground: '#1A7AEB',
-  headerText: '#FFFFFF',
+  // Header - Clean, not gradient-heavy
+  headerBackground: '#FFFFFF',
+  headerText: '#18181B',
   
   // Base colors
   white: '#FFFFFF',
   black: '#000000',
 };
 
-// Dark theme colors - True dark with premium feel
+// Dark theme colors - True dark, OLED-friendly with refined contrast
 export const darkColors: ThemeColors = {
-  // Primary - Bright blue for dark mode visibility
-  primary: '#3B97FF',
-  primaryLight: '#1A365D',
-  primaryDark: '#7ABBFF',
-  secondary: '#38D4C9',
+  // Primary - Softer blue for dark mode eye comfort
+  primary: '#818CF8',
+  primaryLight: '#1E1B4B',
+  primaryDark: '#A5B4FC',
+  secondary: '#5EEAD4',
   secondaryLight: '#134E4A',
   
-  // Status colors - Softened for dark mode comfort
-  success: '#34D399',
-  successLight: '#14532D',
-  warning: '#FBBF24',
+  // Status colors - Softened pastels for dark mode
+  success: '#6EE7B7',
+  successLight: '#064E3B',
+  warning: '#FCD34D',
   warningLight: '#451A03',
-  error: '#F87171',
+  error: '#FCA5A5',
   errorLight: '#450A0A',
-  info: '#7ABBFF',
-  infoLight: '#1A365D',
+  info: '#93C5FD',
+  infoLight: '#1E3A5F',
   
-  // Background - Rich dark with depth
-  background: '#0F172A',
-  backgroundSecondary: '#1E293B',
-  surface: '#1E293B',
-  card: '#1E293B',
-  cardElevated: '#334155',
+  // Background - Pure dark, clean layers
+  background: '#09090B',
+  backgroundSecondary: '#18181B',
+  surface: '#18181B',
+  card: '#1F1F23',
+  cardElevated: '#27272A',
   
-  // Text - Balanced for dark mode
-  text: '#F1F5F9',
-  textSecondary: '#CBD5E1',
-  textMuted: '#64748B',
-  textInverse: '#0F172A',
+  // Text - Optimized for dark mode readability
+  text: '#FAFAFA',
+  textSecondary: '#A1A1AA',
+  textMuted: '#71717A',
+  textInverse: '#18181B',
   textOnPrimary: '#FFFFFF',
   
-  // Borders - Visible yet subtle
-  border: '#334155',
-  borderLight: '#1E293B',
-  borderFocused: '#3B97FF',
+  // Borders - Subtle separation
+  border: '#27272A',
+  borderLight: '#1F1F23',
+  borderFocused: '#818CF8',
   
   // Semantic
-  overlay: 'rgba(0, 0, 0, 0.75)',
-  shadow: 'rgba(0, 0, 0, 0.4)',
-  divider: '#334155',
+  overlay: 'rgba(0, 0, 0, 0.6)',
+  shadow: 'rgba(0, 0, 0, 0.3)',
+  divider: '#27272A',
   highlight: '#422006',
   
-  // Gradients
-  gradientStart: '#3B97FF',
-  gradientEnd: '#1A7AEB',
+  // Gradients - Subtle
+  gradientStart: '#6366F1',
+  gradientEnd: '#818CF8',
   
-  // Tab bar
-  tabBarBackground: '#1E293B',
-  tabBarActive: '#3B97FF',
-  tabBarInactive: '#64748B',
+  // Tab bar - Clean
+  tabBarBackground: '#18181B',
+  tabBarActive: '#818CF8',
+  tabBarInactive: '#71717A',
   
   // Input
-  inputBackground: '#1E293B',
-  inputBorder: '#475569',
-  inputText: '#F1F5F9',
-  placeholder: '#64748B',
+  inputBackground: '#27272A',
+  inputBorder: '#3F3F46',
+  inputText: '#FAFAFA',
+  placeholder: '#71717A',
   
   // Skeleton
-  skeletonBase: '#334155',
-  skeletonHighlight: '#475569',
+  skeletonBase: '#27272A',
+  skeletonHighlight: '#3F3F46',
   
   // Badge
-  badgeBackground: '#F87171',
-  badgeText: '#FFFFFF',
+  badgeBackground: '#FCA5A5',
+  badgeText: '#18181B',
   
-  // Header
-  headerBackground: '#1E293B',
-  headerText: '#F1F5F9',
+  // Header - Clean dark
+  headerBackground: '#18181B',
+  headerText: '#FAFAFA',
   
   // Base colors
   white: '#FFFFFF',

@@ -27,7 +27,9 @@ import {validateCalculatorForm, createNumericInputHandler} from '../utils/valida
 import {Haptics} from '../utils/haptics';
 import {shareMeritSuccessCard, getChanceLevel} from '../services/share';
 
-const {width} = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
+const isSmallScreen = SCREEN_WIDTH < 375;
+const isMediumScreen = SCREEN_WIDTH >= 375 && SCREEN_WIDTH < 414;
 
 // Storage key for persisting calculator inputs
 const CALCULATOR_STORAGE_KEY = '@pakuni_calculator_inputs';
@@ -724,10 +726,10 @@ const PremiumCalculatorScreen = () => {
                     {backgroundColor: colors.card, borderColor: colors.border},
                   ]}
                   onPress={() => setShowFormulaModal(true)}>
-                  <Icon name="bar-chart-outline" family="Ionicons" size={24} color={colors.primary} />
+                  <Icon name="school-outline" family="Ionicons" size={24} color={colors.primary} />
                   <Text
                     style={[styles.selectFormulaBtnText, {color: colors.textSecondary}]}>
-                    Select a specific formula or calculate all
+                    Select MDCAT, ECAT, NET or other university formula
                   </Text>
                 </TouchableOpacity>
               )}
@@ -874,7 +876,7 @@ const PremiumCalculatorScreen = () => {
         </KeyboardAvoidingView>
       </SafeAreaView>
 
-      {/* Formula Selection Modal */}
+      {/* Formula Selection Modal - Organized by Categories */}
       <Modal
         visible={showFormulaModal}
         animationType="slide"
@@ -884,7 +886,7 @@ const PremiumCalculatorScreen = () => {
           <View style={[styles.modalContent, {backgroundColor: colors.card}]}>
             <View style={[styles.modalHeader, {borderBottomColor: colors.border}]}>
               <Text style={[styles.modalTitle, {color: colors.text}]}>
-                Select Merit Formula
+                Select University Formula
               </Text>
               <TouchableOpacity
                 onPress={() => setShowFormulaModal(false)}
@@ -912,13 +914,16 @@ const PremiumCalculatorScreen = () => {
                     Calculate All Formulas
                   </Text>
                   <Text style={[styles.formulaDesc, {color: colors.textSecondary}]}>
-                    Compare your aggregate across all applicable formulas
+                    Compare across MDCAT, ECAT, NET & all university formulas
                   </Text>
                 </View>
               </TouchableOpacity>
 
-              {/* Formula Options */}
-              {MERIT_FORMULAS.map(formula => (
+              {/* Medical Formulas Section */}
+              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>🏥 Medical Colleges</Text>
+              {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
+                field.toLowerCase().includes('medical') || field.toLowerCase().includes('mbbs') || field.toLowerCase().includes('bds')
+              )).map(formula => (
                 <TouchableOpacity
                   key={formula.id}
                   style={[
@@ -936,7 +941,7 @@ const PremiumCalculatorScreen = () => {
                     setSelectedFormula(formula);
                     setShowFormulaModal(false);
                   }}>
-                  <Icon name="school-outline" family="Ionicons" size={28} color={colors.primary} />
+                  <Icon name="medkit-outline" family="Ionicons" size={28} color="#EF4444" />
                   <View style={styles.formulaOptionInfo}>
                     <Text style={[styles.formulaName, {color: colors.text}]}>
                       {formula.name}
@@ -958,7 +963,219 @@ const PremiumCalculatorScreen = () => {
                       {formula.entry_test_weightage > 0 && (
                         <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
                           <Text style={[styles.weightText, {color: colors.warning}]}>
-                            {formula.entry_test_weightage}% Test
+                            {formula.entry_test_weightage}% {formula.entry_test_name}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/* Engineering Formulas Section */}
+              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>⚙️ Engineering Universities</Text>
+              {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
+                field.toLowerCase().includes('engineering') || field.toLowerCase().includes('bsc engineering') || field.toLowerCase().includes('be')
+              ) && !f.applicable_fields.some(field => field.toLowerCase().includes('medical'))).map(formula => (
+                <TouchableOpacity
+                  key={formula.id}
+                  style={[
+                    styles.formulaOption,
+                    {
+                      backgroundColor:
+                        selectedFormula?.id === formula.id
+                          ? `${colors.primary}10`
+                          : colors.background,
+                      borderColor:
+                        selectedFormula?.id === formula.id ? colors.primary : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedFormula(formula);
+                    setShowFormulaModal(false);
+                  }}>
+                  <Icon name="construct-outline" family="Ionicons" size={28} color="#F59E0B" />
+                  <View style={styles.formulaOptionInfo}>
+                    <Text style={[styles.formulaName, {color: colors.text}]}>
+                      {formula.name}
+                    </Text>
+                    <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>
+                      {formula.university}
+                    </Text>
+                    <View style={styles.formulaWeights}>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.primary}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.primary}]}>
+                          {formula.matric_weightage}% Matric
+                        </Text>
+                      </View>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.success}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.success}]}>
+                          {formula.inter_weightage}% Inter
+                        </Text>
+                      </View>
+                      {formula.entry_test_weightage > 0 && (
+                        <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
+                          <Text style={[styles.weightText, {color: colors.warning}]}>
+                            {formula.entry_test_weightage}% {formula.entry_test_name}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/* Computer Science / IT Section */}
+              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>💻 Computer Science & IT</Text>
+              {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
+                field.toLowerCase().includes('computer') || field.toLowerCase().includes('software') || field.toLowerCase().includes('data')
+              )).map(formula => (
+                <TouchableOpacity
+                  key={formula.id}
+                  style={[
+                    styles.formulaOption,
+                    {
+                      backgroundColor:
+                        selectedFormula?.id === formula.id
+                          ? `${colors.primary}10`
+                          : colors.background,
+                      borderColor:
+                        selectedFormula?.id === formula.id ? colors.primary : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedFormula(formula);
+                    setShowFormulaModal(false);
+                  }}>
+                  <Icon name="code-slash-outline" family="Ionicons" size={28} color="#3B82F6" />
+                  <View style={styles.formulaOptionInfo}>
+                    <Text style={[styles.formulaName, {color: colors.text}]}>
+                      {formula.name}
+                    </Text>
+                    <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>
+                      {formula.university}
+                    </Text>
+                    <View style={styles.formulaWeights}>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.primary}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.primary}]}>
+                          {formula.matric_weightage}% Matric
+                        </Text>
+                      </View>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.success}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.success}]}>
+                          {formula.inter_weightage}% Inter
+                        </Text>
+                      </View>
+                      {formula.entry_test_weightage > 0 && (
+                        <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
+                          <Text style={[styles.weightText, {color: colors.warning}]}>
+                            {formula.entry_test_weightage}% {formula.entry_test_name}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/* Business Schools Section */}
+              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>📊 Business Schools</Text>
+              {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
+                field.toLowerCase().includes('business') || field.toLowerCase().includes('bba') || field.toLowerCase().includes('accounting') || field.toLowerCase().includes('economics')
+              )).map(formula => (
+                <TouchableOpacity
+                  key={formula.id}
+                  style={[
+                    styles.formulaOption,
+                    {
+                      backgroundColor:
+                        selectedFormula?.id === formula.id
+                          ? `${colors.primary}10`
+                          : colors.background,
+                      borderColor:
+                        selectedFormula?.id === formula.id ? colors.primary : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedFormula(formula);
+                    setShowFormulaModal(false);
+                  }}>
+                  <Icon name="briefcase-outline" family="Ionicons" size={28} color="#10B981" />
+                  <View style={styles.formulaOptionInfo}>
+                    <Text style={[styles.formulaName, {color: colors.text}]}>
+                      {formula.name}
+                    </Text>
+                    <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>
+                      {formula.university}
+                    </Text>
+                    <View style={styles.formulaWeights}>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.primary}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.primary}]}>
+                          {formula.matric_weightage}% Matric
+                        </Text>
+                      </View>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.success}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.success}]}>
+                          {formula.inter_weightage}% Inter
+                        </Text>
+                      </View>
+                      {formula.entry_test_weightage > 0 && (
+                        <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
+                          <Text style={[styles.weightText, {color: colors.warning}]}>
+                            {formula.entry_test_weightage}% {formula.entry_test_name}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+
+              {/* General Universities Section */}
+              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>🎓 General Universities</Text>
+              {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
+                field.toLowerCase().includes('general') || field.toLowerCase().includes('arts') || field.toLowerCase().includes('all programs') || field.toLowerCase().includes('bs programs')
+              )).map(formula => (
+                <TouchableOpacity
+                  key={formula.id}
+                  style={[
+                    styles.formulaOption,
+                    {
+                      backgroundColor:
+                        selectedFormula?.id === formula.id
+                          ? `${colors.primary}10`
+                          : colors.background,
+                      borderColor:
+                        selectedFormula?.id === formula.id ? colors.primary : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedFormula(formula);
+                    setShowFormulaModal(false);
+                  }}>
+                  <Icon name="school-outline" family="Ionicons" size={28} color="#8B5CF6" />
+                  <View style={styles.formulaOptionInfo}>
+                    <Text style={[styles.formulaName, {color: colors.text}]}>
+                      {formula.name}
+                    </Text>
+                    <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>
+                      {formula.university}
+                    </Text>
+                    <View style={styles.formulaWeights}>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.primary}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.primary}]}>
+                          {formula.matric_weightage}% Matric
+                        </Text>
+                      </View>
+                      <View style={[styles.weightBadge, {backgroundColor: `${colors.success}15`}]}>
+                        <Text style={[styles.weightText, {color: colors.success}]}>
+                          {formula.inter_weightage}% Inter
+                        </Text>
+                      </View>
+                      {formula.entry_test_weightage > 0 && (
+                        <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
+                          <Text style={[styles.weightText, {color: colors.warning}]}>
+                            {formula.entry_test_weightage}% {formula.entry_test_name}
                           </Text>
                         </View>
                       )}
@@ -1212,6 +1429,7 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    flexWrap: 'wrap',
   },
   inputGroup: {
     flex: 1,
@@ -1282,9 +1500,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: SPACING.md,
     marginBottom: SPACING.xl,
+    paddingHorizontal: SPACING.lg,
+    flexWrap: 'wrap',
   },
   calculateBtn: {
     flex: 2,
+    minWidth: 160,
     borderRadius: RADIUS.xl,
     overflow: 'hidden',
     elevation: 4,
@@ -1501,6 +1722,13 @@ const styles = StyleSheet.create({
   weightText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '600',
+  },
+  formulaCategoryTitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    marginTop: SPACING.lg,
+    marginBottom: SPACING.sm,
+    paddingHorizontal: SPACING.xs,
   },
   // Share Result Button Styles
   shareResultBtn: {

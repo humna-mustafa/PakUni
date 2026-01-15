@@ -17,7 +17,7 @@ import { Dimensions, Platform } from 'react-native';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // ============================================================================
-// MODERN COLOR SYSTEM - Corporate & Professional
+// MODERN COLOR SYSTEM - Refined Professional Palette
 // ============================================================================
 
 /**
@@ -27,36 +27,36 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
  * - Semantic: Reserved for status communication only
  */
 export const MODERN_COLORS = {
-  // Brand Primary - Corporate Blue (Used sparingly)
+  // Brand Primary - Refined Indigo (Used sparingly)
   primary: {
-    main: '#0066CC',      // Primary brand color
-    light: '#E8F4FD',     // Subtle backgrounds
-    lighter: '#F5FAFF',   // Very subtle tints
-    dark: '#004C99',      // Pressed states
+    main: '#4F46E5',      // Primary brand color
+    light: '#EEF2FF',     // Subtle backgrounds
+    lighter: '#F5F3FF',   // Very subtle tints
+    dark: '#4338CA',      // Pressed states
     onPrimary: '#FFFFFF', // Text on primary
   },
 
-  // Neutral Palette - The backbone of the UI
+  // Neutral Palette - Zinc-based for cleaner look
   neutral: {
     white: '#FFFFFF',
-    50: '#FAFBFC',        // Page background
-    100: '#F4F6F8',       // Card backgrounds, surfaces
-    200: '#E8ECF0',       // Borders, dividers
-    300: '#D1D9E0',       // Disabled states
-    400: '#A0AEC0',       // Placeholder text
-    500: '#718096',       // Secondary text
-    600: '#4A5568',       // Body text
-    700: '#2D3748',       // Primary text
-    800: '#1A202C',       // Headlines
-    900: '#171923',       // High emphasis text
+    50: '#FAFAFA',        // Page background
+    100: '#F4F4F5',       // Card backgrounds, surfaces
+    200: '#E4E4E7',       // Borders, dividers
+    300: '#D4D4D8',       // Disabled states
+    400: '#A1A1AA',       // Placeholder text
+    500: '#71717A',       // Secondary text
+    600: '#52525B',       // Body text
+    700: '#3F3F46',       // Primary text
+    800: '#27272A',       // Headlines
+    900: '#18181B',       // High emphasis text
     black: '#000000',
   },
 
-  // Semantic Colors - For status only
+  // Semantic Colors - Muted professional tones
   semantic: {
-    success: '#0D9488',
-    successLight: '#F0FDFA',
-    successDark: '#0F766E',
+    success: '#059669',
+    successLight: '#ECFDF5',
+    successDark: '#047857',
     
     warning: '#D97706',
     warningLight: '#FFFBEB',
@@ -73,9 +73,9 @@ export const MODERN_COLORS = {
 
   // Surface Colors - For layering
   surface: {
-    background: '#FAFBFC',
+    background: '#FAFAFA',
     elevated: '#FFFFFF',
-    overlay: 'rgba(0, 0, 0, 0.5)',
+    overlay: 'rgba(0, 0, 0, 0.4)',
   },
 };
 
@@ -262,12 +262,12 @@ export const MODERN_RADIUS = {
 
 /**
  * Shadow Philosophy:
- * - Use shadows sparingly to indicate elevation
- * - Softer, more diffuse shadows look more natural
+ * - Use shadows sparingly - borders often work better
+ * - Softer, more diffuse shadows look more professional
  * - Dark mode uses less shadow, more border contrast
  */
 export const MODERN_SHADOWS = {
-  // Light theme shadows
+  // Light theme shadows - Very subtle
   none: {
     shadowColor: 'transparent',
     shadowOffset: { width: 0, height: 0 },
@@ -279,7 +279,7 @@ export const MODERN_SHADOWS = {
   xs: {
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.03,
+    shadowOpacity: 0.02,
     shadowRadius: 2,
     elevation: 1,
   },
@@ -287,7 +287,7 @@ export const MODERN_SHADOWS = {
   sm: {
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.03,
     shadowRadius: 3,
     elevation: 1,
   },
@@ -295,26 +295,26 @@ export const MODERN_SHADOWS = {
   md: {
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
 
   lg: {
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 6,
-  },
-
-  // Colored shadow for primary actions (use sparingly)
-  primary: {
-    shadowColor: '#0066CC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
     shadowRadius: 12,
     elevation: 4,
+  },
+
+  // No colored shadows - more professional
+  primary: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
 };
 
