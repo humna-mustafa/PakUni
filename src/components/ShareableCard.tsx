@@ -1063,8 +1063,544 @@ const styles = StyleSheet.create({
   },
 });
 
+// ============================================================================
+// ADMISSION CELEBRATION CARD - "I got into NUST!" 🎉
+// ============================================================================
+
+interface AdmissionCelebrationCardProps {
+  universityName: string;
+  universityShortName: string;
+  programName?: string;
+  studentName?: string;
+  year?: number;
+}
+
+export const AdmissionCelebrationCard = forwardRef<View, AdmissionCelebrationCardProps>(
+  ({universityName, universityShortName, programName, studentName, year}, ref) => {
+    return (
+      <View ref={ref} style={celebrationStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={['#10B981', '#059669', '#047857']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={celebrationStyles.gradient}>
+          {/* Decorative Elements */}
+          <View style={celebrationStyles.confetti1}>
+            <Text style={{fontSize: 20}}>🎊</Text>
+          </View>
+          <View style={celebrationStyles.confetti2}>
+            <Text style={{fontSize: 16}}>✨</Text>
+          </View>
+          <View style={celebrationStyles.confetti3}>
+            <Text style={{fontSize: 18}}>🎉</Text>
+          </View>
+          <View style={celebrationStyles.confetti4}>
+            <Text style={{fontSize: 14}}>⭐</Text>
+          </View>
+          
+          {/* Header */}
+          <View style={celebrationStyles.header}>
+            <PakUniLogoBadge size={36} variant="light" />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={celebrationStyles.brand}>PakUni</Text>
+              <Text style={celebrationStyles.subBrand}>Success Story</Text>
+            </View>
+          </View>
+
+          {/* Main Celebration Content */}
+          <View style={celebrationStyles.mainContent}>
+            <Text style={celebrationStyles.celebrationEmoji}>🎓</Text>
+            <Text style={celebrationStyles.bigText}>ADMISSION</Text>
+            <Text style={celebrationStyles.securedText}>SECURED!</Text>
+            
+            {studentName && (
+              <Text style={celebrationStyles.studentName}>{studentName}</Text>
+            )}
+            <Text style={celebrationStyles.gotIntoText}>got admitted to</Text>
+            
+            <View style={celebrationStyles.universityBox}>
+              <Text style={celebrationStyles.uniShort}>{universityShortName}</Text>
+              <Text style={celebrationStyles.uniName}>{universityName}</Text>
+              {programName && (
+                <Text style={celebrationStyles.programName}>📚 {programName}</Text>
+              )}
+              {year && (
+                <View style={celebrationStyles.yearBadge}>
+                  <Text style={celebrationStyles.yearText}>Class of {year}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* Footer */}
+          <View style={celebrationStyles.footer}>
+            <Text style={celebrationStyles.hashtags}>#Alhamdulillah #{universityShortName}{year || ''}</Text>
+            <Text style={celebrationStyles.cta}>Plan your journey on PakUni App 🚀</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// ============================================================================
+// ENTRY TEST SUCCESS CARD - "I cleared ECAT!" ✅
+// ============================================================================
+
+interface EntryTestSuccessCardProps {
+  testName: string;
+  testShortName: string;
+  score?: number;
+  maxScore?: number;
+  percentile?: number;
+  studentName?: string;
+}
+
+export const EntryTestSuccessCard = forwardRef<View, EntryTestSuccessCardProps>(
+  ({testName, testShortName, score, maxScore, percentile, studentName}, ref) => {
+    return (
+      <View ref={ref} style={celebrationStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={['#6366F1', '#4F46E5', '#3730A3']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={celebrationStyles.gradient}>
+          {/* Decorative Elements */}
+          <View style={celebrationStyles.confetti1}>
+            <Text style={{fontSize: 18}}>📝</Text>
+          </View>
+          <View style={celebrationStyles.confetti2}>
+            <Text style={{fontSize: 16}}>✅</Text>
+          </View>
+          <View style={celebrationStyles.confetti3}>
+            <Text style={{fontSize: 18}}>💪</Text>
+          </View>
+          
+          {/* Header */}
+          <View style={celebrationStyles.header}>
+            <PakUniLogoBadge size={36} variant="light" />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={celebrationStyles.brand}>PakUni</Text>
+              <Text style={celebrationStyles.subBrand}>Achievement Unlocked</Text>
+            </View>
+          </View>
+
+          {/* Main Content */}
+          <View style={celebrationStyles.mainContent}>
+            <Text style={celebrationStyles.celebrationEmoji}>📝</Text>
+            <Text style={celebrationStyles.bigText}>{testShortName}</Text>
+            <Text style={celebrationStyles.securedText}>CLEARED! ✅</Text>
+            
+            {studentName && (
+              <Text style={celebrationStyles.studentName}>{studentName}</Text>
+            )}
+            <Text style={celebrationStyles.gotIntoText}>successfully passed the</Text>
+            <Text style={celebrationStyles.testFullName}>{testName}</Text>
+            
+            {(score || percentile) && (
+              <View style={celebrationStyles.scoreBox}>
+                {score && (
+                  <View style={celebrationStyles.scoreItem}>
+                    <Text style={celebrationStyles.scoreLabel}>Score</Text>
+                    <Text style={celebrationStyles.scoreValue}>{score}{maxScore ? `/${maxScore}` : ''}</Text>
+                  </View>
+                )}
+                {percentile && (
+                  <View style={celebrationStyles.scoreItem}>
+                    <Text style={celebrationStyles.scoreLabel}>Percentile</Text>
+                    <Text style={celebrationStyles.scoreValue}>{percentile}%</Text>
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
+
+          {/* Footer */}
+          <View style={celebrationStyles.footer}>
+            <Text style={celebrationStyles.hashtags}>#{testShortName}Cleared #AdmissionSeason</Text>
+            <Text style={celebrationStyles.cta}>Prepare for tests on PakUni App 📱</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// ============================================================================
+// MERIT LIST CELEBRATION CARD - "I'm on the merit list!" 📜
+// ============================================================================
+
+interface MeritListCardProps {
+  universityName: string;
+  universityShortName: string;
+  meritListNumber?: number;
+  studentName?: string;
+  meritPosition?: number;
+}
+
+export const MeritListCard = forwardRef<View, MeritListCardProps>(
+  ({universityName, universityShortName, meritListNumber, studentName, meritPosition}, ref) => {
+    return (
+      <View ref={ref} style={celebrationStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={['#F59E0B', '#D97706', '#B45309']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={celebrationStyles.gradient}>
+          {/* Decorative Elements */}
+          <View style={celebrationStyles.confetti1}>
+            <Text style={{fontSize: 20}}>📜</Text>
+          </View>
+          <View style={celebrationStyles.confetti2}>
+            <Text style={{fontSize: 18}}>🎯</Text>
+          </View>
+          <View style={celebrationStyles.confetti3}>
+            <Text style={{fontSize: 16}}>⭐</Text>
+          </View>
+          
+          {/* Header */}
+          <View style={celebrationStyles.header}>
+            <PakUniLogoBadge size={36} variant="light" />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={celebrationStyles.brand}>PakUni</Text>
+              <Text style={celebrationStyles.subBrand}>Merit Announcement</Text>
+            </View>
+          </View>
+
+          {/* Main Content */}
+          <View style={celebrationStyles.mainContent}>
+            <Text style={celebrationStyles.celebrationEmoji}>📜</Text>
+            <Text style={celebrationStyles.bigText}>MERIT</Text>
+            <Text style={celebrationStyles.securedText}>LISTED! 🎯</Text>
+            
+            {studentName && (
+              <Text style={celebrationStyles.studentName}>{studentName}</Text>
+            )}
+            <Text style={celebrationStyles.gotIntoText}>made it to</Text>
+            
+            <View style={celebrationStyles.universityBox}>
+              {meritListNumber && (
+                <View style={celebrationStyles.listBadge}>
+                  <Text style={celebrationStyles.listBadgeText}>Merit List {meritListNumber}</Text>
+                </View>
+              )}
+              <Text style={celebrationStyles.uniShort}>{universityShortName}</Text>
+              <Text style={celebrationStyles.uniName}>{universityName}</Text>
+              {meritPosition && (
+                <Text style={celebrationStyles.positionText}>Position: #{meritPosition}</Text>
+              )}
+            </View>
+          </View>
+
+          {/* Footer */}
+          <View style={celebrationStyles.footer}>
+            <Text style={celebrationStyles.hashtags}>#MeritListed #{universityShortName}</Text>
+            <Text style={celebrationStyles.cta}>Calculate your merit on PakUni 📊</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// ============================================================================
+// SCHOLARSHIP CARD - "I received a scholarship!" 💰
+// ============================================================================
+
+interface ScholarshipCelebrationCardProps {
+  scholarshipName: string;
+  provider: string;
+  coverage?: string;
+  studentName?: string;
+}
+
+export const ScholarshipCelebrationCard = forwardRef<View, ScholarshipCelebrationCardProps>(
+  ({scholarshipName, provider, coverage, studentName}, ref) => {
+    return (
+      <View ref={ref} style={celebrationStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={['#8B5CF6', '#7C3AED', '#5B21B6']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={celebrationStyles.gradient}>
+          {/* Decorative Elements */}
+          <View style={celebrationStyles.confetti1}>
+            <Text style={{fontSize: 18}}>💰</Text>
+          </View>
+          <View style={celebrationStyles.confetti2}>
+            <Text style={{fontSize: 16}}>🎓</Text>
+          </View>
+          <View style={celebrationStyles.confetti3}>
+            <Text style={{fontSize: 18}}>✨</Text>
+          </View>
+          
+          {/* Header */}
+          <View style={celebrationStyles.header}>
+            <PakUniLogoBadge size={36} variant="light" />
+            <View style={{marginLeft: 8, flex: 1}}>
+              <Text style={celebrationStyles.brand}>PakUni</Text>
+              <Text style={celebrationStyles.subBrand}>Scholarship Award</Text>
+            </View>
+          </View>
+
+          {/* Main Content */}
+          <View style={celebrationStyles.mainContent}>
+            <Text style={celebrationStyles.celebrationEmoji}>🎓💰</Text>
+            <Text style={celebrationStyles.bigText}>SCHOLARSHIP</Text>
+            <Text style={celebrationStyles.securedText}>AWARDED!</Text>
+            
+            {studentName && (
+              <Text style={celebrationStyles.studentName}>{studentName}</Text>
+            )}
+            <Text style={celebrationStyles.gotIntoText}>has been awarded</Text>
+            
+            <View style={celebrationStyles.universityBox}>
+              <Text style={celebrationStyles.scholarshipTitle}>{scholarshipName}</Text>
+              <Text style={celebrationStyles.providerText}>By: {provider}</Text>
+              {coverage && (
+                <View style={celebrationStyles.coverageBadge}>
+                  <Text style={celebrationStyles.coverageText}>{coverage}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* Footer */}
+          <View style={celebrationStyles.footer}>
+            <Text style={celebrationStyles.hashtags}>#Scholarship #EducationFunding</Text>
+            <Text style={celebrationStyles.cta}>Find scholarships on PakUni 💰</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// ============================================================================
+// CELEBRATION STYLES
+// ============================================================================
+
+const celebrationStyles = StyleSheet.create({
+  container: {
+    width: 340,
+    borderRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 12},
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  gradient: {
+    padding: SPACING.lg,
+    position: 'relative',
+  },
+  confetti1: {
+    position: 'absolute',
+    top: 20,
+    right: 30,
+  },
+  confetti2: {
+    position: 'absolute',
+    top: 80,
+    left: 25,
+  },
+  confetti3: {
+    position: 'absolute',
+    bottom: 100,
+    right: 25,
+  },
+  confetti4: {
+    position: 'absolute',
+    bottom: 140,
+    left: 40,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  brand: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  subBrand: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.8)',
+    fontWeight: '500',
+  },
+  mainContent: {
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+  },
+  celebrationEmoji: {
+    fontSize: 48,
+    marginBottom: 8,
+  },
+  bigText: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 4,
+  },
+  securedText: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: SPACING.md,
+  },
+  studentName: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  gotIntoText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: SPACING.sm,
+  },
+  universityBox: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    width: '100%',
+  },
+  uniShort: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  uniName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  programName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: '#FFFFFF',
+    marginTop: 8,
+    fontWeight: '600',
+  },
+  yearBadge: {
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    marginTop: 8,
+  },
+  yearText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  testFullName: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: SPACING.md,
+  },
+  scoreBox: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    gap: SPACING.lg,
+  },
+  scoreItem: {
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: 4,
+  },
+  scoreValue: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  listBadge: {
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    marginBottom: 8,
+  },
+  listBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  positionText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginTop: 8,
+  },
+  scholarshipTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  providerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginTop: 4,
+  },
+  coverageBadge: {
+    backgroundColor: 'rgba(255,215,0,0.3)',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 6,
+    borderRadius: RADIUS.full,
+    marginTop: 10,
+  },
+  coverageText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+    color: '#FFD700',
+  },
+  footer: {
+    alignItems: 'center',
+    paddingTop: SPACING.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.15)',
+    marginTop: SPACING.sm,
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: 6,
+  },
+  cta: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+});
+
 export default {
   MeritSuccessCard,
   ComparisonCard,
   PollResultCard,
+  AdmissionCelebrationCard,
+  EntryTestSuccessCard,
+  MeritListCard,
+  ScholarshipCelebrationCard,
 };

@@ -15,13 +15,13 @@ import {
   Alert,
   RefreshControl,
   StatusBar,
-  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserProfile, UserRole} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {PremiumLoading} from '../../components/PremiumLoading';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -357,7 +357,7 @@ const AdminUsersScreen: React.FC = () => {
           onEndReachedThreshold={0.5}
           ListFooterComponent={
             loading && !refreshing ? (
-              <ActivityIndicator style={styles.loader} color={colors.primary} />
+              <PremiumLoading variant="minimal" size="small" />
             ) : null
           }
           ListEmptyComponent={

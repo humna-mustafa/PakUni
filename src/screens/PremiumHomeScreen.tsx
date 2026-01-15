@@ -265,25 +265,11 @@ interface DashboardWidgetsProps {
 const DashboardWidgets = memo<DashboardWidgetsProps>(({user, colors, isDark, onNavigate}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
-  const progressAnim = useRef(new Animated.Value(0)).current;
   
   // Get real data
   const upcomingDeadlines = getUpcomingDeadlines(3);
   const favoriteCount = (user?.favoriteUniversities?.length || 0) + 
                         (user?.favoriteScholarships?.length || 0);
-  
-  // Calculate real profile completion
-  const getProfileCompletion = () => {
-    if (!user) return 0;
-    let completed = 0;
-    const fields = ['fullName', 'email', 'city', 'currentClass', 'board', 'targetField'];
-    fields.forEach(field => { if (user[field]) completed++; });
-    if (user.matricMarks) completed++;
-    if (user.interests?.length > 0) completed++;
-    return Math.round((completed / 8) * 100);
-  };
-  
-  const profileCompletion = getProfileCompletion();
 
   useEffect(() => {
     Animated.parallel([
@@ -300,16 +286,10 @@ const DashboardWidgets = memo<DashboardWidgetsProps>(({user, colors, isDark, onN
         delay: 300,
         useNativeDriver: true,
       }),
-      Animated.timing(progressAnim, {
-        toValue: profileCompletion,
-        duration: 1200,
-        delay: 500,
-        useNativeDriver: false,
-      }),
     ]).start();
-  }, [profileCompletion]);
+  }, []);
 
-  const widgetBg = isDark ? '#1E293B' : '#FFFFFF';
+  const widgetBg = isDark ? 'rgba(30, 41, 59, 0.8)' : '#FFFFFF';
 
   return (
     <Animated.View
@@ -320,49 +300,6 @@ const DashboardWidgets = memo<DashboardWidgetsProps>(({user, colors, isDark, onN
           transform: [{translateY: slideAnim}],
         },
       ]}>
-      {/* Profile Completion Widget */}
-      <TouchableOpacity
-        style={[widgetStyles.profileWidget, {backgroundColor: widgetBg}]}
-        onPress={() => onNavigate('Profile')}
-        activeOpacity={0.9}>
-        <LinearGradient
-          colors={isDark ? ['rgba(99, 102, 241, 0.15)', 'rgba(99, 102, 241, 0.05)'] : ['rgba(99, 102, 241, 0.1)', 'rgba(99, 102, 241, 0.02)']}
-          style={StyleSheet.absoluteFillObject}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-        />
-        <View style={widgetStyles.profileHeader}>
-          <View style={[widgetStyles.profileIconBg, {backgroundColor: colors.primaryLight}]}>
-            <Icon name="person" family="Ionicons" size={18} color={colors.primary} />
-          </View>
-          <View style={widgetStyles.profileInfo}>
-            <Text style={[widgetStyles.profileTitle, {color: colors.text}]}>Profile</Text>
-            <Text style={[widgetStyles.profileSubtitle, {color: colors.textSecondary}]}>
-              {profileCompletion}% complete
-            </Text>
-          </View>
-          <View style={[widgetStyles.profileBadge, {backgroundColor: profileCompletion >= 80 ? '#10B98120' : colors.warningLight}]}>
-            <Text style={[widgetStyles.profileBadgeText, {color: profileCompletion >= 80 ? '#10B981' : colors.warning}]}>
-              {profileCompletion >= 80 ? '✓' : '!'}
-            </Text>
-          </View>
-        </View>
-        <View style={[widgetStyles.progressBar, {backgroundColor: colors.border}]}>
-          <Animated.View
-            style={[
-              widgetStyles.progressFill,
-              {
-                backgroundColor: profileCompletion >= 80 ? '#10B981' : colors.primary,
-                width: progressAnim.interpolate({
-                  inputRange: [0, 100],
-                  outputRange: ['0%', '100%'],
-                }),
-              },
-            ]}
-          />
-        </View>
-      </TouchableOpacity>
-
       {/* Stats Row */}
       <View style={widgetStyles.statsRow}>
         {/* Favorites Widget */}
@@ -460,58 +397,6 @@ const widgetStyles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     marginBottom: 12,
-  },
-  profileWidget: {
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.04)',
-    overflow: 'hidden',
-  },
-  profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  profileIconBg: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileInfo: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  profileTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  profileSubtitle: {
-    fontSize: 12,
-    marginTop: 1,
-  },
-  profileBadge: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  progressBar: {
-    height: 4,
-    borderRadius: 2,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 2,
   },
   statsRow: {
     flexDirection: 'row',

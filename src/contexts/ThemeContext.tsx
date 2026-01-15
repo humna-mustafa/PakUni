@@ -90,152 +90,154 @@ export interface ThemeColors {
   black: string;
 }
 
-// Light theme colors - Refined corporate palette inspired by Stripe, Linear, Notion
+// Light theme colors - Sky Blue Education Palette
+// Inspired by top universities (Oxford, Cambridge), calm, professional, inviting
 export const lightColors: ThemeColors = {
-  // Primary - Refined indigo-blue, sophisticated and trustworthy
-  primary: '#4F46E5',
-  primaryLight: '#EEF2FF',
-  primaryDark: '#4338CA',
-  secondary: '#0D9488',
-  secondaryLight: '#F0FDFA',
+  // Primary - Beautiful sky blue, trust, learning, wisdom
+  primary: '#0EA5E9',  // Sky blue - warm, friendly, educational
+  primaryLight: '#E0F2FE',
+  primaryDark: '#0284C7',
+  secondary: '#10B981',  // Soft green for achievements
+  secondaryLight: '#ECFDF5',
   
-  // Status colors - Muted, professional tones
+  // Status colors - Professional, warm tones
   success: '#059669',
   successLight: '#ECFDF5',
-  warning: '#D97706',
+  warning: '#F59E0B',
   warningLight: '#FFFBEB',
-  error: '#DC2626',
-  errorLight: '#FEF2F2',
-  info: '#0284C7',
-  infoLight: '#F0F9FF',
+  error: '#EF4444',
+  errorLight: '#FEE2E2',
+  info: '#0EA5E9',
+  infoLight: '#E0F2FE',
   
-  // Background - Pure, clean whites with subtle warmth
-  background: '#FAFAFA',
+  // Background - Subtle warmth, clean
+  background: '#FAFBFC',
   backgroundSecondary: '#FFFFFF',
   surface: '#FFFFFF',
   card: '#FFFFFF',
   cardElevated: '#FFFFFF',
   
   // Text - High contrast, readable
-  text: '#18181B',
-  textSecondary: '#52525B',
-  textMuted: '#A1A1AA',
+  text: '#0F172A',
+  textSecondary: '#475569',
+  textMuted: '#94A3B8',
   textInverse: '#FFFFFF',
   textOnPrimary: '#FFFFFF',
   
-  // Borders - Barely visible, elegant
-  border: '#E4E4E7',
-  borderLight: '#F4F4F5',
-  borderFocused: '#4F46E5',
+  // Borders - Subtle, elegant
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
+  borderFocused: '#0EA5E9',
   
   // Semantic
   overlay: 'rgba(0, 0, 0, 0.4)',
-  shadow: 'rgba(0, 0, 0, 0.04)',
-  divider: '#E4E4E7',
-  highlight: '#FEF9C3',
+  shadow: 'rgba(0, 0, 0, 0.05)',
+  divider: '#E2E8F0',
+  highlight: '#FEF9E7',
   
-  // Gradients - Subtle, professional
-  gradientStart: '#4F46E5',
-  gradientEnd: '#6366F1',
+  // Gradients - Sky blue focused
+  gradientStart: '#0EA5E9',
+  gradientEnd: '#06B6D4',  // Cyan for depth
   
   // Tab bar - Clean, minimal
   tabBarBackground: '#FFFFFF',
-  tabBarActive: '#4F46E5',
-  tabBarInactive: '#A1A1AA',
+  tabBarActive: '#0EA5E9',
+  tabBarInactive: '#94A3B8',
   
   // Input - Refined
-  inputBackground: '#FAFAFA',
-  inputBorder: '#E4E4E7',
-  inputText: '#18181B',
-  placeholder: '#A1A1AA',
+  inputBackground: '#F8FAFC',
+  inputBorder: '#E2E8F0',
+  inputText: '#0F172A',
+  placeholder: '#94A3B8',
   
   // Skeleton - Subtle animation
-  skeletonBase: '#F4F4F5',
-  skeletonHighlight: '#FAFAFA',
+  skeletonBase: '#F1F5F9',
+  skeletonHighlight: '#F8FAFC',
   
-  // Badge - Muted red
-  badgeBackground: '#DC2626',
+  // Badge - Accent color
+  badgeBackground: '#EF4444',
   badgeText: '#FFFFFF',
   
-  // Header - Clean, not gradient-heavy
+  // Header - Clean, light
   headerBackground: '#FFFFFF',
-  headerText: '#18181B',
+  headerText: '#0F172A',
   
   // Base colors
   white: '#FFFFFF',
   black: '#000000',
 };
 
-// Dark theme colors - True dark, OLED-friendly with refined contrast
+// Dark theme colors - AMOLED-optimized with softer blues, eye-comfortable
+// Softer than pure black/white, better for extended reading and learning
 export const darkColors: ThemeColors = {
-  // Primary - Softer blue for dark mode eye comfort
-  primary: '#818CF8',
-  primaryLight: '#1E1B4B',
-  primaryDark: '#A5B4FC',
-  secondary: '#5EEAD4',
-  secondaryLight: '#134E4A',
+  // Primary - Softer sky blue for dark mode, not harsh
+  primary: '#38BDF8',  // Lighter, warmer sky blue for dark
+  primaryLight: '#082F49',  // Deep but soft blue
+  primaryDark: '#7DD3FC',
+  secondary: '#6EE7B7',  // Softer green
+  secondaryLight: '#082F49',
   
-  // Status colors - Softened pastels for dark mode
+  // Status colors - Softened pastels for dark mode, eye-friendly
   success: '#6EE7B7',
   successLight: '#064E3B',
   warning: '#FCD34D',
   warningLight: '#451A03',
-  error: '#FCA5A5',
-  errorLight: '#450A0A',
-  info: '#93C5FD',
-  infoLight: '#1E3A5F',
+  error: '#FB7185',  // Softer red for dark
+  errorLight: '#500724',
+  info: '#38BDF8',
+  infoLight: '#0C2D3E',
   
-  // Background - Pure dark, clean layers
-  background: '#09090B',
-  backgroundSecondary: '#18181B',
-  surface: '#18181B',
-  card: '#1F1F23',
-  cardElevated: '#27272A',
+  // Background - Deep but soft, not pure black (better for OLED eyes)
+  background: '#0B1118',  // Soft black instead of #09090B
+  backgroundSecondary: '#161B22',  // Softer dark
+  surface: '#161B22',
+  card: '#1C2128',  // Softer than #1F1F23
+  cardElevated: '#262C34',  // Softer than #27272A
   
-  // Text - Optimized for dark mode readability
-  text: '#FAFAFA',
-  textSecondary: '#A1A1AA',
-  textMuted: '#71717A',
-  textInverse: '#18181B',
+  // Text - Optimized for dark mode readability, softer
+  text: '#F5F6F8',  // Slightly softer white
+  textSecondary: '#8B949E',  // Softer gray
+  textMuted: '#6E7681',  // Softer muted
+  textInverse: '#0B1118',
   textOnPrimary: '#FFFFFF',
   
-  // Borders - Subtle separation
-  border: '#27272A',
-  borderLight: '#1F1F23',
-  borderFocused: '#818CF8',
+  // Borders - Subtle separation, softer
+  border: '#262C34',
+  borderLight: '#1C2128',
+  borderFocused: '#38BDF8',
   
-  // Semantic
-  overlay: 'rgba(0, 0, 0, 0.6)',
-  shadow: 'rgba(0, 0, 0, 0.3)',
-  divider: '#27272A',
-  highlight: '#422006',
+  // Semantic - Softer overlays
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  shadow: 'rgba(0, 0, 0, 0.25)',
+  divider: '#262C34',
+  highlight: '#3D2817',
   
-  // Gradients - Subtle
-  gradientStart: '#6366F1',
-  gradientEnd: '#818CF8',
+  // Gradients - Softer, sky-focused
+  gradientStart: '#38BDF8',
+  gradientEnd: '#22D3EE',  // Cyan
   
-  // Tab bar - Clean
-  tabBarBackground: '#18181B',
-  tabBarActive: '#818CF8',
-  tabBarInactive: '#71717A',
+  // Tab bar - Soft dark
+  tabBarBackground: '#161B22',
+  tabBarActive: '#38BDF8',
+  tabBarInactive: '#6E7681',
   
-  // Input
-  inputBackground: '#27272A',
-  inputBorder: '#3F3F46',
-  inputText: '#FAFAFA',
-  placeholder: '#71717A',
+  // Input - Soft dark
+  inputBackground: '#262C34',
+  inputBorder: '#3D444D',
+  inputText: '#F5F6F8',
+  placeholder: '#6E7681',
   
-  // Skeleton
-  skeletonBase: '#27272A',
-  skeletonHighlight: '#3F3F46',
+  // Skeleton - Subtle animation
+  skeletonBase: '#262C34',
+  skeletonHighlight: '#3D444D',
   
-  // Badge
-  badgeBackground: '#FCA5A5',
-  badgeText: '#18181B',
+  // Badge - Softer red
+  badgeBackground: '#FB7185',
+  badgeText: '#0B1118',
   
-  // Header - Clean dark
-  headerBackground: '#18181B',
-  headerText: '#FAFAFA',
+  // Header - Soft dark
+  headerBackground: '#161B22',
+  headerText: '#F5F6F8',
   
   // Base colors
   white: '#FFFFFF',

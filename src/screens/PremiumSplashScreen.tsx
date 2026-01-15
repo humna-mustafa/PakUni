@@ -23,6 +23,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
+import {PremiumLoading} from '../components/PremiumLoading';
 import {useTheme} from '../contexts/ThemeContext';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -210,31 +211,18 @@ const PremiumSplashScreen: React.FC<PremiumSplashScreenProps> = memo(({
         </Animated.View>
       </View>
 
-      {/* Loading Indicator */}
+      {/* Loading Indicator - Premium Animated */}
       <Animated.View
         style={[
           styles.loadingContainer,
           {opacity: loadingFade}
         ]}
       >
-        <View style={styles.loadingDots}>
-          {[0, 1, 2].map((index) => (
-            <Animated.View
-              key={index}
-              style={[
-                styles.loadingDot,
-                {
-                  backgroundColor: BRAND_COLORS.primary,
-                  transform: [{scale: pulseAnim}],
-                  opacity: 0.3 + (index * 0.2),
-                },
-              ]}
-            />
-          ))}
-        </View>
-        <Text style={[styles.loadingText, {color: colors.textSecondary}]}>
-          Loading...
-        </Text>
+        <PremiumLoading
+          variant="wave"
+          size="small"
+          message="Loading..."
+        />
       </Animated.View>
 
       {/* Footer */}

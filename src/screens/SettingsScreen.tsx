@@ -263,6 +263,27 @@ const SettingsScreen: React.FC = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}>
+          {/* My Account - Favorites & Notifications */}
+          <Section title="MY ACCOUNT" colors={colors}>
+            <SettingItem
+              icon="heart-outline"
+              iconColor="#EF4444"
+              title="My Favorites"
+              subtitle="Saved universities, scholarships & programs"
+              colors={colors}
+              onPress={() => navigation.navigate('Favorites' as never)}
+            />
+            <View style={[styles.divider, {backgroundColor: colors.border}]} />
+            <SettingItem
+              icon="notifications-outline"
+              iconColor="#3B82F6"
+              title="Notifications"
+              subtitle="View all your alerts & updates"
+              colors={colors}
+              onPress={() => navigation.navigate('Notifications' as never)}
+            />
+          </Section>
+
           {/* Appearance */}
           <Section title="APPEARANCE" colors={colors}>
             <SettingItem

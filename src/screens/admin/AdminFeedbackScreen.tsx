@@ -14,7 +14,6 @@ import {
   Alert,
   RefreshControl,
   StatusBar,
-  ActivityIndicator,
   ScrollView,
   TextInput,
 } from 'react-native';
@@ -23,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserFeedback, FeedbackCategory, FeedbackStatus} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {PremiumLoading} from '../../components/PremiumLoading';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -335,7 +335,7 @@ const AdminFeedbackScreen: React.FC = () => {
           }
           ListFooterComponent={
             loading && !refreshing ? (
-              <ActivityIndicator style={styles.loader} color={colors.primary} />
+              <PremiumLoading variant="minimal" size="small" />
             ) : null
           }
           ListEmptyComponent={

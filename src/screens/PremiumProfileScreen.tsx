@@ -101,8 +101,6 @@ const INITIAL_PROFILE: UserProfile = {
   interests: [],
 };
 
-// No more sample data - we use real favorites from AuthContext
-
 // Animated Tab Component
 const AnimatedTab = ({
   tab,
@@ -139,42 +137,6 @@ const AnimatedTab = ({
           {tab.label}
         </Text>
       </TouchableOpacity>
-    </Animated.View>
-  );
-};
-
-// Stats Card Component
-const StatsCard = ({
-  value,
-  label,
-  iconName,
-  gradient,
-  delay,
-}: {
-  value: string;
-  label: string;
-  iconName: string;
-  gradient: string[];
-  delay: number;
-}) => {
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      delay,
-      ...ANIMATION.spring.bouncy,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  return (
-    <Animated.View style={[styles.statsCard, {transform: [{scale: scaleAnim}]}]}>
-      <LinearGradient colors={gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.statsGradient}>
-        <Icon name={iconName} family="Ionicons" size={24} color="#FFFFFF" />
-        <Text style={styles.statsValue}>{value}</Text>
-        <Text style={styles.statsLabel}>{label}</Text>
-      </LinearGradient>
     </Animated.View>
   );
 };
@@ -313,12 +275,27 @@ const PremiumProfileScreen = () => {
   };
 
   const getProfileCompletion = () => {
+    // For guest users, only count fields with user-entered data (not defaults)
     let completed = 0;
-    const fields = ['name', 'email', 'city', 'currentClass', 'board', 'targetField'];
-    fields.forEach(field => { if (profile[field as keyof UserProfile]) completed++; });
-    if (profile.matricMarks) completed++;
-    if (profile.interests.length > 0) completed++;
-    return Math.round((completed / 8) * 100);
+    const total = 8;
+    
+    // Name must be actually entered, not just 'Student' default
+    if (profile.name && profile.name.trim() !== '' && profile.name !== 'Student') completed++;
+    // Email must exist
+    if (profile.email && profile.email.trim() !== '') completed++;
+    // City - only if not guest or explicitly set
+    if (profile.city && !isGuest) completed++;
+    // Education fields - only count if user has marks
+    if (profile.matricMarks && profile.matricMarks > 0) completed++;
+    if (profile.interMarks && profile.interMarks > 0) completed++;
+    // Entry test score
+    if (profile.entryTestScore && profile.entryTestScore > 0) completed++;
+    // Target field - only if explicitly chosen
+    if (profile.targetField && profile.targetField !== 'Not Decided') completed++;
+    // Interests
+    if (profile.interests && profile.interests.length > 0) completed++;
+    
+    return Math.round((completed / total) * 100);
   };
 
   const getTypeIconName = (type: SavedItem['type']) => {
@@ -487,13 +464,6 @@ const PremiumProfileScreen = () => {
 
   const renderMarksTab = () => (
     <>
-      {/* Stats Cards */}
-      <View style={styles.statsRow}>
-        <StatsCard value={profile.matricMarks ? `${((profile.matricMarks / 1100) * 100).toFixed(0)}%` : '—'} label="Matric" iconName="book-outline" gradient={['#3B82F6', '#2563EB']} delay={0} />
-        <StatsCard value={profile.interMarks ? `${((profile.interMarks / 1100) * 100).toFixed(0)}%` : '—'} label="Inter" iconName="library-outline" gradient={['#10B981', '#059669']} delay={100} />
-        <StatsCard value={profile.entryTestScore ? `${((profile.entryTestScore / 200) * 100).toFixed(0)}%` : '—'} label="Test" iconName="create-outline" gradient={['#F59E0B', '#D97706']} delay={200} />
-      </View>
-
       {/* Matric */}
       <View style={styles.section}>
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
@@ -657,16 +627,6 @@ const PremiumProfileScreen = () => {
       {/* Admin Panel Access - Only for admin users */}
       {isAdminUser() && (
         <View style={styles.section}>
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-            <Icon name="shield-checkmark-outline" family="Ionicons" size={18} color="#EF4444" />
-            <Text style={[styles.sectionTitle, {color: colors.text}]}>Admin Panel</Text>
-            <View style={{backgroundColor: '#EF444420', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8}}>
-              <Text style={{color: '#EF4444', fontSize: 10, fontWeight: '600'}}>
-                {userRole.toUpperCase().replace('_', ' ')}
-              </Text>
-            </View>
-          </View>
-          
           <TouchableOpacity 
             style={[styles.settingRow, {backgroundColor: colors.card, borderLeftWidth: 4, borderLeftColor: '#EF4444'}]} 
             onPress={() => navigation.navigate('AdminDashboard')}>
@@ -675,177 +635,62 @@ const PremiumProfileScreen = () => {
             </View>
             <View style={styles.settingInfo}>
               <Text style={[styles.settingLabel, {color: colors.text}]}>Admin Dashboard</Text>
-              <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Manage app content and users</Text>
+              <Text style={[styles.settingValue, {color: colors.textSecondary}]}>{userRole.toUpperCase().replace('_', ' ')}</Text>
             </View>
             <Icon name="chevron-forward" family="Ionicons" size={18} color="#EF4444" />
           </TouchableOpacity>
         </View>
       )}
 
-      {/* User Features */}
+      {/* Main Settings Link - All other settings moved to Settings screen */}
       <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="person-circle-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>My Account</Text>
-        </View>
-        
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('Favorites')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#FEE2E2'}]}>
-            <Icon name="heart-outline" family="Ionicons" size={20} color="#EF4444" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Favorites</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Your saved universities & scholarships</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('Notifications')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#DBEAFE'}]}>
-            <Icon name="notifications-outline" family="Ionicons" size={20} color="#3B82F6" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Notifications</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>View all your alerts</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="settings-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>App Settings</Text>
-        </View>
-        
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => setShowThemeModal(true)}>
-          <View style={[styles.settingIconBg, {backgroundColor: isDark ? '#1E293B' : '#FEF3C7'}]}>
-            <Icon name={isDark ? 'moon-outline' : 'sunny-outline'} family="Ionicons" size={20} color={isDark ? '#A5B4FC' : '#F59E0B'} />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Theme</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>
-              {themeMode === 'system' ? 'System' : themeMode === 'dark' ? 'Dark' : 'Light'}
-            </Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-
         <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('Settings')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#D1FAE5'}]}>
-            <Icon name="options-outline" family="Ionicons" size={20} color="#10B981" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>All Settings</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Notifications, privacy & more</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* Help & Support Section */}
-      <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="chatbubbles-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>Help & Support</Text>
-        </View>
-        
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card, borderLeftWidth: 4, borderLeftColor: '#1A7AEB'}]} onPress={() => navigation.navigate('ContactSupport')}>
           <View style={[styles.settingIconBg, {backgroundColor: '#DBEAFE'}]}>
-            <Icon name="headset-outline" family="Ionicons" size={20} color="#1A7AEB" />
+            <Icon name="settings-outline" family="Ionicons" size={20} color={colors.primary} />
           </View>
           <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Contact & Support</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Report issues, suggest features, get help</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color="#1A7AEB" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('ContactSupport')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#FEF3C7'}]}>
-            <Icon name="bulb-outline" family="Ionicons" size={20} color="#F59E0B" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Suggest a Feature</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Help us improve PakUni</Text>
+            <Text style={[styles.settingLabel, {color: colors.text}]}>App Settings</Text>
+            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Theme, notifications, privacy & more</Text>
           </View>
           <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('ContactSupport')}>
           <View style={[styles.settingIconBg, {backgroundColor: '#D1FAE5'}]}>
-            <Icon name="document-attach-outline" family="Ionicons" size={20} color="#10B981" />
+            <Icon name="chatbubbles-outline" family="Ionicons" size={20} color="#10B981" />
           </View>
           <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Share Resources</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Merit lists, past papers & more</Text>
+            <Text style={[styles.settingLabel, {color: colors.text}]}>Help & Support</Text>
+            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Contact us, report issues</Text>
           </View>
           <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
+      {/* Quick Actions - Compact grid */}
       <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="flash-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>Quick Actions</Text>
+        <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: SPACING.sm}]}>Quick Actions</Text>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm}}>
+          {[
+            {iconName: 'analytics-outline', label: 'Calculator', screen: 'Calculator' as const, color: '#6366F1'},
+            {iconName: 'bulb-outline', label: 'Career Quiz', screen: 'InterestQuiz' as const, color: '#F59E0B'},
+            {iconName: 'flag-outline', label: 'My Goals', screen: 'GoalSetting' as const, color: '#10B981'},
+            {iconName: 'library-outline', label: 'Guides', screen: 'SubjectGuide' as const, color: '#3B82F6'},
+          ].map(action => (
+            <TouchableOpacity 
+              key={action.screen} 
+              style={[styles.quickActionCompact, {backgroundColor: colors.card}]} 
+              onPress={() => navigation.navigate(action.screen)}>
+              <View style={[styles.quickActionIconSmall, {backgroundColor: `${action.color}15`}]}>
+                <Icon name={action.iconName} family="Ionicons" size={18} color={action.color} />
+              </View>
+              <Text style={[styles.quickActionLabelSmall, {color: colors.text}]}>{action.label}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-        
-        {[
-          {iconName: 'bulb-outline', label: 'Take Career Quiz', screen: 'InterestQuiz' as const},
-          {iconName: 'flag-outline', label: 'Set Goals', screen: 'GoalSetting' as const},
-          {iconName: 'library-outline', label: 'Subject Guide', screen: 'SubjectGuide' as const},
-        ].map(action => (
-          <TouchableOpacity key={action.screen} style={[styles.quickAction, {backgroundColor: colors.card}]} onPress={() => navigation.navigate(action.screen)}>
-            <View style={[styles.quickActionIconBg, {backgroundColor: colors.primaryLight}]}>
-              <Icon name={action.iconName} family="Ionicons" size={20} color={colors.primary} />
-            </View>
-            <Text style={[styles.quickActionLabel, {color: colors.text}]}>{action.label}</Text>
-            <Icon name="arrow-forward" family="Ionicons" size={18} color={colors.primary} />
-          </TouchableOpacity>
-        ))}
       </View>
 
-      {/* Legal Section */}
-      <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="document-text-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>Legal</Text>
-        </View>
-        
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('PrivacyPolicy')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#E8F5E9'}]}>
-            <Icon name="shield-checkmark-outline" family="Ionicons" size={20} color="#10B981" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Privacy Policy</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>How we protect your data</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('TermsOfService')}>
-          <View style={[styles.settingIconBg, {backgroundColor: '#E3F2FD'}]}>
-            <Icon name="document-outline" family="Ionicons" size={20} color="#3B82F6" />
-          </View>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, {color: colors.text}]}>Terms of Service</Text>
-            <Text style={[styles.settingValue, {color: colors.textSecondary}]}>Usage terms and conditions</Text>
-          </View>
-          <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
-        </TouchableOpacity>
-      </View>
-
-      {/* About Card */}
-      <View style={[styles.aboutCard, {backgroundColor: colors.card}]}>
-        <Icon name="flag" family="Ionicons" size={40} color="#2E7D32" />
-        <Text style={[styles.aboutTitle, {color: colors.text}]}>PakUni</Text>
-        <Text style={[styles.aboutVersion, {color: colors.textSecondary}]}>Version 1.0.0</Text>
-        <Text style={[styles.aboutDesc, {color: colors.textSecondary}]}>
-          Your complete guide to Pakistani universities and scholarships
-        </Text>
-      </View>
-
-      {/* Logout / Sign In */}
+      {/* Auth Button */}
       {isGuest ? (
         <TouchableOpacity style={styles.logoutBtn} onPress={() => navigation.navigate('Auth')}>
           <LinearGradient colors={[colors.primary, '#0D47A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
@@ -866,6 +711,11 @@ const PremiumProfileScreen = () => {
           </LinearGradient>
         </TouchableOpacity>
       )}
+
+      {/* Compact About */}
+      <View style={styles.compactAbout}>
+        <Text style={[styles.compactAboutText, {color: colors.textSecondary}]}>PakUni v1.0.0 • Made with ❤️ in Pakistan</Text>
+      </View>
     </>
   );
 
@@ -939,7 +789,7 @@ const PremiumProfileScreen = () => {
             {activeTab === 'settings' && renderSettingsTab()}
           </View>
 
-          <View style={{height: 120}} />
+          <View style={{height: 80}} />
         </ScrollView>
 
         {/* Theme Modal */}
@@ -1055,11 +905,11 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   safeArea: { flex: 1 },
   headerGradient: {
-    paddingVertical: SPACING.xl + SPACING.md,
+    paddingVertical: SPACING.lg,
     paddingHorizontal: SPACING.lg,
     alignItems: 'center',
-    borderBottomLeftRadius: RADIUS.xxl + 8,
-    borderBottomRightRadius: RADIUS.xxl + 8,
+    borderBottomLeftRadius: RADIUS.xxl,
+    borderBottomRightRadius: RADIUS.xxl,
     overflow: 'hidden',
   },
   headerDecoCircle1: {
@@ -1127,23 +977,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   avatarContainer: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: SPACING.md,
-    elevation: 8,
+    marginBottom: SPACING.sm,
+    elevation: 6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    borderWidth: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
   },
-  avatarText: { fontSize: 38, fontWeight: '800', letterSpacing: -0.5 },
-  profileName: { fontSize: TYPOGRAPHY.sizes.xxl, fontWeight: '800', color: '#FFFFFF', marginBottom: 4, letterSpacing: -0.5, textShadowColor: 'rgba(0,0,0,0.2)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
-  profileClass: { fontSize: TYPOGRAPHY.sizes.sm, color: 'rgba(255,255,255,0.95)', fontWeight: '600', letterSpacing: 0.3 },
+  avatarText: { fontSize: 30, fontWeight: '800', letterSpacing: -0.5 },
+  profileName: { fontSize: TYPOGRAPHY.sizes.lg, fontWeight: '700', color: '#FFFFFF', marginBottom: 2, letterSpacing: -0.3, textShadowColor: 'rgba(0,0,0,0.2)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
+  profileClass: { fontSize: TYPOGRAPHY.sizes.xs, color: 'rgba(255,255,255,0.9)', fontWeight: '500', letterSpacing: 0.2 },
   tabsContainer: {
     flexDirection: 'row',
     marginHorizontal: SPACING.lg,
@@ -1180,12 +1030,6 @@ const styles = StyleSheet.create({
   interestsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.xs },
   interestTag: { borderRadius: RADIUS.full, paddingHorizontal: SPACING.sm, paddingVertical: SPACING.xs, borderWidth: 1 },
   interestText: { fontSize: TYPOGRAPHY.sizes.xs },
-  statsRow: { flexDirection: 'row', paddingHorizontal: SPACING.lg, gap: SPACING.sm, marginBottom: SPACING.lg },
-  statsCard: { flex: 1 },
-  statsGradient: { borderRadius: RADIUS.xl, padding: SPACING.md, alignItems: 'center' },
-  statsIcon: { fontSize: 24, marginBottom: SPACING.xs },
-  statsValue: { fontSize: TYPOGRAPHY.sizes.xl, fontWeight: '800', color: '#FFFFFF' },
-  statsLabel: { fontSize: TYPOGRAPHY.sizes.xs, color: 'rgba(255,255,255,0.9)' },
   marksCard: { borderRadius: RADIUS.xl, padding: SPACING.md },
   marksInputRow: { flexDirection: 'row', alignItems: 'center' },
   marksInputGroup: { flex: 1 },
@@ -1241,6 +1085,11 @@ const styles = StyleSheet.create({
   logoutGradient: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: SPACING.md, borderRadius: RADIUS.lg },
   logoutIcon: { fontSize: 18, marginRight: SPACING.sm },
   logoutText: { color: '#FFFFFF', fontSize: TYPOGRAPHY.sizes.md, fontWeight: '700' },
+  quickActionCompact: { width: '47%', borderRadius: RADIUS.lg, padding: SPACING.md, alignItems: 'center' },
+  quickActionIconSmall: { width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center', marginBottom: 6 },
+  quickActionLabelSmall: { fontSize: TYPOGRAPHY.sizes.xs, fontWeight: '600' },
+  compactAbout: { alignItems: 'center', paddingVertical: SPACING.md, marginTop: SPACING.sm },
+  compactAboutText: { fontSize: TYPOGRAPHY.sizes.xs },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
   modalContent: { borderTopLeftRadius: RADIUS.xxl, borderTopRightRadius: RADIUS.xxl, padding: SPACING.lg, maxHeight: '80%' },
   modalHandle: { width: 40, height: 4, borderRadius: 2, alignSelf: 'center', marginBottom: SPACING.md },

@@ -70,6 +70,12 @@ export {Card} from './Card';
 // Feedback & State Components
 export {LoadingSpinner} from './LoadingSpinner';
 export {AnimatedLoader} from './AnimatedLoader';
+export {
+  PremiumLoading,
+  FullScreenLoader,
+  OverlayLoader,
+} from './PremiumLoading';
+export type {LoadingVariant, LoadingSize} from './PremiumLoading';
 export {EmptyState} from './EmptyState';
 export {SkeletonLoader, SkeletonCard, SkeletonList} from './SkeletonLoader';
 export {ErrorBoundary} from './ErrorBoundary';

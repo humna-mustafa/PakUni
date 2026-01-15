@@ -15,7 +15,6 @@ import {
   Alert,
   RefreshControl,
   StatusBar,
-  ActivityIndicator,
   Switch,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -23,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, AppSetting} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {PremiumLoading} from '../../components/PremiumLoading';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -393,7 +393,7 @@ const AdminSettingsScreen: React.FC = () => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
           }>
           {loading ? (
-            <ActivityIndicator style={styles.loader} color={colors.primary} />
+            <PremiumLoading variant="minimal" size="small" />
           ) : (
             Object.entries(groupedSettings).map(([category, categorySettings]) => {
               const catConfig = SETTING_CATEGORIES.find(c => c.key === category);

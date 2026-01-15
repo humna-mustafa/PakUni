@@ -16,7 +16,6 @@ import {
   Alert,
   Platform,
   RefreshControl,
-  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,6 +24,7 @@ import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
+import {PremiumLoading} from '../components/PremiumLoading';
 import {sharePollResults} from '../services/share';
 import {Haptics} from '../utils/haptics';
 import {
@@ -544,8 +544,11 @@ const PremiumPollsScreen = () => {
   if (isLoading) {
     return (
       <View style={[styles.container, styles.loadingContainer, {backgroundColor: colors.background}]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={[styles.loadingText, {color: colors.textSecondary}]}>Loading polls...</Text>
+        <PremiumLoading 
+          variant="graduation" 
+          size="large" 
+          message="Loading polls..."
+        />
       </View>
     );
   }

@@ -20,7 +20,6 @@ import {
   Alert,
   RefreshControl,
   StatusBar,
-  ActivityIndicator,
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -28,6 +27,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {PremiumLoading} from '../../components/PremiumLoading';
 // Static data imports (zero egress)
 import {PROGRAMS, ProgramData} from '../../data/programs';
 
@@ -482,7 +482,7 @@ const AdminContentScreen: React.FC = () => {
           }
           ListFooterComponent={
             loading && !refreshing ? (
-              <ActivityIndicator style={styles.loader} color={colors.primary} />
+              <PremiumLoading variant="minimal" size="small" />
             ) : null
           }
           ListEmptyComponent={
