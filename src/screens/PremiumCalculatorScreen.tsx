@@ -32,8 +32,6 @@ const {width} = Dimensions.get('window');
 // Storage key for persisting calculator inputs
 const CALCULATOR_STORAGE_KEY = '@pakuni_calculator_inputs';
 
-const {width} = Dimensions.get('window');
-
 interface CalculationResult {
   aggregate: number;
   formula: MeritFormulaData;
