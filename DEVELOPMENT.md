@@ -11,6 +11,7 @@ PakUni is a React Native app for discovering Pakistani universities, calculating
 - Supabase (backend ready)
 - Android/iOS
 
+
 ---
 
 ## Project Structure
