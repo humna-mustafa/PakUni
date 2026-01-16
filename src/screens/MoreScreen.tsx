@@ -45,12 +45,16 @@ interface MenuItem {
 
 interface MenuSection {
   title: string;
+  icon: string;
+  iconColor: string;
   items: MenuItem[];
 }
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    title: '🧮 Tools & Calculators',
+    title: 'Tools & Calculators',
+    icon: 'calculator-outline',
+    iconColor: '#6366F1',
     items: [
       {
         id: 'tools',
@@ -79,7 +83,9 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: '🎯 Career & Guidance',
+    title: 'Career & Guidance',
+    icon: 'compass-outline',
+    iconColor: '#059669',
     items: [
       {
         id: 'career',
@@ -108,7 +114,9 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: '📚 Resources & Guides',
+    title: 'Resources & Guides',
+    icon: 'library-outline',
+    iconColor: '#7C3AED',
     items: [
       {
         id: 'entrytests',
@@ -145,7 +153,9 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: '📅 Deadlines & Updates',
+    title: 'Deadlines & Updates',
+    icon: 'calendar-outline',
+    iconColor: '#EF4444',
     items: [
       {
         id: 'deadlines',
@@ -167,7 +177,9 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: '🎮 Fun & Learning',
+    title: 'Fun & Learning',
+    icon: 'game-controller-outline',
+    iconColor: '#10B981',
     items: [
       {
         id: 'resultgame',
@@ -204,7 +216,9 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: '⚙️ Settings & Support',
+    title: 'Settings & Support',
+    icon: 'settings-outline',
+    iconColor: '#64748B',
     items: [
       {
         id: 'settings',
@@ -422,7 +436,10 @@ const MoreScreen = () => {
           {/* Admin Section (if admin) */}
           {isAdmin && (
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, {color: colors.text}]}>👑 Admin Panel</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm, marginLeft: SPACING.xs}}>
+                <Icon name="shield-checkmark-outline" family="Ionicons" size={18} color="#7C3AED" />
+                <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0, marginLeft: 0}]}>Admin Panel</Text>
+              </View>
               <TouchableOpacity
                 style={[styles.adminCard, {backgroundColor: colors.card}]}
                 onPress={() => navigation.navigate('AdminDashboard')}
@@ -446,7 +463,10 @@ const MoreScreen = () => {
           {/* Menu Sections */}
           {MENU_SECTIONS.map((section) => (
             <View key={section.title} style={styles.section}>
-              <Text style={[styles.sectionTitle, {color: colors.text}]}>{section.title}</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm, marginLeft: SPACING.xs}}>
+                <Icon name={section.icon} family="Ionicons" size={18} color={section.iconColor} />
+                <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0, marginLeft: 0}]}>{section.title}</Text>
+              </View>
               <View style={[styles.sectionCard, {backgroundColor: colors.card}]}>
                 {section.items.map((item, index) => (
                   <View key={item.id}>

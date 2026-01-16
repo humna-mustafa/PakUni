@@ -21,7 +21,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
 
@@ -133,7 +133,7 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
         <LinearGradient
           colors={[tool.color, tool.color + 'CC']}
           style={styles.toolIconContainer}>
-          <Icon name={tool.icon} size={28} color="#FFF" />
+          <Icon name={tool.icon} family="Ionicons" size={28} color="#FFF" />
         </LinearGradient>
         <View style={styles.toolContent}>
           <Text style={[styles.toolTitle, {color: colors.text}]}>{tool.title}</Text>
@@ -142,7 +142,7 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
           </Text>
         </View>
         <View style={[styles.toolArrow, {backgroundColor: tool.color + '15'}]}>
-          <Icon name="chevron-forward" size={20} color={tool.color} />
+          <Icon name="chevron-forward" family="Ionicons" size={20} color={tool.color} />
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -185,7 +185,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         <TouchableOpacity
           style={[styles.closeButton, {backgroundColor: colors.card}]}
           onPress={onClose}>
-          <Icon name="arrow-back" size={24} color={colors.text} />
+          <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.calculatorTitle, {color: colors.text}]}>Merit Calculator</Text>
       </View>
@@ -196,7 +196,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
           <View style={styles.inputRow}>
             <View style={styles.inputIconWrapper}>
               <LinearGradient colors={['#6366F1', '#8B5CF6']} style={styles.inputIcon}>
-                <Icon name="school-outline" size={20} color="#FFF" />
+                <Icon name="school-outline" family="Ionicons" size={20} color="#FFF" />
               </LinearGradient>
             </View>
             <View style={styles.inputContent}>
@@ -219,7 +219,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
           <View style={styles.inputRow}>
             <View style={styles.inputIconWrapper}>
               <LinearGradient colors={['#10B981', '#34D399']} style={styles.inputIcon}>
-                <Icon name="book-outline" size={20} color="#FFF" />
+                <Icon name="book-outline" family="Ionicons" size={20} color="#FFF" />
               </LinearGradient>
             </View>
             <View style={styles.inputContent}>
@@ -242,7 +242,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
           <View style={styles.inputRow}>
             <View style={styles.inputIconWrapper}>
               <LinearGradient colors={['#F59E0B', '#FBBF24']} style={styles.inputIcon}>
-                <Icon name="document-text-outline" size={20} color="#FFF" />
+                <Icon name="document-text-outline" family="Ionicons" size={20} color="#FFF" />
               </LinearGradient>
             </View>
             <View style={styles.inputContent}>
@@ -263,7 +263,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
 
         {/* Formula Info */}
         <View style={[styles.formulaCard, {backgroundColor: '#6366F1' + '15'}]}>
-          <Icon name="information-circle-outline" size={20} color="#6366F1" />
+          <Icon name="information-circle-outline" family="Ionicons" size={20} color="#6366F1" />
           <Text style={[styles.formulaText, {color: '#6366F1'}]}>
             Formula: 10% Matric + 50% Inter + 40% Entry Test
           </Text>
@@ -274,7 +274,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
           <LinearGradient
             colors={['#6366F1', '#8B5CF6']}
             style={styles.calculateButton}>
-            <Icon name="calculator-outline" size={24} color="#FFF" />
+            <Icon name="calculator-outline" family="Ionicons" size={24} color="#FFF" />
             <Text style={styles.calculateButtonText}>Calculate Merit</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -299,23 +299,23 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         {/* Quick Tips */}
         <View style={[styles.tipsCard, {backgroundColor: colors.card}]}>
           <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-            <Icon name="bulb-outline" size={20} color="#F59E0B" />
+            <Icon name="bulb-outline" family="Ionicons" size={20} color="#F59E0B" />
             <Text style={[styles.tipsTitle, {color: colors.text, marginLeft: 8}]}>Quick Tips</Text>
           </View>
           <View style={styles.tipItem}>
-            <Icon name="checkmark-circle" size={16} color="#10B981" />
+            <Icon name="checkmark-circle" family="Ionicons" size={16} color="#10B981" />
             <Text style={[styles.tipText, {color: colors.textSecondary}]}>
               Different universities have different formulas
             </Text>
           </View>
           <View style={styles.tipItem}>
-            <Icon name="checkmark-circle" size={16} color="#10B981" />
+            <Icon name="checkmark-circle" family="Ionicons" size={16} color="#10B981" />
             <Text style={[styles.tipText, {color: colors.textSecondary}]}>
               Entry test weight varies (30-50% typically)
             </Text>
           </View>
           <View style={styles.tipItem}>
-            <Icon name="checkmark-circle" size={16} color="#10B981" />
+            <Icon name="checkmark-circle" family="Ionicons" size={16} color="#10B981" />
             <Text style={[styles.tipText, {color: colors.textSecondary}]}>
               Use Custom Formula Builder for exact calculation
             </Text>
@@ -354,7 +354,7 @@ const ToolsScreen: React.FC = () => {
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
                 onPress={() => setActiveTool(null)}>
-                <Icon name="arrow-back" size={24} color={colors.text} />
+                <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.calculatorTitle, {color: colors.text}]}>Grade Converter</Text>
             </View>
@@ -371,7 +371,7 @@ const ToolsScreen: React.FC = () => {
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
                 onPress={() => setActiveTool(null)}>
-                <Icon name="arrow-back" size={24} color={colors.text} />
+                <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.calculatorTitle, {color: colors.text}]}>Target Calculator</Text>
             </View>
@@ -388,7 +388,7 @@ const ToolsScreen: React.FC = () => {
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
                 onPress={() => setActiveTool(null)}>
-                <Icon name="arrow-back" size={24} color={colors.text} />
+                <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.calculatorTitle, {color: colors.text}]}>What-If Simulator</Text>
             </View>
@@ -405,7 +405,7 @@ const ToolsScreen: React.FC = () => {
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
                 onPress={() => setActiveTool(null)}>
-                <Icon name="arrow-back" size={24} color={colors.text} />
+                <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.calculatorTitle, {color: colors.text}]}>Custom Formula</Text>
             </View>
@@ -438,7 +438,7 @@ const ToolsScreen: React.FC = () => {
           <TouchableOpacity
             style={[styles.backButton, {backgroundColor: colors.card}]}
             onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} color={colors.text} />
+            <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
           </TouchableOpacity>
           <View style={styles.headerContent}>
             <Text style={[styles.headerTitle, {color: colors.text}]}>Tools</Text>
@@ -455,7 +455,7 @@ const ToolsScreen: React.FC = () => {
               colors={['#6366F1', '#8B5CF6']}
               style={styles.heroCard}>
               <View style={styles.heroContent}>
-                <Icon name="calculator" size={40} color="rgba(255,255,255,0.9)" />
+                <Icon name="calculator" family="Ionicons" size={40} color="rgba(255,255,255,0.9)" />
                 <Text style={styles.heroTitle}>Merit Calculation Tools</Text>
                 <Text style={styles.heroSubtitle}>
                   Calculate, convert, simulate & plan your academic journey
@@ -477,7 +477,10 @@ const ToolsScreen: React.FC = () => {
 
           {/* Tools List */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, {color: colors.text}]}>🛠️ Available Tools</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+              <Icon name="construct-outline" family="Ionicons" size={20} color={colors.primary} />
+              <Text style={[styles.sectionTitle, {color: colors.text}]}>Available Tools</Text>
+            </View>
             {TOOLS.map(tool => (
               <ToolCard
                 key={tool.id}
@@ -490,18 +493,21 @@ const ToolsScreen: React.FC = () => {
 
           {/* Quick Access */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, {color: colors.text}]}>⚡ Quick Actions</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+              <Icon name="flash-outline" family="Ionicons" size={20} color="#F59E0B" />
+              <Text style={[styles.sectionTitle, {color: colors.text}]}>Quick Actions</Text>
+            </View>
             <View style={styles.quickGrid}>
               <TouchableOpacity
                 style={[styles.quickButton, {backgroundColor: '#6366F1' + '15'}]}
                 onPress={() => setActiveTool('meritCalculator')}>
-                <Icon name="calculator-outline" size={24} color="#6366F1" />
+                <Icon name="calculator-outline" family="Ionicons" size={24} color="#6366F1" />
                 <Text style={[styles.quickText, {color: '#6366F1'}]}>Calculate Merit</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.quickButton, {backgroundColor: '#10B981' + '15'}]}
                 onPress={() => setActiveTool('gradeConverter')}>
-                <Icon name="swap-horizontal-outline" size={24} color="#10B981" />
+                <Icon name="swap-horizontal-outline" family="Ionicons" size={24} color="#10B981" />
                 <Text style={[styles.quickText, {color: '#10B981'}]}>Convert Grade</Text>
               </TouchableOpacity>
             </View>
@@ -510,7 +516,7 @@ const ToolsScreen: React.FC = () => {
           {/* Info Card */}
           <View style={[styles.infoCard, {backgroundColor: colors.card}]}>
             <View style={styles.infoHeader}>
-              <Icon name="information-circle-outline" size={24} color="#6366F1" />
+              <Icon name="information-circle-outline" family="Ionicons" size={24} color="#6366F1" />
               <Text style={[styles.infoTitle, {color: colors.text}]}>About Merit Formulas</Text>
             </View>
             <Text style={[styles.infoText, {color: colors.textSecondary}]}>

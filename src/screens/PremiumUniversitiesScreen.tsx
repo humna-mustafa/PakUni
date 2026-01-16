@@ -24,7 +24,6 @@ import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
 import {Icon} from '../components/icons';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
-import UniversityLogo from '../components/UniversityLogo';
 import FloatingToolsButton from '../components/FloatingToolsButton';
 import {analytics} from '../services/analytics';
 
@@ -211,105 +210,74 @@ const UniversityCard = ({
         accessibilityLabel={`${item.name}, ${item.type} university in ${item.city}${item.ranking_national ? `, ranked number ${item.ranking_national} nationally` : ''}`}
         accessibilityHint="Double tap to view university details">
         <View style={[styles.universityCard, {backgroundColor: colors.card}]}>
-          {/* Header Row */}
+          {/* Compact Header Row - No Logo */}
           <View style={styles.cardHeader}>
-            {/* Logo - Using UniversityLogo for static Supabase storage */}
-            <UniversityLogo
-              shortName={item.short_name}
-              universityName={item.name}
-              size={56}
-              borderRadius={12}
-              style={styles.logoContainer}
-            />
+            {/* Rank Badge on Left */}
+            {item.ranking_national && (
+              <LinearGradient
+                colors={getRankColor(item.ranking_national)}
+                style={styles.rankBadgeCompact}>
+                <Text style={styles.rankText}>#{item.ranking_national}</Text>
+              </LinearGradient>
+            )}
 
             {/* Info */}
-            <View style={styles.headerInfo}>
-              <Text style={[styles.universityName, {color: colors.text}]} numberOfLines={2}>
-                {item.name}
-              </Text>
+            <View style={[styles.headerInfo, !item.ranking_national && {marginLeft: 0}]}>
+              <View style={styles.nameRow}>
+                <Text style={[styles.universityName, {color: colors.text}]} numberOfLines={1}>
+                  {item.name}
+                </Text>
+              </View>
               <View style={styles.shortNameRow}>
-                <Text style={[styles.shortName, {color: colors.textSecondary}]}>
+                <Text style={[styles.shortName, {color: colors.primary, fontWeight: '700'}]}>
                   {item.short_name}
                 </Text>
+                <View style={[
+                  styles.typeBadgeSmall, 
+                  {backgroundColor: item.type === 'public' ? `${colors.success}15` : `${colors.primary}15`}
+                ]}>
+                  <Text style={[
+                    styles.typeBadgeText, 
+                    {color: item.type === 'public' ? colors.success : colors.primary}
+                  ]}>
+                    {item.type.toUpperCase()}
+                  </Text>
+                </View>
                 {item.is_hec_recognized && (
-                  <View style={[styles.hecBadge, {backgroundColor: `${colors.success}15`, flexDirection: 'row', alignItems: 'center', gap: 3}]}>
-                    <Icon name="checkmark-circle" family="Ionicons" size={12} color={colors.success} />
+                  <View style={[styles.hecBadge, {backgroundColor: `${colors.success}15`}]}>
+                    <Icon name="checkmark-circle" family="Ionicons" size={10} color={colors.success} />
                     <Text style={[styles.hecText, {color: colors.success}]}>HEC</Text>
                   </View>
                 )}
               </View>
             </View>
 
-            {/* Rank Badge */}
-            {item.ranking_national && (
-              <LinearGradient
-                colors={getRankColor(item.ranking_national)}
-                style={styles.rankBadge}>
-                <Text style={styles.rankText}>#{item.ranking_national}</Text>
-              </LinearGradient>
-            )}
+            {/* Arrow */}
+            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textSecondary} />
           </View>
 
-          {/* Details Section */}
-          <View style={[styles.cardDetails, {borderTopColor: `${colors.border}`}]}>
+          {/* Compact Details Row */}
+          <View style={styles.cardDetailsCompact}>
             <View style={styles.detailItem}>
-              <Icon name="location-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-              <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+              <Icon name="location" family="Ionicons" size={12} color={colors.primary} />
+              <Text style={[styles.detailText, {color: colors.text}]}>
                 {item.city}
               </Text>
             </View>
-            <View style={styles.detailDivider} />
             <View style={styles.detailItem}>
-              <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-              <Text style={[styles.detailText, {color: colors.textSecondary}]}>
-                Est. {item.established_year}
+              <Icon name="calendar" family="Ionicons" size={12} color={colors.primary} />
+              <Text style={[styles.detailText, {color: colors.text}]}>
+                {item.established_year}
               </Text>
             </View>
             {item.campuses.length > 1 && (
-              <>
-                <View style={styles.detailDivider} />
-                <View style={styles.detailItem}>
-                  <Icon name="business-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-                  <Text style={[styles.detailText, {color: colors.textSecondary}]}>
-                    {item.campuses.length} Campuses
-                  </Text>
-                </View>
-              </>
+              <View style={styles.detailItem}>
+                <Icon name="business" family="Ionicons" size={12} color={colors.primary} />
+                <Text style={[styles.detailText, {color: colors.text}]}>
+                  {item.campuses.length} Campuses
+                </Text>
+              </View>
             )}
-          </View>
-
-          {/* Footer Badges */}
-          <View style={styles.cardFooter}>
-            <View
-              style={[
-                styles.typeBadge,
-                {
-                  backgroundColor: item.type === 'public' 
-                    ? `${colors.success}12` 
-                    : `${colors.primary}12`,
-                },
-              ]}>
-              <View
-                style={[
-                  styles.typeDot,
-                  {
-                    backgroundColor: item.type === 'public' ? colors.success : colors.primary,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.typeText,
-                  {color: item.type === 'public' ? colors.success : colors.primary},
-                ]}>
-                {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-              </Text>
-            </View>
-
-          <View style={styles.viewMore} accessibilityElementsHidden>
-              <Text style={[styles.viewMoreText, {color: colors.primary}]}>View Details</Text>
-              <Icon name="chevron-forward" family="Ionicons" size={16} color={colors.primary} />
-            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -325,6 +293,7 @@ const PremiumUniversitiesScreen = () => {
   const [selectedType, setSelectedType] = useState<'all' | 'public' | 'private'>('all');
   const [sortBy, setSortBy] = useState('ranking');
   const [refreshing, setRefreshing] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const headerAnim = useRef(new Animated.Value(0)).current;
 
   // Debounce search query for better performance
@@ -420,10 +389,10 @@ const PremiumUniversitiesScreen = () => {
             </View>
           </View>
           <TouchableOpacity
-            style={[styles.filterIconBtn, {backgroundColor: colors.card}]}
-            onPress={() => {/* Toggle advanced filters */}}
-            accessibilityLabel="Filter options">
-            <Icon name="options-outline" family="Ionicons" size={20} color={colors.primary} />
+            style={[styles.filterIconBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
+            onPress={() => setShowFilters(!showFilters)}
+            accessibilityLabel="Toggle filter options">
+            <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -440,79 +409,84 @@ const PremiumUniversitiesScreen = () => {
         />
       </View>
 
-      {/* Sort Options */}
-      <View style={styles.sortSection}>
-        <Text style={[styles.sortLabel, {color: colors.textSecondary}]}>Sort by</Text>
-        <View style={styles.sortOptions}>
-          {SORT_OPTIONS.map(opt => (
-            <FilterChip
-              key={opt.value}
-              label={opt.label}
-              isSelected={sortBy === opt.value}
-              onPress={() => setSortBy(opt.value)}
-              colors={colors}
-            />
-          ))}
-        </View>
-      </View>
+      {/* Collapsible Filters */}
+      {showFilters && (
+        <>
+          {/* Sort Options */}
+          <View style={styles.sortSection}>
+            <Text style={[styles.sortLabel, {color: colors.textSecondary}]}>Sort by</Text>
+            <View style={styles.sortOptions}>
+              {SORT_OPTIONS.map(opt => (
+                <FilterChip
+                  key={opt.value}
+                  label={opt.label}
+                  isSelected={sortBy === opt.value}
+                  onPress={() => setSortBy(opt.value)}
+                  colors={colors}
+                />
+              ))}
+            </View>
+          </View>
 
-      {/* Province Filter */}
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={PROVINCES}
-        keyExtractor={item => item.value}
-        style={styles.provinceList}
-        contentContainerStyle={styles.provinceListContent}
-        renderItem={({item}) => (
-          <FilterChip
-            label={item.label}
-            isSelected={selectedProvince === item.value}
-            onPress={() => setSelectedProvince(item.value)}
-            colors={colors}
-            variant="primary"
-          />
-        )}
-      />
-
-      {/* Type Filter */}
-      <View style={styles.typeFilter}>
-        {(['all', 'public', 'private'] as const).map(type => (
-          <TouchableOpacity
-            key={type}
-            style={[
-              styles.typeBtn,
-              {
-                backgroundColor: selectedType === type 
-                  ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
-                  : colors.card,
-                borderColor: selectedType === type 
-                  ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
-                  : colors.border,
-              },
-            ]}
-            onPress={() => setSelectedType(type)}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-              <Icon 
-                name={type === 'all' ? 'school-outline' : type === 'public' ? 'business-outline' : 'briefcase-outline'} 
-                family="Ionicons" 
-                size={14} 
-                color={selectedType === type ? '#FFFFFF' : colors.text} 
+          {/* Province Filter */}
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={PROVINCES}
+            keyExtractor={item => item.value}
+            style={styles.provinceList}
+            contentContainerStyle={styles.provinceListContent}
+            renderItem={({item}) => (
+              <FilterChip
+                label={item.label}
+                isSelected={selectedProvince === item.value}
+                onPress={() => setSelectedProvince(item.value)}
+                colors={colors}
+                variant="primary"
               />
-              <Text
+            )}
+          />
+
+          {/* Type Filter */}
+          <View style={styles.typeFilter}>
+            {(['all', 'public', 'private'] as const).map(type => (
+              <TouchableOpacity
+                key={type}
                 style={[
-                  styles.typeBtnText,
+                  styles.typeBtn,
                   {
-                    color: selectedType === type ? '#FFFFFF' : colors.text,
-                    fontWeight: selectedType === type ? '700' : '500',
+                    backgroundColor: selectedType === type 
+                      ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
+                      : colors.card,
+                    borderColor: selectedType === type 
+                      ? (type === 'public' ? colors.success : type === 'private' ? colors.primary : colors.secondary)
+                      : colors.border,
                   },
-                ]}>
+                ]}
+                onPress={() => setSelectedType(type)}>
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+                  <Icon 
+                    name={type === 'all' ? 'school-outline' : type === 'public' ? 'business-outline' : 'briefcase-outline'} 
+                    family="Ionicons" 
+                    size={14} 
+                    color={selectedType === type ? '#FFFFFF' : colors.text} 
+                  />
+                  <Text
+                    style={[
+                      styles.typeBtnText,
+                      {
+                        color: selectedType === type ? '#FFFFFF' : colors.text,
+                        fontWeight: selectedType === type ? '700' : '500',
+                      },
+                    ]}>
                 {type === 'all' ? 'All' : type === 'public' ? 'Public' : 'Private'}
               </Text>
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+          </View>
+        </>
+      )}
     </View>
   );
 
@@ -724,72 +698,71 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
   },
   listContent: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     paddingBottom: 120,
   },
   universityCard: {
-    borderRadius: RADIUS.xl,
-    padding: SPACING.md,
-    marginBottom: SPACING.md,
-    elevation: 3,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.sm + 4,
+    marginBottom: SPACING.sm,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
   },
   cardHeader: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  logoContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: RADIUS.lg,
-    overflow: 'hidden',
-    justifyContent: 'center',
     alignItems: 'center',
   },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  logoPlaceholder: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+  rankBadgeCompact: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.sm,
+    marginRight: SPACING.sm,
   },
   headerInfo: {
     flex: 1,
-    marginLeft: SPACING.md,
-    marginRight: SPACING.sm,
+    marginLeft: SPACING.xs,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   universityName: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
-    lineHeight: 22,
-    marginBottom: 4,
+    fontSize: TYPOGRAPHY.sizes.md - 1,
+    fontWeight: '600',
+    lineHeight: 20,
   },
   shortNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.sm,
+    gap: SPACING.xs,
+    marginTop: 2,
   },
   shortName: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontSize: TYPOGRAPHY.sizes.sm - 1,
+    fontWeight: '700',
+  },
+  typeBadgeSmall: {
+    paddingHorizontal: SPACING.xs + 2,
+    paddingVertical: 1,
+    borderRadius: RADIUS.xs,
+  },
+  typeBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
   },
   hecBadge: {
-    paddingHorizontal: SPACING.xs + 2,
-    paddingVertical: 2,
-    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 1,
+    borderRadius: RADIUS.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
   hecText: {
-    fontSize: TYPOGRAPHY.sizes.xs - 1,
+    fontSize: 9,
     fontWeight: '700',
   },
   rankBadge: {
@@ -799,9 +772,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   rankText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '800',
     color: '#FFFFFF',
+  },
+  cardDetailsCompact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+    marginTop: SPACING.xs + 2,
+    paddingTop: SPACING.xs,
   },
   cardDetails: {
     flexDirection: 'row',
@@ -813,13 +793,14 @@ const styles = StyleSheet.create({
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 3,
   },
   detailIcon: {
     fontSize: 14,
     marginRight: 4,
   },
   detailText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '500',
   },
   detailDivider: {

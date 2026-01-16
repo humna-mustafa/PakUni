@@ -18,6 +18,9 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  GoogleSignin,
+} from '@react-native-google-signin/google-signin';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
@@ -123,6 +126,83 @@ const SettingsScreen: React.FC = () => {
   const {user, signOut} = useAuth();
   const {preferences: notificationPrefs, updatePreferences, clearAll: clearAllNotifications} = useNotifications();
   const [cacheSize, setCacheSize] = useState<string>('Calculating...');
+  const [isGoogleLinked, setIsGoogleLinked] = useState<boolean>(false);
+  const [isLinkingGoogle, setIsLinkingGoogle] = useState<boolean>(false);
+
+  useEffect(() => {
+    calculateCacheSize();
+    checkGoogleLinkStatus();
+  }, []);
+
+  const checkGoogleLinkStatus = async () => {
+    try {
+      // Check if user signed in with Google or has Google linked
+      const isSignedIn = await GoogleSignin.isSignedIn();
+      setIsGoogleLinked(isSignedIn || user?.provider === 'google');
+    } catch (error) {
+      console.log('Error checking Google status:', error);
+    }
+  };
+
+  const handleLinkGoogleAccount = async () => {
+    try {
+      setIsLinkingGoogle(true);
+      
+      // Check if Google Play Services are available
+      await GoogleSignin.hasPlayServices();
+      
+      // Sign in with Google
+      const userInfo = await GoogleSignin.signIn();
+      
+      if (userInfo) {
+        setIsGoogleLinked(true);
+        Alert.alert(
+          'Account Linked',
+          `Successfully linked Google account: ${userInfo.data?.user?.email || 'your Google account'}`,
+          [{text: 'OK'}]
+        );
+      }
+    } catch (error: any) {
+      console.error('Google link error:', error);
+      
+      if (error.code === '12501') {
+        // User cancelled
+        return;
+      }
+      
+      Alert.alert(
+        'Link Failed',
+        error.message || 'Failed to link Google account. Please try again.',
+        [{text: 'OK'}]
+      );
+    } finally {
+      setIsLinkingGoogle(false);
+    }
+  };
+
+  const handleUnlinkGoogleAccount = async () => {
+    Alert.alert(
+      'Unlink Google Account',
+      'Are you sure you want to unlink your Google account? You can link it again later.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Unlink',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await GoogleSignin.signOut();
+              setIsGoogleLinked(false);
+              Alert.alert('Success', 'Google account unlinked successfully');
+            } catch (error: any) {
+              console.error('Unlink error:', error);
+              Alert.alert('Error', 'Failed to unlink Google account');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   useEffect(() => {
     calculateCacheSize();
@@ -282,6 +362,47 @@ const SettingsScreen: React.FC = () => {
               colors={colors}
               onPress={() => navigation.navigate('Notifications' as never)}
             />
+          </Section>
+
+          {/* Linked Accounts */}
+          <Section title="LINKED ACCOUNTS" colors={colors}>
+            <SettingItem
+              icon="logo-google"
+              iconColor="#4285F4"
+              title="Google Account"
+              subtitle={isGoogleLinked 
+                ? `Connected${user?.provider === 'google' ? ' (Primary)' : ''}` 
+                : 'Not connected'}
+              colors={colors}
+              onPress={isGoogleLinked ? handleUnlinkGoogleAccount : handleLinkGoogleAccount}
+              rightComponent={
+                isLinkingGoogle ? (
+                  <View style={styles.loadingIndicator}>
+                    <Text style={{color: colors.textSecondary, fontSize: 12}}>Linking...</Text>
+                  </View>
+                ) : (
+                  <View style={[
+                    styles.linkBadge, 
+                    {backgroundColor: isGoogleLinked ? '#D1FAE5' : colors.primaryLight}
+                  ]}>
+                    <Text style={[
+                      styles.linkBadgeText, 
+                      {color: isGoogleLinked ? '#059669' : colors.primary}
+                    ]}>
+                      {isGoogleLinked ? 'Linked' : 'Link'}
+                    </Text>
+                  </View>
+                )
+              }
+            />
+            {!isGoogleLinked && (
+              <View style={[styles.helpText, {backgroundColor: colors.background}]}>
+                <Icon name="information-circle-outline" family="Ionicons" size={14} color={colors.textSecondary} />
+                <Text style={[styles.helpTextContent, {color: colors.textSecondary}]}>
+                  Link your Google account for faster sign-in and backup
+                </Text>
+              </View>
+            )}
           </Section>
 
           {/* Appearance */}
@@ -527,9 +648,11 @@ const SettingsScreen: React.FC = () => {
             <Text style={[styles.versionText, {color: colors.textSecondary}]}>
               PakUni v1.0.0
             </Text>
-            <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>
-              Made with ❤️ in Pakistan
-            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>Made with</Text>
+              <Icon name="heart" family="Ionicons" size={14} color="#EF4444" />
+              <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>in Pakistan</Text>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -625,6 +748,30 @@ const styles = StyleSheet.create({
   divider: {
     height: StyleSheet.hairlineWidth,
     marginLeft: 58,
+  },
+  linkBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  linkBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  loadingIndicator: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  helpText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    gap: 6,
+  },
+  helpTextContent: {
+    flex: 1,
+    fontSize: 12,
   },
   versionContainer: {
     alignItems: 'center',

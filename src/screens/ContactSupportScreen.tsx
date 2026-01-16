@@ -815,9 +815,12 @@ const ContactSupportScreen: React.FC = () => {
                 <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Students</Text>
               </View>
             </View>
-            <Text style={[styles.statsHint, {color: colors.textSecondary}]}>
-              Help us grow by sharing info you have! 🚀
-            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6}}>
+              <Text style={[styles.statsHint, {color: colors.textSecondary}]}>
+                Help us grow by sharing info you have!
+              </Text>
+              <Icon name="rocket-outline" family="Ionicons" size={16} color={colors.textSecondary} />
+            </View>
           </Animated.View>
 
           {/* Feedback Options */}
@@ -982,7 +985,10 @@ const ContactSupportScreen: React.FC = () => {
                   <Icon name="checkmark" family="Ionicons" size={48} color="#FFFFFF" />
                 </LinearGradient>
               </View>
-              <Text style={[styles.successTitle, {color: colors.text}]}>Thank You! 🎉</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+                <Text style={[styles.successTitle, {color: colors.text}]}>Thank You!</Text>
+                <Icon name="gift-outline" family="Ionicons" size={24} color="#10B981" />
+              </View>
               <Text style={[styles.successText, {color: colors.textSecondary}]}>
                 Your feedback has been submitted successfully. We appreciate your help in making PakUni better for everyone!
               </Text>

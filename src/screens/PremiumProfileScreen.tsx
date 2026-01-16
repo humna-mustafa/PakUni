@@ -694,7 +694,10 @@ const PremiumProfileScreen = () => {
 
       {/* Quick Actions - Compact grid */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: SPACING.sm}]}>🚀 Quick Actions</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
+          <Icon name="rocket-outline" family="Ionicons" size={18} color={colors.primary} />
+          <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Quick Actions</Text>
+        </View>
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm}}>
           {[
             {iconName: 'analytics-outline', label: 'Calculator', screen: 'Calculator' as const, color: '#6366F1'},
@@ -744,7 +747,11 @@ const PremiumProfileScreen = () => {
 
       {/* Compact About */}
       <View style={styles.compactAbout}>
-        <Text style={[styles.compactAboutText, {color: colors.textSecondary}]}>PakUni v1.0.0 • Made with ❤️ in Pakistan</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4}}>
+          <Text style={[styles.compactAboutText, {color: colors.textSecondary}]}>PakUni v1.0.0 • Made with</Text>
+          <Icon name="heart" family="Ionicons" size={12} color="#EF4444" />
+          <Text style={[styles.compactAboutText, {color: colors.textSecondary}]}>in Pakistan</Text>
+        </View>
       </View>
     </>
   );

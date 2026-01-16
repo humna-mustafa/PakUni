@@ -373,20 +373,26 @@ const AchievementsScreen = () => {
 
         {/* My Achievements List */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>
-            🏆 My Achievements ({achievements.length})
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <Icon name="trophy" family="Ionicons" size={20} color="#F59E0B" />
+            <Text style={[styles.sectionTitle, {color: colors.text}]}>
+              My Achievements ({achievements.length})
+            </Text>
+          </View>
           
           {achievements.length === 0 ? (
             <View style={[styles.emptyState, {backgroundColor: colors.card}]}>
-              <Text style={styles.emptyEmoji}>🎯</Text>
+              <Icon name="ribbon-outline" family="Ionicons" size={48} color="#F59E0B" />
               <Text style={[styles.emptyTitle, {color: colors.text}]}>
                 No achievements yet
               </Text>
-              <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
-                Add your first achievement above!{'\n'}
-                Share your success with friends 🌟
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, flexWrap: 'wrap'}}>
+                <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
+                  Add your first achievement above!{' '}
+                  Share your success with friends
+                </Text>
+                <Icon name="star" family="Ionicons" size={14} color="#F59E0B" />
+              </View>
             </View>
           ) : (
             <View style={styles.achievementsList}>

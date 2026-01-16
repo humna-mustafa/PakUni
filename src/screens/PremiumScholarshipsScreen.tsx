@@ -291,6 +291,7 @@ const PremiumScholarshipsScreen = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isFav, setIsFav] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const searchFocusAnim = useRef(new Animated.Value(0)).current;
 
   // Check favorite status when scholarship is selected
@@ -689,9 +690,10 @@ const PremiumScholarshipsScreen = () => {
               </View>
             </View>
             <TouchableOpacity
-              style={[styles.filterToggleBtn, {backgroundColor: colors.card}]}
-              accessibilityLabel="Filter options">
-              <Icon name="options-outline" family="Ionicons" size={20} color={colors.primary} />
+              style={[styles.filterToggleBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
+              onPress={() => setShowFilters(!showFilters)}
+              accessibilityLabel="Toggle filter options">
+              <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
             </TouchableOpacity>
           </View>
           <Text style={[styles.headerSubtitleText, {color: colors.textSecondary}]}>
@@ -711,7 +713,8 @@ const PremiumScholarshipsScreen = () => {
           />
         </View>
 
-        {/* Filters */}
+        {/* Collapsible Filters */}
+        {showFilters && (
         <View style={styles.filterContainer}>
           <ScrollView
             horizontal
@@ -728,6 +731,7 @@ const PremiumScholarshipsScreen = () => {
             ))}
           </ScrollView>
         </View>
+        )}
 
         {/* List */}
         <FlatList

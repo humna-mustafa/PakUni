@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon} from '../components/icons';
@@ -342,6 +343,7 @@ const ResultCard = ({
 
 const PremiumCalculatorScreen = () => {
   const {colors, isDark} = useTheme();
+  const navigation = useNavigation();
 
   // Input states
   const [matricMarks, setMatricMarks] = useState('');
@@ -624,6 +626,14 @@ const PremiumCalculatorScreen = () => {
               style={styles.headerGradient}>
               <View style={styles.headerDecoCircle1} />
               <View style={styles.headerDecoCircle2} />
+              {/* Back Button */}
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+                accessibilityLabel="Go back"
+                accessibilityRole="button">
+                <Icon name="chevron-back" family="Ionicons" size={24} color="#FFFFFF" />
+              </TouchableOpacity>
               <View style={styles.headerContent}>
                 <View style={styles.headerTextContainer}>
                   <Text style={styles.title}>
@@ -920,7 +930,10 @@ const PremiumCalculatorScreen = () => {
               </TouchableOpacity>
 
               {/* Medical Formulas Section */}
-              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>🏥 Medical Colleges</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, marginBottom: 8}}>
+                <Icon name="medkit-outline" family="Ionicons" size={18} color="#EF4444" />
+                <Text style={[styles.formulaCategoryTitle, {color: colors.text, marginTop: 0, marginBottom: 0}]}>Medical Colleges</Text>
+              </View>
               {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
                 field.toLowerCase().includes('medical') || field.toLowerCase().includes('mbbs') || field.toLowerCase().includes('bds')
               )).map(formula => (
@@ -973,7 +986,10 @@ const PremiumCalculatorScreen = () => {
               ))}
 
               {/* Engineering Formulas Section */}
-              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>⚙️ Engineering Universities</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: SPACING.md}}>
+                <Icon name="construct-outline" family="Ionicons" size={18} color="#F59E0B" />
+                <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>Engineering Universities</Text>
+              </View>
               {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
                 field.toLowerCase().includes('engineering') || field.toLowerCase().includes('bsc engineering') || field.toLowerCase().includes('be')
               ) && !f.applicable_fields.some(field => field.toLowerCase().includes('medical'))).map(formula => (
@@ -1079,7 +1095,10 @@ const PremiumCalculatorScreen = () => {
               ))}
 
               {/* Business Schools Section */}
-              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>📊 Business Schools</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, marginBottom: 8}}>
+                <Icon name="briefcase-outline" family="Ionicons" size={18} color="#F59E0B" />
+                <Text style={[styles.formulaCategoryTitle, {color: colors.text, marginTop: 0, marginBottom: 0}]}>Business Schools</Text>
+              </View>
               {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
                 field.toLowerCase().includes('business') || field.toLowerCase().includes('bba') || field.toLowerCase().includes('accounting') || field.toLowerCase().includes('economics')
               )).map(formula => (
@@ -1132,7 +1151,10 @@ const PremiumCalculatorScreen = () => {
               ))}
 
               {/* General Universities Section */}
-              <Text style={[styles.formulaCategoryTitle, {color: colors.text}]}>🎓 General Universities</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, marginBottom: 8}}>
+                <Icon name="school-outline" family="Ionicons" size={18} color="#8B5CF6" />
+                <Text style={[styles.formulaCategoryTitle, {color: colors.text, marginTop: 0, marginBottom: 0}]}>General Universities</Text>
+              </View>
               {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
                 field.toLowerCase().includes('general') || field.toLowerCase().includes('arts') || field.toLowerCase().includes('all programs') || field.toLowerCase().includes('bs programs')
               )).map(formula => (
@@ -1313,6 +1335,15 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
   },
   headerContent: {
     flexDirection: 'row',

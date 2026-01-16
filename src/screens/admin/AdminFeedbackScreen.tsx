@@ -396,7 +396,10 @@ const AdminFeedbackScreen: React.FC = () => {
                   {/* Metadata Details - Material/Content Specific */}
                   {(selectedFeedback as any).metadata && (
                     <View style={[styles.metadataBlock, {backgroundColor: colors.background}]}>
-                      <Text style={[styles.metadataTitle, {color: colors.text}]}>📋 Submission Details</Text>
+                      <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+                        <Icon name="clipboard-outline" family="Ionicons" size={18} color={colors.primary} />
+                        <Text style={[styles.metadataTitle, {color: colors.text}]}>Submission Details</Text>
+                      </View>
                       
                       {(selectedFeedback as any).metadata.feedbackType && (
                         <View style={styles.metadataRow}>

@@ -549,7 +549,7 @@ const quickActionStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 14,
     alignItems: 'center',
-    minHeight: 100,
+    height: 100,
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.04)',
@@ -688,13 +688,14 @@ const PremiumHomeScreen = () => {
 
   // STREAMLINED Quick Actions - Only essential tools not in main nav bar
   // Universities, Scholarships, Profile are in bottom tabs - REMOVED
+  // Using outline icons for consistency with navbar and profile page
   const quickActions = [
-    {id: '1', iconName: 'calculator', title: 'Calculate Merit', color: '#4F46E5', screen: 'Calculator'},
-    {id: '2', iconName: 'clipboard', title: 'Entry Tests', color: '#059669', screen: 'EntryTests'},
-    {id: '3', iconName: 'sparkles', title: 'AI Match', color: '#8B5CF6', screen: 'Recommendations'},
-    {id: '4', iconName: 'compass', title: 'Career Guide', color: '#0891B2', screen: 'CareerGuidance'},
-    {id: '5', iconName: 'library', title: 'Study Guides', color: '#DC2626', screen: 'Guides'},
-    {id: '6', iconName: 'game-controller', title: 'Score Game', color: '#F59E0B', screen: 'ResultGame'},
+    {id: '1', iconName: 'calculator-outline', title: 'Calculate Merit', color: '#4F46E5', screen: 'Calculator'},
+    {id: '2', iconName: 'clipboard-outline', title: 'Entry Tests', color: '#059669', screen: 'EntryTests'},
+    {id: '3', iconName: 'sparkles-outline', title: 'AI Match', color: '#8B5CF6', screen: 'Recommendations'},
+    {id: '4', iconName: 'compass-outline', title: 'Career Guide', color: '#0891B2', screen: 'CareerGuidance'},
+    {id: '5', iconName: 'library-outline', title: 'Study Guides', color: '#DC2626', screen: 'Guides'},
+    {id: '6', iconName: 'game-controller-outline', title: 'Score Game', color: '#F59E0B', screen: 'ResultGame'},
   ];
 
   const handleNavigate = useCallback((screen: string) => {
@@ -868,41 +869,6 @@ const PremiumHomeScreen = () => {
             colors={colors}
             isDark={isDark}
           />
-
-          {/* Bottom Explore More Section */}
-          <View style={styles.exploreSection}>
-            <Text style={[styles.exploreTitle, {color: colors.text}]}>Explore More</Text>
-            <View style={styles.exploreGrid}>
-              <TouchableOpacity
-                style={[styles.exploreItem, {backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : '#FFFFFF'}]}
-                onPress={() => navigation.navigate('Polls')}
-                activeOpacity={0.8}>
-                <Icon name="stats-chart" family="Ionicons" size={20} color="#8B5CF6" />
-                <Text style={[styles.exploreItemText, {color: colors.text}]}>Live Polls</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.exploreItem, {backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : '#FFFFFF'}]}
-                onPress={() => navigation.navigate('Achievements')}
-                activeOpacity={0.8}>
-                <Icon name="trophy" family="Ionicons" size={20} color="#F59E0B" />
-                <Text style={[styles.exploreItemText, {color: colors.text}]}>Achievements</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.exploreItem, {backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : '#FFFFFF'}]}
-                onPress={() => navigation.navigate('KidsHub')}
-                activeOpacity={0.8}>
-                <Icon name="happy" family="Ionicons" size={20} color="#10B981" />
-                <Text style={[styles.exploreItemText, {color: colors.text}]}>Kids Zone</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.exploreItem, {backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : '#FFFFFF'}]}
-                onPress={() => navigation.navigate('ContactSupport')}
-                activeOpacity={0.8}>
-                <Icon name="chatbubbles" family="Ionicons" size={20} color="#0891B2" />
-                <Text style={[styles.exploreItemText, {color: colors.text}]}>Support</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
         </Animated.ScrollView>
       </SafeAreaView>
     </View>
@@ -965,48 +931,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 12,
     marginBottom: 20,
-  },
-  // Explore More Section
-  exploreSection: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-    marginTop: 8,
-  },
-  exploreTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    letterSpacing: -0.2,
-  },
-  exploreGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  exploreItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.04)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.02,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 1,
-      },
-    }),
-  },
-  exploreItemText: {
-    fontSize: 13,
-    fontWeight: '500',
   },
 });
 

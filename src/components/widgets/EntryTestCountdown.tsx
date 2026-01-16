@@ -496,7 +496,10 @@ const EntryTestCountdown: React.FC<EntryTestCountdownProps> = ({
           </View>
 
           <Text style={styles.testFullName}>{selectedTest.full_name}</Text>
-          <Text style={styles.testDate}>📅 {formatDate(currentTestDate)}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+            <Icon name="calendar-outline" family="Ionicons" size={16} color="#FFF" />
+            <Text style={styles.testDate}>{formatDate(currentTestDate)}</Text>
+          </View>
         </LinearGradient>
 
         <View style={styles.countdownSection}>

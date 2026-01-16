@@ -14,7 +14,7 @@ import {
   Animated,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {Icon} from '../icons';
 import {
   cgpaToPercentage,
   percentageToCGPA,

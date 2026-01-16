@@ -283,7 +283,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="Calculator"
             component={PremiumCalculatorScreen}
-            options={{title: 'Merit Calculator'}}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="Compare"

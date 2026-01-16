@@ -16,7 +16,7 @@ import {
   PanResponder,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');

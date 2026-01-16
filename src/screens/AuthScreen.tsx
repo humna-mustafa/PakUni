@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Icon} from '../components/icons';
+import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import type {RootStackParamList} from '../navigation/AppNavigator';
@@ -284,12 +285,21 @@ const AuthScreen: React.FC = () => {
         {/* Email Sign In */}
         <SocialButton
           iconName="mail"
-          label="Continue with Email"
+          label="Sign In with Email"
           onPress={() => animateTransition('login')}
           colors={colors}
           bgColor={colors.card}
           loading={false}
         />
+
+        {/* Sign Up Button */}
+        <TouchableOpacity
+          style={[styles.signUpButton, {backgroundColor: colors.primary}]}
+          onPress={() => animateTransition('signup')}
+          activeOpacity={0.85}>
+          <Icon name="person-add" family="Ionicons" size={20} color="#FFFFFF" />
+          <Text style={styles.signUpButtonText}>Create New Account</Text>
+        </TouchableOpacity>
 
         {/* Divider */}
         <View style={styles.dividerContainer}>
@@ -310,7 +320,7 @@ const AuthScreen: React.FC = () => {
             <>
               <Icon name="person-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.guestButtonText, {color: colors.primary}]}>
-                Continue as Guest
+                Explore as Guest
               </Text>
             </>
           )}
@@ -641,22 +651,25 @@ const AuthScreen: React.FC = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}>
           <SafeAreaView style={styles.safeArea}>
-            {/* Logo Section */}
+            {/* Logo Section - Premium PakUni Branding */}
             <Animated.View
               style={[
                 styles.logoSection,
                 {transform: [{scale: logoScale}]},
               ]}>
-              <View
-                style={[
-                  styles.logoContainer,
-                  {backgroundColor: colors.primary},
-                ]}>
-                <Icon name="school" family="Ionicons" size={36} color="#FFFFFF" />
+              <View style={styles.logoWrapper}>
+                <GraduationCapIcon
+                  size={mode === 'welcome' ? 100 : 72}
+                  primaryColor={BRAND_COLORS.primary}
+                  secondaryColor={BRAND_COLORS.accent}
+                  animated={mode === 'welcome'}
+                />
               </View>
-              <Text style={[styles.logoText, {color: colors.text}]}>PakUni</Text>
+              <Text style={[styles.logoText, {color: colors.text}]}>
+                Pak<Text style={{color: BRAND_COLORS.primary}}>Uni</Text>
+              </Text>
               <Text style={[styles.logoSubtext, {color: colors.textSecondary}]}>
-                Your University Guide
+                Your Gateway to Pakistani Universities 🇵🇰
               </Text>
             </Animated.View>
 
@@ -695,6 +708,20 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 40 : 20,
     paddingBottom: 28,
   },
+  logoWrapper: {
+    marginBottom: 14,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#6366F1',
+        shadowOffset: {width: 0, height: 8},
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
   logoContainer: {
     width: 72,
     height: 72,
@@ -715,9 +742,9 @@ const styles = StyleSheet.create({
     }),
   },
   logoText: {
-    fontSize: 26,
-    fontWeight: '700',
-    letterSpacing: -0.3,
+    fontSize: 28,
+    fontWeight: '800',
+    letterSpacing: -0.5,
   },
   logoSubtext: {
     fontSize: 13,
@@ -797,6 +824,31 @@ const styles = StyleSheet.create({
   guestButtonText: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  signUpButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 10,
+    marginTop: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#6366F1',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  signUpButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   termsText: {
     fontSize: 11,
