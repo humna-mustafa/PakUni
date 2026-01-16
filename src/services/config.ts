@@ -5,6 +5,7 @@
 
 import {Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -190,12 +191,12 @@ class ConfigService {
       }
 
       // Fetch remote config in background (non-blocking)
-      this.fetchRemoteConfig().catch(console.warn);
+      this.fetchRemoteConfig().catch(err => logger.warn('Failed to fetch remote config', err, 'Config'));
 
       this.isInitialized = true;
       this.notifyListeners();
     } catch (error) {
-      console.warn('Failed to initialize config:', error);
+      logger.warn('Failed to initialize config', error, 'Config');
       this.isInitialized = true;
     }
   }
@@ -317,7 +318,7 @@ class ConfigService {
     try {
       await AsyncStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(this.config));
     } catch (error) {
-      console.warn('Failed to save config:', error);
+      logger.warn('Failed to save config', error, 'Config');
     }
   }
 

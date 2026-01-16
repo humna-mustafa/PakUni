@@ -16,6 +16,8 @@ import {
   Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
@@ -32,11 +34,15 @@ import {UNIVERSITIES} from '../data/universities';
 import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import SearchableDropdown, { createUniversityOptions } from '../components/SearchableDropdown';
 import FloatingToolsButton from '../components/FloatingToolsButton';
 import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
+import type {RootStackParamList} from '../navigation/AppNavigator';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -288,10 +294,10 @@ const ScholarshipCard = ({
             </Text>
             {!isBroadlyAvailable && universityCount > 0 && universityCount <= 4 && (
               <View style={styles.universityLogosRow}>
-                {specificUniversities.slice(0, 4).map((uni: any) => (
-                  <View key={uni.id} style={styles.miniLogoContainer}>
+                {specificUniversities.slice(0, 4).map((uniName: string) => (
+                  <View key={uniName} style={styles.miniLogoContainer}>
                     <UniversityLogo
-                      universityName={uni.name}
+                      universityName={uniName}
                       size={28}
                       style={styles.miniLogo}
                     />
@@ -357,8 +363,9 @@ const ScholarshipCard = ({
 const ITEM_HEIGHT = 200; // Approximate height of scholarship card
 
 const PremiumScholarshipsScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
   const {colors, isDark} = useTheme();
-  const {addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
+  const {user, addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<FilterType>('all');
@@ -401,7 +408,7 @@ const PremiumScholarshipsScreen = () => {
         Haptics.success();
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      logger.error('Error toggling favorite', error, 'Scholarships');
     }
   }, [selectedScholarship, isFav, isGuest, addFavorite, removeFavorite]);
 
@@ -432,7 +439,19 @@ const PremiumScholarshipsScreen = () => {
     [],
   );
 
-  const universityOptions = useMemo(() => createUniversityOptions(UNIVERSITIES), []);
+  const universityOptions = useMemo(() => createUniversityOptions(), []);
+
+  // Get user initials for profile button
+  const getUserInitials = () => {
+    if (user?.fullName) {
+      const names = user.fullName.split(' ');
+      return names.map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
+  };
 
   const filteredScholarships = useMemo(() => {
     return SCHOLARSHIPS.filter((scholarship: ScholarshipData) => {
@@ -448,8 +467,8 @@ const PremiumScholarshipsScreen = () => {
       // University filter
       let matchesUni = true;
       if (selectedUniversity) {
-        const isBroad = hasBroadAvailability(scholarship.available_at);
-        const specificUnis = getScholarshipSpecificUniversities(scholarship.available_at);
+        const isBroad = hasBroadAvailability(scholarship);
+        const specificUnis = getScholarshipSpecificUniversities(scholarship);
         
         matchesUni = isBroad || specificUnis.includes(selectedUniversity);
       }
@@ -726,15 +745,15 @@ const PremiumScholarshipsScreen = () => {
                       </Text>
                       {!isBroadlyAvailable && specificUniversities.length > 0 && (
                         <View style={styles.universityListModal}>
-                          {specificUniversities.slice(0, 8).map((uni: any) => (
-                            <View key={uni.id} style={[styles.universityItemModal, {backgroundColor: colors.card}]}>
+                          {specificUniversities.slice(0, 8).map((uniName: string) => (
+                            <View key={uniName} style={[styles.universityItemModal, {backgroundColor: colors.card}]}>
                               <UniversityLogo
-                                universityName={uni.name}
+                                universityName={uniName}
                                 size={32}
                                 style={styles.uniLogoModal}
                               />
                               <Text style={[styles.uniNameModal, {color: colors.text}]} numberOfLines={2}>
-                                {uni.name}
+                                {uniName}
                               </Text>
                             </View>
                           ))}
@@ -883,12 +902,27 @@ const PremiumScholarshipsScreen = () => {
                 </Text>
               </View>
             </View>
-            <TouchableOpacity
-              style={[styles.filterToggleBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
-              onPress={() => setShowFilters(!showFilters)}
-              accessibilityLabel="Toggle filter options">
-              <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
-            </TouchableOpacity>
+            <View style={styles.headerRightRow}>
+              <TouchableOpacity
+                style={[styles.filterToggleBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
+                onPress={() => setShowFilters(!showFilters)}
+                accessibilityLabel="Toggle filter options">
+                <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.profileBtn, {backgroundColor: colors.primary}]}
+                onPress={() => navigation.navigate('Profile')}
+                accessibilityRole="button"
+                accessibilityLabel="View your profile">
+                {user?.avatarUrl ? (
+                  <View style={styles.profileImage}>
+                    <Icon name="person" family="Ionicons" size={18} color="#FFFFFF" />
+                  </View>
+                ) : (
+                  <Text style={styles.profileInitials}>{getUserInitials()}</Text>
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
           <Text style={[styles.headerSubtitleText, {color: colors.textSecondary}]}>
             Fund your education journey
@@ -913,7 +947,7 @@ const PremiumScholarshipsScreen = () => {
           <View style={styles.universityDropdownWrapper}>
             <SearchableDropdown
               options={universityOptions}
-              onSelect={(value) => setSelectedUniversity(value)}
+              onSelect={(option, value) => setSelectedUniversity(value)}
               placeholder="Filter by University"
               label="Selected University"
               emptyMessage="All Universities"
@@ -1038,6 +1072,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.06)',
+  },
+  headerRightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  profileBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileInitials: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  profileImage: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerSubtitleText: {
     fontSize: TYPOGRAPHY.sizes.sm,

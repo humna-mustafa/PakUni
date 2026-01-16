@@ -5,6 +5,7 @@
 
 import {supabase} from './supabase';
 import {MERIT_RECORDS, AVAILABLE_YEARS, MERIT_CATEGORIES, MeritRecord} from '../data/meritArchive';
+import {logger} from '../utils/logger';
 
 export interface MeritListRecord {
   id: string;
@@ -112,7 +113,7 @@ export async function fetchMeritLists(
 
     return {data: records, error: null, source: 'supabase'};
   } catch (error) {
-    console.error('Error fetching merit lists:', error);
+    logger.error('Error fetching merit lists', error, 'MeritLists');
     // Fallback to local data
     return {data: filterLocalMeritRecords(year, category), error: error as Error, source: 'local'};
   }
@@ -173,7 +174,7 @@ export async function getMeritTrend(
       error: null,
     };
   } catch (error) {
-    console.error('Error fetching merit trend:', error);
+    logger.error('Error fetching merit trend', error, 'MeritLists');
     // Fallback to local data
     const localTrend = MERIT_RECORDS
       .filter(r => r.universityId === universityId && r.programName === programName)
@@ -247,7 +248,7 @@ export async function getUniversityMeritSummary(
       error: null,
     };
   } catch (error) {
-    console.error('Error fetching university merit summary:', error);
+    logger.error('Error fetching university merit summary', error, 'MeritLists');
     return {data: getLocalUniversityMeritSummary(universityId), error: error as Error};
   }
 }

@@ -104,6 +104,8 @@ const AuthScreen: React.FC = () => {
     isLoading,
     authError,
     clearError,
+    hasCompletedOnboarding,
+    isAuthenticated,
   } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('welcome');
@@ -179,20 +181,28 @@ const AuthScreen: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     setLocalLoading('google');
-    await signInWithGoogle();
+    const success = await signInWithGoogle();
     setLocalLoading(null);
+    // Navigation will be handled by useEffect watching auth state
   };
+
+  // Watch for successful authentication and navigate accordingly
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      // User just logged in - navigate based on onboarding status
+      navigation.reset({
+        index: 0,
+        routes: [{name: hasCompletedOnboarding ? 'MainTabs' : 'Onboarding'}],
+      });
+    }
+  }, [isAuthenticated, isLoading, hasCompletedOnboarding, navigation]);
 
   const handleGuestMode = async () => {
     setLocalLoading('guest');
     const success = await continueAsGuest();
     setLocalLoading(null);
-    if (success) {
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Onboarding'}],
-      });
-    }
+    // Navigation is handled by useEffect watching isAuthenticated
+    // Guests always go to Onboarding (hasCompletedOnboarding is false for new guests)
   };
 
   const handleEmailLogin = async () => {
@@ -203,12 +213,7 @@ const AuthScreen: React.FC = () => {
     setLocalLoading('email');
     const success = await signInWithEmail(email.trim(), password);
     setLocalLoading(null);
-    if (success) {
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'MainTabs'}],
-      });
-    }
+    // Navigation is handled by useEffect watching isAuthenticated
   };
 
   const handleEmailSignUp = async () => {

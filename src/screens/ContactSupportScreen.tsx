@@ -34,6 +34,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {supabase} from '../services/supabase';
 
 // Fallback LinearGradient
@@ -303,7 +304,7 @@ const ContactSupportScreen: React.FC = () => {
         rating: 0,
       });
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      logger.error('Error submitting feedback', error, 'ContactSupport');
       setIsSubmitting(false);
       Alert.alert(
         'Submission Failed',

@@ -4,6 +4,7 @@
 
 import {Alert, Linking, Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // CONFIG
@@ -71,7 +72,7 @@ class AppRatingService {
       
       this.isInitialized = true;
     } catch (error) {
-      console.error('Rating service init error:', error);
+      logger.error('Rating service init error', error, 'Rating');
       this.isInitialized = true;
     }
   }
@@ -86,7 +87,7 @@ class AppRatingService {
         JSON.stringify(this.ratingData)
       );
     } catch (error) {
-      console.error('Save rating data error:', error);
+      logger.error('Save rating data error', error, 'Rating');
     }
   }
 
@@ -228,7 +229,7 @@ class AppRatingService {
         }
       }
     } catch (error) {
-      console.error('Open app store error:', error);
+      logger.error('Open app store error', error, 'Rating');
       Alert.alert('Error', 'Unable to open app store. Please try again later.');
     }
   }

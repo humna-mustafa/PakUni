@@ -32,6 +32,7 @@ import {useTheme} from '../../contexts/ThemeContext';
 import {adminService} from '../../services/admin';
 import {adminNotificationService, AdminNotification, NotificationStats, CreateNotificationInput} from '../../services/adminNotifications';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../navigation/AppNavigator';
 
@@ -570,7 +571,7 @@ const AdminNotificationsScreen: React.FC = () => {
       setNotifications(notificationsData);
       setStats(statsData);
     } catch (error) {
-      console.error('Error loading notifications:', error);
+      logger.error('Error loading notifications', error, 'AdminNotifications');
     } finally {
       setLoading(false);
     }

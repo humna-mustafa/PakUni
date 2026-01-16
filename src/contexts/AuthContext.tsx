@@ -15,6 +15,7 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert, Platform, Linking} from 'react-native';
+import {logger} from '../utils/logger';
 import {supabase} from '../services/supabase';
 import {
   GoogleSignin,
@@ -212,7 +213,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         }
       }
     } catch (error) {
-      console.error('Auth initialization error:', error);
+      logger.error('Auth initialization error', error, 'AuthContext');
       setState(prev => ({...prev, isLoading: false}));
     }
 
@@ -302,8 +303,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         const {data: authUser} = await supabase.auth.getUser();
         const now = new Date().toISOString();
         
-        console.log('[Auth] Creating missing profile for user:', userId);
-        console.log('[Auth] User metadata:', JSON.stringify(authUser?.user?.user_metadata));
+        logger.debug('Creating missing profile for user', {userId}, 'Auth');
+        logger.debug('User metadata', authUser?.user?.user_metadata, 'Auth');
         
         // Google stores avatar in 'picture' or 'avatar_url' field
         const avatarUrl = authUser?.user?.user_metadata?.avatar_url 
@@ -341,11 +342,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         });
 
         if (createError) {
-          console.error('[Auth] Failed to create profile:', createError);
+          logger.error('Failed to create profile', createError, 'Auth');
           throw createError;
         }
 
-        console.log('[Auth] Profile created successfully for:', profile.email);
+        logger.info('Profile created successfully', {email: profile.email}, 'Auth');
       }
 
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
@@ -359,9 +360,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         hasCompletedOnboarding: profile.onboardingCompleted,
       }));
 
-      console.log('[Auth] Profile loaded:', profile.email, 'Role:', profile.role);
+      logger.info('Profile loaded', {email: profile.email, role: profile.role}, 'Auth');
     } catch (error) {
-      console.error('Load profile error:', error);
+      logger.error('Load profile error', error, 'Auth');
       setState(prev => ({...prev, isLoading: false}));
     }
   };
@@ -380,7 +381,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       // Sign in with Google natively
       const userInfo = await GoogleSignin.signIn();
       
-      console.log('[Auth] Google sign-in successful, getting ID token...');
+      logger.debug('Google sign-in successful, getting ID token...', null, 'Auth');
       
       // Get the ID token
       const tokens = await GoogleSignin.getTokens();
@@ -390,7 +391,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         throw new Error('No ID token received from Google');
       }
 
-      console.log('[Auth] Signing in to Supabase with Google ID token...');
+      logger.debug('Signing in to Supabase with Google ID token...', null, 'Auth');
       
       // Sign in to Supabase using the ID token
       const {data, error} = await supabase.auth.signInWithIdToken({
@@ -403,14 +404,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       }
 
       if (data.user) {
-        console.log('[Auth] Supabase sign-in successful:', data.user.email);
+        logger.info('Supabase sign-in successful', {email: data.user.email}, 'Auth');
         await loadUserProfile(data.user.id, 'google');
         return true;
       }
 
       return false;
     } catch (error: any) {
-      console.error('Google sign-in error:', error);
+      logger.error('Google sign-in error', error, 'Auth');
       
       let errorMessage = 'Failed to sign in with Google';
       
@@ -460,7 +461,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       return false;
     } catch (error: any) {
-      console.error('Email sign-in error:', error);
+      logger.error('Email sign-in error', error, 'Auth');
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -511,7 +512,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         });
 
         if (profileError) {
-          console.error('Profile creation error:', profileError);
+          logger.error('Profile creation error', profileError, 'Auth');
           throw new Error(`Failed to create profile: ${profileError.message}`);
         }
 
@@ -544,7 +545,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       throw new Error('User creation failed: No user returned');
     } catch (error: any) {
-      console.error('Email sign-up error:', error);
+      logger.error('Email sign-up error', error, 'Auth');
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -587,7 +588,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       return true;
     } catch (error: any) {
-      console.error('Guest mode error:', error);
+      logger.error('Guest mode error', error, 'Auth');
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -608,7 +609,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       await clearLocalData();
     } catch (error) {
-      console.error('Sign out error:', error);
+      logger.error('Sign out error', error, 'Auth');
     } finally {
       setState({
         ...DEFAULT_STATE,
@@ -635,7 +636,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       return true;
     } catch (error: any) {
-      console.error('Password reset error:', error);
+      logger.error('Password reset error', error, 'Auth');
       Alert.alert('Error', error.message || 'Failed to send reset email');
       return false;
     }
@@ -697,7 +698,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       return true;
     } catch (error) {
-      console.error('Update profile error:', error);
+      logger.error('Update profile error', error, 'Auth');
       return false;
     }
   }, [state.user, state.isGuest]);

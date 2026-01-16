@@ -11,6 +11,7 @@
  */
 
 import {supabase} from './supabase';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -202,7 +203,7 @@ class AdminService {
       this.currentUserRole = data?.role || 'user';
       return this.currentUserRole;
     } catch (error) {
-      console.error('Error getting user role:', error);
+      logger.error('Error getting user role', error, 'Admin');
       return null;
     }
   }
@@ -279,7 +280,7 @@ class AdminService {
         activeAnnouncements: announcementsResult.count || 0,
       };
     } catch (error) {
-      console.error('Error getting dashboard stats:', error);
+      logger.error('Error getting dashboard stats', error, 'Admin');
       return {
         totalUsers: 0,
         newUsersToday: 0,
@@ -352,7 +353,7 @@ class AdminService {
         total: count || 0,
       };
     } catch (error) {
-      console.error('Error getting users:', error);
+      logger.error('Error getting users', error, 'Admin');
       return {users: [], total: 0};
     }
   }
@@ -371,7 +372,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting user:', error);
+      logger.error('Error getting user', error, 'Admin');
       return null;
     }
   }
@@ -393,7 +394,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating user role:', error);
+      logger.error('Error updating user role', error, 'Admin');
       return false;
     }
   }
@@ -419,7 +420,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error banning user:', error);
+      logger.error('Error banning user', error, 'Admin');
       return false;
     }
   }
@@ -445,7 +446,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error unbanning user:', error);
+      logger.error('Error unbanning user', error, 'Admin');
       return false;
     }
   }
@@ -466,7 +467,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error verifying user:', error);
+      logger.error('Error verifying user', error, 'Admin');
       return false;
     }
   }
@@ -520,7 +521,7 @@ class AdminService {
 
       return {universities: data || [], total: count || 0};
     } catch (error) {
-      console.error('Error getting universities:', error);
+      logger.error('Error getting universities', error, 'Admin');
       return {universities: [], total: 0};
     }
   }
@@ -542,7 +543,7 @@ class AdminService {
 
       return {success: true, id: data.id};
     } catch (error: any) {
-      console.error('Error creating university:', error);
+      logger.error('Error creating university', error, 'Admin');
       return {success: false, error: error.message};
     }
   }
@@ -570,7 +571,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating university:', error);
+      logger.error('Error updating university', error, 'Admin');
       return false;
     }
   }
@@ -597,7 +598,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error deleting university:', error);
+      logger.error('Error deleting university', error, 'Admin');
       return false;
     }
   }
@@ -653,7 +654,7 @@ class AdminService {
 
       return {scholarships: data || [], total: count || 0};
     } catch (error) {
-      console.error('Error getting scholarships:', error);
+      logger.error('Error getting scholarships', error, 'Admin');
       return {scholarships: [], total: 0};
     }
   }
@@ -675,7 +676,7 @@ class AdminService {
 
       return {success: true, id: data.id};
     } catch (error: any) {
-      console.error('Error creating scholarship:', error);
+      logger.error('Error creating scholarship', error, 'Admin');
       return {success: false, error: error.message};
     }
   }
@@ -702,7 +703,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating scholarship:', error);
+      logger.error('Error updating scholarship', error, 'Admin');
       return false;
     }
   }
@@ -729,7 +730,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error deleting scholarship:', error);
+      logger.error('Error deleting scholarship', error, 'Admin');
       return false;
     }
   }
@@ -786,7 +787,7 @@ class AdminService {
       // This is imported in the component for zero-egress operation
       return {programs: [], total: 0};
     } catch (error) {
-      console.error('Error getting programs:', error);
+      logger.error('Error getting programs', error, 'Admin');
       return {programs: [], total: 0};
     }
   }
@@ -808,7 +809,7 @@ class AdminService {
 
       return {success: true, id: data.id};
     } catch (error: any) {
-      console.error('Error creating program:', error);
+      logger.error('Error creating program', error, 'Admin');
       return {success: false, error: error.message};
     }
   }
@@ -835,7 +836,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating program:', error);
+      logger.error('Error updating program', error, 'Admin');
       return false;
     }
   }
@@ -862,7 +863,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error deleting program:', error);
+      logger.error('Error deleting program', error, 'Admin');
       return false;
     }
   }
@@ -883,7 +884,7 @@ class AdminService {
       const fields = [...new Set((data || []).map(p => p.field))];
       return fields;
     } catch (error) {
-      console.error('Error getting program fields:', error);
+      logger.error('Error getting program fields', error, 'Admin');
       return [];
     }
   }
@@ -928,7 +929,7 @@ class AdminService {
 
       return {announcements: data || [], total: count || 0};
     } catch (error) {
-      console.error('Error getting announcements:', error);
+      logger.error('Error getting announcements', error, 'Admin');
       return {announcements: [], total: 0};
     }
   }
@@ -952,7 +953,7 @@ class AdminService {
 
       return data || [];
     } catch (error) {
-      console.error('Error getting active announcements:', error);
+      logger.error('Error getting active announcements', error, 'Admin');
       return [];
     }
   }
@@ -976,7 +977,7 @@ class AdminService {
 
       return {success: true, id: data.id};
     } catch (error: any) {
-      console.error('Error creating announcement:', error);
+      logger.error('Error creating announcement', error, 'Admin');
       return {success: false, error: error.message};
     }
   }
@@ -997,7 +998,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating announcement:', error);
+      logger.error('Error updating announcement', error, 'Admin');
       return false;
     }
   }
@@ -1018,7 +1019,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error deleting announcement:', error);
+      logger.error('Error deleting announcement', error, 'Admin');
       return false;
     }
   }
@@ -1039,7 +1040,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error dismissing announcement:', error);
+      logger.error('Error dismissing announcement', error, 'Admin');
       return false;
     }
   }
@@ -1083,7 +1084,7 @@ class AdminService {
 
       return {reports: data || [], total: count || 0};
     } catch (error) {
-      console.error('Error getting content reports:', error);
+      logger.error('Error getting content reports', error, 'Admin');
       return {reports: [], total: 0};
     }
   }
@@ -1115,7 +1116,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating report status:', error);
+      logger.error('Error updating report status', error, 'Admin');
       return false;
     }
   }
@@ -1142,7 +1143,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating content report:', error);
+      logger.error('Error updating content report', error, 'Admin');
       return false;
     }
   }
@@ -1173,7 +1174,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error submitting report:', error);
+      logger.error('Error submitting report', error, 'Admin');
       return false;
     }
   }
@@ -1222,7 +1223,7 @@ class AdminService {
 
       return {feedback: data || [], total: count || 0};
     } catch (error) {
-      console.error('Error getting user feedback:', error);
+      logger.error('Error getting user feedback', error, 'Admin');
       return {feedback: [], total: 0};
     }
   }
@@ -1250,7 +1251,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error responding to feedback:', error);
+      logger.error('Error responding to feedback', error, 'Admin');
       return false;
     }
   }
@@ -1281,7 +1282,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      logger.error('Error submitting feedback', error, 'Admin');
       return false;
     }
   }
@@ -1310,7 +1311,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error updating feedback:', error);
+      logger.error('Error updating feedback', error, 'Admin');
       return false;
     }
   }
@@ -1331,7 +1332,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error('Error deleting feedback:', error);
+      logger.error('Error deleting feedback', error, 'Admin');
       return false;
     }
   }
@@ -1354,7 +1355,7 @@ class AdminService {
 
       return {settings: data || []};
     } catch (error) {
-      console.error('Error getting settings:', error);
+      logger.error('Error getting settings', error, 'Admin');
       return {settings: []};
     }
   }
@@ -1378,7 +1379,7 @@ class AdminService {
 
       return settings;
     } catch (error) {
-      console.error('Error getting public settings:', error);
+      logger.error('Error getting public settings', error, 'Admin');
       return {};
     }
   }
@@ -1398,7 +1399,7 @@ class AdminService {
 
       return data?.value;
     } catch (error) {
-      console.error(`Error getting setting ${key}:`, error);
+      logger.error(`Error getting setting ${key}`, error, 'Admin');
       return null;
     }
   }
@@ -1425,7 +1426,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error(`Error updating setting ${key}:`, error);
+      logger.error(`Error updating setting ${key}`, error, 'Admin');
       return false;
     }
   }
@@ -1450,7 +1451,7 @@ class AdminService {
 
       return {success: true};
     } catch (error: any) {
-      console.error('Error creating setting:', error);
+      logger.error('Error creating setting', error, 'Admin');
       return {success: false, error: error.message};
     }
   }
@@ -1471,7 +1472,7 @@ class AdminService {
 
       return true;
     } catch (error) {
-      console.error(`Error deleting setting ${key}:`, error);
+      logger.error(`Error deleting setting ${key}`, error, 'Admin');
       return false;
     }
   }
@@ -1527,7 +1528,7 @@ class AdminService {
 
       return {logs: data || [], total, hasMore};
     } catch (error) {
-      console.error('Error getting audit logs:', error);
+      logger.error('Error getting audit logs', error, 'Admin');
       return {logs: [], total: 0, hasMore: false};
     }
   }
@@ -1556,7 +1557,7 @@ class AdminService {
           new_values: newValues,
         }]);
     } catch (error) {
-      console.error('Error logging action:', error);
+      logger.error('Error logging action', error, 'Admin');
     }
   }
 
@@ -1580,7 +1581,7 @@ class AdminService {
 
       return data || [];
     } catch (error) {
-      console.error('Error getting analytics summary:', error);
+      logger.error('Error getting analytics summary', error, 'Admin');
       return [];
     }
   }
@@ -1787,7 +1788,7 @@ class AdminService {
         dailyActiveUsers,
       };
     } catch (error) {
-      console.error('Error getting real analytics:', error);
+      logger.error('Error getting real analytics', error, 'Admin');
       // Return default data on error
       return this.getDefaultAnalytics();
     }
@@ -1883,7 +1884,7 @@ class AdminService {
           screen_name: screenName,
         }]);
     } catch (error) {
-      console.error('Error tracking event:', error);
+      logger.error('Error tracking event', error, 'Admin');
     }
   }
 
@@ -1918,7 +1919,7 @@ class AdminService {
 
       return csv;
     } catch (error) {
-      console.error('Error exporting analytics:', error);
+      logger.error('Error exporting analytics', error, 'Admin');
       throw error;
     }
   }
@@ -1948,7 +1949,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting universities:', error);
+      logger.error('Error exporting universities', error, 'Admin');
       throw error;
     }
   }
@@ -1973,7 +1974,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting scholarships:', error);
+      logger.error('Error exporting scholarships', error, 'Admin');
       throw error;
     }
   }
@@ -1998,7 +1999,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting programs:', error);
+      logger.error('Error exporting programs', error, 'Admin');
       throw error;
     }
   }
@@ -2025,7 +2026,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting users:', error);
+      logger.error('Error exporting users', error, 'Admin');
       throw error;
     }
   }
@@ -2051,7 +2052,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting feedback:', error);
+      logger.error('Error exporting feedback', error, 'Admin');
       throw error;
     }
   }
@@ -2076,7 +2077,7 @@ class AdminService {
 
       return this.buildCSV(headers, rows);
     } catch (error) {
-      console.error('Error exporting merit lists:', error);
+      logger.error('Error exporting merit lists', error, 'Admin');
       throw error;
     }
   }
@@ -2109,7 +2110,7 @@ class AdminService {
 
       return sections.join('\n\n');
     } catch (error) {
-      console.error('Error exporting all data:', error);
+      logger.error('Error exporting all data', error, 'Admin');
       throw error;
     }
   }
@@ -2155,7 +2156,7 @@ class AdminService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching merit lists:', error);
+      logger.error('Error fetching merit lists', error, 'Admin');
       return [];
     }
   }
@@ -2185,7 +2186,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating merit list:', error);
+      logger.error('Error creating merit list', error, 'Admin');
       throw error;
     }
   }
@@ -2216,7 +2217,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating merit list:', error);
+      logger.error('Error updating merit list', error, 'Admin');
       throw error;
     }
   }
@@ -2233,7 +2234,7 @@ class AdminService {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting merit list:', error);
+      logger.error('Error deleting merit list', error, 'Admin');
       throw error;
     }
   }
@@ -2255,7 +2256,7 @@ class AdminService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching entry test dates:', error);
+      logger.error('Error fetching entry test dates', error, 'Admin');
       return [];
     }
   }
@@ -2287,7 +2288,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating entry test date:', error);
+      logger.error('Error creating entry test date', error, 'Admin');
       throw error;
     }
   }
@@ -2320,7 +2321,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating entry test date:', error);
+      logger.error('Error updating entry test date', error, 'Admin');
       throw error;
     }
   }
@@ -2337,7 +2338,7 @@ class AdminService {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting entry test date:', error);
+      logger.error('Error deleting entry test date', error, 'Admin');
       throw error;
     }
   }
@@ -2359,7 +2360,7 @@ class AdminService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching admission dates:', error);
+      logger.error('Error fetching admission dates', error, 'Admin');
       return [];
     }
   }
@@ -2390,7 +2391,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating admission date:', error);
+      logger.error('Error creating admission date', error, 'Admin');
       throw error;
     }
   }
@@ -2422,7 +2423,7 @@ class AdminService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating admission date:', error);
+      logger.error('Error updating admission date', error, 'Admin');
       throw error;
     }
   }
@@ -2439,7 +2440,7 @@ class AdminService {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error deleting admission date:', error);
+      logger.error('Error deleting admission date', error, 'Admin');
       throw error;
     }
   }

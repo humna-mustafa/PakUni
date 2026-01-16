@@ -5,6 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ENTRY_TESTS_DATA} from '../data';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -109,7 +110,7 @@ export const loadUserProfile = async (): Promise<UserProfile | null> => {
     const stored = await AsyncStorage.getItem(USER_PROFILE_KEY);
     return stored ? JSON.parse(stored) : null;
   } catch (error) {
-    console.error('Failed to load user profile:', error);
+    logger.error('Failed to load user profile', error, 'SpecialOccasions');
     return null;
   }
 };
@@ -118,7 +119,7 @@ export const saveUserProfile = async (profile: UserProfile): Promise<void> => {
   try {
     await AsyncStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
   } catch (error) {
-    console.error('Failed to save user profile:', error);
+    logger.error('Failed to save user profile', error, 'SpecialOccasions');
   }
 };
 
@@ -165,7 +166,7 @@ const markWishAsShown = async (wishId: string): Promise<void> => {
       await AsyncStorage.setItem(SHOWN_WISHES_KEY, JSON.stringify(recentWishes));
     }
   } catch (error) {
-    console.error('Failed to mark wish as shown:', error);
+    logger.error('Failed to mark wish as shown', error, 'SpecialOccasions');
   }
 };
 

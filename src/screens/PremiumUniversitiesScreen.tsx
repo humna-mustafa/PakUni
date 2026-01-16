@@ -17,8 +17,11 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
+import {useAuth} from '../contexts/AuthContext';
 import {RootStackParamList} from '../navigation/AppNavigator';
-import {UNIVERSITIES, PROVINCES} from '../data';
+import {PROVINCES} from '../data';
+import {hybridDataService} from '../services/hybridData';
+import type {TursoUniversity} from '../services/turso';
 import type {UniversityData} from '../data';
 import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
@@ -34,6 +37,9 @@ import UniversityLogo from '../components/UniversityLogo';
 import {getUniversityBrandColor} from '../utils/universityLogos';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+// Unified type for both Turso and bundled university data
+type UniversityItem = TursoUniversity | UniversityData;
 
 const {width} = Dimensions.get('window');
 
@@ -303,16 +309,35 @@ const UniversityCard = ({
 const PremiumUniversitiesScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark} = useTheme();
+  const {user} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('all');
   const [selectedType, setSelectedType] = useState<'all' | 'public' | 'private'>('all');
   const [sortBy, setSortBy] = useState('ranking');
   const [refreshing, setRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
+  const [universities, setUniversities] = useState<UniversityItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const headerAnim = useRef(new Animated.Value(0)).current;
 
   // Debounce search query for better performance
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+
+  // Load universities from hybrid data service (Turso with bundled fallback)
+  useEffect(() => {
+    const loadUniversities = async () => {
+      try {
+        const data = await hybridDataService.getUniversities();
+        setUniversities(data);
+      } catch (error) {
+        // Fallback to sync bundled data if async fails
+        setUniversities(hybridDataService.getUniversitiesSync());
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUniversities();
+  }, []);
 
   // Track search queries for analytics
   useEffect(() => {
@@ -322,20 +347,27 @@ const PremiumUniversitiesScreen = () => {
     }
   }, [debouncedSearchQuery]);
 
-  // Pull to refresh handler
+  // Pull to refresh handler - refreshes from Turso if available
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     Haptics.refreshThreshold();
-    // Simulate data refresh (in real app, this would fetch from API)
-    await new Promise<void>(resolve => setTimeout(() => resolve(), 800));
-    setRefreshing(false);
-    Haptics.success();
+    try {
+      // Refresh data from Turso/bundled sources
+      const data = await hybridDataService.getUniversities();
+      setUniversities(data);
+      Haptics.success();
+    } catch (error) {
+      // Keep existing data on error
+      Haptics.error();
+    } finally {
+      setRefreshing(false);
+    }
   }, []);
 
   // FlatList optimization: getItemLayout for fixed height items
   const ITEM_HEIGHT = 180; // Approximate card height
   const getItemLayout = useCallback(
-    (_data: ArrayLike<UniversityData> | null | undefined, index: number) => ({
+    (_data: ArrayLike<UniversityItem> | null | undefined, index: number) => ({
       length: ITEM_HEIGHT,
       offset: ITEM_HEIGHT * index,
       index,
@@ -344,7 +376,7 @@ const PremiumUniversitiesScreen = () => {
   );
 
   const filteredUniversities = useMemo(() => {
-    let result = [...UNIVERSITIES];
+    let result = [...universities];
 
     // Search filter - use debounced query
     if (debouncedSearchQuery.trim()) {
@@ -373,7 +405,7 @@ const PremiumUniversitiesScreen = () => {
         case 'ranking':
           return (a.ranking_national || 999) - (b.ranking_national || 999);
         case 'established':
-          return a.established_year - b.established_year;
+          return (a.established_year || 0) - (b.established_year || 0);
         case 'name':
         default:
           return a.name.localeCompare(b.name);
@@ -381,33 +413,58 @@ const PremiumUniversitiesScreen = () => {
     });
 
     return result;
-  }, [debouncedSearchQuery, selectedProvince, selectedType, sortBy]);
+  }, [debouncedSearchQuery, selectedProvince, selectedType, sortBy, universities]);
 
   const handleUniversityPress = useCallback(
-    (university: UniversityData) => {
+    (university: UniversityItem) => {
       navigation.navigate('UniversityDetail', {universityId: university.short_name});
     },
     [navigation],
   );
 
+  // Get user initials for profile button
+  const getUserInitials = () => {
+    if (user?.fullName) {
+      const names = user.fullName.split(' ');
+      return names.map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
   const renderHeader = () => (
     <View style={styles.listHeader}>
-      {/* Compact Header Row - Integrated with Search */}
-      <View style={styles.compactHeader}>
-        <View style={styles.titleRow}>
-          <View style={styles.titleLeft}>
-            <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
-            <View style={[styles.countBadgeInline, {backgroundColor: colors.primaryLight}]}>
-              <Text style={[styles.countTextInline, {color: colors.primary}]}>
-                {filteredUniversities.length}
-              </Text>
-            </View>
+      {/* Top Header Row with Profile */}
+      <View style={styles.topHeaderRow}>
+        <View style={styles.headerLeft}>
+          <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
+          <View style={[styles.countBadgeInline, {backgroundColor: colors.primaryLight}]}>
+            <Text style={[styles.countTextInline, {color: colors.primary}]}>
+              {filteredUniversities.length}
+            </Text>
           </View>
+        </View>
+        <View style={styles.headerRight}>
           <TouchableOpacity
             style={[styles.filterIconBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
             onPress={() => setShowFilters(!showFilters)}
             accessibilityLabel="Toggle filter options">
             <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.profileBtn, {backgroundColor: colors.primary}]}
+            onPress={() => navigation.navigate('Profile')}
+            accessibilityRole="button"
+            accessibilityLabel="View your profile">
+            {user?.avatarUrl ? (
+              <View style={styles.profileImage}>
+                <Icon name="person" family="Ionicons" size={18} color="#FFFFFF" />
+              </View>
+            ) : (
+              <Text style={styles.profileInitials}>{getUserInitials()}</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -449,12 +506,10 @@ const PremiumUniversitiesScreen = () => {
               <SearchableDropdown
                 options={PROVINCE_OPTIONS}
                 value={selectedProvince}
-                onSelect={(option) => setSelectedProvince(option?.value || 'all')}
+                onSelect={(option, value) => setSelectedProvince(value || 'all')}
                 placeholder="Select Province"
                 searchPlaceholder="Search provinces..."
                 emptyMessage="No provinces found"
-                showSearch={false}
-                variant="compact"
               />
             </View>
             
@@ -531,9 +586,9 @@ const PremiumUniversitiesScreen = () => {
   );
 
   const renderUniversityCard = useCallback(
-    ({item, index}: {item: UniversityData; index: number}) => (
+    ({item, index}: {item: UniversityItem; index: number}) => (
       <UniversityCard
-        item={item}
+        item={item as any}
         onPress={() => handleUniversityPress(item)}
         colors={colors}
         isDark={isDark}
@@ -618,6 +673,24 @@ const styles = StyleSheet.create({
   listHeader: {
     paddingBottom: SPACING.md,
   },
+  topHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.sm,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
   compactHeader: {
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.md,
@@ -655,6 +728,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.06)',
+  },
+  profileBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileInitials: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  profileImage: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerCard: {
     margin: SPACING.lg,

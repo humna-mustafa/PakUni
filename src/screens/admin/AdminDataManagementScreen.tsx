@@ -28,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 import RNFS from 'react-native-fs';
 
@@ -154,7 +155,7 @@ const AdminDataManagementScreen: React.FC = () => {
         setAdmissionDates(data);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
+      logger.error('Error loading data', error, 'AdminDataManagement');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -228,7 +229,7 @@ const AdminDataManagementScreen: React.FC = () => {
 
       Alert.alert('Success', `${dataType} exported successfully!`);
     } catch (error) {
-      console.error('Export error:', error);
+      logger.error('Export error', error, 'AdminDataManagement');
       Alert.alert('Error', `Failed to export ${dataType}`);
     } finally {
       setExporting(null);

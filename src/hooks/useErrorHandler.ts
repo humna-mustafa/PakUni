@@ -16,6 +16,7 @@ import {
   UserFriendlyError,
   ErrorCategory,
 } from '../services/errorReporting';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -184,7 +185,7 @@ export const ErrorHandlerProvider: React.FC<ErrorHandlerProviderProps> = ({
     const errorObj = typeof error === 'string' ? new Error(error) : error;
     
     // Log error
-    console.error('[ErrorHandler]', errorObj.message);
+    logger.error(errorObj.message, null, 'ErrorHandler');
 
     // Set current error
     setCurrentError(errorObj);
@@ -197,7 +198,7 @@ export const ErrorHandlerProvider: React.FC<ErrorHandlerProviderProps> = ({
       errorReportingService.reportError(errorObj, {
         userAction: mergedOptions.userAction,
         additionalContext: mergedOptions.additionalContext,
-      }).catch(console.error);
+      }).catch(err => logger.error('Failed to report error', err, 'ErrorHandler'));
     }
   }, [defaultOptions, onError]);
 
@@ -208,13 +209,13 @@ export const ErrorHandlerProvider: React.FC<ErrorHandlerProviderProps> = ({
     const errorObj = typeof error === 'string' ? new Error(error) : error;
     
     // Log silently
-    console.error('[ErrorHandler:Silent]', errorObj.message, context);
+    logger.error(errorObj.message, {context}, 'ErrorHandler:Silent');
     
     // Report to admin
     errorReportingService.reportError(errorObj, {
       userAction: context,
       additionalContext: {silent: true},
-    }).catch(console.error);
+    }).catch(err => logger.error('Failed to report silent error', err, 'ErrorHandler'));
   }, []);
 
   const showErrorToast = useCallback(() => {
@@ -275,15 +276,15 @@ export const useErrorHandler = (): ErrorHandlerContextType => {
   if (!context) {
     // Return a fallback implementation that uses console only
     return {
-      handleError: (error) => console.error('[ErrorHandler:Fallback]', error),
-      handleSilentError: (error) => console.error('[ErrorHandler:Silent:Fallback]', error),
-      showErrorToast: () => console.warn('[ErrorHandler] Provider not found'),
+      handleError: (error) => logger.error('Fallback', error, 'ErrorHandler'),
+      handleSilentError: (error) => logger.error('Silent fallback', error, 'ErrorHandler'),
+      showErrorToast: () => logger.warn('Provider not found', null, 'ErrorHandler'),
       hideErrorToast: () => {},
       withErrorHandling: async (fn) => {
         try {
           return await fn();
         } catch (e) {
-          console.error('[ErrorHandler:Fallback]', e);
+          logger.error('Fallback', e, 'ErrorHandler');
           return null;
         }
       },

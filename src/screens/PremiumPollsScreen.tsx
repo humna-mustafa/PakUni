@@ -24,6 +24,7 @@ import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {PremiumLoading} from '../components/PremiumLoading';
 import {sharePollResults} from '../services/share';
 import {Haptics} from '../utils/haptics';
@@ -390,7 +391,7 @@ const PremiumPollsScreen = () => {
       const {data, error: pollsError} = await fetchPolls();
       
       if (pollsError) {
-        console.log('Using fallback data:', pollsError.message);
+        logger.debug('Using fallback data', {error: pollsError.message}, 'Polls');
         // Continue with local data
       }
       
@@ -415,7 +416,7 @@ const PremiumPollsScreen = () => {
       }
       // If no data from Supabase, use local POLLS_DATA (already set as default)
     } catch (err) {
-      console.log('Error loading polls, using local data');
+      logger.debug('Error loading polls, using local data', err, 'Polls');
     } finally {
       setIsLoading(false);
     }
@@ -428,7 +429,7 @@ const PremiumPollsScreen = () => {
         const cached = await getCachedVotes();
         setVotedPolls(cached);
       } catch (error) {
-        console.log('Failed to load voted polls');
+        logger.debug('Failed to load voted polls', error, 'Polls');
       }
     };
     loadVotedPolls();
@@ -489,7 +490,7 @@ const PremiumPollsScreen = () => {
       
       if (!success) {
         // If Supabase fails, still update locally for UX
-        console.log('Vote submission error:', voteError?.message);
+        logger.debug('Vote submission error', {error: voteError?.message}, 'Polls');
       }
 
       // Update local state

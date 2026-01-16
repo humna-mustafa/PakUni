@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {MeritSuccessCard} from '../components/ShareableCard';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
@@ -388,7 +389,7 @@ const PremiumCalculatorScreen = () => {
           if (data.selectedEducation) setSelectedEducation(data.selectedEducation);
         }
       } catch (error) {
-        console.log('Failed to load calculator inputs');
+        logger.debug('Failed to load calculator inputs', error, 'Calculator');
       }
     };
     loadSavedInputs();
@@ -410,7 +411,7 @@ const PremiumCalculatorScreen = () => {
         };
         await AsyncStorage.setItem(CALCULATOR_STORAGE_KEY, JSON.stringify(data));
       } catch (error) {
-        console.log('Failed to save calculator inputs');
+        logger.debug('Failed to save calculator inputs', error, 'Calculator');
       }
     };
     saveInputs();

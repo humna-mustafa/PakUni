@@ -24,6 +24,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {Haptics} from '../utils/haptics';
 import {
   ADMISSION_DEADLINES,
@@ -294,7 +295,7 @@ const PremiumDeadlinesScreen = () => {
           setFollowedUniversities(JSON.parse(saved));
         }
       } catch (error) {
-        console.log('Failed to load followed universities');
+        logger.debug('Failed to load followed universities', error, 'Deadlines');
       }
     };
     loadFollowed();
@@ -376,7 +377,7 @@ const PremiumDeadlinesScreen = () => {
     try {
       await AsyncStorage.setItem(FOLLOWED_UNIVERSITIES_KEY, JSON.stringify(newFollowed));
     } catch (error) {
-      console.log('Failed to save followed universities');
+      logger.debug('Failed to save followed universities', error, 'Deadlines');
     }
   }, [followedUniversities]);
 

@@ -42,6 +42,7 @@ export {default as GuidesScreen} from './GuidesScreen';
 export {default as ToolsScreen} from './ToolsScreen';
 export {default as ResultGameScreen} from './ResultGameScreen';
 export {default as AchievementsScreen} from './AchievementsScreen';
+export {default as MoreScreen} from './MoreScreen';
 
 // Direct access to all Premium versions
 export {default as PremiumHomeScreen} from './PremiumHomeScreen';

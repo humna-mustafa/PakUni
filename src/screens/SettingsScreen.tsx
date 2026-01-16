@@ -22,6 +22,7 @@ import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {
@@ -143,7 +144,7 @@ const SettingsScreen: React.FC = () => {
     } catch (error) {
       // If error, just check provider
       setIsGoogleLinked(user?.provider === 'google');
-      console.log('Error checking Google status:', error);
+      logger.debug('Error checking Google status', error, 'Settings');
     }
   };
 
@@ -166,7 +167,7 @@ const SettingsScreen: React.FC = () => {
         );
       }
     } catch (error: any) {
-      console.error('Google link error:', error);
+      logger.error('Google link error', error, 'Settings');
       
       if (error.code === '12501') {
         // User cancelled
@@ -198,7 +199,7 @@ const SettingsScreen: React.FC = () => {
               setIsGoogleLinked(false);
               Alert.alert('Success', 'Google account unlinked successfully');
             } catch (error: any) {
-              console.error('Unlink error:', error);
+              logger.error('Unlink error', error, 'Settings');
               Alert.alert('Error', 'Failed to unlink Google account');
             }
           },

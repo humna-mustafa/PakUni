@@ -54,8 +54,8 @@ import UniversityLogo from './UniversityLogo';
 // ============================================================================
 
 export interface DropdownOption<T = string> {
-  /** Unique identifier for the option */
-  id: string;
+  /** Unique identifier for the option (defaults to value if omitted) */
+  id?: string;
   /** Display label */
   label: string;
   /** Value to return on selection */
@@ -70,6 +70,10 @@ export interface DropdownOption<T = string> {
   universityShortName?: string;
   /** Additional metadata */
   metadata?: Record<string, any>;
+  /** Alias for subtitle to support different data shapes */
+  subLabel?: string;
+  /** Alias for subtitle to support different data shapes */
+  description?: string;
 }
 
 export interface SearchableDropdownProps<T = string> {
@@ -77,12 +81,14 @@ export interface SearchableDropdownProps<T = string> {
   label?: string;
   /** Placeholder text when no selection */
   placeholder?: string;
+  /** Alias for placeholder used in some screens */
+  searchPlaceholder?: string;
   /** Currently selected value */
   value?: T;
   /** Array of options to display */
   options: DropdownOption<T>[];
   /** Callback when an option is selected */
-  onSelect: (value: T, option: DropdownOption<T>) => void;
+  onSelect: (option: DropdownOption<T>, value: T) => void;
   /** Allow custom entry if not found */
   allowCustom?: boolean;
   /** Custom entry placeholder */
@@ -111,6 +117,12 @@ export interface SearchableDropdownProps<T = string> {
   groupBy?: string;
   /** No results text */
   emptyText?: string;
+  /** Alias for emptyText used in some screens */
+  emptyMessage?: string;
+  /** External control for visibility */
+  visible?: boolean;
+  /** Callback when the dropdown is closed */
+  onClose?: () => void;
 }
 
 // ============================================================================
@@ -120,6 +132,7 @@ export interface SearchableDropdownProps<T = string> {
 function SearchableDropdownInner<T = string>({
   label,
   placeholder = 'Search and select...',
+  searchPlaceholder,
   value,
   options,
   onSelect,
@@ -137,9 +150,16 @@ function SearchableDropdownInner<T = string>({
   fullScreenOnMobile = true,
   groupBy,
   emptyText = 'No results found',
+  emptyMessage,
+  visible,
+  onClose,
 }: SearchableDropdownProps<T>) {
   const { colors, isDark } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  
+  // Use either internal state or external visible prop
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = visible !== undefined ? visible : internalIsOpen;
+  
   const [searchText, setSearchText] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customValue, setCustomValue] = useState('');
@@ -150,6 +170,18 @@ function SearchableDropdownInner<T = string>({
 
   const shadowStyle = isDark ? ULTRA_SHADOWS.dark : ULTRA_SHADOWS.light;
   const hasError = !!error;
+
+  // Sync animation with isOpen
+  useEffect(() => {
+    Animated.timing(dropdownAnim, {
+      toValue: isOpen ? 1 : 0,
+      duration: ULTRA_MOTION.duration.fast,
+      useNativeDriver: true,
+    }).start();
+  }, [isOpen]);
+
+  const effectivePlaceholder = searchPlaceholder || placeholder;
+  const effectiveEmptyText = emptyMessage || emptyText;
 
   // Get selected option
   const selectedOption = useMemo(() => {
@@ -193,35 +225,24 @@ function SearchableDropdownInner<T = string>({
   const handleOpen = useCallback(() => {
     if (disabled) return;
     Haptics.light();
-    setIsOpen(true);
+    setInternalIsOpen(true);
     setSearchText('');
     setShowCustomInput(false);
-
-    Animated.timing(dropdownAnim, {
-      toValue: 1,
-      duration: ULTRA_MOTION.duration.fast,
-      useNativeDriver: true,
-    }).start();
-  }, [disabled, dropdownAnim]);
+  }, [disabled]);
 
   // Close dropdown
   const handleClose = useCallback(() => {
     Keyboard.dismiss();
-    Animated.timing(dropdownAnim, {
-      toValue: 0,
-      duration: ULTRA_MOTION.duration.fast,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsOpen(false);
-      setSearchText('');
-      setShowCustomInput(false);
-    });
-  }, [dropdownAnim]);
+    setInternalIsOpen(false);
+    setSearchText('');
+    setShowCustomInput(false);
+    onClose?.();
+  }, [onClose]);
 
   // Select option
   const handleSelect = useCallback((option: DropdownOption<T>) => {
     Haptics.medium();
-    onSelect(option.value, option);
+    onSelect(option, option.value);
     handleClose();
   }, [onSelect, handleClose]);
 
@@ -237,10 +258,11 @@ function SearchableDropdownInner<T = string>({
   // Render single option
   const renderOption = useCallback((option: DropdownOption<T>, index: number) => {
     const isSelected = option.value === value;
+    const optionSubtitle = option.subtitle || option.subLabel || option.description;
 
     return (
       <TouchableOpacity
-        key={option.id}
+        key={option.id || `opt-${index}`}
         style={[
           styles.optionItem,
           {
@@ -291,12 +313,12 @@ function SearchableDropdownInner<T = string>({
           >
             {option.label}
           </Text>
-          {option.subtitle && (
+          {optionSubtitle && (
             <Text
               style={[styles.optionSubtitle, { color: colors.textMuted }]}
               numberOfLines={1}
             >
-              {option.subtitle}
+              {optionSubtitle}
             </Text>
           )}
         </View>
@@ -352,9 +374,9 @@ function SearchableDropdownInner<T = string>({
           style={[styles.searchInput, { color: colors.text }]}
           value={searchText}
           onChangeText={setSearchText}
-          placeholder={placeholder}
+          placeholder={effectivePlaceholder}
           placeholderTextColor={colors.placeholder}
-          autoFocus
+          autoFocus={isOpen}
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="search"
@@ -395,7 +417,7 @@ function SearchableDropdownInner<T = string>({
               color={colors.textMuted}
             />
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-              {emptyText}
+              {effectiveEmptyText}
             </Text>
             {allowCustom && searchText.length > 0 && (
               <TouchableOpacity
@@ -928,6 +950,92 @@ export function createScholarshipOptions(): DropdownOption<string>[] {
       isActive: scholarship.is_active,
     },
   }));
+}
+
+// ============================================================================
+// HELPER: Create entry test options from static data
+// ============================================================================
+
+import { ENTRY_TESTS } from '../data/meritFormulas';
+
+export function createEntryTestOptions(): DropdownOption<string>[] {
+  return ENTRY_TESTS.map(test => ({
+    id: test.id,
+    label: test.name,
+    value: test.id,
+    subtitle: test.conducting_body,
+    icon: 'document-text-outline',
+    metadata: {
+      conductingBody: test.conducting_body,
+      description: test.description,
+      dateRange: test.date_range,
+    },
+  }));
+}
+
+// Short version with just test names for quick selection
+export function createEntryTestShortOptions(): DropdownOption<string>[] {
+  return ENTRY_TESTS.map(test => ({
+    id: test.id,
+    label: test.id.toUpperCase(),
+    value: test.name,
+    subtitle: test.conducting_body,
+    icon: 'document-text-outline',
+    metadata: {
+      fullName: test.name,
+    },
+  }));
+}
+
+// ============================================================================
+// HELPER: Create program/degree options
+// ============================================================================
+
+export const COMMON_PROGRAMS: DropdownOption<string>[] = [
+  // Engineering Programs
+  { id: 'bs-cs', label: 'BS Computer Science', value: 'BS Computer Science', icon: 'laptop-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-se', label: 'BS Software Engineering', value: 'BS Software Engineering', icon: 'code-slash-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-it', label: 'BS Information Technology', value: 'BS Information Technology', icon: 'globe-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-ee', label: 'BS Electrical Engineering', value: 'BS Electrical Engineering', icon: 'flash-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-me', label: 'BS Mechanical Engineering', value: 'BS Mechanical Engineering', icon: 'settings-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-ce', label: 'BS Civil Engineering', value: 'BS Civil Engineering', icon: 'business-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-che', label: 'BS Chemical Engineering', value: 'BS Chemical Engineering', icon: 'flask-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-ai', label: 'BS Artificial Intelligence', value: 'BS Artificial Intelligence', icon: 'hardware-chip-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-ds', label: 'BS Data Science', value: 'BS Data Science', icon: 'analytics-outline', metadata: { category: 'Engineering' } },
+  { id: 'bs-cyber', label: 'BS Cyber Security', value: 'BS Cyber Security', icon: 'shield-checkmark-outline', metadata: { category: 'Engineering' } },
+  
+  // Medical Programs
+  { id: 'mbbs', label: 'MBBS', value: 'MBBS', icon: 'medkit-outline', metadata: { category: 'Medical' } },
+  { id: 'bds', label: 'BDS', value: 'BDS', icon: 'medical-outline', metadata: { category: 'Medical' } },
+  { id: 'bs-nursing', label: 'BS Nursing', value: 'BS Nursing', icon: 'heart-outline', metadata: { category: 'Medical' } },
+  { id: 'pharm-d', label: 'Pharm-D', value: 'Pharm-D', icon: 'fitness-outline', metadata: { category: 'Medical' } },
+  { id: 'dpt', label: 'DPT (Doctor of Physical Therapy)', value: 'DPT', icon: 'body-outline', metadata: { category: 'Medical' } },
+  
+  // Business Programs
+  { id: 'bba', label: 'BBA', value: 'BBA', icon: 'briefcase-outline', metadata: { category: 'Business' } },
+  { id: 'bs-accounting', label: 'BS Accounting & Finance', value: 'BS Accounting & Finance', icon: 'calculator-outline', metadata: { category: 'Business' } },
+  { id: 'bs-economics', label: 'BS Economics', value: 'BS Economics', icon: 'trending-up-outline', metadata: { category: 'Business' } },
+  { id: 'mba', label: 'MBA', value: 'MBA', icon: 'ribbon-outline', metadata: { category: 'Business' } },
+  
+  // Sciences
+  { id: 'bs-physics', label: 'BS Physics', value: 'BS Physics', icon: 'planet-outline', metadata: { category: 'Sciences' } },
+  { id: 'bs-chemistry', label: 'BS Chemistry', value: 'BS Chemistry', icon: 'flask-outline', metadata: { category: 'Sciences' } },
+  { id: 'bs-math', label: 'BS Mathematics', value: 'BS Mathematics', icon: 'calculator-outline', metadata: { category: 'Sciences' } },
+  { id: 'bs-bio', label: 'BS Biology', value: 'BS Biology', icon: 'leaf-outline', metadata: { category: 'Sciences' } },
+  
+  // Arts & Social Sciences
+  { id: 'bs-english', label: 'BS English', value: 'BS English', icon: 'book-outline', metadata: { category: 'Arts' } },
+  { id: 'bs-psychology', label: 'BS Psychology', value: 'BS Psychology', icon: 'people-outline', metadata: { category: 'Social Sciences' } },
+  { id: 'bs-mass-comm', label: 'BS Mass Communication', value: 'BS Mass Communication', icon: 'radio-outline', metadata: { category: 'Arts' } },
+  { id: 'llb', label: 'LLB (Law)', value: 'LLB', icon: 'scale-outline', metadata: { category: 'Law' } },
+  
+  // Architecture & Design
+  { id: 'b-arch', label: 'B.Arch (Architecture)', value: 'B.Arch', icon: 'construct-outline', metadata: { category: 'Architecture' } },
+  { id: 'bs-design', label: 'BS Design', value: 'BS Design', icon: 'color-palette-outline', metadata: { category: 'Design' } },
+];
+
+export function createProgramOptions(): DropdownOption<string>[] {
+  return COMMON_PROGRAMS;
 }
 
 // ============================================================================

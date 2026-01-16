@@ -16,6 +16,7 @@ import {View, Platform, Alert, PermissionsAndroid} from 'react-native';
 import {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -85,7 +86,7 @@ export const requestStoragePermission = async (): Promise<boolean> => {
     );
     return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
-    console.warn('Storage permission error:', err);
+    logger.warn('Storage permission error', err, 'CardCapture');
     return false;
   }
 };
@@ -114,7 +115,7 @@ export const captureCard = async (
 
     return {success: true, uri};
   } catch (error) {
-    console.error('Error capturing card:', error);
+    logger.error('Error capturing card', error, 'CardCapture');
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to capture card',
@@ -178,7 +179,7 @@ export const captureAndSaveCard = async (
 
     return {success: true, uri: destPath};
   } catch (error) {
-    console.error('Error saving card:', error);
+    logger.error('Error saving card', error, 'CardCapture');
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to save card',
@@ -243,7 +244,7 @@ export const captureAndShareCard = async (
       };
     }
     
-    console.error('Error sharing card:', error);
+    logger.error('Error sharing card', error, 'CardCapture');
     return {
       success: false,
       shared: false,
@@ -380,7 +381,7 @@ export const cleanupTempImages = async (): Promise<void> => {
       await RNFS.unlink(file.path);
     }
   } catch (error) {
-    console.warn('Error cleaning up temp images:', error);
+    logger.warn('Error cleaning up temp images', error, 'CardCapture');
   }
 };
 

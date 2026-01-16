@@ -30,6 +30,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {errorReportingService, ErrorReport, ErrorStatus, ErrorCategory, ErrorSeverity} from '../../services/errorReporting';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 import {useToast} from '../../components/PremiumToast';
 
@@ -128,7 +129,7 @@ const AdminErrorReportsScreen: React.FC = () => {
       });
       setReports(data);
     } catch (error) {
-      console.error('Error loading reports:', error);
+      logger.error('Error loading reports', error, 'AdminErrorReports');
       toast.error('Failed to load error reports');
     } finally {
       setLoading(false);

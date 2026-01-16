@@ -27,6 +27,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 // Static data imports (zero egress)
 import {PROGRAMS, ProgramData} from '../../data/programs';
@@ -174,7 +175,7 @@ const AdminContentScreen: React.FC = () => {
       setItems(result.items);
       setTotalItems(result.total);
     } catch (error) {
-      console.error('Error loading content:', error);
+      logger.error('Error loading content', error, 'AdminContent');
     } finally {
       setLoading(false);
       setRefreshing(false);

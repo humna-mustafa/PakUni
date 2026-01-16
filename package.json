@@ -29,7 +29,11 @@
     "turso:import": "npx ts-node turso/import-all-data.ts",
     "turso:shell": "turso db shell pakuni-static-data",
     "turso:admin": "npx ts-node turso/admin.ts",
-    "turso:stats": "npx ts-node turso/admin.ts stats"
+    "turso:stats": "npx ts-node turso/admin.ts stats",
+    "kaggle:download": "node scripts/download-kaggle-datasets.js",
+    "kaggle:process": "npx ts-node data-import/import-kaggle-data.ts",
+    "kaggle:import": "npx ts-node turso/import-kaggle-enhancements.ts",
+    "kaggle:all": "npm run kaggle:process && npm run kaggle:import"
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",

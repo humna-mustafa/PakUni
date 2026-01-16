@@ -106,3 +106,5 @@ supabase/.env.*.local
 
 # Temp files
 *.tmp
+# Kaggle datasets (downloaded separately)
+kaggle-data/

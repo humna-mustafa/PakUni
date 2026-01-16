@@ -5,6 +5,7 @@
 
 import {I18nManager, Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -665,7 +666,7 @@ class LocalizationService {
       }
       this.isInitialized = true;
     } catch (error) {
-      console.warn('Failed to load language preference:', error);
+      logger.warn('Failed to load language preference', error, 'i18n');
       this.isInitialized = true;
     }
   }
@@ -695,7 +696,7 @@ class LocalizationService {
       try {
         await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, language);
       } catch (error) {
-        console.warn('Failed to save language preference:', error);
+        logger.warn('Failed to save language preference', error, 'i18n');
       }
     }
 

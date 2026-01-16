@@ -14,6 +14,7 @@ import {Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {supabase} from './supabase';
 import DeviceInfo from 'react-native-device-info';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -34,6 +35,12 @@ export type ErrorCategory =
   | 'unknown';
 
 export type ErrorStatus = 'new' | 'acknowledged' | 'investigating' | 'resolved' | 'wont_fix';
+export type ErrorReportStatus = ErrorStatus;
+
+export interface UserFeedbackOnError {
+  description: string;
+  contactEmail?: string;
+}
 
 export interface ErrorReport {
   id?: string;
@@ -180,9 +187,9 @@ class ErrorReportingService {
       this.deviceInfo = await this.collectDeviceInfo();
       await this.syncOfflineErrors();
       this.isInitialized = true;
-      console.log('[ErrorReporting] Service initialized');
+      logger.debug('Service initialized', null, 'ErrorReporting');
     } catch (error) {
-      console.error('[ErrorReporting] Initialization failed:', error);
+      logger.error('Initialization failed', error, 'ErrorReporting');
     }
   }
 
@@ -377,7 +384,7 @@ class ErrorReportingService {
       const errorKey = `${error.name}:${error.message}`;
       const lastReported = this.recentErrors.get(errorKey);
       if (lastReported && Date.now() - lastReported < ERROR_DEDUPE_WINDOW_MS) {
-        console.log('[ErrorReporting] Skipping duplicate error');
+        logger.debug('Skipping duplicate error', {key: errorKey}, 'ErrorReporting');
         return {success: true};
       }
       this.recentErrors.set(errorKey, Date.now());
@@ -415,14 +422,14 @@ class ErrorReportingService {
       if (dbError) {
         // If offline or error, queue for later
         await this.queueOfflineError(errorReport);
-        console.log('[ErrorReporting] Error queued for offline sync');
+        logger.debug('Error queued for offline sync', null, 'ErrorReporting');
         return {success: true};
       }
 
-      console.log('[ErrorReporting] Error reported:', data?.id);
+      logger.debug('Error reported', {id: data?.id}, 'ErrorReporting');
       return {success: true, reportId: data?.id};
     } catch (err) {
-      console.error('[ErrorReporting] Failed to report error:', err);
+      logger.error('Failed to report error', err, 'ErrorReporting');
       return {success: false};
     }
   }
@@ -486,7 +493,7 @@ class ErrorReportingService {
 
       return true;
     } catch (err) {
-      console.error('[ErrorReporting] Failed to submit feedback:', err);
+      logger.error('Failed to submit feedback', err, 'ErrorReporting');
       return false;
     }
   }
@@ -508,7 +515,7 @@ class ErrorReportingService {
       errors.push(error);
       await AsyncStorage.setItem(OFFLINE_ERRORS_KEY, JSON.stringify(errors));
     } catch (err) {
-      console.error('[ErrorReporting] Failed to queue offline error:', err);
+      logger.error('Failed to queue offline error', err, 'ErrorReporting');
     }
   }
 
@@ -520,7 +527,7 @@ class ErrorReportingService {
       const errors: Omit<ErrorReport, 'id' | 'created_at'>[] = JSON.parse(stored);
       if (errors.length === 0) return;
 
-      console.log(`[ErrorReporting] Syncing ${errors.length} offline errors`);
+      logger.debug(`Syncing ${errors.length} offline errors`, null, 'ErrorReporting');
 
       const {error} = await supabase
         .from('error_reports')
@@ -528,10 +535,10 @@ class ErrorReportingService {
 
       if (!error) {
         await AsyncStorage.removeItem(OFFLINE_ERRORS_KEY);
-        console.log('[ErrorReporting] Offline errors synced successfully');
+        logger.debug('Offline errors synced successfully', null, 'ErrorReporting');
       }
     } catch (err) {
-      console.error('[ErrorReporting] Failed to sync offline errors:', err);
+      logger.error('Failed to sync offline errors', err, 'ErrorReporting');
     }
   }
 
@@ -576,7 +583,7 @@ class ErrorReportingService {
 
       return {reports: data || [], total: count || 0};
     } catch (err) {
-      console.error('[ErrorReporting] Failed to get error reports:', err);
+      logger.error('Failed to get error reports', err, 'ErrorReporting');
       return {reports: [], total: 0};
     }
   }
@@ -608,7 +615,7 @@ class ErrorReportingService {
 
       return true;
     } catch (err) {
-      console.error('[ErrorReporting] Failed to update error status:', err);
+      logger.error('Failed to update error status', err, 'ErrorReporting');
       return false;
     }
   }
@@ -662,7 +669,7 @@ class ErrorReportingService {
         bySeverity,
       };
     } catch (err) {
-      console.error('[ErrorReporting] Failed to get error stats:', err);
+      logger.error('Failed to get error stats', err, 'ErrorReporting');
       return {
         total: 0,
         newCount: 0,
@@ -684,7 +691,7 @@ class ErrorReportingService {
 
       return true;
     } catch (err) {
-      console.error('[ErrorReporting] Failed to delete error report:', err);
+      logger.error('Failed to delete error report', err, 'ErrorReporting');
       return false;
     }
   }

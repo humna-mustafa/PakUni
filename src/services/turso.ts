@@ -15,14 +15,47 @@
  * user-independent data that can scale nationwide.
  */
 
-import {createClient, Client, ResultSet} from '@libsql/client';
+import type {Client, ResultSet} from '@libsql/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {logger} from '../utils/logger';
 
 // Turso configuration from environment
-const TURSO_DATABASE_URL = Config.TURSO_DATABASE_URL || '';
-const TURSO_AUTH_TOKEN = Config.TURSO_AUTH_TOKEN || '';
+export const TURSO_DATABASE_URL = Config.TURSO_DATABASE_URL || '';
+export const TURSO_AUTH_TOKEN = Config.TURSO_AUTH_TOKEN || '';
+
+// Lazy load createClient only when needed (prevents bundling Node.js modules)
+let createClient: any = null;
+let libsqlImportAttempted = false;
+
+const getLibsqlClient = async () => {
+  if (libsqlImportAttempted && !createClient) {
+    return null; // Already failed to import
+  }
+  
+  if (createClient) {
+    return createClient;
+  }
+  
+  libsqlImportAttempted = true;
+  
+  try {
+    // Only attempt import in Node.js server environments (data-import scripts)
+    // This check is robust for avoiding the package in React Native
+    const isNode = typeof process !== 'undefined' && process.versions && process.versions.node;
+    
+    if (isNode && !(global as any).RN_METRO) {
+      // Use eval('require') to completely hide this from Metro's static analysis.
+      // Metro cannot follow eval, so it won't try to resolve '@libsql/client'.
+      const libsql = eval('require')('@libsql/client');
+      createClient = libsql.createClient;
+      return createClient;
+    }
+  } catch (error) {
+    logger.warn('libsql client not available in React Native environment', error, 'Turso');
+    return null;
+  }
+};
 
 // Cache keys
 const CACHE_KEYS = {
@@ -34,6 +67,7 @@ const CACHE_KEYS = {
   DEADLINES: '@turso_deadlines',
   MERIT_FORMULAS: '@turso_merit_formulas',
   MERIT_ARCHIVE: '@turso_merit_archive',
+  JOB_MARKET_STATS: '@turso_job_market_stats',
   LAST_SYNC: '@turso_last_sync',
 };
 
@@ -46,7 +80,7 @@ let tursoClient: Client | null = null;
 /**
  * Initialize Turso client
  */
-export const initTurso = (): Client | null => {
+export const initTurso = async (): Promise<Client | null> => {
   if (tursoClient) {
     return tursoClient;
   }
@@ -61,7 +95,13 @@ export const initTurso = (): Client | null => {
   }
 
   try {
-    tursoClient = createClient({
+    const createClientFn = await getLibsqlClient();
+    if (!createClientFn) {
+      logger.warn('libsql not available, using fallback data', undefined, 'Turso');
+      return null;
+    }
+
+    tursoClient = createClientFn({
       url: TURSO_DATABASE_URL,
       authToken: TURSO_AUTH_TOKEN,
     });
@@ -77,7 +117,7 @@ export const initTurso = (): Client | null => {
  * Get Turso client instance
  */
 export const getTursoClient = (): Client | null => {
-  return tursoClient || initTurso();
+  return tursoClient;
 };
 
 /**
@@ -112,6 +152,14 @@ export interface TursoUniversity {
   campuses?: string[];
   status_notes?: string;
   application_steps?: string[];
+  // Kaggle enhancement fields
+  latitude?: number;
+  longitude?: number;
+  map_url?: string;
+  contact_phone?: string;
+  contact_email?: string;
+  total_campuses?: number;
+  campus_locations?: string[];
   updated_at: string;
 }
 
@@ -205,6 +253,11 @@ export interface TursoCareer {
   required_education: string[];
   skills_required: string[];
   job_titles: string[];
+  // Kaggle enhancement fields
+  job_count?: number;
+  top_cities?: string[];
+  common_titles?: string[];
+  market_trend?: 'growing' | 'stable' | 'declining';
   updated_at: string;
 }
 
@@ -232,6 +285,18 @@ export interface TursoMeritArchive {
   closing_merit?: number;
   seats_available?: number;
   notes?: string;
+  updated_at: string;
+}
+
+// Enhanced types from Kaggle data (enhances existing features)
+export interface TursoJobMarketStats {
+  id: string;
+  field: string;
+  total_jobs: number;
+  top_skills: string[];
+  top_cities: string[];
+  demand_level: 'low' | 'medium' | 'high' | 'very_high';
+  common_titles: string[];
   updated_at: string;
 }
 
@@ -271,7 +336,7 @@ async function fetchWithCache<T>(
   }
 
   try {
-    const result: ResultSet = await client.execute(query);
+    const result: ResultSet = await (client as any).execute(query);
     const data = transformer(result.rows as any[]);
     
     // Update cache
@@ -325,6 +390,14 @@ export async function fetchUniversities(): Promise<TursoUniversity[]> {
       campuses: row.campuses ? JSON.parse(row.campuses) : [],
       status_notes: row.status_notes,
       application_steps: row.application_steps ? JSON.parse(row.application_steps) : [],
+      // Kaggle enhancement fields
+      latitude: row.latitude || undefined,
+      longitude: row.longitude || undefined,
+      map_url: row.map_url || undefined,
+      contact_phone: row.contact_phone || undefined,
+      contact_email: row.contact_email || undefined,
+      total_campuses: row.total_campuses || undefined,
+      campus_locations: row.campus_locations ? JSON.parse(row.campus_locations) : undefined,
       updated_at: row.updated_at,
     }))
   );
@@ -444,7 +517,7 @@ export async function fetchPrograms(): Promise<TursoProgram[]> {
 export async function fetchCareers(): Promise<TursoCareer[]> {
   return fetchWithCache<TursoCareer>(
     CACHE_KEYS.CAREERS,
-    'SELECT * FROM careers ORDER BY demand_level DESC, name ASC',
+    'SELECT * FROM careers ORDER BY job_count DESC NULLS LAST, demand_level DESC, name ASC',
     (rows) => rows.map(row => ({
       id: row.id,
       name: row.name,
@@ -457,6 +530,11 @@ export async function fetchCareers(): Promise<TursoCareer[]> {
       required_education: row.required_education ? JSON.parse(row.required_education) : [],
       skills_required: row.skills_required ? JSON.parse(row.skills_required) : [],
       job_titles: row.job_titles ? JSON.parse(row.job_titles) : [],
+      // Kaggle enhancement fields
+      job_count: row.job_count || undefined,
+      top_cities: row.top_cities ? JSON.parse(row.top_cities) : undefined,
+      common_titles: row.common_titles ? JSON.parse(row.common_titles) : undefined,
+      market_trend: row.market_trend || undefined,
       updated_at: row.updated_at,
     }))
   );
@@ -505,6 +583,39 @@ export async function fetchMeritArchive(): Promise<TursoMeritArchive[]> {
       updated_at: row.updated_at,
     }))
   );
+}
+
+// =============================================================================
+// KAGGLE ENHANCEMENT DATA (Job Market Stats)
+// =============================================================================
+
+/**
+ * Fetch job market statistics from Turso (Kaggle data)
+ * Enhances career guidance with real job market data
+ */
+export async function fetchJobMarketStats(): Promise<TursoJobMarketStats[]> {
+  return fetchWithCache<TursoJobMarketStats>(
+    CACHE_KEYS.JOB_MARKET_STATS,
+    'SELECT * FROM job_market_stats ORDER BY total_jobs DESC',
+    (rows) => rows.map(row => ({
+      id: row.id,
+      field: row.field,
+      total_jobs: row.total_jobs,
+      top_skills: row.top_skills ? JSON.parse(row.top_skills) : [],
+      top_cities: row.top_cities ? JSON.parse(row.top_cities) : [],
+      demand_level: row.demand_level,
+      common_titles: row.common_titles ? JSON.parse(row.common_titles) : [],
+      updated_at: row.updated_at,
+    }))
+  );
+}
+
+/**
+ * Get job market stats for a specific field
+ */
+export async function getJobMarketStatsByField(field: string): Promise<TursoJobMarketStats | null> {
+  const stats = await fetchJobMarketStats();
+  return stats.find(s => s.field.toLowerCase() === field.toLowerCase()) || null;
 }
 
 // =============================================================================
@@ -589,6 +700,8 @@ export async function refreshAllData(): Promise<void> {
     fetchCareers(),
     fetchMeritFormulas(),
     fetchMeritArchive(),
+    // Job market stats (may not exist yet, gracefully handle)
+    fetchJobMarketStats().catch(() => []),
   ]);
   
   logger.info('All Turso data refreshed', undefined, 'Turso');
@@ -624,8 +737,8 @@ export async function needsRefresh(): Promise<boolean> {
   return Date.now() - lastSync.getTime() > CACHE_EXPIRY_MS;
 }
 
-// Initialize on module load
-initTurso();
+// NOTE: Don't initialize Turso on module load to prevent bundling Node.js modules
+// It will be lazily loaded when first needed via hybridDataService
 
 export default {
   initTurso,
@@ -639,6 +752,8 @@ export default {
   fetchCareers,
   fetchMeritFormulas,
   fetchMeritArchive,
+  fetchJobMarketStats,
+  getJobMarketStatsByField,
   searchUniversities,
   searchScholarships,
   refreshAllData,

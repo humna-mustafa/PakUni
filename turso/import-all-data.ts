@@ -36,12 +36,14 @@ const client = createClient({
 });
 
 // Helper to generate unique IDs
-function generateId(name: string, prefix: string = ''): string {
+function generateId(name: string, prefix: string = '', index?: number): string {
   const slug = name.toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .substring(0, 30);
-  return prefix ? `${prefix}-${slug}` : slug;
+  const baseId = prefix ? `${prefix}-${slug}` : slug;
+  // Add index suffix if provided to ensure uniqueness
+  return index !== undefined ? `${baseId}-${index}` : baseId;
 }
 
 // Helper to safely stringify JSON
@@ -54,12 +56,17 @@ async function importUniversities() {
   console.log('\n📚 Importing universities...');
   let count = 0;
   
-  for (const uni of UNIVERSITIES) {
+  // First, clear existing universities to avoid duplicates
+  await client.execute('DELETE FROM universities');
+  
+  for (let i = 0; i < UNIVERSITIES.length; i++) {
+    const uni = UNIVERSITIES[i];
     try {
-      const id = generateId(uni.short_name || uni.name, 'uni');
+      // Use index to ensure unique IDs even for duplicate short_names
+      const id = generateId(uni.short_name || uni.name, 'uni', i);
       
       await client.execute({
-        sql: `INSERT OR REPLACE INTO universities (
+        sql: `INSERT INTO universities (
           id, name, short_name, type, province, city, address, website, email, phone,
           established_year, ranking_hec, ranking_national, is_hec_recognized, logo_url,
           description, admission_url, campuses, status_notes, application_steps

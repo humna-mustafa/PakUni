@@ -18,6 +18,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {supabase} from './supabase';
 import {cache, CACHE_KEYS, CACHE_TTL} from './cache';
+import {logger} from '../utils/logger';
 
 // Import bundled static data
 import {UNIVERSITIES, UniversityData} from '../data/universities';
@@ -246,7 +247,7 @@ class DataService {
       // Fetch from Supabase
       return await this.fetchAnnouncements();
     } catch (error) {
-      console.error('[DataService] Get announcements error:', error);
+      logger.error('Get announcements error', error, 'DataService');
       return [];
     }
   }
@@ -277,7 +278,7 @@ class DataService {
 
       return announcements;
     } catch (error) {
-      console.error('[DataService] Fetch announcements error:', error);
+      logger.error('Fetch announcements error', error, 'DataService');
       return [];
     }
   }
@@ -291,7 +292,7 @@ class DataService {
       try {
         await this.fetchAnnouncements();
       } catch (error) {
-        console.error('[DataService] Background refresh error:', error);
+        logger.error('Background refresh error', error, 'DataService');
       }
     }, 100);
   }
@@ -327,7 +328,7 @@ class DataService {
 
       return favorites;
     } catch (error) {
-      console.error('[DataService] Get favorites error:', error);
+      logger.error('Get favorites error', error, 'DataService');
       return [];
     }
   }
@@ -351,7 +352,7 @@ class DataService {
       
       return true;
     } catch (error) {
-      console.error('[DataService] Add favorite error:', error);
+      logger.error('Add favorite error', error, 'DataService');
       return false;
     }
   }
@@ -373,7 +374,7 @@ class DataService {
 
       return true;
     } catch (error) {
-      console.error('[DataService] Remove favorite error:', error);
+      logger.error('Remove favorite error', error, 'DataService');
       return false;
     }
   }
@@ -408,7 +409,7 @@ class DataService {
 
       return true;
     } catch (error) {
-      console.error('[DataService] Save calculation error:', error);
+      logger.error('Save calculation error', error, 'DataService');
       return false;
     }
   }
@@ -453,7 +454,7 @@ class DataService {
 
       return calculations;
     } catch (error) {
-      console.error('[DataService] Get calculations error:', error);
+      logger.error('Get calculations error', error, 'DataService');
       return [];
     }
   }
@@ -482,7 +483,7 @@ class DataService {
 
       return goals;
     } catch (error) {
-      console.error('[DataService] Get goals error:', error);
+      logger.error('Get goals error', error, 'DataService');
       return [];
     }
   }
@@ -528,7 +529,7 @@ class DataService {
       await cache.remove(CACHE_KEYS.USER_GOALS);
       return true;
     } catch (error) {
-      console.error('[DataService] Save goal error:', error);
+      logger.error('Save goal error', error, 'DataService');
       return false;
     }
   }
@@ -559,7 +560,7 @@ class DataService {
       await cache.remove(CACHE_KEYS.USER_GOALS);
       return true;
     } catch (error) {
-      console.error('[DataService] Update goal error:', error);
+      logger.error('Update goal error', error, 'DataService');
       return false;
     }
   }
@@ -586,7 +587,7 @@ class DataService {
       await cache.remove(CACHE_KEYS.USER_GOALS);
       return true;
     } catch (error) {
-      console.error('[DataService] Delete goal error:', error);
+      logger.error('Delete goal error', error, 'DataService');
       return false;
     }
   }

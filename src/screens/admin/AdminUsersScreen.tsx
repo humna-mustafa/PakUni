@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserProfile, UserRole} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 import {PremiumSearchBar} from '../../components/PremiumSearchBar';
 
@@ -150,7 +151,7 @@ const AdminUsersScreen: React.FC = () => {
       setHasMore(fetchedUsers.length === 20);
       setPage(currentPage + 1);
     } catch (error) {
-      console.error('Error loading users:', error);
+      logger.error('Error loading users', error, 'AdminUsers');
     } finally {
       setLoading(false);
       setRefreshing(false);

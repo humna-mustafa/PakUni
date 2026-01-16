@@ -19,6 +19,7 @@ import {TYPOGRAPHY, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {ENTRY_TESTS_DATA, EntryTestData} from '../data';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import SearchableDropdown from '../components/SearchableDropdown';
 import {getEntryTestBrandColors} from '../data/entryTests';
 
@@ -327,7 +328,7 @@ const PremiumEntryTestsScreen = () => {
           setCustomDates(JSON.parse(stored));
         }
       } catch (error) {
-        console.error('Error loading custom dates:', error);
+        logger.error('Error loading custom dates', error, 'EntryTests');
       }
     };
     loadCustomDates();
@@ -340,7 +341,7 @@ const PremiumEntryTestsScreen = () => {
       setCustomDates(newDates);
       await AsyncStorage.setItem(CUSTOM_TEST_DATES_KEY, JSON.stringify(newDates));
     } catch (error) {
-      console.error('Error saving custom date:', error);
+      logger.error('Error saving custom date', error, 'EntryTests');
     }
   }, [customDates]);
 
@@ -352,7 +353,7 @@ const PremiumEntryTestsScreen = () => {
       setCustomDates(newDates);
       await AsyncStorage.setItem(CUSTOM_TEST_DATES_KEY, JSON.stringify(newDates));
     } catch (error) {
-      console.error('Error clearing custom date:', error);
+      logger.error('Error clearing custom date', error, 'EntryTests');
     }
   }, [customDates]);
 

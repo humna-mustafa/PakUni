@@ -7,6 +7,7 @@
  * - Network state detection
  * - Data freshness indicators
  * - Sync progress tracking
+ * - Now integrates with Turso for static data
  * 
  * Designed for Pakistan's variable internet connectivity
  */
@@ -14,6 +15,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {cache, CACHE_KEYS, CACHE_TTL} from './cache';
+import {hybridDataService} from './hybridData';
+// Keep bundled imports as fallback
 import {UNIVERSITIES} from '../data/universities';
 import {SCHOLARSHIPS} from '../data/scholarships';
 import {PROGRAMS} from '../data/programs';

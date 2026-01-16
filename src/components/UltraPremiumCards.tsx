@@ -13,7 +13,7 @@
  * - Animated-style layering
  * - Professional typography system
  * 
- * @version 1.0.0
+ * @version 1.0.1 (Internal Fix)
  */
 
 import React, {useRef, useState} from 'react';
@@ -41,16 +41,22 @@ import {
   captureAndShareCard,
   captureAndSaveCard,
 } from '../services/cardCapture';
-import {CardCustomImages, CardImageCustomizer} from './CardImageCustomizer';
+
+// Custom images type (previously from CardImageCustomizer)
+export interface CardCustomImages {
+  backgroundImage?: string;
+  logoImage?: string;
+  userPhoto?: string;
+  campusImage?: string;
+  personalPhoto?: string;
+  studentName?: string;
+  campusLogo?: string;
+}
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - 32;
 
-// ============================================================================
-// OPTIONAL IMAGE CUSTOMIZATION TYPES
-// ============================================================================
-
-export type {CardCustomImages};
+// CardCustomImages is now defined above as an interface
 
 // ============================================================================
 // MERIT SUCCESS CARD - Gold & Royal Theme
@@ -195,10 +201,10 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
               <Text style={meritStyles.badgeText}>📜 MERIT LIST</Text>
             </LinearGradient>
             {/* Optional University Logo */}
-            {images.universityLogo && (
+            {images.campusLogo && (
               <View style={customImageStyles.logoContainer}>
                 <Image
-                  source={{uri: images.universityLogo}}
+                  source={{uri: images.campusLogo}}
                   style={customImageStyles.universityLogo}
                   resizeMode="contain"
                 />
@@ -309,16 +315,6 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Image Customizer Modal */}
-      <CardImageCustomizer
-        visible={showImagePicker}
-        onClose={() => setShowImagePicker(false)}
-        onApply={setImages}
-        currentImages={images}
-        cardType="merit"
-        primaryColor="#FFD700"
-      />
     </View>
   );
 };
@@ -449,10 +445,10 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           <View style={admissionStyles.celebrationBadge}>
             <Text style={admissionStyles.celebrationText}>🎉 CELEBRATION TIME! 🎉</Text>
             {/* Optional University Logo */}
-            {images.universityLogo && (
+            {images.campusLogo && (
               <View style={[customImageStyles.logoContainer, {right: -55}]}>
                 <Image
-                  source={{uri: images.universityLogo}}
+                  source={{uri: images.campusLogo}}
                   style={customImageStyles.universityLogo}
                   resizeMode="contain"
                 />
@@ -552,16 +548,6 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Image Customizer Modal */}
-      <CardImageCustomizer
-        visible={showImagePicker}
-        onClose={() => setShowImagePicker(false)}
-        onApply={setImages}
-        currentImages={images}
-        cardType="admission"
-        primaryColor="#00B894"
-      />
     </View>
   );
 };
@@ -687,10 +673,10 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           <View style={testStyles.topAccent}>
             <Text style={testStyles.accentText}>📝 ENTRY TEST</Text>
             {/* Optional University Logo */}
-            {images.universityLogo && (
+            {images.campusLogo && (
               <View style={[customImageStyles.logoContainer, {right: -50}]}>
                 <Image
-                  source={{uri: images.universityLogo}}
+                  source={{uri: images.campusLogo}}
                   style={customImageStyles.universityLogo}
                   resizeMode="contain"
                 />
@@ -794,16 +780,6 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Image Customizer Modal */}
-      <CardImageCustomizer
-        visible={showImagePicker}
-        onClose={() => setShowImagePicker(false)}
-        onApply={setImages}
-        currentImages={images}
-        cardType="test"
-        primaryColor="#764ba2"
-      />
     </View>
   );
 };
@@ -937,10 +913,10 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           <View style={scholarshipStyles.badge}>
             <Text style={scholarshipStyles.badgeText}>🏅 SCHOLARSHIP</Text>
             {/* Optional University Logo */}
-            {images.universityLogo && (
+            {images.campusLogo && (
               <View style={[customImageStyles.logoContainer, {right: -50}]}>
                 <Image
-                  source={{uri: images.universityLogo}}
+                  source={{uri: images.campusLogo}}
                   style={customImageStyles.universityLogo}
                   resizeMode="contain"
                 />
@@ -1043,16 +1019,6 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
-
-      {/* Image Customizer Modal */}
-      <CardImageCustomizer
-        visible={showImagePicker}
-        onClose={() => setShowImagePicker(false)}
-        onApply={setImages}
-        currentImages={images}
-        cardType="scholarship"
-        primaryColor="#F5576C"
-      />
     </View>
   );
 };

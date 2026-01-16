@@ -180,6 +180,18 @@ const MoreScreen = () => {
     navigation.navigate('Profile');
   }, [navigation]);
 
+  // Get user initials for profile button
+  const getUserInitials = () => {
+    if (user?.fullName) {
+      const names = user.fullName.split(' ');
+      return names.map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
@@ -191,18 +203,24 @@ const MoreScreen = () => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Text style={[styles.headerTitle, {color: colors.text}]}>More</Text>
+            <Text style={[styles.headerTitle, {color: colors.text}]}>
+              {user?.fullName ? `Hi, ${user.fullName.split(' ')[0]}` : 'More'}
+            </Text>
             <Text style={[styles.headerSubtitle, {color: colors.textSecondary}]}>
               Tools, resources & features
             </Text>
           </View>
-          {/* Profile Button */}
+          {/* Profile Button with User Initials */}
           <TouchableOpacity
             style={[styles.profileButton, {backgroundColor: colors.primary}]}
             onPress={handleProfilePress}
             accessibilityRole="button"
             accessibilityLabel="View profile">
-            <Icon name="person-outline" family="Ionicons" size={20} color="#FFFFFF" />
+            {user?.avatarUrl ? (
+              <Icon name="person-outline" family="Ionicons" size={20} color="#FFFFFF" />
+            ) : (
+              <Text style={styles.profileInitials}>{getUserInitials()}</Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -428,6 +446,11 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
+  },
+  profileInitials: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
   },
   scrollContent: {
     paddingHorizontal: SPACING.md,

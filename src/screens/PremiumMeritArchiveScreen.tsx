@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import {Haptics} from '../utils/haptics';
 import {
@@ -339,7 +340,7 @@ const PremiumMeritArchiveScreen = () => {
       }
       // If no data from Supabase, use local MERIT_RECORDS (already set as default)
     } catch (err) {
-      console.log('Error loading merit data, using local data');
+      logger.debug('Error loading merit data, using local data', err, 'MeritArchive');
     } finally {
       setIsLoading(false);
     }

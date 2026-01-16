@@ -5,6 +5,7 @@
 
 import {supabase} from './supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logger} from '../utils/logger';
 
 const VOTED_POLLS_CACHE_KEY = '@pakuni_voted_polls_cache';
 
@@ -86,7 +87,7 @@ export async function fetchPolls(): Promise<{data: Poll[] | null; error: Error |
 
     return {data: pollsWithOptions, error: null};
   } catch (error) {
-    console.error('Error fetching polls:', error);
+    logger.error('Error fetching polls', error, 'Polls');
     return {data: null, error: error as Error};
   }
 }
@@ -107,7 +108,7 @@ export async function getUserVotes(userId: string): Promise<{data: UserVote[] | 
 
     return {data: data || [], error: null};
   } catch (error) {
-    console.error('Error fetching user votes:', error);
+    logger.error('Error fetching user votes', error, 'Polls');
     return {data: null, error: error as Error};
   }
 }
@@ -151,7 +152,7 @@ export async function submitVote(
 
     return {success: true, error: null};
   } catch (error) {
-    console.error('Error submitting vote:', error);
+    logger.error('Error submitting vote', error, 'Polls');
     return {success: false, error: error as Error};
   }
 }
@@ -166,7 +167,7 @@ async function cacheVote(pollId: string, optionId: string): Promise<void> {
     votes[pollId] = optionId;
     await AsyncStorage.setItem(VOTED_POLLS_CACHE_KEY, JSON.stringify(votes));
   } catch (error) {
-    console.warn('Failed to cache vote:', error);
+    logger.warn('Failed to cache vote', error, 'Polls');
   }
 }
 
@@ -178,7 +179,7 @@ export async function getCachedVotes(): Promise<Record<string, string>> {
     const cached = await AsyncStorage.getItem(VOTED_POLLS_CACHE_KEY);
     return cached ? JSON.parse(cached) : {};
   } catch (error) {
-    console.warn('Failed to get cached votes:', error);
+    logger.warn('Failed to get cached votes', error, 'Polls');
     return {};
   }
 }

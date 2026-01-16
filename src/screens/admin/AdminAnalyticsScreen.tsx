@@ -26,6 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import RNFS from 'react-native-fs';
 
 // Fallback LinearGradient
@@ -107,7 +108,7 @@ const AdminAnalyticsScreen: React.FC = () => {
       
       setAnalytics(data);
     } catch (error) {
-      console.error('Error loading analytics:', error);
+      logger.error('Error loading analytics', error, 'AdminAnalytics');
       Alert.alert('Error', 'Failed to load analytics data');
     } finally {
       setLoading(false);
@@ -146,7 +147,7 @@ const AdminAnalyticsScreen: React.FC = () => {
       
       Alert.alert('Success', 'Analytics exported successfully');
     } catch (error) {
-      console.error('Export error:', error);
+      logger.error('Export error', error, 'AdminAnalytics');
       Alert.alert('Error', 'Failed to export analytics');
     } finally {
       setExporting(false);
@@ -189,7 +190,7 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
         message: report,
       });
     } catch (error) {
-      console.error('Email report error:', error);
+      logger.error('Email report error', error, 'AdminAnalytics');
       Alert.alert('Error', 'Failed to share report');
     }
   };

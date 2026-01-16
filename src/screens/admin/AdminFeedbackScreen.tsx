@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserFeedback, FeedbackCategory, FeedbackStatus} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 
 // Fallback LinearGradient
@@ -84,7 +85,7 @@ const AdminFeedbackScreen: React.FC = () => {
       });
       setFeedback(data);
     } catch (error) {
-      console.error('Error loading feedback:', error);
+      logger.error('Error loading feedback', error, 'AdminFeedback');
     } finally {
       setLoading(false);
       setRefreshing(false);

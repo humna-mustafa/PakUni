@@ -20,7 +20,7 @@ import {getUniversityLogoUrl, getUniversityBrandColor, hasStaticLogo} from '../u
 
 interface UniversityLogoProps {
   /** University short name (e.g., 'NUST', 'LUMS') */
-  shortName: string;
+  shortName?: string;
   /** Full university name (for fallback display) */
   universityName?: string;
   /** Direct logo URL (optional - overrides shortName lookup) */
@@ -61,12 +61,12 @@ const UniversityLogo = memo(({
     if (directLogoUrl) {
       return directLogoUrl;
     }
-    return getUniversityLogoUrl(shortName);
+    return getUniversityLogoUrl(shortName || '');
   }, [shortName, directLogoUrl]);
   
   // Get brand color for fallback
   const brandColor = useMemo(
-    () => getUniversityBrandColor(shortName),
+    () => getUniversityBrandColor(shortName || ''),
     [shortName]
   );
 

@@ -23,6 +23,7 @@ import {getUniversityMeritSummaryByShortName} from '../services/meritLists';
 import type {ScholarshipData} from '../data';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon, FeatureIcon} from '../components/icons';
+import {logger} from '../utils/logger';
 import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
 
@@ -285,7 +286,7 @@ const PremiumUniversityDetailScreen = () => {
         setIsFav(true);
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      logger.error('Error toggling favorite', error, 'UniversityDetail');
     }
   };
 
@@ -357,7 +358,7 @@ const PremiumUniversityDetailScreen = () => {
         );
       }
     } catch (error) {
-      console.error('Error opening URL:', error);
+      logger.error('Error opening URL', error, 'UniversityDetail');
       Alert.alert(
         'Error Opening Link',
         'There was a problem opening this link. Please try again.',

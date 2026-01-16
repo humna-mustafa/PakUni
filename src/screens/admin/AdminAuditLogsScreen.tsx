@@ -21,6 +21,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, AuditLog} from '../../services/admin';
+import {logger} from '../../utils/logger';
 import {Icon} from '../../components/icons';
 
 // Fallback LinearGradient
@@ -91,7 +92,7 @@ const AdminAuditLogsScreen: React.FC = () => {
       setHasMore(more);
       setPage(pageNum);
     } catch (error) {
-      console.error('Error loading audit logs:', error);
+      logger.error('Error loading audit logs', error, 'AdminAuditLogs');
     } finally {
       setLoading(false);
       setRefreshing(false);

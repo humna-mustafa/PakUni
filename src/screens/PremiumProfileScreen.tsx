@@ -15,13 +15,14 @@ import {
   Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme, ThemeMode} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {adminService, UserRole} from '../services/admin';
 import {UNIVERSITIES, SCHOLARSHIPS} from '../data';
 
@@ -231,7 +232,7 @@ const PremiumProfileScreen = () => {
       // Build real saved items from favorites
       setSavedItems(buildSavedItems());
       
-      console.log('[Profile] User loaded:', user.email, 'Role:', user.role);
+      logger.debug('User loaded', {email: user.email, role: user.role}, 'Profile');
     }
   }, [user, buildSavedItems]);
 
@@ -242,7 +243,7 @@ const PremiumProfileScreen = () => {
         setUserRole(role);
       }
     } catch (error) {
-      console.log('Error checking user role:', error);
+      logger.debug('Error checking user role', error, 'Profile');
     }
   };
 
@@ -694,7 +695,14 @@ const PremiumProfileScreen = () => {
 
       {/* Auth Button */}
       {isGuest ? (
-        <TouchableOpacity style={styles.logoutBtn} onPress={() => navigation.navigate('Auth')}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Auth'}],
+            })
+          );
+        }}>
           <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-in-outline" family="Ionicons" size={22} color="#FFFFFF" />
             <Text style={styles.logoutText}>Sign In / Create Account</Text>
@@ -766,7 +774,14 @@ const PremiumProfileScreen = () => {
               {isGuest && (
                 <TouchableOpacity 
                   style={styles.signInBadge}
-                  onPress={() => navigation.navigate('Auth')}>
+                  onPress={() => {
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{name: 'Auth'}],
+                      })
+                    );
+                  }}>
                   <Icon name="log-in-outline" family="Ionicons" size={14} color="#1A7AEB" />
                   <Text style={styles.signInBadgeText}>Sign In</Text>
                 </TouchableOpacity>

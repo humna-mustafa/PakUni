@@ -776,9 +776,11 @@ const PremiumHomeScreen = () => {
             <LogoBadge size="sm" showGlow />
             <View style={styles.headerTextContainer}>
               <Text style={[styles.greeting, {color: colors.textSecondary}]}>
-                Welcome back,
+                {user ? 'Welcome back,' : 'Welcome to PakUni,'}
               </Text>
-              <Text style={[styles.appName, {color: colors.text}]}>Student</Text>
+              <Text style={[styles.appName, {color: colors.text}]}>
+                {user?.fullName?.split(' ')[0] || 'Explorer'}
+              </Text>
             </View>
           </View>
           <View style={styles.headerRight}>

@@ -16,6 +16,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -153,7 +154,7 @@ class CacheService {
       // Check cache version
       const storedVersion = await AsyncStorage.getItem(CACHE_KEYS.CACHE_VERSION);
       if (storedVersion !== String(CACHE_VERSION)) {
-        console.log('[Cache] Version mismatch, clearing cache');
+        logger.debug('Version mismatch, clearing cache', null, 'Cache');
         await this.clearAll();
         await AsyncStorage.setItem(CACHE_KEYS.CACHE_VERSION, String(CACHE_VERSION));
       }
@@ -167,7 +168,7 @@ class CacheService {
       // Cleanup expired entries on startup
       await this.cleanup();
     } catch (error) {
-      console.error('[Cache] Initialization error:', error);
+      logger.error('Initialization error', error, 'Cache');
     }
   }
 
@@ -209,7 +210,7 @@ class CacheService {
       
       return entry.data;
     } catch (error) {
-      console.error(`[Cache] Get error for ${key}:`, error);
+      logger.error(`Get error for ${key}`, error, 'Cache');
       this.stats.missCount++;
       return null;
     }
@@ -232,7 +233,7 @@ class CacheService {
       
       // Check size
       if (serialized.length > this.config.maxSize) {
-        console.warn(`[Cache] Entry too large for ${key}`);
+        logger.warn(`Entry too large for ${key}`, null, 'Cache');
         return false;
       }
 
@@ -245,7 +246,7 @@ class CacheService {
       
       return true;
     } catch (error) {
-      console.error(`[Cache] Set error for ${key}:`, error);
+      logger.error(`Set error for ${key}`, error, 'Cache');
       return false;
     }
   }
@@ -261,7 +262,7 @@ class CacheService {
       await this.saveStats();
       return true;
     } catch (error) {
-      console.error(`[Cache] Remove error for ${key}:`, error);
+      logger.error(`Remove error for ${key}`, error, 'Cache');
       return false;
     }
   }
@@ -309,7 +310,7 @@ class CacheService {
 
       return cached;
     } catch (error) {
-      console.error(`[Cache] GetWithRevalidate error for ${key}:`, error);
+      logger.error(`GetWithRevalidate error for ${key}`, error, 'Cache');
       return null;
     }
   }
@@ -326,7 +327,7 @@ class CacheService {
       const fresh = await fetcher();
       await this.set(key, fresh, ttl);
     } catch (error) {
-      console.error(`[Cache] Background revalidate error for ${key}:`, error);
+      logger.error(`Background revalidate error for ${key}`, error, 'Cache');
     }
   }
 
@@ -360,7 +361,7 @@ class CacheService {
       );
       return true;
     } catch (error) {
-      console.error('[Cache] SetMany error:', error);
+      logger.error('SetMany error', error, 'Cache');
       return false;
     }
   }
@@ -385,9 +386,9 @@ class CacheService {
         lastCleanup: Date.now(),
       };
       await this.saveStats();
-      console.log('[Cache] All entries cleared');
+      logger.debug('All entries cleared', null, 'Cache');
     } catch (error) {
-      console.error('[Cache] Clear all error:', error);
+      logger.error('Clear all error', error, 'Cache');
     }
   }
 
@@ -405,9 +406,9 @@ class CacheService {
         this.memoryCache.delete(key);
       }
       
-      console.log(`[Cache] Cleared ${keysToRemove.length} entries with prefix ${prefix}`);
+      logger.debug(`Cleared ${keysToRemove.length} entries with prefix ${prefix}`, null, 'Cache');
     } catch (error) {
-      console.error('[Cache] Clear by prefix error:', error);
+      logger.error('Clear by prefix error', error, 'Cache');
     }
   }
 
@@ -445,10 +446,10 @@ class CacheService {
       await this.saveStats();
       
       if (cleaned > 0) {
-        console.log(`[Cache] Cleaned up ${cleaned} expired entries`);
+        logger.debug(`Cleaned up ${cleaned} expired entries`, null, 'Cache');
       }
     } catch (error) {
-      console.error('[Cache] Cleanup error:', error);
+      logger.error('Cleanup error', error, 'Cache');
     }
   }
 
@@ -478,7 +479,7 @@ class CacheService {
     try {
       await AsyncStorage.setItem(CACHE_KEYS.CACHE_STATS, JSON.stringify(this.stats));
     } catch (error) {
-      console.error('[Cache] Save stats error:', error);
+      logger.error('Save stats error', error, 'Cache');
     }
   }
 

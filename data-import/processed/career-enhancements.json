@@ -1,0 +1,403 @@
+[
+  {
+    "field": "Data Science & AI",
+    "job_count": 5334,
+    "top_cities": [
+      "Singapore",
+      "Tokyo",
+      "New York",
+      "Dubai",
+      "Berlin"
+    ],
+    "common_titles": [
+      "Smart Contract Engineer",
+      "Sustainability Analyst",
+      "AI Engineer",
+      "Data Scientist",
+      "ML Researcher",
+      "Full Time Email And Chat Support Executive - Foodp",
+      "Full Time Email/Chat Support Specialist - Retail I",
+      "Full Time Trainee Data Scientist Job in Pakistan",
+      "Full Time Email And Chat Support Executive - Domes",
+      "Full Time Sales Executive Jobs in Pakistan"
+    ],
+    "market_trend": "growing"
+  },
+  {
+    "field": "Software Engineering",
+    "job_count": 4596,
+    "top_cities": [
+      "Islamabad",
+      "Lahore",
+      "London",
+      "Tokyo",
+      "New York"
+    ],
+    "common_titles": [
+      "Quantum Software Developer",
+      "Blockchain Developer",
+      "Full Time PHP Developer Job in Pakistan",
+      "Full Time Web Developer Jobs in Pakistan",
+      "Full Time Android Developer Job in Pakistan",
+      "Full Time Wordpress Developer Job in Pakistan",
+      "Full Time Web Developer Job in Pakistan",
+      "Full Time Wordpress Developer Jobs in Pakistan",
+      "Full Time Front End Developer Job in Pakistan",
+      "Full Time PHP Developer Jobs in Pakistan"
+    ],
+    "market_trend": "growing"
+  },
+  {
+    "field": "Business & Management",
+    "job_count": 1784,
+    "top_cities": [
+      "Lahore",
+      "Karachi",
+      "Islamabad",
+      "Faisalabad",
+      "Sialkot"
+    ],
+    "common_titles": [
+      "Full Time Sales Executive Jobs in Pakistan",
+      "Sales Executive",
+      "Full Time Business Development Executive Jobs in P",
+      "Full Time Sales Executive Job in Pakistan",
+      "Full Time Business Development Executive - BDE Job",
+      "Full Time BDE - Business Development Executive Job",
+      "Full Time Franchise Service Executive Job in Pakis",
+      "Full Time Business Development Manager Job in Paki",
+      "Full Time Business Development Officer Jobs in Pak",
+      "Full Time Call Center Agents / Executives - Night "
+    ],
+    "market_trend": "growing"
+  },
+  {
+    "field": "Other",
+    "job_count": 1687,
+    "top_cities": [
+      "London",
+      "Dubai",
+      "Singapore",
+      "New York",
+      "Berlin"
+    ],
+    "common_titles": [
+      "Quantum Researcher",
+      "NA",
+      "Full Time Data Entry Operator Jobs in Pakistan",
+      "Full Time Data Entry Operator Job in Pakistan",
+      "Full Time Data Entry Job in Pakistan",
+      "Data Entry Operator",
+      "Full Time Digital Ecosystem Architect Job in Pakis",
+      "Full Time Takaful Consultants Job in Pakistan",
+      "Full Time Student Counselor Jobs in Pakistan",
+      "Full Time Product Analyst Job in Pakistan"
+    ],
+    "market_trend": "growing"
+  },
+  {
+    "field": "Engineering (Other)",
+    "job_count": 1450,
+    "top_cities": [
+      "Dubai",
+      "New York",
+      "Tokyo",
+      "Berlin",
+      "Singapore"
+    ],
+    "common_titles": [
+      "Renewable Energy Engineer",
+      "Full Time Technical Support Engineer Jobs in Pakis",
+      "Full Time Electrical Engineer Job in Pakistan",
+      "Full Time Systems Engineer Job in Pakistan",
+      "Online Full Time QA Automation Engineer (PK) Job i",
+      "Full Time SQA Automation Engineer Jobs in Pakistan",
+      "Full Time HLS Specialist (f/m/d) Job in Pakistan",
+      "Full Time Windows Site Reliability Consultant (Ind",
+      "Full Time Windows Site Reliability Consultant ( In",
+      "Full Time Autocad Draftsman Jobs in Pakistan"
+    ],
+    "market_trend": "growing"
+  },
+  {
+    "field": "Marketing & Digital",
+    "job_count": 745,
+    "top_cities": [
+      "Lahore",
+      "Karachi",
+      "Islamabad",
+      "Faisalabad",
+      "Sialkot"
+    ],
+    "common_titles": [
+      "Full Time Content Writer Job in Pakistan",
+      "Full Time Graphic Designer Job in Pakistan",
+      "Full Time SEO Expert Job in Pakistan",
+      "Full Time SEO Expert Jobs in Pakistan",
+      "Full Time Graphic Designer Jobs in Pakistan",
+      "Full Time Content Writer Jobs in Pakistan",
+      "Call Center Agent",
+      "Customer Sales Representative",
+      "Full Time SEO Specialist Job in Pakistan",
+      "Full Time SEO Specialist Jobs in Pakistan"
+    ],
+    "market_trend": "stable"
+  },
+  {
+    "field": "Sales & Business Development",
+    "job_count": 393,
+    "top_cities": [
+      "Islamabad",
+      "Karachi",
+      "Lahore",
+      "Faisalabad",
+      "Rawalpindi"
+    ],
+    "common_titles": [
+      "Full Time Territory Sales Supervisor Job in Pakist",
+      "Full Time Area Sales Job in Pakistan",
+      "Full Time Customer Sales Representative Jobs in Pa",
+      "Full Time Telesales Representative Jobs in Pakista",
+      "Full Time Inbound Sales Specialist Jobs in Pakista",
+      "Full Time Sales Representative Jobs in Pakistan",
+      "Full Time Sales Officer Jobs in Pakistan",
+      "Full Time Call Center Agents Jobs in Pakistan",
+      "Full Time Telesales Representative Job in Pakistan",
+      "Full Time Sales Associate Job in Pakistan"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Design & Creative",
+    "job_count": 393,
+    "top_cities": [
+      "Lahore",
+      "Islamabad",
+      "Karachi",
+      "Sialkot",
+      "Faisalabad"
+    ],
+    "common_titles": [
+      "Full Time Graphic Designer Job in Pakistan",
+      "Full Time Graphic Designer Jobs in Pakistan",
+      "Graphic Designer",
+      "Full Time Graphics Designer Job in Pakistan",
+      "Video Editor",
+      "Full Time Video Editor Jobs in Pakistan",
+      "Full Time UI/UX Designer Job in Pakistan",
+      "Full Time Web Designer Job in Pakistan",
+      "Full Time UI/UX Designer Jobs in Pakistan",
+      "Full Time Auto CAD Designer Jobs in Pakistan"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "HR & Administration",
+    "job_count": 325,
+    "top_cities": [
+      "Lahore",
+      "Islamabad",
+      "Karachi",
+      "Faisalabad",
+      "Hyderabad"
+    ],
+    "common_titles": [
+      "Full Time Receptionist Job in Pakistan",
+      "Full Time Office Assistant Job in Pakistan",
+      "Receptionist",
+      "Full Time CBS Rapid - Administrative And Workplace",
+      "Full Time Office Administrator Job in Pakistan",
+      "Office Assistant",
+      "Full Time Specialist Agent Reporting & Analysis Jo",
+      "Full Time Analyst Venture Support Team Job in Paki",
+      "Full Time HR Officer Job in Pakistan",
+      "Full Time Customer Service Officer Jobs in Pakista"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Customer Service",
+    "job_count": 296,
+    "top_cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad",
+      "Faisalabad",
+      "Rawalpindi"
+    ],
+    "common_titles": [
+      "Full Time Customer Service Representative Jobs in ",
+      "Full Time Call Center Agent Jobs in Pakistan",
+      "Full Time Call Center Representative Jobs in Pakis",
+      "Full Time Customer Support Specialist - Internatio",
+      "Customer Service Representative",
+      "Full Time Call Center Agents Jobs in Pakistan",
+      "Full Time CSR Jobs in Pakistan",
+      "Full Time Customer Support Representative Jobs in ",
+      "Full Time Customer Support Representative Job in P",
+      "Online Full Time Customer Service Representative J"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Medical & Healthcare",
+    "job_count": 262,
+    "top_cities": [
+      "Karachi",
+      "Islamabad",
+      "Lahore",
+      "Rawalpindi",
+      "Sialkot"
+    ],
+    "common_titles": [
+      "Full Time Pharmacist Job in Pakistan",
+      "Full Time Pharmacist Jobs in Pakistan",
+      "Full Time Chef Job in Pakistan",
+      "Full Time Office Boy Job in Pakistan",
+      "Full Time Medical Research Writer Jobs in Pakistan",
+      "Nurse",
+      "Full Time Pharmacist With Category Required Job in",
+      "Full Time Android Engineer - Pakistan Job in Pakis",
+      "Full Time iOS Engineer - Pakistan Job in Pakistan",
+      "Full Time Engineering Manager - Pakistan Job in Pa"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Finance & Banking",
+    "job_count": 249,
+    "top_cities": [
+      "Lahore",
+      "Islamabad",
+      "Karachi",
+      "Sialkot",
+      "Gujranwala"
+    ],
+    "common_titles": [
+      "Full Time Accountant Job in Pakistan",
+      "Full Time Accounts Officer Job in Pakistan",
+      "Accounts Officer",
+      "Full Time Accountant Jobs in Pakistan",
+      "Accountant",
+      "Full Time Financial Advisor Jobs in Pakistan",
+      "Full Time Specialist Revenue Job in Pakistan",
+      "Full Time Accounts Assistant Job in Pakistan",
+      "Full Time Finance Officer Job in Pakistan",
+      "Junior Accountant"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Education & Training",
+    "job_count": 102,
+    "top_cities": [
+      "Lahore",
+      "Islamabad",
+      "Karachi",
+      "Rawalpindi",
+      "Mailsi"
+    ],
+    "common_titles": [
+      "Full Time Academic Writer Jobs in Pakistan",
+      "Full Time Teacher Job in Pakistan",
+      "Full Time Quran Tutor Jobs in Pakistan",
+      "Full Time Subject Teachers Jobs in Pakistan",
+      "Full Time Career Counselor In Study Abroad Firms L",
+      "Full Time Student Counselor Job in Pakistan",
+      "Full Time Teacher For English Grade VI-VIII Job in",
+      "Full Time Receptionist Job in Pakistan",
+      "Full Time IT Teacher Job in Pakistan",
+      "Full Time Teaching Staff Jobs in Pakistan"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "IT Infrastructure",
+    "job_count": 81,
+    "top_cities": [
+      "Islamabad",
+      "Lahore",
+      "Hyderabad",
+      "Karachi",
+      "Faisalabad"
+    ],
+    "common_titles": [
+      "Full Time Mongo Database Consultant (Hyderabad or ",
+      "Full Time DevOps Architect Job in Pakistan",
+      "Full Time DevOps Engineer - America's Time Zone Jo",
+      "Full Time DevOps Engineer - European Time Zone's J",
+      "Full Time SRE Hadoop Infrastructure Specialist (Hy",
+      "Full Time Cyber Security Advisor Job in Pakistan",
+      "Full Time Specialist Helpdesk & Operational Manage",
+      "Full Time Data Center IP Network Specialist Job in",
+      "Full Time Core Transport Network Planning Speciali",
+      "Full Time Network Supervision Specialist Job in Pa"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Logistics & Supply Chain",
+    "job_count": 18,
+    "top_cities": [
+      "Karachi",
+      "Lahore",
+      "Islamabad",
+      "Sialkot",
+      "I.I Chundrigar Road"
+    ],
+    "common_titles": [
+      "Full Time Bids & Proposal Expert Job in Pakistan",
+      "Full Time Warehouse Job in Pakistan",
+      "Driver",
+      "Purchaser",
+      "Driver - HTV",
+      "Full Time Export Assistant Job in Pakistan",
+      "Full Time Store Assistant Job in Pakistan",
+      "Full Time Rider Job in Pakistan",
+      "Online Full Time Purchase Associate Jobs in Pakist",
+      "Export Incharge"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Legal",
+    "job_count": 17,
+    "top_cities": [
+      "Islamabad",
+      "Lahore",
+      "Karachi",
+      "Faisalabad"
+    ],
+    "common_titles": [
+      "Full Time Legal Counsel Contracts Job in Pakistan",
+      "Full Time Legal Counsel - Corporate Governance IP ",
+      "Full Time Of Litigation Job in Pakistan",
+      "Full Time Legal Counsel Regulatory Litigation Job ",
+      "Online Full Time Applications Still OPEN - Interna",
+      "Full Time Lawyer Job in Pakistan",
+      "Full Time International Lawyers Job in Pakistan",
+      "Full Time Assistant Lawyer Job in Pakistan",
+      "Full Time Legal Associate Job in Pakistan",
+      "Full Time Assistant / Typist Job in Pakistan"
+    ],
+    "market_trend": "declining"
+  },
+  {
+    "field": "Quality Assurance",
+    "job_count": 7,
+    "top_cities": [
+      "Karachi",
+      "Islamabad",
+      "Lahore"
+    ],
+    "common_titles": [
+      "Online Full Time QA For Mobile Apps Job in Pakista",
+      "Full Time Internee Quality Assurance (QA) For Game",
+      "Full Time Quality Supervisor Job in Pakistan",
+      "Full Time SQA Specialist Jobs in Pakistan",
+      "Sqa",
+      "SQA"
+    ],
+    "market_trend": "declining"
+  }
+]

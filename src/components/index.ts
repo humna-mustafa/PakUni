@@ -1,129 +1,70 @@
 /**
- * Components index file
- * Export all reusable components for easy importing
+ * Components Index
+ * Centralized exports for all UI components
  */
 
-// ============================================================================
-// PREMIUM ICON SYSTEM
-// ============================================================================
+// =============================================================================
+// CORE UI COMPONENTS
+// =============================================================================
 
-export {
-  Icon,
-  TabIcon,
-  FeatureIcon,
-  ICON_SIZES,
-  TAB_ICONS,
-  ACTION_ICONS,
-  EDUCATION_ICONS,
-  FIELD_ICONS,
-  INFO_ICONS,
-  CAREER_ICONS,
-  STUDY_ICONS,
-  STATE_ICONS,
-  KIDS_ICONS,
-  MISC_ICONS,
-  getIcon,
-} from './icons';
-export type { IconProps, IconFamily, IconConfig, IconSize } from './icons';
+// App Branding
+export { default as AppLogo, LogoBadge, SplashLogo, BRAND_COLORS, LOGO_SIZES, LogoText, Tagline } from './AppLogo';
+export { default as BrandHeader } from './BrandHeader';
+export { default as UniversalHeader } from './UniversalHeader';
+export { default as UniversityLogo } from './UniversityLogo';
 
-// ============================================================================
-// TYPOGRAPHY COMPONENTS
-// ============================================================================
+// Typography
+export { default as AppText } from './AppText';
 
-export {
-  AppText,
-  DisplayText,
-  HeadlineText,
-  TitleText,
-  BodyText,
-  LabelText,
-  CaptionText,
-  ButtonText,
-} from './AppText';
+// Loading & Animation
+export { default as AnimatedLoader } from './AnimatedLoader';
+export { LoadingSpinner } from './LoadingSpinner';
+export { default as SkeletonLoader } from './SkeletonLoader';
 
-// ============================================================================
-// MODERN UI COMPONENTS (2025 Clean Design)
-// ============================================================================
+// Images
+export { default as OptimizedImage } from './OptimizedImage';
 
-export {
-  ModernCard,
-  ModernButton,
-  ModernSectionHeader,
-  ModernChip,
-  ModernStat,
-  ModernDivider,
-  ModernListItem,
-  ModernIconContainer,
-  ModernBadge,
-} from './ModernUI';
+// Search
+export { default as SearchBar } from './SearchBar';
+export { default as SearchableDropdown } from './SearchableDropdown';
+export { default as SectionHeader } from './SectionHeader';
 
-// ============================================================================
-// LEGACY COMPONENTS (Backward Compatibility)
-// ============================================================================
+// State Components
+export { default as EmptyState } from './EmptyState';
+export { default as OfflineNotice, ConnectionRestoredToast } from './OfflineNotice';
 
-// Core Button
-export {Button} from './Button';
+// Notifications
+export { default as NotificationBell, type Notification, type NotificationType } from './NotificationBell';
 
-// Card Components
-export {Card} from './Card';
+// Error Handling
+export { default as ErrorBoundary } from './ErrorBoundary';
+export { default as EnhancedErrorBoundary, GlobalErrorProvider } from './EnhancedErrorBoundary';
+export { default as EnhancedErrorToast } from './EnhancedErrorToast';
 
-// Feedback & State Components
-export {LoadingSpinner} from './LoadingSpinner';
-export {AnimatedLoader} from './AnimatedLoader';
-export {
-  PremiumLoading,
-  FullScreenLoader,
-  OverlayLoader,
-} from './PremiumLoading';
-export type {LoadingVariant, LoadingSize} from './PremiumLoading';
-export {EmptyState} from './EmptyState';
-export {SkeletonLoader, SkeletonCard, SkeletonList} from './SkeletonLoader';
-export {ErrorBoundary} from './ErrorBoundary';
-
-// Input Components
-export {SearchBar} from './SearchBar';
-
-// Display Components
-export {Badge} from './Badge';
-export {Chip, ChipGroup} from './Chip';
-export {StatCard, StatRow} from './StatCard';
-
-// Layout Components
-export {SectionHeader} from './SectionHeader';
-export {GradientHeader} from './GradientHeader';
-
-// Interactive Components
-export {AnimatedButton} from './AnimatedButton';
-
-// ============================================================================
-// PREMIUM COMPONENTS (Production-Ready, New Design System)
-// ============================================================================
+// =============================================================================
+// PREMIUM UI SYSTEM (Production Design)
+// =============================================================================
 
 // Premium Cards
-export {PremiumCard, GlassCard, ElevatedCard, OutlinedCard} from './PremiumCard';
+export { PremiumCard, GlassCard, ElevatedCard, OutlinedCard } from './PremiumCard';
+export { default as PremiumCardDefault } from './PremiumCard';
 
 // Premium Buttons
-export {PremiumButton, IconButton} from './PremiumButton';
+export { PremiumButton, IconButton } from './PremiumButton';
+export { default as PremiumButtonDefault } from './PremiumButton';
+
+// Premium Chips & Tags
+export { PremiumChip, ChipGroup } from './PremiumChip';
+export { default as PremiumChipDefault } from './PremiumChip';
 
 // Premium Search
-export {PremiumSearchBar} from './PremiumSearchBar';
+export { default as PremiumSearchBar } from './PremiumSearchBar';
 
-// Premium Chips
-export {PremiumChip, ChipGroup as PremiumChipGroup} from './PremiumChip';
+// Premium Loading States
+export { PremiumLoading, FullScreenLoader, OverlayLoader } from './PremiumLoading';
+export type { PremiumLoadingProps, LoadingVariant, LoadingSize } from './PremiumLoading';
+export { default as PremiumLoadingDefault } from './PremiumLoading';
 
-// Premium UI Elements
-export {
-  PremiumBadge,
-  PremiumStatCard,
-  PremiumStatRow,
-  PremiumSectionHeader,
-  PremiumDivider,
-} from './PremiumUI';
-
-// Premium Navigation
-export {default as PremiumTabBar} from './PremiumTabBar';
-
-// Premium Shimmer / Loading States
 export {
   Shimmer,
   ShimmerCard,
@@ -135,30 +76,11 @@ export {
   ShimmerFullPage,
 } from './PremiumShimmer';
 
-// Premium Empty States
-export {
-  PremiumEmptyState,
-  NoSearchResults,
-  NoFavorites,
-  NetworkError,
-  GenericError,
-  SuccessState,
-} from './PremiumEmptyState';
-
-// Premium Micro-Interactions
-export {
-  FloatingLabelInput,
-  BouncyCheckbox,
-  MorphingCounter,
-  RippleButton,
-  ProgressSteps,
-  SkeletonPulse,
-} from './PremiumMicroInteractions';
-
 // Premium Gradients
 export {
   GRADIENT_PRESETS,
   GradientBox,
+  GradientText,
   GradientBorder,
   GlowingBorder,
   GradientDivider,
@@ -166,27 +88,13 @@ export {
   GradientIconBg,
 } from './PremiumGradients';
 
-// Premium Toast & Notifications
-export {
-  ToastProvider,
-  useToast,
-  NotificationBanner,
-} from './PremiumToast';
+// Premium Navigation
+export { default as PremiumTabBar } from './PremiumTabBar';
 
-// Notification Bell (Modern Dropdown Widget)
-export {default as NotificationBell} from './NotificationBell';
-export type {Notification, NotificationType} from './NotificationBell';
+// Premium Feedback (Toast)
+export { useToast, ToastProvider, NotificationBanner } from './PremiumToast';
 
-// Premium Animated Lists
-export {
-  AnimatedListItem,
-  AnimatedFlatList,
-  ParallaxHeader,
-  FadeInView,
-  ScaleOnPress,
-} from './PremiumAnimatedList';
-
-// Premium Refresh Control
+// Premium Refresh
 export {
   TopRefreshBar,
   RefreshIndicator,
@@ -194,306 +102,31 @@ export {
   LoadingFooter,
 } from './PremiumRefresh';
 
-// ============================================================================
-// ENTERPRISE COMPONENTS
-// ============================================================================
-
-// Enhanced Error Boundary with crash reporting
+// Premium UI Composites
 export {
-  EnhancedErrorBoundary,
-  GlobalErrorProvider,
-  useGlobalError,
-} from './EnhancedErrorBoundary';
+  PremiumBadge,
+  PremiumStatCard,
+  PremiumStatRow,
+  PremiumSectionHeader,
+  PremiumDivider,
+} from './PremiumUI';
 
-// Enhanced Error Toast with reporting functionality
-export {default as EnhancedErrorToast} from './EnhancedErrorToast';
-export type {EnhancedErrorToastConfig} from './EnhancedErrorToast';
+// =============================================================================
+// SPECIAL CARDS & ACHIEVEMENT SYSTEM
+// =============================================================================
 
-// ============================================================================
-// OPTIMIZED IMAGE
-// ============================================================================
+// Achievement Cards
+export { default as PremiumAchievementCard } from './PremiumAchievementCard';
 
+// Ultra Premium Cards (Achievement System)
 export {
-  default as OptimizedImage,
-  ShimmerPlaceholder,
-  FallbackPlaceholder,
-} from './OptimizedImage';
+  MeritSuccessCard as UltraMeritCard,
+  AdmissionCelebrationCard as UltraAdmissionCard,
+  TestCompletionCard as UltraTestCard,
+  ScholarshipWinCard as UltraScholarshipCard,
+} from './UltraPremiumCards';
 
-// ============================================================================
-// UNIVERSITY LOGO (Static Supabase Storage)
-// ============================================================================
-
-export {default as UniversityLogo} from './UniversityLogo';
-
-// ============================================================================
-// APP LOGO & BRANDING (Premium PakUni Identity)
-// ============================================================================
-
-export {
-  default as AppLogo,
-  AppLogo as PakUniLogo,
-  SplashLogo,
-  LogoBadge,
-  GraduationCapIcon,
-  LogoText,
-  Tagline,
-  BRAND_COLORS,
-  GRADIENT_PRESETS as LOGO_GRADIENTS,
-  LOGO_SIZES,
-} from './AppLogo';
-export type { LogoSize, LogoVariant } from './AppLogo';
-
-export {
-  default as BrandHeader,
-  BrandHeader as PakUniBrandHeader,
-  CompactBrandBar,
-  BrandFooter,
-} from './BrandHeader';
-
-// ============================================================================
-// OFFLINE NOTICE
-// ============================================================================
-
-export {
-  OfflineNotice,
-  ConnectionRestoredToast,
-} from './OfflineNotice';
-
-// ============================================================================
-// PREMIUM GRAPHICS (NEW - High Quality Visual Effects)
-// ============================================================================
-
-export {
-  // Visual Effects
-  PREMIUM_GRADIENTS,
-  GlowOrb,
-  AuroraBackground,
-  MeshGradient,
-  ShineEffect,
-  FloatingParticles,
-  GradientBorderCard,
-  PremiumHeroBanner,
-  // Icon Containers
-  ICON_PRESETS,
-  PremiumIconContainer,
-  GradientIconBadge,
-  GlowingIconCircle,
-  PulsingIcon,
-  RankBadge,
-  // Decorations
-  PremiumBadge as EliteBadge,
-  LiveDot,
-  GradientDivider as EliteGradientDivider,
-  FeatureTag,
-  DecorativePattern,
-  StatsHighlight,
-  ShimmerLine,
-  PremiumChip as EliteChip,
-  // Ultra Cards
-  UltraCard,
-  FeatureCard,
-  StatCard as EliteStatCard,
-  ListItemCard,
-} from './graphics';
-
-// ============================================================================
-// ULTRA PREMIUM COMPONENTS (Designer-Grade, Pixel-Perfect, Zero Blur)
-// ============================================================================
-
-// Core Components
-export {
-  UltraPremiumCard,
-  UltraPremiumButton,
-  UltraPremiumBadge,
-  UltraPremiumText,
-  UltraPremiumDivider,
-} from './ultra';
-
-// Visual Effects
-export {
-  UltraShimmer,
-  UltraGlowOrb,
-  UltraHeroBanner,
-  UltraGradientBorder,
-  UltraSpinner,
-  UltraPulseDots,
-  UltraSkeletonCard,
-  UltraFloatingParticles,
-} from './ultra';
-
-// Input Components
-export {
-  UltraSearchBar,
-  UltraTextInput,
-  UltraSelect,
-} from './ultra';
-
-// Modal Components
-export {
-  UltraBottomSheet,
-  UltraAlert,
-  UltraActionSheet,
-} from './ultra';
-
-// List Components
-export {
-  UltraListItem,
-  UltraSectionHeader,
-  UltraAnimatedList,
-  UltraSectionList,
-  UltraListSeparator,
-} from './ultra';
-
-// Navigation Components
-export {
-  UltraHeader,
-  UltraHeaderButton,
-  UltraTabBar,
-  UltraSegmentedControl,
-} from './ultra';
-
-// Ultra Design System Tokens
-export {
-  ULTRA_TYPOGRAPHY,
-  ULTRA_SPACING,
-  ULTRA_RADIUS,
-  ULTRA_SHADOWS,
-  ULTRA_MOTION,
-  ULTRA_GLASS,
-  ULTRA_GRADIENTS,
-  ULTRA_COLORS,
-  ULTRA_A11Y,
-  pixelPerfect,
-} from './ultra';
-
-// ============================================================================
-// CLEAN DESIGN 2025 - Content-First, Minimal, Professional
-// ============================================================================
-
-// Clean Card Components
-export {
-  CleanCard,
-  OutlinedCard as CleanOutlinedCard,
-  ElevatedCard2025,
-  FlatCard,
-  InteractiveCard,
-  ListItemCard as CleanListItemCard,
-  FeatureCard as CleanFeatureCard,
-  StatsCard as CleanStatsCard,
-} from './CleanCard';
-
-// Clean Button Components
-export {
-  CleanButton,
-  CleanIconButton,
-  CleanTextButton,
-} from './CleanButton';
-
-// Clean Chip Components
-export {
-  CleanChip,
-  CleanChipGroup,
-  StatusChip,
-} from './CleanChip';
-
-// Clean Search Components
-export {
-  CleanSearchBar,
-  CleanSearchField,
-  ExpandableSearch,
-} from './CleanSearchBar';
-
-// Clean Layout Components
-export {
-  CleanSectionHeader,
-  CleanPageHeader,
-  LabeledDivider,
-} from './CleanSectionHeader';
-
-// Clean Design System Tokens
-export {
-  CLEAN_COLORS,
-  CLEAN_COLORS_DARK,
-  CLEAN_TYPOGRAPHY,
-  TEXT_STYLES,
-  CLEAN_SPACING,
-  CLEAN_RADIUS,
-  CLEAN_SHADOWS,
-  CLEAN_SHADOWS_DARK,
-  CLEAN_BORDERS,
-  CLEAN_MOTION,
-  CLEAN_COMPONENTS,
-  CLEAN_A11Y,
-  CLEAN_SCREEN,
-  getCleanThemeColors,
-} from '../constants/clean-design-2025';
-
-// ============================================================================
-// PIXEL PERFECT COMPONENTS - Zero Artifacts, Crisp Rendering
-// ============================================================================
-
-// Pixel Perfect Card Components
-export {
-  PixelPerfectCard,
-  PPOutlinedCard,
-  PPElevatedCard,
-  PPGlassCard,
-  PPInteractiveCard,
-  PPFlatCard,
-  PPListItemCard,
-  PPFeatureCard,
-  PPStatsCard,
-  PPHorizontalCard,
-} from './PixelPerfectCard';
-
-// Pixel Perfect Button Components
-export {
-  PPButton,
-  PPIconButton,
-  PPFab,
-} from './PixelPerfectButton';
-
-// Pixel Perfect UI Components
-export {
-  PPBadge,
-  PPIconContainer,
-  PPAvatar,
-  PPDivider,
-  PPSurface,
-  PPSkeleton,
-  PPSectionHeader,
-  PPEmptyState,
-} from './PixelPerfectUI';
-
-// Pixel Perfect Design System Tokens
-export {
-  // Utilities
-  roundToPixel,
-  getPixelSize,
-  snapToGrid,
-  scaleSize,
-  scaleFontSize,
-  HAIRLINE_WIDTH,
-  // Design Tokens
-  PP_SPACING,
-  PP_BORDERS,
-  PP_SHADOWS,
-  PP_CARD_STYLES,
-  PP_ICON_CONTAINERS,
-  PP_AVATARS,
-  PP_BADGES,
-  PP_BUTTONS,
-  PP_INPUTS,
-  PP_TYPOGRAPHY,
-  PP_MOTION,
-  PP_SCREEN,
-  PP_A11Y,
-} from '../constants/pixel-perfect';
-
-// ============================================================================
-// SHAREABLE CARDS (Social Media Sharing)
-// ============================================================================
-
+// Shareable Cards
 export {
   MeritSuccessCard,
   ComparisonCard,
@@ -502,74 +135,84 @@ export {
   EntryTestSuccessCard,
   MeritListCard,
   ScholarshipCelebrationCard,
+  PersonalizedScholarshipCard,
+  PersonalizedMeritCard,
 } from './ShareableCard';
 
-export {
-  AchievementCardVisual,
-  ShareableAchievementCard,
-} from './AchievementCardVisual';
+// Floating Actions
+export { default as FloatingToolsButton } from './FloatingToolsButton';
 
-// ============================================================================
-// PREMIUM ACHIEVEMENT CARDS (Designer-Grade, Marketing Quality)
-// ============================================================================
+// =============================================================================
+// ICONS SYSTEM
+// =============================================================================
 
-// Universal Premium Card with auto-detection
-export {
-  PremiumAchievementCard,
-} from './PremiumAchievementCard';
-export type { PremiumAchievementCardProps } from './PremiumAchievementCard';
+export { default as Icon, ICON_SIZES } from './icons/Icon';
+export type { IconProps, IconSize } from './icons/Icon';
+export { default as TabIcon } from './icons/TabIcon';
+export { default as FeatureIcon } from './icons/FeatureIcon';
+export * from './icons/iconMappings';
+export type { IconFamily, IconConfig } from './icons/iconMappings';
 
-// Ultra-Premium Specialized Cards (Maximum Visual Impact)
-export {
-  MeritSuccessCard as UltraMeritCard,
-  AdmissionCelebrationCard as UltraAdmissionCard,
-  TestCompletionCard as UltraTestCard,
-  ScholarshipWinCard as UltraScholarshipCard,
-} from './UltraPremiumCards';
-export type {CardCustomImages} from './UltraPremiumCards';
+// =============================================================================
+// CALCULATORS
+// =============================================================================
 
-// Card Image Customizer (Optional Image Personalization)
-export {
-  CardImageCustomizer,
-  CompactImageCustomizer,
-} from './CardImageCustomizer';
+export { GradeConverterCard, CompactGradeConverter } from './calculators/GradeConverterCard';
+export { TargetCalculator } from './calculators/TargetCalculator';
+export { WhatIfSimulator } from './calculators/WhatIfSimulator';
+export { CustomFormulaBuilder } from './calculators/CustomFormulaBuilder';
+export type { CustomFormula } from './calculators/CustomFormulaBuilder';
 
-// Card Style Selector & Renderer (Easy card management)
-export {
-  CardStyleSelector,
-  AchievementCardRenderer,
-} from './CardStyleSelector';
-
-// ============================================================================
-// FLOATING ACTION BUTTONS
-// ============================================================================
-
-export {default as FloatingToolsButton} from './FloatingToolsButton';
-
-// ============================================================================
-// UNIVERSAL HEADER
-// ============================================================================
-
-export {default as UniversalHeader} from './UniversalHeader';
-
-// ============================================================================
-// TYPOGRAPHY SYSTEM
-// ============================================================================
+// =============================================================================
+// FILTERS
+// =============================================================================
 
 export {
-  // Font definitions
-  FontFamily,
-  FontWeight,
-  FontSize,
-  LineHeight,
-  LetterSpacing,
-  // Pre-composed styles
-  TextStyles,
-  Typography,
-  // Utility functions
-  pixelPerfectFont,
-  responsiveFontSize,
-  accessibleFontSize,
-  createTextStyle,
-  withTruncation,
-} from '../constants/typography';
+  EnhancedFilterEngine,
+  CompactFilterBar,
+  DEFAULT_FILTER_CONFIG,
+  createDefaultFilters,
+} from './filters/EnhancedFilterEngine';
+
+export type {
+  FilterState,
+  FilterConfig,
+  EnhancedFilterEngineProps,
+} from './filters/EnhancedFilterEngine';
+
+// =============================================================================
+// GRAPHS & DATA VISUALIZATION
+// =============================================================================
+
+export { default as HistoricalMeritGraph } from './graphs/HistoricalMeritGraph';
+
+// =============================================================================
+// GUIDES
+// =============================================================================
+
+export { AdmissionGuides, CompactGuideCard } from './guides/AdmissionGuides';
+
+// =============================================================================
+// CAREER
+// =============================================================================
+
+export { default as EnhancedCareerExplorer } from './career/EnhancedCareerExplorer';
+
+// =============================================================================
+// GAMES & INTERACTIVE
+// =============================================================================
+
+export { ResultPredictionGame } from './games/ResultPredictionGame';
+
+// =============================================================================
+// INTEGRATIONS
+// =============================================================================
+
+export { ExternalLinksCard, AddToCalendarButton } from './integrations/ExternalLinksCard';
+
+// =============================================================================
+// WIDGETS
+// =============================================================================
+
+export { default as EntryTestCountdown } from './widgets/EntryTestCountdown';
+export { default as SpecialOccasionCard } from './widgets/SpecialOccasionCard';

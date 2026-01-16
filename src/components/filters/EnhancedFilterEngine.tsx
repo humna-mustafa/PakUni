@@ -128,7 +128,12 @@ const FilterChip: React.FC<FilterChipProps> = ({
       ]}>
       <Text style={[chipStyles.label, selected && {color}]}>{label}</Text>
       {selected && (
-        <Icon name="checkmark-circle" size={16} color={color} style={{marginLeft: 4}} />
+        <Icon
+          name="checkmark-circle"
+          size={16}
+          color={color}
+          containerStyle={{marginLeft: 4}}
+        />
       )}
     </View>
   </TouchableOpacity>

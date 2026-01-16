@@ -8,7 +8,8 @@
  */
 
 import {Alert, Platform, PermissionsAndroid, Linking} from 'react-native';
-import {launchImageLibrary, launchCamera, ImagePickerResponse, MediaType, CameraOptions, ImageLibraryOptions} from 'react-native-image-picker';
+import {launchImageLibrary, launchCamera, ImagePickerResponse, MediaType, CameraOptions, ImageLibraryOptions, PhotoQuality} from 'react-native-image-picker';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -29,7 +30,7 @@ export type ImageSourceType = 'gallery' | 'camera';
 
 export interface PickerOptions {
   mediaType?: MediaType;
-  quality?: number;
+  quality?: PhotoQuality;
   maxWidth?: number;
   maxHeight?: number;
   includeBase64?: boolean;
@@ -73,7 +74,7 @@ const requestCameraPermission = async (): Promise<boolean> => {
     );
     return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
-    console.warn('Camera permission error:', err);
+    logger.warn('Camera permission error', err, 'ImagePicker');
     return false;
   }
 };
@@ -101,7 +102,7 @@ const requestGalleryPermission = async (): Promise<boolean> => {
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
-      console.warn('Gallery permission error:', err);
+      logger.warn('Gallery permission error', err, 'ImagePicker');
       return false;
     }
   }
@@ -120,7 +121,7 @@ const requestGalleryPermission = async (): Promise<boolean> => {
     );
     return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
-    console.warn('Storage permission error:', err);
+    logger.warn('Storage permission error', err, 'ImagePicker');
     return false;
   }
 };
@@ -164,7 +165,7 @@ export const pickImageFromGallery = async (
 
       if (response.errorCode) {
         const errorMessage = response.errorMessage || 'Failed to pick image';
-        console.error('Image picker error:', response.errorCode, errorMessage);
+        logger.error('Image picker error', {code: response.errorCode, message: errorMessage}, 'ImagePicker');
         resolve({success: false, error: errorMessage});
         return;
       }
@@ -222,7 +223,7 @@ export const captureImageFromCamera = async (
 
       if (response.errorCode) {
         const errorMessage = response.errorMessage || 'Failed to capture image';
-        console.error('Camera error:', response.errorCode, errorMessage);
+        logger.error('Camera error', {code: response.errorCode, message: errorMessage}, 'ImagePicker');
         resolve({success: false, error: errorMessage});
         return;
       }
@@ -288,7 +289,7 @@ export const pickSquareImage = async (): Promise<ImagePickerResult> => {
   return pickImageFromGallery({
     maxWidth: 800,
     maxHeight: 800,
-    quality: 0.85,
+    quality: 0.8,
   });
 };
 
@@ -299,7 +300,7 @@ export const pickLandscapeImage = async (): Promise<ImagePickerResult> => {
   return pickImageFromGallery({
     maxWidth: 1600,
     maxHeight: 900,
-    quality: 0.85,
+    quality: 0.8,
   });
 };
 
@@ -310,7 +311,7 @@ export const pickLogoImage = async (): Promise<ImagePickerResult> => {
   return pickImageFromGallery({
     maxWidth: 400,
     maxHeight: 400,
-    quality: 0.95,
+    quality: 0.9,
   });
 };
 

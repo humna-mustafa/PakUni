@@ -7,7 +7,6 @@
 // ACHIEVEMENTS & GAMIFICATION
 // ============================================================================
 export * from './services/achievements';
-export * from './components/graphics/AchievementBadgeCard';
 
 // ============================================================================
 // WIDGETS

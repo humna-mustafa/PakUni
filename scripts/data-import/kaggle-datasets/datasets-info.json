@@ -1,0 +1,76 @@
+[
+  {
+    "id": "hec-universities",
+    "name": "HEC-Accredited Universities of Pakistan",
+    "kaggleUrl": "whisperingkahuna/hec-accredited-universities-of-pakistan-dataset",
+    "filename": "hec_universities.csv",
+    "features": [
+      "geo_coordinates",
+      "campuses",
+      "contact_info",
+      "distance_education"
+    ],
+    "addedValue": "Enhanced university data with geolocation and distance education info"
+  },
+  {
+    "id": "intellectual-capital",
+    "name": "Pakistan Intellectual Capital",
+    "kaggleUrl": "zusmani/pakistanintellectualcapitalcs",
+    "filename": "intellectual_capital.csv",
+    "features": [
+      "faculty_profiles",
+      "research_areas",
+      "phd_programs"
+    ],
+    "addedValue": "University faculty info for research-focused students"
+  },
+  {
+    "id": "job-market",
+    "name": "Pakistan's Job Market",
+    "kaggleUrl": "zusmani/pakistans-job-market",
+    "filename": "pakistan_jobs.csv",
+    "features": [
+      "job_titles",
+      "experience_levels",
+      "departments",
+      "job_descriptions"
+    ],
+    "addedValue": "Career insights based on real job market data"
+  },
+  {
+    "id": "colleges",
+    "name": "All Intermediate Colleges in Pakistan",
+    "kaggleUrl": "tayyarhussain/all-the-intermediate-colleges-in-pakistan",
+    "filename": "intermediate_colleges.csv",
+    "features": [
+      "college_info",
+      "programs",
+      "affiliations"
+    ],
+    "addedValue": "College search for pre-university students"
+  },
+  {
+    "id": "universities-basic",
+    "name": "Every University in Pakistan",
+    "kaggleUrl": "tayyarhussain/all-of-the-universities-in-pakistan",
+    "filename": "universities_basic.csv",
+    "features": [
+      "basic_info",
+      "locations",
+      "establishment_dates"
+    ],
+    "addedValue": "Cross-reference and validate university data"
+  },
+  {
+    "id": "edu-statistics",
+    "name": "Teachers/Students Statistics 1947-2018",
+    "kaggleUrl": "tariqbashir/number-of-teachersstudents-in-pakistan-1947-2018",
+    "filename": "education_stats.csv",
+    "features": [
+      "historical_data",
+      "student_teacher_ratio",
+      "trends"
+    ],
+    "addedValue": "Education statistics for insights and analytics"
+  }
+]

@@ -8,7 +8,7 @@
  * - No unlock detection complexity
  */
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,16 @@ import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 import {PremiumAchievementCard} from '../components/PremiumAchievementCard';
+import SearchableDropdown, {
+  createUniversityOptions,
+  createUniversityOptionsWithFullNames,
+  createScholarshipOptions,
+  createEntryTestOptions,
+  createProgramOptions,
+  DropdownOption,
+} from '../components/SearchableDropdown';
 import {
   MeritSuccessCard as UltraMeritCard,
   AdmissionCelebrationCard as UltraAdmissionCard,
@@ -108,6 +117,12 @@ const AddAchievementModal = ({
   const [formData, setFormData] = useState<Record<string, string>>({});
   const modalAnim = useRef(new Animated.Value(0)).current;
 
+  // Memoize options to avoid recalculation
+  const universityOptions = useMemo(() => createUniversityOptionsWithFullNames(), []);
+  const scholarshipOptions = useMemo(() => createScholarshipOptions(), []);
+  const entryTestOptions = useMemo(() => createEntryTestOptions(), []);
+  const programOptions = useMemo(() => createProgramOptions(), []);
+
   useEffect(() => {
     if (visible) {
       setFormData({});
@@ -140,6 +155,110 @@ const AddAchievementModal = ({
     onAdd(formData);
   };
 
+  // Determine which dropdown to show based on field key and template type
+  const getFieldComponent = (field: typeof template.fields[0]) => {
+    const fieldKey = field.key.toLowerCase();
+    
+    // University field - show university dropdown
+    if (fieldKey === 'universityname') {
+      return (
+        <SearchableDropdown
+          label={field.label + (field.required ? ' *' : '')}
+          placeholder={field.placeholder}
+          options={universityOptions}
+          value={formData[field.key]}
+          onSelect={(option, value) => {
+            // Use the full university name from metadata
+            const displayName = option.metadata?.name || option.label;
+            setFormData(prev => ({...prev, [field.key]: displayName}));
+          }}
+          allowCustom
+          customPlaceholder="Type custom university name..."
+          onCustomEntry={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+          showLogos
+        />
+      );
+    }
+    
+    // Test name field - show entry test dropdown
+    if (fieldKey === 'testname' && (template.type === 'entry_test' || template.type === 'result')) {
+      return (
+        <SearchableDropdown
+          label={field.label + (field.required ? ' *' : '')}
+          placeholder={field.placeholder}
+          options={entryTestOptions}
+          value={formData[field.key]}
+          onSelect={(option, value) => {
+            setFormData(prev => ({...prev, [field.key]: option.label}));
+          }}
+          allowCustom
+          customPlaceholder="Type custom test/exam name..."
+          onCustomEntry={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+        />
+      );
+    }
+    
+    // Program name field - show program dropdown
+    if (fieldKey === 'programname') {
+      return (
+        <SearchableDropdown
+          label={field.label + (field.required ? ' *' : '')}
+          placeholder={field.placeholder}
+          options={programOptions}
+          value={formData[field.key]}
+          onSelect={(option, value) => {
+            setFormData(prev => ({...prev, [field.key]: option.value}));
+          }}
+          allowCustom
+          customPlaceholder="Type custom program name..."
+          onCustomEntry={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+        />
+      );
+    }
+    
+    // Scholarship name field - show scholarship dropdown
+    if (fieldKey === 'scholarshipname') {
+      return (
+        <SearchableDropdown
+          label={field.label + (field.required ? ' *' : '')}
+          placeholder={field.placeholder}
+          options={scholarshipOptions}
+          value={formData[field.key]}
+          onSelect={(option, value) => {
+            setFormData(prev => ({...prev, [field.key]: option.label}));
+          }}
+          allowCustom
+          customPlaceholder="Type custom scholarship name..."
+          onCustomEntry={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+        />
+      );
+    }
+    
+    // Default: Regular text input for other fields
+    return (
+      <View>
+        <Text style={[styles.fieldLabel, {color: colors.text}]}>
+          {field.label}
+          {field.required && <Text style={{color: '#EF4444'}}> *</Text>}
+        </Text>
+        <TextInput
+          style={[
+            styles.fieldInput,
+            {
+              backgroundColor: colors.background,
+              color: colors.text,
+              borderColor: colors.border,
+            },
+          ]}
+          placeholder={field.placeholder}
+          placeholderTextColor={colors.textSecondary}
+          value={formData[field.key] || ''}
+          onChangeText={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+        />
+      </View>
+    );
+  };
+
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
       <KeyboardAvoidingView
@@ -156,38 +275,39 @@ const AddAchievementModal = ({
               opacity: modalAnim,
             },
           ]}>
-          {/* Header */}
+          {/* Header with 3D decoration */}
           <LinearGradient colors={template.gradientColors} style={styles.addModalHeader}>
+            {/* Decorative elements */}
+            <View style={styles.headerDecor1} />
+            <View style={styles.headerDecor2} />
+            <View style={styles.headerDecor3} />
             <Text style={styles.addModalEmoji}>{template.icon}</Text>
             <Text style={styles.addModalTitle}>{template.title}</Text>
+            {/* Sparkle decorations */}
+            <View style={styles.sparkleContainer}>
+              <Text style={styles.sparkle}>✨</Text>
+              <Text style={[styles.sparkle, styles.sparkle2]}>⭐</Text>
+              <Text style={[styles.sparkle, styles.sparkle3]}>💫</Text>
+            </View>
           </LinearGradient>
 
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Icon name="close" family="Ionicons" size={24} color={colors.textSecondary} />
           </TouchableOpacity>
 
-          {/* Form */}
+          {/* Form with searchable dropdowns */}
           <ScrollView style={styles.addModalForm} showsVerticalScrollIndicator={false}>
+            {/* Helpful tip */}
+            <View style={[styles.tipCard, {backgroundColor: colors.primaryLight + '20'}]}>
+              <Icon name="bulb-outline" family="Ionicons" size={16} color={colors.primary} />
+              <Text style={[styles.tipText, {color: colors.primary}]}>
+                Search from list or type custom name
+              </Text>
+            </View>
+            
             {template.fields.map(field => (
               <View key={field.key} style={styles.formField}>
-                <Text style={[styles.fieldLabel, {color: colors.text}]}>
-                  {field.label}
-                  {field.required && <Text style={{color: '#EF4444'}}> *</Text>}
-                </Text>
-                <TextInput
-                  style={[
-                    styles.fieldInput,
-                    {
-                      backgroundColor: colors.background,
-                      color: colors.text,
-                      borderColor: colors.border,
-                    },
-                  ]}
-                  placeholder={field.placeholder}
-                  placeholderTextColor={colors.textSecondary}
-                  value={formData[field.key] || ''}
-                  onChangeText={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
-                />
+                {getFieldComponent(field)}
               </View>
             ))}
           </ScrollView>
@@ -239,7 +359,7 @@ const AchievementsScreen = () => {
       setAchievements(loadedAchievements);
       setStats(loadedStats);
     } catch (error) {
-      console.error('Error loading achievements:', error);
+      logger.error('Error loading achievements', error, 'Achievements');
     } finally {
       setIsLoading(false);
     }
@@ -398,41 +518,37 @@ const AchievementsScreen = () => {
             <View style={styles.achievementsList}>
               {achievements.map((achievement, index) => (
                 <View key={achievement.id}>
-                  {/* Ultra Premium Cards - Designer Grade */}
+                  {/* Ultra Premium Cards - Designer Grade with Customizer */}
                   {achievement.type === 'merit_list' && (
                     <UltraMeritCard
                       achievement={achievement}
                       showActions={true}
-                      onShareComplete={(success) => {
-                        if (success) console.log('Merit card shared!');
-                      }}
+                      showCustomizer={true}
+                      onShareComplete={() => {}}
                     />
                   )}
                   {achievement.type === 'admission' && (
                     <UltraAdmissionCard
                       achievement={achievement}
                       showActions={true}
-                      onShareComplete={(success) => {
-                        if (success) console.log('Admission card shared!');
-                      }}
+                      showCustomizer={true}
+                      onShareComplete={() => {}}
                     />
                   )}
                   {achievement.type === 'entry_test' && (
                     <UltraTestCard
                       achievement={achievement}
                       showActions={true}
-                      onShareComplete={(success) => {
-                        if (success) console.log('Test card shared!');
-                      }}
+                      showCustomizer={true}
+                      onShareComplete={() => {}}
                     />
                   )}
                   {achievement.type === 'scholarship' && (
                     <UltraScholarshipCard
                       achievement={achievement}
                       showActions={true}
-                      onShareComplete={(success) => {
-                        if (success) console.log('Scholarship card shared!');
-                      }}
+                      showCustomizer={true}
+                      onShareComplete={() => {}}
                     />
                   )}
                   {/* Fallback for other types */}
@@ -440,9 +556,7 @@ const AchievementsScreen = () => {
                     <PremiumAchievementCard
                       achievement={achievement}
                       showSaveButton={true}
-                      onShareComplete={(success) => {
-                        if (success) console.log('Card shared!');
-                      }}
+                      onShareComplete={() => {}}
                     />
                   )}
                   
@@ -723,6 +837,73 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopLeftRadius: RADIUS.xxl,
     borderTopRightRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  // 3D decorative elements for modal header
+  headerDecor1: {
+    position: 'absolute',
+    top: -20,
+    right: -20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+  },
+  headerDecor2: {
+    position: 'absolute',
+    bottom: -10,
+    left: -10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  headerDecor3: {
+    position: 'absolute',
+    top: 20,
+    left: 30,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  sparkleContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pointerEvents: 'none',
+  },
+  sparkle: {
+    position: 'absolute',
+    fontSize: 14,
+    top: 15,
+    right: 25,
+  },
+  sparkle2: {
+    top: 35,
+    right: 50,
+    fontSize: 10,
+  },
+  sparkle3: {
+    top: 20,
+    left: 30,
+    fontSize: 12,
+  },
+  tipCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.md,
+    gap: SPACING.xs,
+    marginBottom: SPACING.md,
+  },
+  tipText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '500',
   },
   addModalEmoji: {
     fontSize: 48,

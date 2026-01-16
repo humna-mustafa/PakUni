@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useMemo} from 'react';
 import {
   View,
   Text,
@@ -283,7 +283,7 @@ const PremiumCompareScreen = () => {
     const newSelection = [...selectedUniversities];
     newSelection[index] = null;
     setSelectedUniversities(newSelection);
-    Haptics.impact('light');
+    Haptics.light();
   };
 
   const universityOptions = useMemo(() => {
@@ -469,7 +469,7 @@ const PremiumCompareScreen = () => {
         placeholder="Search for a university..."
         visible={modalVisible}
         options={universityOptions}
-        onSelect={(uni) => selectUniversity(uni as UniversityData)}
+        onSelect={(option, value) => selectUniversity(value)}
         onClose={closeModal}
       />
     </SafeAreaView>

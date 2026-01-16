@@ -1,11 +1,14 @@
 /**
  * useUniversities Hook
  * Manages university data with filtering, sorting, and search
+ * Now uses Hybrid Data Service (Turso + bundled fallback)
  */
 
-import {useState, useMemo, useCallback} from 'react';
-import {UNIVERSITIES, UniversityData} from '../data/universities';
+import {useState, useMemo, useCallback, useEffect} from 'react';
+import {UniversityData} from '../data/universities';
 import {PROVINCES} from '../data';
+import {hybridDataService} from '../services';
+import {logger} from '../utils/logger';
 
 export type SortOption = 'name' | 'ranking' | 'province';
 export type UniversityType = 'all' | 'public' | 'private';
@@ -39,6 +42,8 @@ interface UseUniversitiesReturn {
   resetFilters: () => void;
   getUniversityByName: (name: string) => UniversityData | undefined;
   provinces: ProvinceOption[];
+  dataSource: 'turso' | 'bundled';
+  refreshData: () => Promise<void>;
 }
 
 export const useUniversities = (
@@ -55,12 +60,57 @@ export const useUniversities = (
   const [selectedProvince, setSelectedProvince] = useState(initialProvince);
   const [selectedType, setSelectedType] = useState<UniversityType>(initialType);
   const [sortBy, setSortBy] = useState<SortOption>(initialSort);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dataSource, setDataSource] = useState<'turso' | 'bundled'>('bundled');
+  
+  // Start with bundled data for instant display
+  const [universities, setUniversities] = useState<UniversityData[]>(() => 
+    hybridDataService.getUniversitiesSync() as unknown as UniversityData[]
+  );
 
   const provinces = useMemo(() => PROVINCES, []);
 
+  // Fetch fresh data from Turso on mount
+  useEffect(() => {
+    let mounted = true;
+    
+    async function fetchData() {
+      try {
+        const freshData = await hybridDataService.getUniversities();
+        if (mounted) {
+          setUniversities(freshData as unknown as UniversityData[]);
+          const status = await hybridDataService.getSyncStatus();
+          setDataSource(status.dataSource as 'turso' | 'bundled');
+        }
+      } catch (error) {
+        logger.debug('Using bundled data', null, 'useUniversities');
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+    
+    fetchData();
+    return () => { mounted = false; };
+  }, []);
+
+  const refreshData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await hybridDataService.refreshTursoData();
+      const freshData = await hybridDataService.getUniversities();
+      setUniversities(freshData as unknown as UniversityData[]);
+      setDataSource('turso');
+    } catch (error) {
+      logger.debug('Refresh failed, using cached data', null, 'useUniversities');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const filteredUniversities = useMemo(() => {
-    let result = [...UNIVERSITIES];
+    let result = [...universities];
 
     // Apply search filter
     if (searchQuery.trim()) {
@@ -101,7 +151,7 @@ export const useUniversities = (
     });
 
     return result;
-  }, [searchQuery, selectedProvince, selectedType, sortBy]);
+  }, [universities, searchQuery, selectedProvince, selectedType, sortBy]);
 
   const resetFilters = useCallback(() => {
     setSearchQuery('');
@@ -112,13 +162,13 @@ export const useUniversities = (
 
   const getUniversityByName = useCallback(
     (name: string): UniversityData | undefined => {
-      return UNIVERSITIES.find(uni => uni.name === name || uni.short_name === name);
+      return universities.find(uni => uni.name === name || uni.short_name === name);
     },
-    [],
+    [universities],
   );
 
   return {
-    universities: UNIVERSITIES,
+    universities,
     filteredUniversities,
     searchQuery,
     setSearchQuery,
@@ -129,11 +179,13 @@ export const useUniversities = (
     sortBy,
     setSortBy,
     isLoading,
-    totalCount: UNIVERSITIES.length,
+    totalCount: universities.length,
     filteredCount: filteredUniversities.length,
     resetFilters,
     getUniversityByName,
     provinces,
+    dataSource,
+    refreshData,
   };
 };
 

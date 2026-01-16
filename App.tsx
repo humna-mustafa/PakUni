@@ -15,7 +15,7 @@ import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToa
 import {analytics} from './src/services/analytics';
 import {supabase} from './src/services/supabase';
 
-// Deep linking configuration for OAuth callbacks
+// Deep linking configuration for OAuth callbacks and shared content
 const linking = {
   prefixes: [
     'pakuni://',
@@ -36,6 +36,16 @@ const linking = {
       },
       UniversityDetail: 'university/:universityId',
       Calculator: 'calculator',
+      // Achievement & Card sharing deep links
+      Achievements: 'achievements',
+      SharedAchievement: 'achievement/:achievementId',
+      SharedCard: 'card/:cardType/:cardId',
+      // Feature screens
+      Guides: 'guides',
+      Tools: 'tools',
+      EntryTests: 'entry-tests',
+      CareerGuidance: 'career-guidance',
+      Compare: 'compare',
     },
   },
 };

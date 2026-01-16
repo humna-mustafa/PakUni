@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, AppSetting} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 import {PremiumSearchBar} from '../../components/PremiumSearchBar';
 
@@ -82,7 +83,7 @@ const AdminSettingsScreen: React.FC = () => {
       const {settings: data} = await adminService.getAllSettings();
       setSettings(data);
     } catch (error) {
-      console.error('Error loading settings:', error);
+      logger.error('Error loading settings', error, 'AdminSettings');
     } finally {
       setLoading(false);
       setRefreshing(false);

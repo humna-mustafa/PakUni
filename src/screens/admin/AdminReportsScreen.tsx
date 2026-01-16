@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, ContentReport, ReportStatus} from '../../services/admin';
 import {Icon} from '../../components/icons';
+import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
 
 // Fallback LinearGradient
@@ -81,7 +82,7 @@ const AdminReportsScreen: React.FC = () => {
       });
       setReports(data);
     } catch (error) {
-      console.error('Error loading reports:', error);
+      logger.error('Error loading reports', error, 'AdminReports');
     } finally {
       setLoading(false);
       setRefreshing(false);

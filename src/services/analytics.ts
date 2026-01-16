@@ -12,6 +12,7 @@ import {Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {supabase} from './supabase';
 import DeviceInfo from 'react-native-device-info';
+import {logger} from '../utils/logger';
 
 // Constants for batching
 const BATCH_SIZE = 20;
@@ -599,7 +600,7 @@ class AnalyticsService {
    */
   private log(message: string, data?: any): void {
     if (this.isDebugMode) {
-      console.log(`[Analytics] ${message}`, data || '');
+      logger.debug(message, data, 'Analytics');
     }
   }
 
@@ -608,7 +609,7 @@ class AnalyticsService {
    */
   private logError(message: string, error: Error): void {
     if (this.isDebugMode) {
-      console.error(`[Analytics Error] ${message}`, error);
+      logger.error(message, error, 'Analytics');
     }
   }
 }

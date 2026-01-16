@@ -66,6 +66,10 @@ import {
   AdminNotificationsScreen,
   AdminErrorReportsScreen,
   AdminDataManagementScreen,
+  EnterpriseAdminDashboardScreen,
+  AdminTursoDataManagementScreen,
+  AdminTursoNotificationsScreen,
+  AdminSystemHealthScreen,
 } from '../screens/admin';
 
 // Components
@@ -115,6 +119,9 @@ export type RootStackParamList = {
   Tools: undefined;
   ResultGame: undefined;
   Achievements: undefined;
+  // Shared Achievement/Card Deep Links (for viral sharing)
+  SharedAchievement: {achievementId: string};
+  SharedCard: {cardType: string; cardId: string};
   // User Feature Screens
   Profile: undefined;
   Notifications: undefined;
@@ -134,6 +141,11 @@ export type RootStackParamList = {
   AdminNotifications: undefined;
   AdminErrorReports: undefined;
   AdminDataManagement: undefined;
+  // Enterprise Admin Screens - Turso Integration
+  EnterpriseAdminDashboard: undefined;
+  AdminTursoDataManagement: undefined;
+  AdminTursoNotifications: undefined;
+  AdminSystemHealth: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -477,6 +489,27 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="AdminDataManagement"
             component={AdminDataManagementScreen}
+            options={{headerShown: false}}
+          />
+          {/* Enterprise Admin Screens - Turso Integration */}
+          <Stack.Screen
+            name="EnterpriseAdminDashboard"
+            component={EnterpriseAdminDashboardScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminTursoDataManagement"
+            component={AdminTursoDataManagementScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminTursoNotifications"
+            component={AdminTursoNotificationsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminSystemHealth"
+            component={AdminSystemHealthScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

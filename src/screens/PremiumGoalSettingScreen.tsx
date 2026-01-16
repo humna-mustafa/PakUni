@@ -18,6 +18,7 @@ import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+import {logger} from '../utils/logger';
 
 const {width} = Dimensions.get('window');
 
@@ -345,7 +346,7 @@ const PremiumGoalSettingScreen = () => {
         setGoals(JSON.parse(storedGoals));
       }
     } catch (error) {
-      console.error('Failed to load goals:', error);
+      logger.error('Failed to load goals', error, 'GoalSetting');
     } finally {
       setIsLoading(false);
     }
@@ -355,7 +356,7 @@ const PremiumGoalSettingScreen = () => {
     try {
       await AsyncStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goalsToSave));
     } catch (error) {
-      console.error('Failed to save goals:', error);
+      logger.error('Failed to save goals', error, 'GoalSetting');
     }
   }, []);
 

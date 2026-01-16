@@ -6,6 +6,7 @@
 import {Share, Platform, Alert} from 'react-native';
 import {RefObject} from 'react';
 import {View} from 'react-native';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -133,7 +134,7 @@ export const shareContent = async (content: ShareContent): Promise<boolean> => {
     }
     return false;
   } catch (error) {
-    console.error('Share error:', error);
+    logger.error('Share error', error, 'Share');
     Alert.alert('Error', 'Unable to share. Please try again.');
     return false;
   }

@@ -327,10 +327,10 @@ export type {
 
 export {
   errorReportingService,
-  ErrorCategory,
-  ErrorSeverity,
 } from './errorReporting';
 export type {
+  ErrorCategory,
+  ErrorSeverity,
   ErrorReport as UserErrorReport,
   ErrorReportStatus,
   UserFeedbackOnError,

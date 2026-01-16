@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Share, Image} from 'react-native';
 import RNFS from 'react-native-fs';
 import {generateAchievementCardSVG, svgToDataUrl} from './achievementCards';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -37,6 +38,7 @@ export interface MyAchievement {
   scholarshipName?: string;
   score?: string;
   percentage?: string;
+  studentName?: string;
   date: string;
   createdAt: string;
   gradientColors: string[];
@@ -158,7 +160,7 @@ export const loadMyAchievements = async (): Promise<MyAchievement[]> => {
       return JSON.parse(stored);
     }
   } catch (error) {
-    console.error('Failed to load achievements:', error);
+    logger.error('Failed to load achievements', error, 'Achievements');
   }
   return [];
 };
@@ -167,7 +169,7 @@ export const saveMyAchievements = async (achievements: MyAchievement[]): Promise
   try {
     await AsyncStorage.setItem(MY_ACHIEVEMENTS_KEY, JSON.stringify(achievements));
   } catch (error) {
-    console.error('Failed to save achievements:', error);
+    logger.error('Failed to save achievements', error, 'Achievements');
   }
 };
 
@@ -249,7 +251,24 @@ const buildShareMessage = (achievement: MyAchievement): string => {
   message = message.replace(/\s*Percentage:\s*$/m, '');
   message = message.replace(/\s*\|\s*$/m, '');
   
-  return `${message}\n\n📱 Download PakUni App!\nhttps://pakuni.app`;
+  // Generate shareable deep link
+  const shareLink = `https://pakuni.app/achievement/${achievement.id}`;
+  
+  return `${message}\n\n📱 Create your own achievement card!\n🔗 ${shareLink}`;
+};
+
+/**
+ * Generate a shareable deep link URL for an achievement
+ */
+export const generateShareLink = (achievement: MyAchievement): string => {
+  return `https://pakuni.app/achievement/${achievement.id}`;
+};
+
+/**
+ * Generate a shareable deep link URL for a card type
+ */
+export const generateCardShareLink = (cardType: string, cardId: string): string => {
+  return `https://pakuni.app/card/${cardType}/${cardId}`;
 };
 
 /**
@@ -278,14 +297,14 @@ export const shareAchievement = async (achievement: MyAchievement): Promise<bool
       
       return result.action === Share.sharedAction;
     } catch (imageError) {
-      console.warn('Could not generate image card, falling back to text:', imageError);
+      logger.warn('Could not generate image card, falling back to text', imageError, 'Achievements');
       // Fall back to text-only sharing
       const message = buildShareMessage(achievement);
       const result = await Share.share({message});
       return result.action === Share.sharedAction;
     }
   } catch (error) {
-    console.error('Failed to share achievement:', error);
+    logger.error('Failed to share achievement', error, 'Achievements');
     return false;
   }
 };
@@ -321,7 +340,7 @@ export const shareQuickCard = async (
     });
     return result.action === Share.sharedAction;
   } catch (error) {
-    console.error('Failed to share quick card:', error);
+    logger.error('Failed to share quick card', error, 'Achievements');
     return false;
   }
 };

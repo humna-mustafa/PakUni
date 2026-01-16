@@ -1,4 +1,5 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const path = require('path');
 
 /**
  * Metro configuration
@@ -9,8 +10,7 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const config = {
   server: {
     port: 8081,
-    // Allow connections from physical devices over WiFi
-    // Use reliable-metro-server.ps1 which binds to 0.0.0.0 for device access
+    // Note: host: '0.0.0.0' should be set via CLI argument --host
     enhanceMiddleware: (middleware) => {
       return (req, res, next) => {
         // Add CORS headers for device access
@@ -23,7 +23,12 @@ const config = {
   watchFolders: [],
   resolver: {
     // Improve resolution stability
-    nodeModulesPaths: [],
+    nodeModulesPaths: [path.resolve(__dirname, 'node_modules')],
+    // Exclude Node.js-only packages from React Native bundle.
+    // We use a broad regex to ensure any part of the path matching 'libsql' is ignored.
+    // Try both property names for maximum compatibility across Metro versions.
+    blockList: [/.*@libsql.*/, /.*libsql.*/],
+    blacklistRE: /.*@libsql.*/,
   },
 };
 

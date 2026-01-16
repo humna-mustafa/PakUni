@@ -23,6 +23,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, Announcement, AnnouncementType} from '../../services/admin';
+import {logger} from '../../utils/logger';
 import {Icon} from '../../components/icons';
 
 // Fallback LinearGradient
@@ -82,7 +83,7 @@ const AdminAnnouncementsScreen: React.FC = () => {
       });
       setAnnouncements(data);
     } catch (error) {
-      console.error('Error loading announcements:', error);
+      logger.error('Error loading announcements', error, 'AdminAnnouncements');
     } finally {
       setLoading(false);
       setRefreshing(false);

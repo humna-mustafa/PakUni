@@ -4,6 +4,7 @@
  */
 
 import {Linking, Platform, Alert} from 'react-native';
+import {logger} from '../utils/logger';
 
 // ============================================================================
 // TYPES
@@ -300,7 +301,7 @@ export const addToGoogleCalendar = async (event: CalendarEvent): Promise<boolean
       return false;
     }
   } catch (error) {
-    console.error('Calendar integration error:', error);
+    logger.error('Calendar integration error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to open calendar');
     return false;
   }
@@ -366,7 +367,7 @@ export const openInGoogleMaps = async (location: MapLocation): Promise<boolean> 
     }
     return true;
   } catch (error) {
-    console.error('Maps integration error:', error);
+    logger.error('Maps integration error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to open maps');
     return false;
   }
@@ -391,7 +392,7 @@ export const openInAppleMaps = async (location: MapLocation): Promise<boolean> =
       return openInGoogleMaps(location);
     }
   } catch (error) {
-    console.error('Apple Maps error:', error);
+    logger.error('Apple Maps error', error, 'ExternalIntegrations');
     return openInGoogleMaps(location);
   }
 };
@@ -417,7 +418,7 @@ export const getDirections = async (location: MapLocation): Promise<boolean> => 
     }
     return true;
   } catch (error) {
-    console.error('Directions error:', error);
+    logger.error('Directions error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to get directions');
     return false;
   }
@@ -442,7 +443,7 @@ export const openUrl = async (url: string): Promise<boolean> => {
       return false;
     }
   } catch (error) {
-    console.error('URL open error:', error);
+    logger.error('URL open error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to open link');
     return false;
   }
@@ -540,7 +541,7 @@ export const sendEmail = async (
       return false;
     }
   } catch (error) {
-    console.error('Email error:', error);
+    logger.error('Email error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to open email');
     return false;
   }
@@ -562,7 +563,7 @@ export const makePhoneCall = async (phoneNumber: string): Promise<boolean> => {
       return false;
     }
   } catch (error) {
-    console.error('Phone call error:', error);
+    logger.error('Phone call error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to make phone call');
     return false;
   }
@@ -616,7 +617,7 @@ export const shareViaWhatsApp = async (text: string): Promise<boolean> => {
     }
     return true;
   } catch (error) {
-    console.error('WhatsApp share error:', error);
+    logger.error('WhatsApp share error', error, 'ExternalIntegrations');
     Alert.alert('Error', 'Failed to share via WhatsApp');
     return false;
   }

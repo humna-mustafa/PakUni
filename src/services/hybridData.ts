@@ -33,6 +33,7 @@ import {
   TursoCareer,
   TursoMeritFormula,
   TursoMeritArchive,
+  TursoJobMarketStats,
 } from './turso';
 
 // Supabase imports
@@ -47,7 +48,7 @@ import {CAREER_FIELDS, CAREER_PATHS} from '../data/careers';
 import {MERIT_FORMULAS} from '../data/meritFormulas';
 import {PROGRAMS} from '../data/programs';
 import {ADMISSION_DEADLINES} from '../data/deadlines';
-import {MERIT_ARCHIVE} from '../data/meritArchive';
+import {MERIT_RECORDS} from '../data/meritArchive';
 
 // ============================================================================
 // TYPES
@@ -222,7 +223,7 @@ class HybridDataService {
       results = results.filter(u => u.type === filters.type);
     }
     if (filters?.city) {
-      results = results.filter(u => u.city.toLowerCase() === filters.city.toLowerCase());
+      results = results.filter(u => u.city.toLowerCase() === filters.city?.toLowerCase());
     }
 
     return results;
@@ -443,7 +444,7 @@ class HybridDataService {
   /**
    * Get merit archive
    */
-  async getMeritArchive(): Promise<(TursoMeritArchive | typeof MERIT_ARCHIVE[0])[]> {
+  async getMeritArchive(): Promise<(TursoMeritArchive | typeof MERIT_RECORDS[0])[]> {
     if (this.dataSource === 'turso') {
       try {
         const data = await turso.fetchMeritArchive();
@@ -452,7 +453,61 @@ class HybridDataService {
         logger.warn('Turso merit archive fetch failed', error, 'HybridData');
       }
     }
-    return MERIT_ARCHIVE;
+    return MERIT_RECORDS;
+  }
+
+  // ===========================================================================
+  // KAGGLE ENHANCEMENTS - Enriches existing features with real data
+  // ===========================================================================
+
+  /**
+   * Get job market statistics (Kaggle data)
+   * Enhances career guidance with real job market demand data
+   */
+  async getJobMarketStats(): Promise<TursoJobMarketStats[]> {
+    if (this.dataSource === 'turso') {
+      try {
+        return await turso.fetchJobMarketStats();
+      } catch (error) {
+        logger.warn('Turso job market stats fetch failed', error, 'HybridData');
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Get job market stats for a specific career field
+   * Use this to show demand data on career detail screens
+   */
+  async getJobMarketStatsForField(field: string): Promise<TursoJobMarketStats | null> {
+    if (this.dataSource === 'turso') {
+      try {
+        return await turso.getJobMarketStatsByField(field);
+      } catch (error) {
+        logger.warn('Turso job stats by field failed', error, 'HybridData');
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get enhanced career data with job market stats
+   * Combines careers with real market demand data
+   */
+  async getCareersWithMarketData(): Promise<any[]> {
+    const careers = await this.getCareers();
+    const marketStats = await this.getJobMarketStats();
+    
+    return careers.map(career => {
+      const c = career as any;
+      const cName = c.name || c.title || '';
+      const cField = c.field || c.field_id || '';
+      
+      const stats = marketStats.find(s => 
+        s.field.toLowerCase() === (cField || cName).toLowerCase()
+      );
+      return { ...career, marketStats: stats };
+    });
   }
 
   // ===========================================================================
