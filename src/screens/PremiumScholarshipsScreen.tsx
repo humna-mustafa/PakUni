@@ -13,10 +13,12 @@ import {
   StatusBar,
   RefreshControl,
   Platform,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
+import {useAuth} from '../contexts/AuthContext';
 import {SCHOLARSHIPS} from '../data';
 import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
@@ -281,13 +283,50 @@ const ITEM_HEIGHT = 200; // Approximate height of scholarship card
 
 const PremiumScholarshipsScreen = () => {
   const {colors, isDark} = useTheme();
+  const {addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<FilterType>('all');
   const [selectedScholarship, setSelectedScholarship] = useState<ScholarshipData | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [isFav, setIsFav] = useState(false);
   const searchFocusAnim = useRef(new Animated.Value(0)).current;
+
+  // Check favorite status when scholarship is selected
+  useEffect(() => {
+    if (selectedScholarship) {
+      setIsFav(isFavorite(selectedScholarship.id, 'scholarship'));
+    }
+  }, [selectedScholarship, isFavorite]);
+
+  // Toggle favorite handler
+  const handleToggleFavorite = useCallback(async () => {
+    if (!selectedScholarship) return;
+    
+    if (isGuest) {
+      Alert.alert(
+        'Sign In Required',
+        'Please sign in to save scholarships to your favorites.',
+        [{text: 'OK'}]
+      );
+      return;
+    }
+    
+    try {
+      if (isFav) {
+        await removeFavorite(selectedScholarship.id, 'scholarship');
+        setIsFav(false);
+        Haptics.light();
+      } else {
+        await addFavorite(selectedScholarship.id, 'scholarship');
+        setIsFav(true);
+        Haptics.success();
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  }, [selectedScholarship, isFav, isGuest, addFavorite, removeFavorite]);
 
   // Track search queries for analytics
   useEffect(() => {
@@ -402,14 +441,29 @@ const PremiumScholarshipsScreen = () => {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity
-                style={[styles.closeBtn, {backgroundColor: colors.background}]}
-                onPress={() => setShowDetail(false)}
-                accessibilityRole="button"
-                accessibilityLabel="Close scholarship details"
-                hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}>
-                <Icon name="close" family="Ionicons" size={18} color={colors.textSecondary} />
-              </TouchableOpacity>
+              <View style={styles.modalHeaderButtons}>
+                <TouchableOpacity
+                  style={[styles.favoriteBtn, {backgroundColor: isFav ? '#FEE2E2' : colors.background}]}
+                  onPress={handleToggleFavorite}
+                  accessibilityRole="button"
+                  accessibilityLabel={isFav ? "Remove from favorites" : "Add to favorites"}
+                  hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}>
+                  <Icon 
+                    name={isFav ? "heart" : "heart-outline"} 
+                    family="Ionicons" 
+                    size={18} 
+                    color={isFav ? "#EF4444" : colors.textSecondary} 
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.closeBtn, {backgroundColor: colors.background}]}
+                  onPress={() => setShowDetail(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Close scholarship details"
+                  hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}>
+                  <Icon name="close" family="Ionicons" size={18} color={colors.textSecondary} />
+                </TouchableOpacity>
+              </View>
             </View>
 
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
@@ -1085,6 +1139,18 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  favoriteBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalHeaderButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
   },
   closeBtnText: {
     fontSize: 18,

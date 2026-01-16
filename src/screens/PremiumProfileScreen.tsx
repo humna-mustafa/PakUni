@@ -144,7 +144,7 @@ const AnimatedTab = ({
 const PremiumProfileScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark, themeMode, setThemeMode} = useTheme();
-  const {user, signOut, isGuest, isFavorite, removeFavorite} = useAuth();
+  const {user, signOut, isGuest, isFavorite, removeFavorite, updateProfile: updateAuthProfile} = useAuth();
   const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [activeTab, setActiveTab] = useState<'profile' | 'marks' | 'saved' | 'settings'>('profile');
@@ -250,7 +250,32 @@ const PremiumProfileScreen = () => {
     return ['admin', 'super_admin', 'moderator', 'content_editor'].includes(userRole);
   };
 
-  const updateProfile = (key: string, value: any) => setProfile({...profile, [key]: value});
+  // Update local profile state AND sync to database
+  const updateProfile = useCallback((key: string, value: any) => {
+    setProfile(prev => ({...prev, [key]: value}));
+    
+    // Map local profile keys to AuthContext profile keys and sync to DB
+    const keyMapping: Record<string, string> = {
+      name: 'fullName',
+      phone: 'phone',
+      city: 'city',
+      currentClass: 'currentClass',
+      board: 'board',
+      school: 'school',
+      matricMarks: 'matricMarks',
+      interMarks: 'interMarks',
+      entryTestScore: 'entryTestScore',
+      targetField: 'targetField',
+      targetUniversity: 'targetUniversity',
+      interests: 'interests',
+    };
+    
+    // Only sync to DB if not a guest and key is mappable
+    if (!isGuest && keyMapping[key]) {
+      const authKey = keyMapping[key];
+      updateAuthProfile({[authKey]: value});
+    }
+  }, [isGuest, updateAuthProfile]);
   
   const toggleInterest = (interest: string) => {
     if (profile.interests.includes(interest)) {

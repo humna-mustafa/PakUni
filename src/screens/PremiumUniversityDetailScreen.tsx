@@ -17,6 +17,7 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 import type {RouteProp} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION, GRADIENTS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
+import {useAuth} from '../contexts/AuthContext';
 import {UNIVERSITIES, PROGRAMS, MERIT_FORMULAS, getScholarshipsForUniversity, MERIT_RECORDS} from '../data';
 import {getUniversityMeritSummaryByShortName} from '../services/meritLists';
 import type {ScholarshipData} from '../data';
@@ -252,10 +253,41 @@ const PremiumUniversityDetailScreen = () => {
   const navigation = useNavigation();
   const {universityId} = route.params;
   const {colors, isDark} = useTheme();
+  const {addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [isFav, setIsFav] = useState(false);
   
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerOpacity = useRef(new Animated.Value(0)).current;
+
+  // Check if university is favorited
+  useEffect(() => {
+    setIsFav(isFavorite(universityId, 'university'));
+  }, [universityId, isFavorite]);
+
+  // Toggle favorite handler
+  const handleToggleFavorite = async () => {
+    if (isGuest) {
+      Alert.alert(
+        'Sign In Required',
+        'Please sign in to save universities to your favorites.',
+        [{text: 'OK'}]
+      );
+      return;
+    }
+    
+    try {
+      if (isFav) {
+        await removeFavorite(universityId, 'university');
+        setIsFav(false);
+      } else {
+        await addFavorite(universityId, 'university');
+        setIsFav(true);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   // Track university view for analytics
   useEffect(() => {
@@ -971,7 +1003,17 @@ const PremiumUniversityDetailScreen = () => {
             {university.short_name || university.name}
           </Animated.Text>
           
-          <View style={styles.headerRight} />
+          <TouchableOpacity
+            style={styles.headerRight}
+            onPress={handleToggleFavorite}
+            activeOpacity={0.7}>
+            <Icon 
+              name={isFav ? "heart" : "heart-outline"} 
+              family="Ionicons" 
+              size={24} 
+              color={isFav ? "#EF4444" : "#FFFFFF"} 
+            />
+          </TouchableOpacity>
         </SafeAreaView>
 
         {/* Hero Content */}
@@ -1128,6 +1170,11 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   heroContent: {
     alignItems: 'center',
