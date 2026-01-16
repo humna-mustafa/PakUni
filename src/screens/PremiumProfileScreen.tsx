@@ -669,18 +669,23 @@ const PremiumProfileScreen = () => {
 
       {/* Quick Actions - Compact grid */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: SPACING.sm}]}>Quick Actions</Text>
+        <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: SPACING.sm}]}>🚀 Quick Actions</Text>
         <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm}}>
           {[
             {iconName: 'analytics-outline', label: 'Calculator', screen: 'Calculator' as const, color: '#6366F1'},
             {iconName: 'bulb-outline', label: 'Career Quiz', screen: 'InterestQuiz' as const, color: '#F59E0B'},
             {iconName: 'flag-outline', label: 'My Goals', screen: 'GoalSetting' as const, color: '#10B981'},
-            {iconName: 'library-outline', label: 'Guides', screen: 'SubjectGuide' as const, color: '#3B82F6'},
+            {iconName: 'ribbon-outline', label: 'Achievements', screen: 'Achievements' as const, color: '#8B5CF6'},
+            {iconName: 'book-outline', label: 'Guides', screen: 'Guides' as const, color: '#3B82F6'},
+            {iconName: 'game-controller-outline', label: 'Predict', screen: 'ResultGame' as const, color: '#EC4899'},
+            {iconName: 'clipboard-outline', label: 'Tools', screen: 'Tools' as const, color: '#14B8A6'},
+            {iconName: 'home-outline', label: 'Career Tips', screen: 'KidsHub' as const, color: '#F59E0B'},
           ].map(action => (
             <TouchableOpacity 
               key={action.screen} 
               style={[styles.quickActionCompact, {backgroundColor: colors.card}]} 
-              onPress={() => navigation.navigate(action.screen)}>
+              onPress={() => navigation.navigate(action.screen)}
+              activeOpacity={0.7}>
               <View style={[styles.quickActionIconSmall, {backgroundColor: `${action.color}15`}]}>
                 <Icon name={action.iconName} family="Ionicons" size={18} color={action.color} />
               </View>

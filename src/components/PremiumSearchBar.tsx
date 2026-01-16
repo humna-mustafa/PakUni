@@ -1,9 +1,12 @@
 /**
  * PremiumSearchBar Component  
  * Production-ready search input with animations and advanced features
+ * 
+ * UNIFIED SEARCH BAR - Use this component across ALL screens for consistency
+ * Supports multiple variants and sizes for different contexts
  */
 
-import React, {useRef, useState, useCallback} from 'react';
+import React, {useRef, useState, useCallback, memo} from 'react';
 import {
   View,
   TextInput,
@@ -12,6 +15,7 @@ import {
   Animated,
   ViewStyle,
   Platform,
+  Pressable,
 } from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
 import {RADIUS, SPACING, SHADOWS, TYPOGRAPHY, ANIMATION} from '../constants/design';
@@ -27,18 +31,24 @@ interface PremiumSearchBarProps {
   onSubmit?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onClear?: () => void;
   style?: ViewStyle;
-  variant?: 'default' | 'filled' | 'outlined' | 'glass';
+  containerStyle?: ViewStyle;
+  variant?: 'default' | 'filled' | 'outlined' | 'glass' | 'minimal';
   size?: 'sm' | 'md' | 'lg';
+  showClearButton?: boolean;
+  disabled?: boolean;
+  testID?: string;
 }
 
+// Consistent sizing across all screens
 const SIZE_CONFIG = {
-  sm: {height: 38, fontSize: TYPOGRAPHY.scale.subhead, iconSize: 15, padding: SPACING[3]},
-  md: {height: 44, fontSize: TYPOGRAPHY.scale.callout, iconSize: 17, padding: SPACING[4]},
-  lg: {height: 50, fontSize: TYPOGRAPHY.scale.body, iconSize: 19, padding: SPACING[5]},
+  sm: {height: 40, fontSize: 14, iconSize: 16, padding: SPACING[3], clearSize: 18},
+  md: {height: 48, fontSize: 15, iconSize: 18, padding: SPACING[4], clearSize: 20},
+  lg: {height: 54, fontSize: 16, iconSize: 20, padding: SPACING[5], clearSize: 22},
 };
 
-export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
+export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = memo(({
   value,
   onChangeText,
   placeholder = 'Search...',
@@ -48,14 +58,20 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
   onSubmit,
   onFocus,
   onBlur,
+  onClear,
   style,
+  containerStyle,
   variant = 'default',
   size = 'md',
+  showClearButton = true,
+  disabled = false,
+  testID,
 }) => {
   const {colors, isDark} = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const focusAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const inputRef = useRef<TextInput>(null);
 
   const sizeConfig = SIZE_CONFIG[size];
 
@@ -97,14 +113,17 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
 
   const handleClear = useCallback(() => {
     onChangeText('');
-  }, [onChangeText]);
+    onClear?.();
+    inputRef.current?.focus();
+  }, [onChangeText, onClear]);
 
   const getVariantStyle = (): ViewStyle => {
     switch (variant) {
       case 'filled':
         return {
-          backgroundColor: colors.background,
-          borderWidth: 0,
+          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.8)' : colors.background,
+          borderWidth: 1.5,
+          borderColor: isFocused ? colors.primary : 'transparent',
         };
       case 'outlined':
         return {
@@ -122,10 +141,15 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
             ? 'rgba(255, 255, 255, 0.1)' 
             : 'rgba(255, 255, 255, 0.6)',
         };
+      case 'minimal':
+        return {
+          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(0, 0, 0, 0.04)',
+          borderWidth: 0,
+        };
       default:
         return {
           backgroundColor: colors.card,
-          borderWidth: 1,
+          borderWidth: 1.5,
           borderColor: isFocused ? colors.primary : colors.border,
         };
     }
@@ -137,65 +161,74 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = ({
   });
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        getVariantStyle(),
-        {
-          height: sizeConfig.height,
-          borderRadius: RADIUS.xl,
-          borderColor: variant !== 'filled' ? borderColorAnimated : undefined,
-          transform: [{scale: scaleAnim}],
-        },
-        isFocused && variant !== 'glass' && SHADOWS.soft.sm,
-        style,
-      ]}>
-      {/* Left Icon / Search Icon */}
-      <View style={[styles.leftIcon, {marginRight: SPACING[2]}]}>
-        {leftIcon || (
-          <SearchIcon size={sizeConfig.iconSize} color={isFocused ? colors.primary : colors.textMuted} />
-        )}
-      </View>
-
-      {/* Input */}
-      <TextInput
+    <View style={containerStyle}>
+      <Animated.View
         style={[
-          styles.input,
+          styles.container,
+          getVariantStyle(),
           {
-            fontSize: sizeConfig.fontSize,
-            color: colors.text,
+            height: sizeConfig.height,
+            borderRadius: RADIUS.xl,
+            borderColor: variant !== 'filled' && variant !== 'minimal' ? borderColorAnimated : undefined,
+            transform: [{scale: scaleAnim}],
+            opacity: disabled ? 0.5 : 1,
           },
+          isFocused && variant !== 'glass' && variant !== 'minimal' && SHADOWS.soft.sm,
+          style,
         ]}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={colors.placeholder}
-        autoFocus={autoFocus}
-        autoCapitalize="none"
-        autoCorrect={false}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onSubmitEditing={onSubmit}
-        returnKeyType="search"
-      />
+        testID={testID}>
+        {/* Left Icon / Search Icon */}
+        <View style={[styles.leftIcon, {marginRight: SPACING[2]}]}>
+          {leftIcon || (
+            <SearchIcon size={sizeConfig.iconSize} color={isFocused ? colors.primary : colors.textSecondary} />
+          )}
+        </View>
 
-      {/* Clear Button */}
-      {value.length > 0 && (
-        <TouchableOpacity 
-          style={styles.clearButton} 
-          onPress={handleClear}
-          accessibilityRole="button"
-          accessibilityLabel="Clear search"
-          hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}>
-          <ClearIcon size={sizeConfig.iconSize - 2} color={colors.textMuted} />
-        </TouchableOpacity>
-      )}
+        {/* Input */}
+        <TextInput
+          ref={inputRef}
+          style={[
+            styles.input,
+            {
+              fontSize: sizeConfig.fontSize,
+              color: colors.text,
+            },
+          ]}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor={colors.textSecondary}
+          autoFocus={autoFocus}
+          autoCapitalize="none"
+          autoCorrect={false}
+          editable={!disabled}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onSubmitEditing={onSubmit}
+          returnKeyType="search"
+          accessibilityLabel={placeholder}
+          accessibilityHint="Type to search"
+          accessibilityRole="search"
+        />
 
-      {/* Right Icon */}
-      {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
-    </Animated.View>
+        {/* Clear Button */}
+        {showClearButton && value.length > 0 && (
+          <Pressable 
+            style={styles.clearButton} 
+            onPress={handleClear}
+            accessibilityRole="button"
+            accessibilityLabel="Clear search"
+            hitSlop={{top: 12, bottom: 12, left: 12, right: 12}}>
+            <ClearIcon size={sizeConfig.clearSize - 4} color={colors.textSecondary} bgColor={colors.background} />
+          </Pressable>
+        )}
+
+        {/* Right Icon */}
+        {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
+      </Animated.View>
+    </View>
   );
-};
+});
 
 // Premium Search Icon using vector icons
 const SearchIcon: React.FC<{size: number; color: string}> = ({size, color}) => (
@@ -207,20 +240,20 @@ const SearchIcon: React.FC<{size: number; color: string}> = ({size, color}) => (
   />
 );
 
-const ClearIcon: React.FC<{size: number; color: string}> = ({size, color}) => (
+const ClearIcon: React.FC<{size: number; color: string; bgColor: string}> = ({size, color, bgColor}) => (
   <View
     style={{
-      width: size + 8,
-      height: size + 8,
-      borderRadius: (size + 8) / 2,
-      backgroundColor: color + '20',
+      width: size + 10,
+      height: size + 10,
+      borderRadius: (size + 10) / 2,
+      backgroundColor: bgColor,
       justifyContent: 'center',
       alignItems: 'center',
     }}>
     <Icon
       name="close"
       family="Ionicons"
-      size={size - 2}
+      size={size}
       color={color}
     />
   </View>
@@ -239,7 +272,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: 0,
-    fontWeight: TYPOGRAPHY.weight.regular,
+    fontWeight: '400',
+    ...Platform.select({
+      android: {
+        paddingVertical: 0,
+      },
+    }),
   },
   clearButton: {
     padding: SPACING[1],
@@ -249,5 +287,8 @@ const styles = StyleSheet.create({
     marginLeft: SPACING[2],
   },
 });
+
+// Display name for debugging
+PremiumSearchBar.displayName = 'PremiumSearchBar';
 
 export default PremiumSearchBar;

@@ -12,6 +12,8 @@ export const TAB_ICONS = {
   UniversitiesOutline: { name: 'school-outline', family: 'Ionicons' },
   Scholarships: { name: 'wallet', family: 'Ionicons' },
   ScholarshipsOutline: { name: 'wallet-outline', family: 'Ionicons' },
+  More: { name: 'grid', family: 'Ionicons' },
+  MoreOutline: { name: 'grid-outline', family: 'Ionicons' },
   Profile: { name: 'person-circle', family: 'Ionicons' },
   ProfileOutline: { name: 'person-circle-outline', family: 'Ionicons' },
 } as const;

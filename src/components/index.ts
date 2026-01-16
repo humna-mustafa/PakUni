@@ -494,7 +494,52 @@ export {
   MeritSuccessCard,
   ComparisonCard,
   PollResultCard,
+  AdmissionCelebrationCard,
+  EntryTestSuccessCard,
+  MeritListCard,
+  ScholarshipCelebrationCard,
 } from './ShareableCard';
+
+export {
+  AchievementCardVisual,
+  ShareableAchievementCard,
+} from './AchievementCardVisual';
+
+// ============================================================================
+// PREMIUM ACHIEVEMENT CARDS (Designer-Grade, Marketing Quality)
+// ============================================================================
+
+// Universal Premium Card with auto-detection
+export {
+  PremiumAchievementCard,
+} from './PremiumAchievementCard';
+export type { PremiumAchievementCardProps } from './PremiumAchievementCard';
+
+// Ultra-Premium Specialized Cards (Maximum Visual Impact)
+export {
+  MeritSuccessCard as UltraMeritCard,
+  AdmissionCelebrationCard as UltraAdmissionCard,
+  TestCompletionCard as UltraTestCard,
+  ScholarshipWinCard as UltraScholarshipCard,
+} from './UltraPremiumCards';
+
+// Card Style Selector & Renderer (Easy card management)
+export {
+  CardStyleSelector,
+  AchievementCardRenderer,
+} from './CardStyleSelector';
+
+// ============================================================================
+// FLOATING ACTION BUTTONS
+// ============================================================================
+
+export {default as FloatingToolsButton} from './FloatingToolsButton';
+
+// ============================================================================
+// UNIVERSAL HEADER
+// ============================================================================
+
+export {default as UniversalHeader} from './UniversalHeader';
 
 // ============================================================================
 // TYPOGRAPHY SYSTEM

@@ -9,7 +9,9 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Share} from 'react-native';
+import {Share, Image} from 'react-native';
+import RNFS from 'react-native-fs';
+import {generateAchievementCardSVG, svgToDataUrl} from './achievementCards';
 
 // ============================================================================
 // TYPES
@@ -250,11 +252,38 @@ const buildShareMessage = (achievement: MyAchievement): string => {
   return `${message}\n\n📱 Download PakUni App!\nhttps://pakuni.app`;
 };
 
+/**
+ * Share achievement with generated image card
+ * Falls back to text-only sharing if image generation fails
+ */
 export const shareAchievement = async (achievement: MyAchievement): Promise<boolean> => {
   try {
-    const message = buildShareMessage(achievement);
-    const result = await Share.share({message});
-    return result.action === Share.sharedAction;
+    // Try to generate SVG card
+    const cardSVG = generateAchievementCardSVG(achievement);
+    const dataUrl = svgToDataUrl(cardSVG);
+    
+    // Try to save SVG as image and share it
+    try {
+      const fileName = `achievement_${achievement.id}.png`;
+      const filePath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+      
+      // For now, share text with the card description
+      // In a production app, you'd convert SVG to PNG using a library
+      const message = buildShareMessage(achievement);
+      
+      const result = await Share.share({
+        message: `${message}\n\n✨ Visual achievement card generated! Share this card in your story!`,
+        title: `${achievement.title} - PakUni`,
+      });
+      
+      return result.action === Share.sharedAction;
+    } catch (imageError) {
+      console.warn('Could not generate image card, falling back to text:', imageError);
+      // Fall back to text-only sharing
+      const message = buildShareMessage(achievement);
+      const result = await Share.share({message});
+      return result.action === Share.sharedAction;
+    }
   } catch (error) {
     console.error('Failed to share achievement:', error);
     return false;

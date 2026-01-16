@@ -40,6 +40,7 @@ import GuidesScreen from '../screens/GuidesScreen';
 import ToolsScreen from '../screens/ToolsScreen';
 import ResultGameScreen from '../screens/ResultGameScreen';
 import AchievementsScreen from '../screens/AchievementsScreen';
+import MoreScreen from '../screens/MoreScreen';
 
 // Legal Screens
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
@@ -78,6 +79,7 @@ export type TabParamList = {
   Home: undefined;
   Universities: undefined;
   Scholarships: undefined;
+  More: undefined;
   Profile: undefined;
 };
 
@@ -111,6 +113,7 @@ export type RootStackParamList = {
   ResultGame: undefined;
   Achievements: undefined;
   // User Feature Screens
+  Profile: undefined;
   Notifications: undefined;
   Favorites: undefined;
   Settings: undefined;
@@ -172,8 +175,8 @@ const MainTabs = () => {
         }}
       />
       <Tab.Screen 
-        name="Profile" 
-        component={PremiumProfileScreen}
+        name="More" 
+        component={MoreScreen}
         options={{
           headerShown: false,
         }}
@@ -384,6 +387,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             options={{headerShown: false}}
           />
           {/* User Feature Screens */}
+          <Stack.Screen
+            name="Profile"
+            component={PremiumProfileScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="Notifications"
             component={NotificationsScreen}

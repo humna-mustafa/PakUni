@@ -41,6 +41,7 @@ const STORAGE_KEYS = {
   NOTIFICATION_PREFS: '@pakuni_notification_prefs',
   NOTIFICATIONS: '@pakuni_notifications',
   PUSH_TOKEN: '@pakuni_push_token',
+  WELCOME_SENT: '@pakuni_welcome_notification_sent',
 };
 
 const DEFAULT_PREFS: NotificationPreferences = {
@@ -86,9 +87,32 @@ class NotificationService {
 
       // Clean old notifications
       await this.cleanOldNotifications();
+      
+      // Send welcome notification for first-time users
+      await this.sendWelcomeNotificationIfNeeded();
     } catch (error) {
       log.error('Service init error', error);
       this.isInitialized = true;
+    }
+  }
+  
+  /**
+   * Send welcome notification for first-time users
+   */
+  private async sendWelcomeNotificationIfNeeded(): Promise<void> {
+    try {
+      const welcomeSent = await AsyncStorage.getItem(STORAGE_KEYS.WELCOME_SENT);
+      if (!welcomeSent) {
+        await this.addNotification({
+          title: '🎓 Welcome to PakUni!',
+          body: 'Your journey to your dream university starts here. Explore scholarships, calculate merit, and find your perfect match!',
+          type: 'update',
+          data: {occasion: 'welcome'},
+        });
+        await AsyncStorage.setItem(STORAGE_KEYS.WELCOME_SENT, 'true');
+      }
+    } catch (error) {
+      log.warn('Failed to send welcome notification', error);
     }
   }
 
@@ -521,6 +545,69 @@ class NotificationService {
   getPushToken(): string | null {
     return this.pushToken;
   }
+
+  /**
+   * Fetch and sync announcements from Supabase
+   * Converts server announcements to local notifications
+   */
+  async syncAnnouncementsFromServer(): Promise<void> {
+    try {
+      // Dynamic import to avoid circular dependency
+      const {supabase} = await import('./supabase');
+      
+      // Fetch active announcements that user hasn't dismissed
+      const {data: announcements, error} = await supabase
+        .from('announcements')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', {ascending: false})
+        .limit(10);
+
+      if (error) {
+        log.warn('Failed to fetch announcements', error);
+        return;
+      }
+
+      if (!announcements || announcements.length === 0) {
+        return;
+      }
+
+      // Get existing notification IDs to avoid duplicates
+      const existingIds = new Set(this.notifications.map(n => n.id));
+
+      // Convert announcements to local notifications
+      for (const announcement of announcements) {
+        const announcementId = `announcement_${announcement.id}`;
+        
+        // Skip if already exists
+        if (existingIds.has(announcementId)) {
+          continue;
+        }
+
+        // Map announcement type to notification type
+        const typeMap: Record<string, LocalNotification['type']> = {
+          'info': 'update',
+          'warning': 'general',
+          'alert': 'general',
+          'update': 'update',
+          'promotion': 'scholarship',
+        };
+
+        await this.addNotification({
+          title: announcement.title,
+          body: announcement.message,
+          type: typeMap[announcement.type] || 'general',
+          data: {
+            announcementId: announcement.id,
+            actionUrl: announcement.action_url,
+            actionLabel: announcement.action_label,
+          },
+        });
+      }
+    } catch (error) {
+      log.warn('Announcement sync error', error);
+    }
+  }
 }
 
 // Singleton instance
@@ -540,6 +627,8 @@ export const useNotifications = () => {
   useEffect(() => {
     const init = async () => {
       await notificationService.initialize();
+      // Sync announcements from Supabase
+      await notificationService.syncAnnouncementsFromServer();
       setPreferences(notificationService.getPreferences());
       setNotifications(notificationService.getNotifications());
       setUnreadCount(notificationService.getUnreadCount());
@@ -576,7 +665,9 @@ export const useNotifications = () => {
     setUnreadCount(0);
   }, []);
 
-  const refresh = useCallback(() => {
+  const refresh = useCallback(async () => {
+    // Also sync announcements from server when refreshing
+    await notificationService.syncAnnouncementsFromServer();
     setNotifications(notificationService.getNotifications());
     setUnreadCount(notificationService.getUnreadCount());
   }, []);

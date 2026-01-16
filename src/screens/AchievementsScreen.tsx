@@ -30,6 +30,13 @@ import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {Icon} from '../components/icons';
+import {PremiumAchievementCard} from '../components/PremiumAchievementCard';
+import {
+  MeritSuccessCard as UltraMeritCard,
+  AdmissionCelebrationCard as UltraAdmissionCard,
+  TestCompletionCard as UltraTestCard,
+  ScholarshipWinCard as UltraScholarshipCard,
+} from '../components/UltraPremiumCards';
 import {
   ACHIEVEMENT_TEMPLATES,
   AchievementTemplate,
@@ -56,104 +63,6 @@ const TYPE_COLORS: Record<string, {primary: string; secondary: string}> = {
 // ============================================================================
 // COMPONENTS
 // ============================================================================
-
-// Achievement Card Component
-const AchievementCard = ({
-  achievement,
-  onPress,
-  onDelete,
-  onShare,
-  colors,
-  index,
-}: {
-  achievement: MyAchievement;
-  onPress: () => void;
-  onDelete: () => void;
-  onShare: () => void;
-  colors: any;
-  index: number;
-}) => {
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      delay: index * 80,
-      tension: 50,
-      friction: 7,
-      useNativeDriver: true,
-    }).start();
-  }, [index]);
-
-  const typeColor = TYPE_COLORS[achievement.type] || TYPE_COLORS.custom;
-
-  return (
-    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={onPress}
-        style={[styles.achievementCard, {backgroundColor: colors.card}]}>
-        <LinearGradient
-          colors={[typeColor.primary + '15', typeColor.secondary + '05']}
-          style={StyleSheet.absoluteFillObject}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-        />
-
-        {/* Left icon */}
-        <View style={[styles.cardIconContainer, {backgroundColor: typeColor.primary + '20'}]}>
-          <Text style={styles.cardEmoji}>{achievement.icon}</Text>
-        </View>
-
-        {/* Content */}
-        <View style={styles.cardContent}>
-          <Text style={[styles.cardTitle, {color: colors.text}]} numberOfLines={1}>
-            {achievement.title}
-          </Text>
-          
-          {achievement.universityName && (
-            <Text style={[styles.cardSubtitle, {color: colors.textSecondary}]} numberOfLines={1}>
-              🏛️ {achievement.universityName}
-              {achievement.programName ? ` • ${achievement.programName}` : ''}
-            </Text>
-          )}
-          
-          {achievement.testName && !achievement.universityName && (
-            <Text style={[styles.cardSubtitle, {color: colors.textSecondary}]} numberOfLines={1}>
-              📝 {achievement.testName}
-              {achievement.score ? ` • Score: ${achievement.score}` : ''}
-            </Text>
-          )}
-
-          {achievement.scholarshipName && (
-            <Text style={[styles.cardSubtitle, {color: colors.textSecondary}]} numberOfLines={1}>
-              🏆 {achievement.scholarshipName}
-              {achievement.percentage ? ` • ${achievement.percentage}` : ''}
-            </Text>
-          )}
-
-          <Text style={[styles.cardDate, {color: colors.textSecondary}]}>
-            📅 {achievement.date}
-          </Text>
-        </View>
-
-        {/* Actions */}
-        <View style={styles.cardActions}>
-          <TouchableOpacity
-            style={[styles.actionBtn, {backgroundColor: typeColor.primary}]}
-            onPress={onShare}>
-            <Icon name="share-social" family="Ionicons" size={16} color="#FFF" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionBtn, {backgroundColor: colors.error || '#EF4444'}]}
-            onPress={onDelete}>
-            <Icon name="trash-outline" family="Ionicons" size={16} color="#FFF" />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
 
 // Template Card for adding new achievement
 const TemplateCard = ({
@@ -482,15 +391,63 @@ const AchievementsScreen = () => {
           ) : (
             <View style={styles.achievementsList}>
               {achievements.map((achievement, index) => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  onPress={() => handleShareAchievement(achievement)}
-                  onDelete={() => handleDeleteAchievement(achievement.id)}
-                  onShare={() => handleShareAchievement(achievement)}
-                  colors={colors}
-                  index={index}
-                />
+                <View key={achievement.id}>
+                  {/* Ultra Premium Cards - Designer Grade */}
+                  {achievement.type === 'merit_list' && (
+                    <UltraMeritCard
+                      achievement={achievement}
+                      showActions={true}
+                      onShareComplete={(success) => {
+                        if (success) console.log('Merit card shared!');
+                      }}
+                    />
+                  )}
+                  {achievement.type === 'admission' && (
+                    <UltraAdmissionCard
+                      achievement={achievement}
+                      showActions={true}
+                      onShareComplete={(success) => {
+                        if (success) console.log('Admission card shared!');
+                      }}
+                    />
+                  )}
+                  {achievement.type === 'entry_test' && (
+                    <UltraTestCard
+                      achievement={achievement}
+                      showActions={true}
+                      onShareComplete={(success) => {
+                        if (success) console.log('Test card shared!');
+                      }}
+                    />
+                  )}
+                  {achievement.type === 'scholarship' && (
+                    <UltraScholarshipCard
+                      achievement={achievement}
+                      showActions={true}
+                      onShareComplete={(success) => {
+                        if (success) console.log('Scholarship card shared!');
+                      }}
+                    />
+                  )}
+                  {/* Fallback for other types */}
+                  {!['merit_list', 'admission', 'entry_test', 'scholarship'].includes(achievement.type) && (
+                    <PremiumAchievementCard
+                      achievement={achievement}
+                      showSaveButton={true}
+                      onShareComplete={(success) => {
+                        if (success) console.log('Card shared!');
+                      }}
+                    />
+                  )}
+                  
+                  {/* Delete button */}
+                  <TouchableOpacity
+                    style={[styles.deleteBtn, {backgroundColor: colors.error || '#EF4444'}]}
+                    onPress={() => handleDeleteAchievement(achievement.id)}>
+                    <Icon name="trash-outline" family="Ionicons" size={18} color="#FFF" />
+                    <Text style={styles.deleteBtnText}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
               ))}
             </View>
           )}
@@ -504,8 +461,9 @@ const AchievementsScreen = () => {
             <Text style={[styles.infoText, {color: colors.textSecondary}]}>
               1. Add your achievement when you accomplish something{'\n'}
               2. Fill in the details (university, score, etc.){'\n'}
-              3. Share the card on WhatsApp, Instagram, etc.{'\n'}
-              4. All data is stored locally on your device
+              3. Share the card as an image on WhatsApp, Instagram, etc.{'\n'}
+              4. Save cards to your device for later sharing{'\n'}
+              5. All data is stored locally on your device
             </Text>
           </View>
         </View>
@@ -807,6 +765,21 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
     color: '#fff',
+  },
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.xs,
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.md,
+  },
+  deleteBtnText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
   },
 });
 

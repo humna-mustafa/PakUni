@@ -5,8 +5,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  TextInput,
-  Image,
   Dimensions,
   Animated,
   StatusBar,
@@ -25,7 +23,9 @@ import type {UniversityData} from '../data';
 import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
 import {Icon} from '../components/icons';
+import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import UniversityLogo from '../components/UniversityLogo';
+import FloatingToolsButton from '../components/FloatingToolsButton';
 import {analytics} from '../services/analytics';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -37,73 +37,6 @@ const SORT_OPTIONS = [
   {value: 'name', label: 'Name', iconName: 'text-outline'},
   {value: 'established', label: 'Oldest', iconName: 'calendar-outline'},
 ];
-
-// Animated Search Bar Component
-const AnimatedSearchBar = ({
-  value,
-  onChangeText,
-  onClear,
-  colors,
-  isDark,
-}: {
-  value: string;
-  onChangeText: (text: string) => void;
-  onClear: () => void;
-  colors: any;
-  isDark: boolean;
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const focusAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.spring(focusAnim, {
-      toValue: isFocused ? 1 : 0,
-      ...ANIMATION.spring.gentle,
-      useNativeDriver: false,
-    }).start();
-  }, [isFocused]);
-
-  const borderColor = focusAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.border, colors.primary],
-  });
-
-  const shadowOpacity = focusAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 0.15],
-  });
-
-  return (
-    <Animated.View
-      style={[
-        styles.searchBar,
-        {
-          backgroundColor: colors.card,
-          borderColor,
-          shadowColor: colors.primary,
-          shadowOpacity,
-        },
-      ]}>
-      <Icon name="search-outline" family="Ionicons" size={20} color={colors.textSecondary} />
-      <TextInput
-        style={[styles.searchInput, {color: colors.text}]}
-        placeholder="Search universities, cities..."
-        placeholderTextColor={colors.textSecondary}
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-      />
-      {value.length > 0 && (
-        <TouchableOpacity onPress={onClear} style={styles.clearButton}>
-          <View style={[styles.clearCircle, {backgroundColor: colors.textSecondary + '30'}]}>
-            <Icon name="close" family="Ionicons" size={14} color={colors.textSecondary} />
-          </View>
-        </TouchableOpacity>
-      )}
-    </Animated.View>
-  );
-};
 
 // Filter Chip Component
 const FilterChip = ({
@@ -464,7 +397,7 @@ const PremiumUniversitiesScreen = () => {
     });
 
     return result;
-  }, [searchQuery, selectedProvince, selectedType, sortBy]);
+  }, [debouncedSearchQuery, selectedProvince, selectedType, sortBy]);
 
   const handleUniversityPress = useCallback(
     (university: UniversityData) => {
@@ -475,38 +408,37 @@ const PremiumUniversitiesScreen = () => {
 
   const renderHeader = () => (
     <View style={styles.listHeader}>
-      {/* Header Title - Clean, professional design */}
-      <View 
-        style={[
-          styles.headerCard, 
-          {
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-          }
-        ]}>
-        <View style={styles.headerContent}>
-          <View style={styles.headerTextContainer}>
+      {/* Compact Header Row - Integrated with Search */}
+      <View style={styles.compactHeader}>
+        <View style={styles.titleRow}>
+          <View style={styles.titleLeft}>
             <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
-            <Text style={[styles.screenSubtitle, {color: colors.textSecondary}]}>
-              Explore Pakistani institutions
-            </Text>
+            <View style={[styles.countBadgeInline, {backgroundColor: colors.primaryLight}]}>
+              <Text style={[styles.countTextInline, {color: colors.primary}]}>
+                {filteredUniversities.length}
+              </Text>
+            </View>
           </View>
-          <View style={[styles.countBadge, {backgroundColor: colors.primaryLight}]}>
-            <Text style={[styles.countText, {color: colors.primary}]}>
-              {filteredUniversities.length}
-            </Text>
-          </View>
+          <TouchableOpacity
+            style={[styles.filterIconBtn, {backgroundColor: colors.card}]}
+            onPress={() => {/* Toggle advanced filters */}}
+            accessibilityLabel="Filter options">
+            <Icon name="options-outline" family="Ionicons" size={20} color={colors.primary} />
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* Search Bar */}
-      <AnimatedSearchBar
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        onClear={() => setSearchQuery('')}
-        colors={colors}
-        isDark={isDark}
-      />
+      {/* Search Bar - Consistent Design */}
+      <View style={styles.searchContainer}>
+        <PremiumSearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+          placeholder="Search universities, cities..."
+          variant="default"
+          size="md"
+        />
+      </View>
 
       {/* Sort Options */}
       <View style={styles.sortSection}>
@@ -655,6 +587,9 @@ const PremiumUniversitiesScreen = () => {
           }
         />
       </SafeAreaView>
+      
+      {/* Floating Tools Button - Quick access to calculators */}
+      <FloatingToolsButton bottomOffset={100} />
     </View>
   );
 };
@@ -668,6 +603,44 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     paddingBottom: SPACING.md,
+  },
+  compactHeader: {
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.sm,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  screenTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  countBadgeInline: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.md,
+  },
+  countTextInline: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  filterIconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
   },
   headerCard: {
     margin: SPACING.lg,
@@ -685,11 +658,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: SPACING.md,
   },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    letterSpacing: -0.5,
-  },
   screenSubtitle: {
     fontSize: 14,
     marginTop: 4,
@@ -704,41 +672,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
   },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: SPACING.lg,
+  // Unified search container style
+  searchContainer: {
+    paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    borderRadius: RADIUS.xl,
-    borderWidth: 1.5,
-    elevation: 2,
-    shadowOffset: {width: 0, height: 4},
-    shadowRadius: 12,
-  },
-  searchIcon: {
-    fontSize: 18,
-    marginRight: SPACING.sm,
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: SPACING.md,
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
-  },
-  clearButton: {
-    padding: SPACING.xs,
-  },
-  clearCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  clearIcon: {
-    fontSize: 12,
-    fontWeight: '700',
   },
   sortSection: {
     paddingHorizontal: SPACING.lg,

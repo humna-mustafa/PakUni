@@ -5,7 +5,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  TextInput,
   Linking,
   Modal,
   ScrollView,
@@ -23,6 +22,8 @@ import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
 import type {ScholarshipData} from '../data';
 import {Icon} from '../components/icons';
+import {PremiumSearchBar} from '../components/PremiumSearchBar';
+import FloatingToolsButton from '../components/FloatingToolsButton';
 import {analytics} from '../services/analytics';
 
 // Fallback LinearGradient
@@ -622,60 +623,38 @@ const PremiumScholarshipsScreen = () => {
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Header */}
-        <LinearGradient
-          colors={isDark ? ['#0F172A', '#3730A3', '#8B5CF6'] : ['#8B5CF6', '#7C3AED', '#6D28D9']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={styles.headerGradient}>
-          <View style={styles.headerDecoCircle1} />
-          <View style={styles.headerDecoCircle2} />
-          <View style={styles.headerContent}>
-            <View style={styles.headerTextContainer}>
-              <Text style={styles.headerTitle}>Scholarships</Text>
-              <Text style={styles.headerSubtitle}>
-                Fund your education journey
-              </Text>
+        {/* Compact Header - Space Efficient Design */}
+        <View style={styles.compactHeader}>
+          <View style={styles.headerTitleRow}>
+            <View style={styles.headerTitleLeft}>
+              <Text style={[styles.headerTitleText, {color: colors.text}]}>Scholarships</Text>
+              <View style={[styles.countBadgeCompact, {backgroundColor: `${colors.primary}15`}]}>
+                <Text style={[styles.countTextCompact, {color: colors.primary}]}>
+                  {filteredScholarships.length}
+                </Text>
+              </View>
             </View>
-            <View style={styles.countBadge}>
-              <Text style={styles.countText}>
-                {filteredScholarships.length}
-              </Text>
-            </View>
+            <TouchableOpacity
+              style={[styles.filterToggleBtn, {backgroundColor: colors.card}]}
+              accessibilityLabel="Filter options">
+              <Icon name="options-outline" family="Ionicons" size={20} color={colors.primary} />
+            </TouchableOpacity>
           </View>
-        </LinearGradient>
+          <Text style={[styles.headerSubtitleText, {color: colors.textSecondary}]}>
+            Fund your education journey
+          </Text>
+        </View>
 
-        {/* Search */}
+        {/* Search - Consistent Design */}
         <View style={styles.searchContainer}>
-          <Animated.View
-            style={[
-              styles.searchBox,
-              {
-                backgroundColor: colors.card,
-                borderColor: searchBorderColor,
-                borderWidth: 2,
-              },
-            ]}>
-            <View style={styles.searchIcon}>
-              <Icon name="search-outline" family="Ionicons" size={20} color={colors.textSecondary} />
-            </View>
-            <TextInput
-              style={[styles.searchInput, {color: colors.text}]}
-              placeholder="Search scholarships..."
-              placeholderTextColor={colors.placeholder}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity
-                style={[styles.clearBtn, {backgroundColor: colors.background}]}
-                onPress={() => setSearchQuery('')}>
-                <Icon name="close" family="Ionicons" size={16} color={colors.textSecondary} />
-              </TouchableOpacity>
-            )}
-          </Animated.View>
+          <PremiumSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery('')}
+            placeholder="Search scholarships..."
+            variant="default"
+            size="md"
+          />
         </View>
 
         {/* Filters */}
@@ -745,6 +724,9 @@ const PremiumScholarshipsScreen = () => {
 
         {renderDetailModal()}
       </SafeAreaView>
+      
+      {/* Floating Tools Button - Quick access to calculators */}
+      <FloatingToolsButton bottomOffset={100} />
     </View>
   );
 };
@@ -755,6 +737,49 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  compactHeader: {
+    paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.sm,
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  headerTitleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  headerTitleText: {
+    fontSize: 28,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  countBadgeCompact: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.md,
+  },
+  countTextCompact: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  filterToggleBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  headerSubtitleText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '400',
   },
   headerGradient: {
     margin: SPACING.lg,
@@ -824,34 +849,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
   },
+  // Unified search container
   searchContainer: {
     paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: RADIUS.xl,
-    paddingHorizontal: SPACING.md,
-    height: 52,
-  },
-  searchIcon: {
-    fontSize: 18,
-    marginRight: SPACING.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: TYPOGRAPHY.sizes.md,
-  },
-  clearBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  clearIcon: {
-    fontSize: 14,
   },
   filterContainer: {
     marginBottom: SPACING.md,

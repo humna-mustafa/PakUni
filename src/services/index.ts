@@ -191,3 +191,70 @@ export type {
   SyncStatus,
   DataModule,
 } from './offline';
+
+// ============================================================================
+// CARD CAPTURE SERVICE - For shareable achievement cards
+// ============================================================================
+
+export {
+  captureCard,
+  captureAndSaveCard,
+  captureAndShareCard,
+  requestStoragePermission,
+  shareMeritCardWithImage,
+  shareAdmissionCardWithImage,
+  shareTestCardWithImage,
+  shareScholarshipCardWithImage,
+  shareMeritListCardWithImage,
+  shareAchievementBadgeWithImage,
+  getOptimalDimensions,
+  cleanupTempImages,
+  isImageSharingSupported,
+  CARD_DIMENSIONS,
+} from './cardCapture';
+export type {
+  CaptureResult,
+  ShareCardResult,
+  CaptureOptions,
+} from './cardCapture';
+
+// ============================================================================
+// ACHIEVEMENT CARDS SERVICE - SVG generation
+// ============================================================================
+
+export {
+  generateMeritSuccessCardSVG,
+  generateAdmissionCardSVG,
+  generateTestCompletionCardSVG,
+  generateScholarshipCardSVG,
+  generateAchievementCardSVG,
+  svgToDataUrl,
+  CARD_WIDTH,
+  CARD_HEIGHT,
+} from './achievementCards';
+export type {
+  CardGenerationOptions,
+} from './achievementCards';
+
+// ============================================================================
+// ACHIEVEMENTS SERVICE - User achievements management
+// ============================================================================
+
+export {
+  ACHIEVEMENT_TEMPLATES,
+  loadMyAchievements,
+  saveMyAchievements,
+  addAchievement,
+  deleteAchievement,
+  updateAchievement,
+  shareAchievement,
+  shareQuickCard,
+  getAchievementsByType,
+  getAchievementStats,
+  getTemplateByType,
+} from './achievements';
+export type {
+  AchievementType,
+  MyAchievement,
+  AchievementTemplate,
+} from './achievements';

@@ -13,7 +13,6 @@ import {
   Animated,
   Dimensions,
   StatusBar,
-  TextInput,
   Platform,
   RefreshControl,
 } from 'react-native';
@@ -23,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import {Haptics} from '../utils/haptics';
 import {
   fetchMeritLists,
@@ -481,21 +481,16 @@ const PremiumMeritArchiveScreen = () => {
           </LinearGradient>
         </Animated.View>
 
-        {/* Search Bar */}
-        <View style={[styles.searchContainer, {backgroundColor: colors.card}]}>
-          <Icon name="search-outline" family="Ionicons" size={20} color={colors.textSecondary} />
-          <TextInput
-            style={[styles.searchInput, {color: colors.text}]}
-            placeholder="Search university, program, city..."
-            placeholderTextColor={colors.textSecondary}
+        {/* Search Bar - Consistent Design */}
+        <View style={styles.searchWrapper}>
+          <PremiumSearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery('')}
+            placeholder="Search university, program, city..."
+            variant="default"
+            size="md"
           />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Icon name="close-circle" family="Ionicons" size={20} color={colors.textSecondary} />
-            </TouchableOpacity>
-          )}
         </View>
 
         <ScrollView
@@ -809,33 +804,11 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
   },
-  // Search
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: SPACING.lg,
+  // Unified search wrapper
+  searchWrapper: {
+    paddingHorizontal: SPACING.lg,
     marginTop: -20,
     marginBottom: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: RADIUS.lg,
-    gap: SPACING.sm,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: TYPOGRAPHY.sizes.md,
-    paddingVertical: SPACING.xs,
   },
   // Year Selector
   yearContainer: {

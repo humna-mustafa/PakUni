@@ -92,47 +92,11 @@ const NOTIFICATION_CONFIG: Record<NotificationType, {
 };
 
 // ============================================================================
-// SAMPLE NOTIFICATIONS (Replace with real data)
+// NO SAMPLE NOTIFICATIONS - Use real data from props
 // ============================================================================
 
-const SAMPLE_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    type: 'deadline',
-    title: 'NUST Application Deadline',
-    message: 'Only 3 days left to submit your application',
-    timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 min ago
-    read: false,
-    actionLabel: 'Apply Now',
-    actionRoute: 'UniversityDetail',
-  },
-  {
-    id: '2',
-    type: 'scholarship',
-    title: 'New HEC Scholarship',
-    message: 'HEC Merit Scholarship 2026 is now open',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    read: false,
-    actionLabel: 'View Details',
-    actionRoute: 'Scholarships',
-  },
-  {
-    id: '3',
-    type: 'news',
-    title: 'MDCAT Results Announced',
-    message: 'Check your MDCAT 2025 results now',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-    read: true,
-  },
-  {
-    id: '4',
-    type: 'update',
-    title: 'Merit Calculator Updated',
-    message: 'New universities added to merit calculator',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    read: true,
-  },
-];
+// Empty array - notifications should come from props (useNotifications hook)
+const DEFAULT_EMPTY_NOTIFICATIONS: Notification[] = [];
 
 // ============================================================================
 // TIME AGO HELPER
@@ -432,7 +396,7 @@ const NotificationPanel = memo<NotificationPanelProps>(({
 // ============================================================================
 
 const NotificationBell: React.FC<NotificationBellProps> = ({
-  notifications = SAMPLE_NOTIFICATIONS,
+  notifications = DEFAULT_EMPTY_NOTIFICATIONS,
   onNotificationPress,
   onSeeAllPress,
   onClearAll,

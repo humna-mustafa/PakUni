@@ -1,0 +1,370 @@
+/**
+ * Card Capture Service
+ * 
+ * Captures React Native views as PNG images for sharing on social media
+ * - WhatsApp Stories & Status
+ * - Instagram Stories & Posts
+ * - Facebook Stories
+ * - General social media sharing
+ * 
+ * Uses react-native-view-shot for high-quality image capture
+ */
+
+import {RefObject} from 'react';
+import {View, Share, Platform, Alert, PermissionsAndroid} from 'react-native';
+import ViewShot, {captureRef} from 'react-native-view-shot';
+import RNFS from 'react-native-fs';
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+export interface CaptureResult {
+  success: boolean;
+  uri?: string;
+  error?: string;
+}
+
+export interface ShareCardResult {
+  success: boolean;
+  shared: boolean;
+  error?: string;
+}
+
+export interface CaptureOptions {
+  format?: 'png' | 'jpg' | 'webm';
+  quality?: number;
+  width?: number;
+  height?: number;
+  result?: 'tmpfile' | 'base64' | 'data-uri';
+}
+
+// Card dimensions optimized for social media
+export const CARD_DIMENSIONS = {
+  // Instagram Story / WhatsApp Status (9:16)
+  story: {width: 1080, height: 1920},
+  // Instagram Post (1:1)
+  square: {width: 1080, height: 1080},
+  // Instagram Post (4:5) - Best for feed
+  portrait: {width: 1080, height: 1350},
+  // Twitter/X Card (16:9)
+  landscape: {width: 1200, height: 675},
+  // Default for achievement cards
+  achievement: {width: 1080, height: 1350},
+};
+
+// ============================================================================
+// PERMISSIONS
+// ============================================================================
+
+/**
+ * Request storage permission on Android for saving images
+ */
+export const requestStoragePermission = async (): Promise<boolean> => {
+  if (Platform.OS !== 'android') return true;
+  
+  try {
+    // Android 13+ uses different permission model
+    const sdkVersion = Platform.Version;
+    if (typeof sdkVersion === 'number' && sdkVersion >= 33) {
+      // On Android 13+, we don't need storage permission for app-specific files
+      return true;
+    }
+    
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Storage Permission',
+        message: 'PakUni needs storage access to save and share achievement cards.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  } catch (err) {
+    console.warn('Storage permission error:', err);
+    return false;
+  }
+};
+
+// ============================================================================
+// CAPTURE FUNCTIONS
+// ============================================================================
+
+/**
+ * Capture a React Native view as an image
+ */
+export const captureCard = async (
+  viewRef: RefObject<View | null>,
+  options?: CaptureOptions,
+): Promise<CaptureResult> => {
+  if (!viewRef.current) {
+    return {success: false, error: 'View reference not available'};
+  }
+
+  try {
+    const uri = await captureRef(viewRef, {
+      format: options?.format || 'png',
+      quality: options?.quality || 1,
+      result: options?.result || 'tmpfile',
+    });
+
+    return {success: true, uri};
+  } catch (error) {
+    console.error('Error capturing card:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to capture card',
+    };
+  }
+};
+
+/**
+ * Capture and save card to device storage
+ */
+export const captureAndSaveCard = async (
+  viewRef: RefObject<View | null>,
+  fileName?: string,
+): Promise<CaptureResult> => {
+  const hasPermission = await requestStoragePermission();
+  if (!hasPermission) {
+    return {success: false, error: 'Storage permission denied'};
+  }
+
+  const captureResult = await captureCard(viewRef);
+  if (!captureResult.success || !captureResult.uri) {
+    return captureResult;
+  }
+
+  try {
+    const name = fileName || `pakuni_achievement_${Date.now()}.png`;
+    const destPath = Platform.OS === 'android'
+      ? `${RNFS.DownloadDirectoryPath}/${name}`
+      : `${RNFS.DocumentDirectoryPath}/${name}`;
+
+    await RNFS.copyFile(captureResult.uri, destPath);
+
+    return {success: true, uri: destPath};
+  } catch (error) {
+    console.error('Error saving card:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to save card',
+    };
+  }
+};
+
+/**
+ * Capture and share card directly
+ */
+export const captureAndShareCard = async (
+  viewRef: RefObject<View | null>,
+  shareTitle?: string,
+  shareMessage?: string,
+): Promise<ShareCardResult> => {
+  const captureResult = await captureCard(viewRef);
+  
+  if (!captureResult.success || !captureResult.uri) {
+    return {
+      success: false,
+      shared: false,
+      error: captureResult.error || 'Failed to capture card',
+    };
+  }
+
+  try {
+    // Platform-specific sharing
+    if (Platform.OS === 'ios') {
+      const result = await Share.share({
+        url: captureResult.uri,
+        message: shareMessage,
+        title: shareTitle,
+      });
+      return {
+        success: true,
+        shared: result.action === Share.sharedAction,
+      };
+    } else {
+      // Android - share with file path
+      const result = await Share.share({
+        message: shareMessage ? `${shareMessage}\n\n${captureResult.uri}` : captureResult.uri,
+        title: shareTitle,
+      });
+      return {
+        success: true,
+        shared: result.action === Share.sharedAction,
+      };
+    }
+  } catch (error) {
+    console.error('Error sharing card:', error);
+    return {
+      success: false,
+      shared: false,
+      error: error instanceof Error ? error.message : 'Failed to share card',
+    };
+  }
+};
+
+// ============================================================================
+// CARD-SPECIFIC SHARE FUNCTIONS
+// ============================================================================
+
+/**
+ * Share merit success card with image
+ */
+export const shareMeritCardWithImage = async (
+  viewRef: RefObject<View | null>,
+  universityName: string,
+  aggregate: number,
+): Promise<ShareCardResult> => {
+  const message = `🎯 My merit score: ${aggregate.toFixed(2)}%\n\n🏛️ Checking my chances at ${universityName}\n\nCalculated using PakUni App! 📱\n\n#PakUni #MeritCalculator #Admission`;
+  
+  return captureAndShareCard(viewRef, `Merit Score - ${universityName}`, message);
+};
+
+/**
+ * Share admission celebration card with image
+ */
+export const shareAdmissionCardWithImage = async (
+  viewRef: RefObject<View | null>,
+  universityName: string,
+  programName?: string,
+): Promise<ShareCardResult> => {
+  const program = programName ? `\n📚 ${programName}` : '';
+  const message = `🎉 ADMISSION SECURED! 🎓\n\n🏛️ ${universityName}${program}\n\nAlhamdulillah! Dreams coming true! ✨\n\n#PakUni #Admission #Success`;
+  
+  return captureAndShareCard(viewRef, `I got into ${universityName}!`, message);
+};
+
+/**
+ * Share entry test completion card with image
+ */
+export const shareTestCardWithImage = async (
+  viewRef: RefObject<View | null>,
+  testName: string,
+  score?: string,
+): Promise<ShareCardResult> => {
+  const scoreText = score ? `\n📊 Score: ${score}` : '';
+  const message = `✅ ${testName} COMPLETED!${scoreText}\n\nOne step closer to my dream university! 💪\n\n#PakUni #EntryTest #AdmissionJourney`;
+  
+  return captureAndShareCard(viewRef, `${testName} Done!`, message);
+};
+
+/**
+ * Share scholarship card with image
+ */
+export const shareScholarshipCardWithImage = async (
+  viewRef: RefObject<View | null>,
+  scholarshipName: string,
+  coverage?: string,
+  universityName?: string,
+): Promise<ShareCardResult> => {
+  const coverageText = coverage ? `\n💰 Coverage: ${coverage}` : '';
+  const uniText = universityName ? `\n🏛️ ${universityName}` : '';
+  const message = `🏆 SCHOLARSHIP AWARDED!\n\n📝 ${scholarshipName}${coverageText}${uniText}\n\nAlhamdulillah! Education is now more accessible! ✨\n\n#PakUni #Scholarship #Success`;
+  
+  return captureAndShareCard(viewRef, 'Scholarship Received!', message);
+};
+
+/**
+ * Share merit list celebration card with image
+ */
+export const shareMeritListCardWithImage = async (
+  viewRef: RefObject<View | null>,
+  universityName: string,
+  meritListNumber?: number,
+): Promise<ShareCardResult> => {
+  const listText = meritListNumber ? `Merit List ${meritListNumber}` : 'the merit list';
+  const message = `📜 MERIT LISTED! 🎯\n\nI made it to ${listText} at ${universityName}!\n\nAlhamdulillah! Hard work pays off! ✨\n\n#PakUni #MeritListed #Success`;
+  
+  return captureAndShareCard(viewRef, `Merit Listed at ${universityName}!`, message);
+};
+
+/**
+ * Share achievement badge card with image
+ */
+export const shareAchievementBadgeWithImage = async (
+  viewRef: RefObject<View | null>,
+  badgeName: string,
+  badgeDescription?: string,
+): Promise<ShareCardResult> => {
+  const descText = badgeDescription ? `\n${badgeDescription}` : '';
+  const message = `🏅 BADGE UNLOCKED!\n\n${badgeName}${descText}\n\nUnlocked on PakUni App! 🎯\n\n#PakUni #Achievement #Badge`;
+  
+  return captureAndShareCard(viewRef, `Badge: ${badgeName}`, message);
+};
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Get optimal card dimensions for a specific platform
+ */
+export const getOptimalDimensions = (
+  platform: 'instagram_story' | 'instagram_post' | 'whatsapp' | 'twitter' | 'default',
+): {width: number; height: number} => {
+  switch (platform) {
+    case 'instagram_story':
+    case 'whatsapp':
+      return CARD_DIMENSIONS.story;
+    case 'instagram_post':
+      return CARD_DIMENSIONS.portrait;
+    case 'twitter':
+      return CARD_DIMENSIONS.landscape;
+    default:
+      return CARD_DIMENSIONS.achievement;
+  }
+};
+
+/**
+ * Clean up temporary captured images
+ */
+export const cleanupTempImages = async (): Promise<void> => {
+  try {
+    const tempDir = RNFS.CachesDirectoryPath;
+    const files = await RNFS.readDir(tempDir);
+    
+    const imageFiles = files.filter(
+      file => file.name.startsWith('pakuni_') && file.name.endsWith('.png'),
+    );
+    
+    for (const file of imageFiles) {
+      await RNFS.unlink(file.path);
+    }
+  } catch (error) {
+    console.warn('Error cleaning up temp images:', error);
+  }
+};
+
+/**
+ * Check if sharing images is supported
+ */
+export const isImageSharingSupported = (): boolean => {
+  return Platform.OS === 'ios' || Platform.OS === 'android';
+};
+
+export default {
+  // Core functions
+  captureCard,
+  captureAndSaveCard,
+  captureAndShareCard,
+  requestStoragePermission,
+  
+  // Card-specific shares
+  shareMeritCardWithImage,
+  shareAdmissionCardWithImage,
+  shareTestCardWithImage,
+  shareScholarshipCardWithImage,
+  shareMeritListCardWithImage,
+  shareAchievementBadgeWithImage,
+  
+  // Utilities
+  getOptimalDimensions,
+  cleanupTempImages,
+  isImageSharingSupported,
+  
+  // Constants
+  CARD_DIMENSIONS,
+};

@@ -16,7 +16,6 @@ import {
   Dimensions,
   StatusBar,
   Platform,
-  TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -24,6 +23,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
+import {PremiumSearchBar} from '../components/PremiumSearchBar';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -1385,23 +1385,16 @@ const GuidesScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Search Bar */}
+        {/* Search Bar - Consistent Design */}
         <View style={styles.searchContainer}>
-          <View style={[styles.searchBar, {backgroundColor: colors.card}]}>
-            <Icon name="search-outline" size={20} color={colors.textSecondary} />
-            <TextInput
-              style={[styles.searchInput, {color: colors.text}]}
-              placeholder="Search guides..."
-              placeholderTextColor={colors.textSecondary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <Icon name="close-circle" size={20} color={colors.textSecondary} />
-              </TouchableOpacity>
-            )}
-          </View>
+          <PremiumSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery('')}
+            placeholder="Search guides..."
+            variant="default"
+            size="md"
+          />
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -1529,21 +1522,10 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 2,
   },
+  // Unified search container
   searchContainer: {
     paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: RADIUS.lg,
-    paddingHorizontal: SPACING.md,
-    height: 48,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: TYPOGRAPHY.sizes.md,
-    marginLeft: SPACING.sm,
   },
   section: {
     paddingHorizontal: SPACING.lg,

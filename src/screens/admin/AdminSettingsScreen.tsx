@@ -23,6 +23,7 @@ import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, AppSetting} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {PremiumLoading} from '../../components/PremiumLoading';
+import {PremiumSearchBar} from '../../components/PremiumSearchBar';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -317,23 +318,16 @@ const AdminSettingsScreen: React.FC = () => {
           </TouchableOpacity>
         </LinearGradient>
 
-        {/* Search */}
-        <View style={styles.searchContainer}>
-          <View style={[styles.searchBox, {backgroundColor: colors.card}]}>
-            <Icon name="search-outline" family="Ionicons" size={18} color={colors.textSecondary} />
-            <TextInput
-              style={[styles.searchInput, {color: colors.text}]}
-              placeholder="Search settings..."
-              placeholderTextColor={colors.placeholder}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-            {searchQuery ? (
-              <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <Icon name="close-circle" family="Ionicons" size={18} color={colors.textSecondary} />
-              </TouchableOpacity>
-            ) : null}
-          </View>
+        {/* Search - Consistent Design */}
+        <View style={styles.searchWrapper}>
+          <PremiumSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery('')}
+            placeholder="Search settings..."
+            variant="default"
+            size="md"
+          />
         </View>
 
         {/* Category Filter */}
@@ -657,22 +651,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  searchContainer: {
+  // Unified search wrapper
+  searchWrapper: {
     paddingHorizontal: 16,
     paddingTop: 12,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    padding: 0,
   },
   categoryScroll: {
     flexGrow: 0,

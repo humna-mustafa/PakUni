@@ -1,0 +1,1297 @@
+/**
+ * Ultra-Premium Card Variants
+ * 
+ * Specialized designer-grade card templates for each achievement type:
+ * - Story Format (9:16 ratio) - Perfect for Instagram/WhatsApp Stories
+ * - Square Format (1:1 ratio) - Perfect for Instagram Posts
+ * - Wide Format (16:9 ratio) - Perfect for Twitter/Facebook
+ * 
+ * Features:
+ * - Cinematic quality gradients
+ * - Particle effects & decorations
+ * - Premium glassmorphism
+ * - Animated-style layering
+ * - Professional typography system
+ * 
+ * @version 1.0.0
+ */
+
+import React, {useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {MyAchievement} from '../services/achievements';
+import {Icon} from './icons';
+import {
+  TYPOGRAPHY,
+  SPACING,
+  RADIUS,
+  PALETTE,
+  SHADOWS,
+} from '../constants/design';
+import {
+  captureAndShareCard,
+  captureAndSaveCard,
+} from '../services/cardCapture';
+
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH - 32;
+
+// ============================================================================
+// MERIT SUCCESS CARD - Gold & Royal Theme
+// ============================================================================
+
+interface MeritCardProps {
+  achievement: MyAchievement;
+  onShareComplete?: (success: boolean) => void;
+  onSaveComplete?: (success: boolean, path?: string) => void;
+  showActions?: boolean;
+}
+
+export const MeritSuccessCard: React.FC<MeritCardProps> = ({
+  achievement,
+  onShareComplete,
+  onSaveComplete,
+  showActions = true,
+}) => {
+  const cardRef = useRef<View>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleShare = async () => {
+    if (!cardRef.current) return;
+    setIsSharing(true);
+    try {
+      const message = `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Calculated with PakUni Merit Calculator!\n\n#PakUni #MeritList #Pakistan #2026\n\n📱 https://pakuni.app`;
+      const result = await captureAndShareCard(cardRef, 'Merit Success', message);
+      onShareComplete?.(result.shared);
+    } catch {
+      onShareComplete?.(false);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!cardRef.current) return;
+    setIsSaving(true);
+    try {
+      const result = await captureAndSaveCard(cardRef, `merit_${Date.now()}.png`);
+      if (result.success) {
+        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        onSaveComplete?.(true, result.uri);
+      }
+    } catch {
+      onSaveComplete?.(false);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <View style={containerStyles.wrapper}>
+      <View ref={cardRef} collapsable={false} style={containerStyles.cardShadow}>
+        <LinearGradient
+          colors={['#1a1a2e', '#16213e', '#0f3460']}
+          style={meritStyles.container}
+        >
+          {/* Gold accent strip */}
+          <LinearGradient
+            colors={['#FFD700', '#FFA500', '#FF8C00']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={meritStyles.accentStrip}
+          />
+
+          {/* Decorative stars */}
+          <View style={meritStyles.starsContainer}>
+            <Text style={[meritStyles.star, {top: 20, left: 20}]}>⭐</Text>
+            <Text style={[meritStyles.star, {top: 45, right: 35, fontSize: 14}]}>✦</Text>
+            <Text style={[meritStyles.star, {top: 80, left: 50, fontSize: 12, opacity: 0.5}]}>★</Text>
+            <Text style={[meritStyles.star, {top: 30, right: 80, fontSize: 10}]}>✧</Text>
+          </View>
+
+          {/* Header badge */}
+          <View style={meritStyles.badgeContainer}>
+            <LinearGradient
+              colors={['#FFD700', '#FFA500']}
+              style={meritStyles.badge}
+            >
+              <Text style={meritStyles.badgeText}>📜 MERIT LIST</Text>
+            </LinearGradient>
+          </View>
+
+          {/* Trophy icon */}
+          <View style={meritStyles.iconSection}>
+            <View style={meritStyles.trophyGlow}>
+              <Text style={meritStyles.trophyIcon}>🏆</Text>
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={meritStyles.title}>MERIT SUCCESS!</Text>
+          <Text style={meritStyles.subtitle}>Your calculation is complete</Text>
+
+          {/* Glass info card */}
+          <View style={meritStyles.glassCard}>
+            <LinearGradient
+              colors={['rgba(255,255,255,0.12)', 'rgba(255,255,255,0.05)']}
+              style={meritStyles.glassGradient}
+            >
+              {/* University */}
+              <View style={meritStyles.infoRow}>
+                <Text style={meritStyles.infoEmoji}>🏛️</Text>
+                <View style={meritStyles.infoContent}>
+                  <Text style={meritStyles.infoLabel}>UNIVERSITY</Text>
+                  <Text style={meritStyles.infoValue}>{achievement.universityName || 'Your University'}</Text>
+                </View>
+              </View>
+
+              {/* Program */}
+              {achievement.programName && (
+                <View style={meritStyles.infoRow}>
+                  <Text style={meritStyles.infoEmoji}>📚</Text>
+                  <View style={meritStyles.infoContent}>
+                    <Text style={meritStyles.infoLabel}>PROGRAM</Text>
+                    <Text style={meritStyles.infoValue}>{achievement.programName}</Text>
+                  </View>
+                </View>
+              )}
+
+              {/* Aggregate score box */}
+              <View style={meritStyles.scoreBox}>
+                <LinearGradient
+                  colors={['#FFD700', '#FFA500']}
+                  style={meritStyles.scoreGradient}
+                >
+                  <Text style={meritStyles.scoreLabel}>YOUR AGGREGATE</Text>
+                  <Text style={meritStyles.scoreValue}>{achievement.percentage || '85.5%'}</Text>
+                </LinearGradient>
+              </View>
+            </LinearGradient>
+          </View>
+
+          {/* Hashtags */}
+          <Text style={meritStyles.hashtags}>#PakUni #MeritCalculator #Success</Text>
+
+          {/* Branding */}
+          <View style={meritStyles.branding}>
+            <Text style={meritStyles.brandText}>📱 PakUni • pakuni.app</Text>
+          </View>
+        </LinearGradient>
+      </View>
+
+      {/* Actions */}
+      {showActions && (
+        <View style={containerStyles.actionsRow}>
+          <TouchableOpacity
+            style={[containerStyles.shareBtn, {backgroundColor: '#FFD700'}]}
+            onPress={handleShare}
+            disabled={isSharing}
+          >
+            {isSharing ? (
+              <ActivityIndicator color="#1a1a2e" />
+            ) : (
+              <>
+                <Icon name="share-social" family="Ionicons" size={20} color="#1a1a2e" />
+                <Text style={[containerStyles.shareBtnText, {color: '#1a1a2e'}]}>Share Merit Card</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[containerStyles.saveBtn, {borderColor: '#FFD700'}]}
+            onPress={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <ActivityIndicator color="#FFD700" />
+            ) : (
+              <Icon name="download-outline" family="Ionicons" size={22} color="#FFD700" />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================================================
+// ADMISSION CELEBRATION CARD - Emerald & White Theme
+// ============================================================================
+
+export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
+  achievement,
+  onShareComplete,
+  onSaveComplete,
+  showActions = true,
+}) => {
+  const cardRef = useRef<View>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleShare = async () => {
+    if (!cardRef.current) return;
+    setIsSharing(true);
+    try {
+      const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 https://pakuni.app`;
+      const result = await captureAndShareCard(cardRef, 'Admission', message);
+      onShareComplete?.(result.shared);
+    } catch {
+      onShareComplete?.(false);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!cardRef.current) return;
+    setIsSaving(true);
+    try {
+      const result = await captureAndSaveCard(cardRef, `admission_${Date.now()}.png`);
+      if (result.success) {
+        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        onSaveComplete?.(true, result.uri);
+      }
+    } catch {
+      onSaveComplete?.(false);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <View style={containerStyles.wrapper}>
+      <View ref={cardRef} collapsable={false} style={containerStyles.cardShadow}>
+        <LinearGradient
+          colors={['#00D4AA', '#00B894', '#009973']}
+          style={admissionStyles.container}
+        >
+          {/* Confetti decorations */}
+          <View style={admissionStyles.confettiContainer}>
+            <Text style={[admissionStyles.confetti, {top: 15, left: 25}]}>🎊</Text>
+            <Text style={[admissionStyles.confetti, {top: 40, right: 30, fontSize: 20}]}>🎉</Text>
+            <Text style={[admissionStyles.confetti, {top: 70, left: 60, fontSize: 14}]}>✨</Text>
+            <Text style={[admissionStyles.confetti, {top: 25, right: 70, fontSize: 12}]}>🌟</Text>
+            <Text style={[admissionStyles.confetti, {top: 55, right: 50, fontSize: 10}]}>⭐</Text>
+          </View>
+
+          {/* White overlay glow */}
+          <LinearGradient
+            colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)']}
+            style={admissionStyles.glowTop}
+          />
+
+          {/* Celebration badge */}
+          <View style={admissionStyles.celebrationBadge}>
+            <Text style={admissionStyles.celebrationText}>🎉 CELEBRATION TIME! 🎉</Text>
+          </View>
+
+          {/* Main icon */}
+          <View style={admissionStyles.iconWrap}>
+            <View style={admissionStyles.iconCircle}>
+              <Text style={admissionStyles.mainIcon}>🎓</Text>
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={admissionStyles.heroTitle}>ADMISSION</Text>
+          <Text style={admissionStyles.heroTitle}>SECURED!</Text>
+          <Text style={admissionStyles.subtitle}>Dreams coming true! ✨</Text>
+
+          {/* White glass card */}
+          <View style={admissionStyles.whiteCard}>
+            {/* University */}
+            <View style={admissionStyles.infoBlock}>
+              <Text style={admissionStyles.infoLabel}>UNIVERSITY</Text>
+              <Text style={admissionStyles.infoValue}>{achievement.universityName || 'Your Dream University'}</Text>
+            </View>
+
+            {/* Program */}
+            {achievement.programName && (
+              <View style={admissionStyles.infoBlock}>
+                <Text style={admissionStyles.infoLabel}>PROGRAM</Text>
+                <Text style={[admissionStyles.infoValue, {color: '#00B894'}]}>{achievement.programName}</Text>
+              </View>
+            )}
+
+            {/* Celebration message */}
+            <View style={admissionStyles.messageBox}>
+              <Text style={admissionStyles.messageText}>
+                🌟 Congratulations on your admission! 🌟
+              </Text>
+              <Text style={admissionStyles.subMessage}>
+                Your hard work has paid off!
+              </Text>
+            </View>
+          </View>
+
+          {/* Hashtags */}
+          <Text style={admissionStyles.hashtags}>#PakUni #Admission #Success #2026</Text>
+
+          {/* Branding */}
+          <View style={admissionStyles.branding}>
+            <Text style={admissionStyles.brandText}>📱 PakUni • pakuni.app</Text>
+          </View>
+        </LinearGradient>
+      </View>
+
+      {/* Actions */}
+      {showActions && (
+        <View style={containerStyles.actionsRow}>
+          <TouchableOpacity
+            style={[containerStyles.shareBtn, {backgroundColor: '#00B894'}]}
+            onPress={handleShare}
+            disabled={isSharing}
+          >
+            {isSharing ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <>
+                <Icon name="share-social" family="Ionicons" size={20} color="#fff" />
+                <Text style={containerStyles.shareBtnText}>Share Celebration</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[containerStyles.saveBtn, {borderColor: '#00B894'}]}
+            onPress={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <ActivityIndicator color="#00B894" />
+            ) : (
+              <Icon name="download-outline" family="Ionicons" size={22} color="#00B894" />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================================================
+// TEST COMPLETION CARD - Purple & Gradient Theme
+// ============================================================================
+
+export const TestCompletionCard: React.FC<MeritCardProps> = ({
+  achievement,
+  onShareComplete,
+  onSaveComplete,
+  showActions = true,
+}) => {
+  const cardRef = useRef<View>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleShare = async () => {
+    if (!cardRef.current) return;
+    setIsSharing(true);
+    try {
+      const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to my dream university!\n\n#PakUni #EntryTest #Success\n\n📱 https://pakuni.app`;
+      const result = await captureAndShareCard(cardRef, 'Test Complete', message);
+      onShareComplete?.(result.shared);
+    } catch {
+      onShareComplete?.(false);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!cardRef.current) return;
+    setIsSaving(true);
+    try {
+      const result = await captureAndSaveCard(cardRef, `test_${Date.now()}.png`);
+      if (result.success) {
+        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        onSaveComplete?.(true, result.uri);
+      }
+    } catch {
+      onSaveComplete?.(false);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <View style={containerStyles.wrapper}>
+      <View ref={cardRef} collapsable={false} style={containerStyles.cardShadow}>
+        <LinearGradient
+          colors={['#667eea', '#764ba2', '#8E54E9']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={testStyles.container}
+        >
+          {/* Wave pattern */}
+          <View style={testStyles.waveContainer}>
+            <View style={[testStyles.wave, {opacity: 0.1}]} />
+            <View style={[testStyles.wave, {top: 40, opacity: 0.08}]} />
+          </View>
+
+          {/* Top accent */}
+          <View style={testStyles.topAccent}>
+            <Text style={testStyles.accentText}>📝 ENTRY TEST</Text>
+          </View>
+
+          {/* Checkmark icon */}
+          <View style={testStyles.checkSection}>
+            <View style={testStyles.checkCircle}>
+              <Text style={testStyles.checkIcon}>✅</Text>
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={testStyles.title}>TEST COMPLETED!</Text>
+          <Text style={testStyles.subtitle}>One step closer to success 🎯</Text>
+
+          {/* Info card */}
+          <View style={testStyles.infoCard}>
+            {/* Test name */}
+            <View style={testStyles.infoRow}>
+              <Text style={testStyles.infoEmoji}>📋</Text>
+              <View>
+                <Text style={testStyles.infoLabel}>TEST NAME</Text>
+                <Text style={testStyles.infoValue}>{achievement.testName || 'Entry Test'}</Text>
+              </View>
+            </View>
+
+            {/* Score if available */}
+            {achievement.score && (
+              <View style={testStyles.scoreSection}>
+                <LinearGradient
+                  colors={['#667eea', '#764ba2']}
+                  style={testStyles.scoreBox}
+                >
+                  <Text style={testStyles.scoreLabel}>YOUR SCORE</Text>
+                  <Text style={testStyles.scoreValue}>{achievement.score}</Text>
+                </LinearGradient>
+              </View>
+            )}
+
+            {/* Motivation */}
+            <View style={testStyles.motivationBox}>
+              <Text style={testStyles.motivationText}>
+                💪 Every test brings you closer to your dream!
+              </Text>
+            </View>
+          </View>
+
+          {/* Hashtags */}
+          <Text style={testStyles.hashtags}>#PakUni #EntryTest #Journey</Text>
+
+          {/* Branding */}
+          <View style={testStyles.branding}>
+            <Text style={testStyles.brandText}>📱 PakUni • pakuni.app</Text>
+          </View>
+        </LinearGradient>
+      </View>
+
+      {/* Actions */}
+      {showActions && (
+        <View style={containerStyles.actionsRow}>
+          <TouchableOpacity
+            style={[containerStyles.shareBtn, {backgroundColor: '#764ba2'}]}
+            onPress={handleShare}
+            disabled={isSharing}
+          >
+            {isSharing ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <>
+                <Icon name="share-social" family="Ionicons" size={20} color="#fff" />
+                <Text style={containerStyles.shareBtnText}>Share Achievement</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[containerStyles.saveBtn, {borderColor: '#764ba2'}]}
+            onPress={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <ActivityIndicator color="#764ba2" />
+            ) : (
+              <Icon name="download-outline" family="Ionicons" size={22} color="#764ba2" />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================================================
+// SCHOLARSHIP CARD - Pink & Diamond Theme
+// ============================================================================
+
+export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
+  achievement,
+  onShareComplete,
+  onSaveComplete,
+  showActions = true,
+}) => {
+  const cardRef = useRef<View>(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleShare = async () => {
+    if (!cardRef.current) return;
+    setIsSharing(true);
+    try {
+      const message = `💎 SCHOLARSHIP WON! 🏅\n\n📝 ${achievement.scholarshipName || 'Scholarship'}\n${achievement.percentage ? `💰 Coverage: ${achievement.percentage}\n` : ''}${achievement.universityName ? `🏛️ At: ${achievement.universityName}\n` : ''}\n#PakUni #Scholarship #Success\n\n📱 https://pakuni.app`;
+      const result = await captureAndShareCard(cardRef, 'Scholarship', message);
+      onShareComplete?.(result.shared);
+    } catch {
+      onShareComplete?.(false);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!cardRef.current) return;
+    setIsSaving(true);
+    try {
+      const result = await captureAndSaveCard(cardRef, `scholarship_${Date.now()}.png`);
+      if (result.success) {
+        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        onSaveComplete?.(true, result.uri);
+      }
+    } catch {
+      onSaveComplete?.(false);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <View style={containerStyles.wrapper}>
+      <View ref={cardRef} collapsable={false} style={containerStyles.cardShadow}>
+        <LinearGradient
+          colors={['#F093FB', '#F5576C', '#FF6B6B']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={scholarshipStyles.container}
+        >
+          {/* Diamond decorations */}
+          <View style={scholarshipStyles.diamondContainer}>
+            <Text style={[scholarshipStyles.diamond, {top: 20, left: 25}]}>💎</Text>
+            <Text style={[scholarshipStyles.diamond, {top: 45, right: 30, fontSize: 18}]}>◆</Text>
+            <Text style={[scholarshipStyles.diamond, {top: 75, left: 55, fontSize: 14}]}>✦</Text>
+            <Text style={[scholarshipStyles.diamond, {top: 30, right: 75, fontSize: 12}]}>◇</Text>
+          </View>
+
+          {/* Sparkle overlay */}
+          <LinearGradient
+            colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0)']}
+            style={scholarshipStyles.sparkleOverlay}
+          />
+
+          {/* Badge */}
+          <View style={scholarshipStyles.badge}>
+            <Text style={scholarshipStyles.badgeText}>🏅 SCHOLARSHIP</Text>
+          </View>
+
+          {/* Diamond icon */}
+          <View style={scholarshipStyles.iconSection}>
+            <View style={scholarshipStyles.diamondCircle}>
+              <Text style={scholarshipStyles.mainIcon}>💎</Text>
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={scholarshipStyles.title}>SCHOLARSHIP</Text>
+          <Text style={scholarshipStyles.title}>WON! 🏅</Text>
+          <Text style={scholarshipStyles.subtitle}>Financial freedom achieved!</Text>
+
+          {/* White card */}
+          <View style={scholarshipStyles.whiteCard}>
+            {/* Scholarship name */}
+            <View style={scholarshipStyles.infoBlock}>
+              <Text style={scholarshipStyles.infoLabel}>SCHOLARSHIP</Text>
+              <Text style={scholarshipStyles.infoValue}>{achievement.scholarshipName || 'Merit Scholarship'}</Text>
+            </View>
+
+            {/* Coverage */}
+            {achievement.percentage && (
+              <View style={scholarshipStyles.coverageBox}>
+                <LinearGradient
+                  colors={['#F093FB', '#F5576C']}
+                  style={scholarshipStyles.coverageGradient}
+                >
+                  <Text style={scholarshipStyles.coverageLabel}>COVERAGE</Text>
+                  <Text style={scholarshipStyles.coverageValue}>{achievement.percentage}</Text>
+                </LinearGradient>
+              </View>
+            )}
+
+            {/* University */}
+            {achievement.universityName && (
+              <View style={scholarshipStyles.infoBlock}>
+                <Text style={scholarshipStyles.infoLabel}>AT</Text>
+                <Text style={[scholarshipStyles.infoValue, {color: '#F5576C'}]}>{achievement.universityName}</Text>
+              </View>
+            )}
+          </View>
+
+          {/* Hashtags */}
+          <Text style={scholarshipStyles.hashtags}>#PakUni #Scholarship #Future</Text>
+
+          {/* Branding */}
+          <View style={scholarshipStyles.branding}>
+            <Text style={scholarshipStyles.brandText}>📱 PakUni • pakuni.app</Text>
+          </View>
+        </LinearGradient>
+      </View>
+
+      {/* Actions */}
+      {showActions && (
+        <View style={containerStyles.actionsRow}>
+          <TouchableOpacity
+            style={[containerStyles.shareBtn, {backgroundColor: '#F5576C'}]}
+            onPress={handleShare}
+            disabled={isSharing}
+          >
+            {isSharing ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <>
+                <Icon name="share-social" family="Ionicons" size={20} color="#fff" />
+                <Text style={containerStyles.shareBtnText}>Share Victory</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[containerStyles.saveBtn, {borderColor: '#F5576C'}]}
+            onPress={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <ActivityIndicator color="#F5576C" />
+            ) : (
+              <Icon name="download-outline" family="Ionicons" size={22} color="#F5576C" />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================================================
+// SHARED CONTAINER STYLES
+// ============================================================================
+
+const containerStyles = StyleSheet.create({
+  wrapper: {
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  cardShadow: {
+    borderRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    ...SHADOWS.soft.xl,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginTop: SPACING.md,
+  },
+  shareBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.sm,
+    paddingVertical: 14,
+    borderRadius: RADIUS.lg,
+    ...SHADOWS.soft.md,
+  },
+  shareBtnText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+  },
+  saveBtn: {
+    width: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: RADIUS.lg,
+    borderWidth: 2,
+    backgroundColor: '#fff',
+  },
+});
+
+// ============================================================================
+// MERIT CARD STYLES
+// ============================================================================
+
+const meritStyles = StyleSheet.create({
+  container: {
+    paddingTop: SPACING.xl,
+    paddingBottom: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    minHeight: 520,
+  },
+  accentStrip: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 5,
+  },
+  starsContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  star: {
+    position: 'absolute',
+    fontSize: 16,
+    color: '#FFD700',
+    opacity: 0.7,
+  },
+  badgeContainer: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+  },
+  badge: {
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.full,
+  },
+  badgeText: {
+    color: '#1a1a2e',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+  },
+  iconSection: {
+    alignItems: 'center',
+    marginTop: SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  trophyGlow: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 215, 0, 0.4)',
+  },
+  trophyIcon: {
+    fontSize: 54,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '900',
+    color: '#FFD700',
+    textAlign: 'center',
+    letterSpacing: 2,
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+    marginTop: SPACING.xs,
+  },
+  glassCard: {
+    marginTop: SPACING.lg,
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.3)',
+  },
+  glassGradient: {
+    padding: SPACING.lg,
+    gap: SPACING.md,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: SPACING.md,
+  },
+  infoEmoji: {
+    fontSize: 22,
+  },
+  infoContent: {
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.6)',
+    letterSpacing: 1,
+    marginBottom: 2,
+  },
+  infoValue: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  scoreBox: {
+    marginTop: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+  },
+  scoreGradient: {
+    paddingVertical: SPACING.lg,
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: 'rgba(26, 26, 46, 0.7)',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  scoreValue: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#1a1a2e',
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255, 215, 0, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.lg,
+    fontWeight: '600',
+  },
+  branding: {
+    marginTop: SPACING.md,
+    alignItems: 'center',
+  },
+  brandText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontWeight: '600',
+  },
+});
+
+// ============================================================================
+// ADMISSION CARD STYLES
+// ============================================================================
+
+const admissionStyles = StyleSheet.create({
+  container: {
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    minHeight: 520,
+  },
+  confettiContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  confetti: {
+    position: 'absolute',
+    fontSize: 24,
+  },
+  glowTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+  },
+  celebrationBadge: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+  },
+  celebrationText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '800',
+    color: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.full,
+    overflow: 'hidden',
+    letterSpacing: 1,
+  },
+  iconWrap: {
+    alignItems: 'center',
+    marginTop: SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  iconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  mainIcon: {
+    fontSize: 54,
+  },
+  heroTitle: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#fff',
+    textAlign: 'center',
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.15)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 4,
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+    fontWeight: '500',
+  },
+  whiteCard: {
+    marginTop: SPACING.lg,
+    backgroundColor: '#fff',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    gap: SPACING.md,
+  },
+  infoBlock: {
+    gap: 4,
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: PALETTE.neutral[400],
+    letterSpacing: 1,
+  },
+  infoValue: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    color: PALETTE.neutral[800],
+  },
+  messageBox: {
+    backgroundColor: '#E8FFF5',
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    marginTop: SPACING.sm,
+    alignItems: 'center',
+  },
+  messageText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#00B894',
+    textAlign: 'center',
+  },
+  subMessage: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: PALETTE.neutral[500],
+    marginTop: 4,
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.lg,
+    fontWeight: '600',
+  },
+  branding: {
+    marginTop: SPACING.md,
+    alignItems: 'center',
+  },
+  brandText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '600',
+  },
+});
+
+// ============================================================================
+// TEST COMPLETION CARD STYLES
+// ============================================================================
+
+const testStyles = StyleSheet.create({
+  container: {
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    minHeight: 480,
+  },
+  waveContainer: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
+  },
+  wave: {
+    position: 'absolute',
+    top: 20,
+    left: -50,
+    right: -50,
+    height: 200,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 100,
+    transform: [{rotate: '-5deg'}],
+  },
+  topAccent: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+  },
+  accentText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '800',
+    color: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.full,
+    letterSpacing: 1.5,
+    overflow: 'hidden',
+  },
+  checkSection: {
+    alignItems: 'center',
+    marginTop: SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  checkCircle: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  checkIcon: {
+    fontSize: 48,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#fff',
+    textAlign: 'center',
+    letterSpacing: 1.5,
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+  },
+  infoCard: {
+    marginTop: SPACING.lg,
+    backgroundColor: '#fff',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    gap: SPACING.md,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: SPACING.md,
+  },
+  infoEmoji: {
+    fontSize: 22,
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: PALETTE.neutral[400],
+    letterSpacing: 1,
+    marginBottom: 2,
+  },
+  infoValue: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: PALETTE.neutral[800],
+  },
+  scoreSection: {
+    marginTop: SPACING.sm,
+  },
+  scoreBox: {
+    borderRadius: RADIUS.lg,
+    paddingVertical: SPACING.lg,
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.8)',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  scoreValue: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#fff',
+  },
+  motivationBox: {
+    backgroundColor: '#F3E8FF',
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    alignItems: 'center',
+  },
+  motivationText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#764ba2',
+    textAlign: 'center',
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.lg,
+    fontWeight: '600',
+  },
+  branding: {
+    marginTop: SPACING.md,
+    alignItems: 'center',
+  },
+  brandText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '600',
+  },
+});
+
+// ============================================================================
+// SCHOLARSHIP CARD STYLES
+// ============================================================================
+
+const scholarshipStyles = StyleSheet.create({
+  container: {
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    minHeight: 520,
+  },
+  diamondContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  diamond: {
+    position: 'absolute',
+    fontSize: 22,
+    color: '#fff',
+    opacity: 0.6,
+  },
+  sparkleOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+  },
+  badge: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+  },
+  badgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '800',
+    color: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.full,
+    letterSpacing: 1.5,
+    overflow: 'hidden',
+  },
+  iconSection: {
+    alignItems: 'center',
+    marginTop: SPACING.xl,
+    marginBottom: SPACING.md,
+  },
+  diamondCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  mainIcon: {
+    fontSize: 54,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '900',
+    color: '#fff',
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+  },
+  whiteCard: {
+    marginTop: SPACING.lg,
+    backgroundColor: '#fff',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    gap: SPACING.md,
+  },
+  infoBlock: {
+    gap: 4,
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: PALETTE.neutral[400],
+    letterSpacing: 1,
+  },
+  infoValue: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    color: PALETTE.neutral[800],
+  },
+  coverageBox: {
+    marginTop: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+  },
+  coverageGradient: {
+    paddingVertical: SPACING.lg,
+    alignItems: 'center',
+  },
+  coverageLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.8)',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  coverageValue: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#fff',
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    marginTop: SPACING.lg,
+    fontWeight: '600',
+  },
+  branding: {
+    marginTop: SPACING.md,
+    alignItems: 'center',
+  },
+  brandText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '600',
+  },
+});
+
+export default {
+  MeritSuccessCard,
+  AdmissionCelebrationCard,
+  TestCompletionCard,
+  ScholarshipWinCard,
+};

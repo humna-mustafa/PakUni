@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -13,12 +13,16 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
 
 const {width} = Dimensions.get('window');
+
+// Storage key for goals
+const GOALS_STORAGE_KEY = '@pakuni_user_goals';
 
 // Goal templates
 const GOAL_TEMPLATES = [
@@ -72,37 +76,24 @@ const GOAL_TEMPLATES = [
   },
 ];
 
-// Sample user goals
-const SAMPLE_GOALS = [
-  {
-    id: '1',
-    title: 'Get 90%+ in FSc',
-    iconName: 'reader-outline',
-    color: '#27ae60',
-    progress: 65,
-    deadline: '2025-04-15',
-    milestones: [
-      {text: 'Study 4 hours daily', completed: true},
-      {text: 'Complete Physics syllabus', completed: true},
-      {text: 'Complete Chemistry syllabus', completed: false},
-      {text: 'Solve 50 past papers', completed: false},
-    ],
-  },
-  {
-    id: '2',
-    title: 'Clear ECAT with 160+ marks',
-    iconName: 'create-outline',
-    color: '#3498db',
-    progress: 35,
-    deadline: '2025-06-30',
-    milestones: [
-      {text: 'Join coaching academy', completed: true},
-      {text: 'Complete math prep', completed: false},
-      {text: 'Take 10 mock tests', completed: false},
-      {text: 'Review weak areas', completed: false},
-    ],
-  },
-];
+// Goal type definition
+interface GoalMilestone {
+  text: string;
+  completed: boolean;
+}
+
+interface UserGoal {
+  id: string;
+  title: string;
+  iconName: string;
+  color: string;
+  progress: number;
+  deadline: string;
+  milestones: GoalMilestone[];
+}
+
+// Default empty goals - user needs to create their own
+const DEFAULT_GOALS: UserGoal[] = [];
 
 // Animated progress circle
 const ProgressCircle = ({
@@ -325,7 +316,8 @@ const TemplateCard = ({
 const PremiumGoalSettingScreen = () => {
   const {colors, isDark} = useTheme();
   const navigation = useNavigation();
-  const [goals, setGoals] = useState(SAMPLE_GOALS);
+  const [goals, setGoals] = useState<UserGoal[]>(DEFAULT_GOALS);
+  const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<any>(null);
@@ -333,6 +325,39 @@ const PremiumGoalSettingScreen = () => {
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const modalAnim = useRef(new Animated.Value(0)).current;
+
+  // Load goals from AsyncStorage on mount
+  useEffect(() => {
+    loadGoals();
+  }, []);
+
+  // Save goals whenever they change (after initial load)
+  useEffect(() => {
+    if (!isLoading) {
+      saveGoals(goals);
+    }
+  }, [goals, isLoading]);
+
+  const loadGoals = useCallback(async () => {
+    try {
+      const storedGoals = await AsyncStorage.getItem(GOALS_STORAGE_KEY);
+      if (storedGoals) {
+        setGoals(JSON.parse(storedGoals));
+      }
+    } catch (error) {
+      console.error('Failed to load goals:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const saveGoals = useCallback(async (goalsToSave: UserGoal[]) => {
+    try {
+      await AsyncStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goalsToSave));
+    } catch (error) {
+      console.error('Failed to save goals:', error);
+    }
+  }, []);
 
   useEffect(() => {
     Animated.timing(headerAnim, {

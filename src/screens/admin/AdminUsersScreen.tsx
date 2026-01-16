@@ -22,6 +22,7 @@ import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserProfile, UserRole} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {PremiumLoading} from '../../components/PremiumLoading';
+import {PremiumSearchBar} from '../../components/PremiumSearchBar';
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -256,21 +257,16 @@ const AdminUsersScreen: React.FC = () => {
 
   const renderHeader = () => (
     <View style={styles.listHeader}>
-      {/* Search Bar */}
-      <View style={[styles.searchContainer, {backgroundColor: colors.card}]}>
-        <Icon name="search" family="Ionicons" size={20} color={colors.textSecondary} />
-        <TextInput
-          style={[styles.searchInput, {color: colors.text}]}
-          placeholder="Search users..."
-          placeholderTextColor={colors.placeholder}
+      {/* Search Bar - Consistent Design */}
+      <View style={styles.searchWrapper}>
+        <PremiumSearchBar
           value={searchQuery}
           onChangeText={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+          placeholder="Search users..."
+          variant="default"
+          size="md"
         />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Icon name="close-circle" family="Ionicons" size={20} color={colors.textSecondary} />
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* Filters */}
@@ -581,18 +577,9 @@ const styles = StyleSheet.create({
   listHeader: {
     marginBottom: 16,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 48,
+  // Unified search wrapper
+  searchWrapper: {
     marginBottom: 12,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 15,
   },
   filtersRow: {
     flexDirection: 'row',
