@@ -35,7 +35,7 @@
     <!-- Cap Base (Crown) -->
     <path
         android:pathData="M44,52 L64,52 L66,60 Q66,62 64,62 L44,62 Q42,62 42,60 L44,52 Z"
-        android:fillColor="#6366F1"/>
+        android:fillColor="#FFFFFF"/>
     
     <!-- Cap Band -->
     <path
@@ -46,7 +46,7 @@
     <!-- Mortarboard Top (Diamond shape - rotated square) -->
     <path
         android:pathData="M54,38 L74,48 L54,58 L34,48 Z"
-        android:fillColor="#6366F1"/>
+        android:fillColor="#FFFFFF"/>
     
     <!-- Mortarboard shine effect -->
     <path

@@ -14,7 +14,7 @@ import React, {
   ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Platform} from 'react-native';
+import {Alert, Platform, Linking} from 'react-native';
 import {supabase} from '../services/supabase';
 
 // ============================================================================
@@ -341,14 +341,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     try {
       setState(prev => ({...prev, isLoading: true, authError: null}));
 
+      // Use the custom scheme for mobile app deep linking
+      const redirectUrl = 'pakuni://auth/callback';
+      
       const {data, error} = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'pakuni://auth/callback',
+          redirectTo: redirectUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
+          skipBrowserRedirect: true, // We'll handle the redirect manually
         },
       });
 
@@ -356,7 +360,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         throw error;
       }
 
-      // OAuth will redirect, so we wait for the callback
+      // Open the OAuth URL in the browser
+      if (data?.url) {
+        console.log('[Auth] Opening Google OAuth URL:', data.url);
+        const canOpen = await Linking.canOpenURL(data.url);
+        if (canOpen) {
+          await Linking.openURL(data.url);
+        } else {
+          throw new Error('Cannot open browser for Google sign-in');
+        }
+      }
+
+      // The callback will be handled by the deep link handler in App.tsx
+      // Set loading to false since we're waiting for callback
+      setState(prev => ({...prev, isLoading: false}));
       return true;
     } catch (error: any) {
       console.error('Google sign-in error:', error);

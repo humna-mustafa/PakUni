@@ -66,13 +66,21 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSharing(true);
     try {
       const message = `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Calculated with PakUni Merit Calculator!\n\n#PakUni #MeritList #Pakistan #2026\n\n📱 https://pakuni.app`;
       const result = await captureAndShareCard(cardRef, 'Merit Success', message);
       onShareComplete?.(result.shared);
-    } catch {
+      if (!result.success && result.error) {
+        Alert.alert('Sharing Failed', result.error);
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      Alert.alert('Error', 'Failed to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -80,15 +88,23 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
   };
 
   const handleSave = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSaving(true);
     try {
       const result = await captureAndSaveCard(cardRef, `merit_${Date.now()}.png`);
       if (result.success) {
-        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        Alert.alert('✅ Saved!', 'Card saved to your gallery in Pictures/PakUni folder.');
         onSaveComplete?.(true, result.uri);
+      } else {
+        Alert.alert('Save Failed', result.error || 'Could not save card.');
+        onSaveComplete?.(false);
       }
-    } catch {
+    } catch (error) {
+      console.error('Save error:', error);
+      Alert.alert('Error', 'Failed to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);
@@ -237,13 +253,21 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSharing(true);
     try {
       const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 https://pakuni.app`;
       const result = await captureAndShareCard(cardRef, 'Admission', message);
       onShareComplete?.(result.shared);
-    } catch {
+      if (!result.success && result.error) {
+        Alert.alert('Sharing Failed', result.error);
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      Alert.alert('Error', 'Failed to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -251,15 +275,23 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
   };
 
   const handleSave = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSaving(true);
     try {
       const result = await captureAndSaveCard(cardRef, `admission_${Date.now()}.png`);
       if (result.success) {
-        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        Alert.alert('✅ Saved!', 'Card saved to your gallery in Pictures/PakUni folder.');
         onSaveComplete?.(true, result.uri);
+      } else {
+        Alert.alert('Save Failed', result.error || 'Could not save card.');
+        onSaveComplete?.(false);
       }
-    } catch {
+    } catch (error) {
+      console.error('Save error:', error);
+      Alert.alert('Error', 'Failed to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);
@@ -391,13 +423,21 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSharing(true);
     try {
       const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to my dream university!\n\n#PakUni #EntryTest #Success\n\n📱 https://pakuni.app`;
       const result = await captureAndShareCard(cardRef, 'Test Complete', message);
       onShareComplete?.(result.shared);
-    } catch {
+      if (!result.success && result.error) {
+        Alert.alert('Sharing Failed', result.error);
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      Alert.alert('Error', 'Failed to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -405,15 +445,23 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
   };
 
   const handleSave = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSaving(true);
     try {
       const result = await captureAndSaveCard(cardRef, `test_${Date.now()}.png`);
       if (result.success) {
-        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        Alert.alert('✅ Saved!', 'Card saved to your gallery in Pictures/PakUni folder.');
         onSaveComplete?.(true, result.uri);
+      } else {
+        Alert.alert('Save Failed', result.error || 'Could not save card.');
+        onSaveComplete?.(false);
       }
-    } catch {
+    } catch (error) {
+      console.error('Save error:', error);
+      Alert.alert('Error', 'Failed to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);
@@ -542,13 +590,21 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleShare = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSharing(true);
     try {
       const message = `💎 SCHOLARSHIP WON! 🏅\n\n📝 ${achievement.scholarshipName || 'Scholarship'}\n${achievement.percentage ? `💰 Coverage: ${achievement.percentage}\n` : ''}${achievement.universityName ? `🏛️ At: ${achievement.universityName}\n` : ''}\n#PakUni #Scholarship #Success\n\n📱 https://pakuni.app`;
       const result = await captureAndShareCard(cardRef, 'Scholarship', message);
       onShareComplete?.(result.shared);
-    } catch {
+      if (!result.success && result.error) {
+        Alert.alert('Sharing Failed', result.error);
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      Alert.alert('Error', 'Failed to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -556,15 +612,23 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
   };
 
   const handleSave = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     setIsSaving(true);
     try {
       const result = await captureAndSaveCard(cardRef, `scholarship_${Date.now()}.png`);
       if (result.success) {
-        Alert.alert('✅ Saved!', 'Card saved to gallery.');
+        Alert.alert('✅ Saved!', 'Card saved to your gallery in Pictures/PakUni folder.');
         onSaveComplete?.(true, result.uri);
+      } else {
+        Alert.alert('Save Failed', result.error || 'Could not save card.');
+        onSaveComplete?.(false);
       }
-    } catch {
+    } catch (error) {
+      console.error('Save error:', error);
+      Alert.alert('Error', 'Failed to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);

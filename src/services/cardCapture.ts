@@ -8,12 +8,14 @@
  * - General social media sharing
  * 
  * Uses react-native-view-shot for high-quality image capture
+ * Uses react-native-share for proper image sharing with social apps
  */
 
 import {RefObject} from 'react';
-import {View, Share, Platform, Alert, PermissionsAndroid} from 'react-native';
-import ViewShot, {captureRef} from 'react-native-view-shot';
+import {View, Platform, Alert, PermissionsAndroid} from 'react-native';
+import {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
+import Share from 'react-native-share';
 
 // ============================================================================
 // TYPES
@@ -129,6 +131,7 @@ export const captureAndSaveCard = async (
 ): Promise<CaptureResult> => {
   const hasPermission = await requestStoragePermission();
   if (!hasPermission) {
+    Alert.alert('Permission Required', 'Please grant storage permission to save cards.');
     return {success: false, error: 'Storage permission denied'};
   }
 
@@ -139,11 +142,39 @@ export const captureAndSaveCard = async (
 
   try {
     const name = fileName || `pakuni_achievement_${Date.now()}.png`;
-    const destPath = Platform.OS === 'android'
-      ? `${RNFS.DownloadDirectoryPath}/${name}`
-      : `${RNFS.DocumentDirectoryPath}/${name}`;
+    
+    // On Android, save to Pictures folder for gallery visibility
+    let destPath: string;
+    if (Platform.OS === 'android') {
+      // Try Pictures directory first, then Download
+      const picturesDir = `${RNFS.ExternalStorageDirectoryPath}/Pictures/PakUni`;
+      const downloadDir = RNFS.DownloadDirectoryPath;
+      
+      try {
+        // Create PakUni folder in Pictures if it doesn't exist
+        const picturesDirExists = await RNFS.exists(picturesDir);
+        if (!picturesDirExists) {
+          await RNFS.mkdir(picturesDir);
+        }
+        destPath = `${picturesDir}/${name}`;
+      } catch {
+        // Fallback to Downloads
+        destPath = `${downloadDir}/${name}`;
+      }
+    } else {
+      destPath = `${RNFS.DocumentDirectoryPath}/${name}`;
+    }
 
     await RNFS.copyFile(captureResult.uri, destPath);
+    
+    // On Android, scan the file so it appears in gallery
+    if (Platform.OS === 'android') {
+      try {
+        await RNFS.scanFile(destPath);
+      } catch {
+        // Ignore scan errors
+      }
+    }
 
     return {success: true, uri: destPath};
   } catch (error) {
@@ -156,7 +187,7 @@ export const captureAndSaveCard = async (
 };
 
 /**
- * Capture and share card directly
+ * Capture and share card directly with image
  */
 export const captureAndShareCard = async (
   viewRef: RefObject<View | null>,
@@ -174,29 +205,44 @@ export const captureAndShareCard = async (
   }
 
   try {
-    // Platform-specific sharing
-    if (Platform.OS === 'ios') {
-      const result = await Share.share({
-        url: captureResult.uri,
-        message: shareMessage,
-        title: shareTitle,
-      });
+    // Read the image file and convert to base64 for sharing
+    const base64Image = await RNFS.readFile(captureResult.uri, 'base64');
+    const imageUrl = `data:image/png;base64,${base64Image}`;
+
+    // Use react-native-share for proper image sharing
+    const shareOptions = {
+      title: shareTitle || 'PakUni Achievement',
+      message: shareMessage || '',
+      url: imageUrl,
+      type: 'image/png',
+      failOnCancel: false,
+      showAppsToView: true,
+    };
+
+    const result = await Share.open(shareOptions);
+    
+    // Clean up temp file
+    try {
+      await RNFS.unlink(captureResult.uri);
+    } catch {
+      // Ignore cleanup errors
+    }
+
+    return {
+      success: true,
+      shared: !result.dismissedAction,
+    };
+  } catch (error: any) {
+    // User cancelled or error occurred
+    if (error?.message?.includes('User did not share') || 
+        error?.message?.includes('cancelled') ||
+        error?.dismissedAction) {
       return {
         success: true,
-        shared: result.action === Share.sharedAction,
-      };
-    } else {
-      // Android - share with file path
-      const result = await Share.share({
-        message: shareMessage ? `${shareMessage}\n\n${captureResult.uri}` : captureResult.uri,
-        title: shareTitle,
-      });
-      return {
-        success: true,
-        shared: result.action === Share.sharedAction,
+        shared: false,
       };
     }
-  } catch (error) {
+    
     console.error('Error sharing card:', error);
     return {
       success: false,

@@ -98,7 +98,7 @@ const defaultConfig: AppConfig = {
     // Always use production API URL - app is offline-first with bundled data
     // No localhost dependency - this prevents crashes when API is unavailable
     baseUrl: 'https://api.pakuni.app',
-    supabaseUrl: process.env.SUPABASE_URL || 'https://therewjnnidxlddgkaca.supabase.co',
+    supabaseUrl: process.env.SUPABASE_URL || '',
     supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
     timeout: 30000,
     retryCount: 3,

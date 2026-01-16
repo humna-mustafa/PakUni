@@ -1,0 +1,750 @@
+Starting a Gradle Daemon, 1 busy Daemon could not be reused, use --status for details
+Configuration on demand is an incubating feature.
+> Task :gradle-plugin:settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:settings-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:shared:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:shared:compileJava NO-SOURCE
+> Task :gradle-plugin:shared:processResources NO-SOURCE
+> Task :gradle-plugin:shared:classes UP-TO-DATE
+> Task :gradle-plugin:shared:jar UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:settings-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:settings-plugin:jar UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle-plugin:react-native-gradle-plugin:compileKotlin UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:compileJava NO-SOURCE
+> Task :gradle-plugin:react-native-gradle-plugin:pluginDescriptors UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:processResources UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:classes UP-TO-DATE
+> Task :gradle-plugin:react-native-gradle-plugin:jar UP-TO-DATE
+> Task :react-native-fs:preBuild UP-TO-DATE
+> Task :react-native-community_netinfo:preBuild UP-TO-DATE
+> Task :react-native-device-info:preBuild UP-TO-DATE
+> Task :react-native-fs:preReleaseBuild UP-TO-DATE
+> Task :react-native-device-info:preReleaseBuild UP-TO-DATE
+> Task :react-native-community_netinfo:preReleaseBuild UP-TO-DATE
+> Task :app:generateAutolinkingNewArchitectureFiles UP-TO-DATE
+> Task :react-native-haptic-feedback:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-gesture-handler:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-config:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :app:generateAutolinkingPackageList UP-TO-DATE
+> Task :app:generateCodegenSchemaFromJavaScript SKIPPED
+> Task :react-native-gesture-handler:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-config:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-gesture-handler:preBuild UP-TO-DATE
+> Task :react-native-haptic-feedback:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :app:generateCodegenArtifactsFromSchema SKIPPED
+> Task :react-native-config:preBuild UP-TO-DATE
+> Task :react-native-config:preReleaseBuild UP-TO-DATE
+> Task :react-native-haptic-feedback:preBuild UP-TO-DATE
+> Task :react-native-haptic-feedback:preReleaseBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preBuild UP-TO-DATE
+> Task :react-native-gesture-handler:preReleaseBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:preReleaseBuild UP-TO-DATE
+> Task :app:generateReactNativeEntryPoint UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeReleaseJniLibFolders
+> Task :react-native-haptic-feedback:mergeReleaseJniLibFolders
+> Task :react-native-community_netinfo:mergeReleaseJniLibFolders
+> Task :react-native-config:mergeReleaseJniLibFolders
+> Task :react-native-device-info:mergeReleaseJniLibFolders
+> Task :react-native-fs:mergeReleaseJniLibFolders
+> Task :react-native-async-storage_async-storage:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-config:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-device-info:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-haptic-feedback:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-fs:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-community_netinfo:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-fs:copyReleaseJniLibsProjectOnly
+> Task :react-native-async-storage_async-storage:copyReleaseJniLibsProjectOnly
+> Task :react-native-haptic-feedback:copyReleaseJniLibsProjectOnly
+> Task :react-native-device-info:copyReleaseJniLibsProjectOnly
+> Task :react-native-config:copyReleaseJniLibsProjectOnly
+> Task :react-native-community_netinfo:copyReleaseJniLibsProjectOnly
+> Task :react-native-linear-gradient:preBuild UP-TO-DATE
+> Task :react-native-linear-gradient:preReleaseBuild UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-safe-area-context:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-view-shot:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-share:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-linear-gradient:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :react-native-screens:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-vector-icons:generateCodegenSchemaFromJavaScript UP-TO-DATE
+> Task :react-native-view-shot:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-view-shot:preBuild UP-TO-DATE
+> Task :react-native-safe-area-context:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-view-shot:preReleaseBuild UP-TO-DATE
+> Task :react-native-safe-area-context:preBuild UP-TO-DATE
+> Task :react-native-safe-area-context:preReleaseBuild UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :react-native-share:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-share:preBuild UP-TO-DATE
+> Task :react-native-share:preReleaseBuild UP-TO-DATE
+> Task :react-native-vector-icons:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-vector-icons:preBuild UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-safe-area-context:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-vector-icons:preReleaseBuild UP-TO-DATE
+> Task :react-native-view-shot:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :react-native-safe-area-context:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-vector-icons:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-screens:generateCodegenArtifactsFromSchema UP-TO-DATE
+> Task :react-native-screens:preBuild UP-TO-DATE
+> Task :react-native-screens:preReleaseBuild UP-TO-DATE
+> Task :react-native-safe-area-context:generateReleaseBuildConfig UP-TO-DATE
+> Task :react-native-vector-icons:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :react-native-safe-area-context:generateReleaseResValues UP-TO-DATE
+> Task :react-native-safe-area-context:generateReleaseResources UP-TO-DATE
+> Task :react-native-safe-area-context:packageReleaseResources UP-TO-DATE
+> Task :react-native-share:mergeReleaseJniLibFolders
+> Task :react-native-safe-area-context:parseReleaseLocalResources UP-TO-DATE
+> Task :react-native-community_netinfo:generateReleaseBuildConfig
+> Task :react-native-share:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-safe-area-context:generateReleaseRFile UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateReleaseBuildConfig
+> Task :react-native-community_netinfo:generateReleaseResValues
+> Task :react-native-config:generateReleaseBuildConfig
+> Task :react-native-async-storage_async-storage:generateReleaseResValues
+> Task :react-native-share:copyReleaseJniLibsProjectOnly
+> Task :react-native-config:generateReleaseResValues
+> Task :react-native-community_netinfo:generateReleaseResources
+> Task :react-native-config:generateReleaseResources
+> Task :react-native-async-storage_async-storage:generateReleaseResources
+> Task :react-native-device-info:generateReleaseBuildConfig
+> Task :react-native-device-info:generateReleaseResValues
+> Task :react-native-device-info:generateReleaseResources
+> Task :react-native-community_netinfo:packageReleaseResources
+> Task :react-native-config:packageReleaseResources
+> Task :react-native-async-storage_async-storage:packageReleaseResources
+> Task :react-native-device-info:packageReleaseResources
+> Task :react-native-community_netinfo:javaPreCompileRelease
+> Task :react-native-async-storage_async-storage:javaPreCompileRelease
+> Task :react-native-community_netinfo:parseReleaseLocalResources
+> Task :react-native-async-storage_async-storage:parseReleaseLocalResources
+> Task :react-native-config:parseReleaseLocalResources
+> Task :react-native-community_netinfo:generateReleaseRFile
+> Task :react-native-async-storage_async-storage:generateReleaseRFile
+> Task :react-native-device-info:parseReleaseLocalResources
+> Task :react-native-config:generateReleaseRFile
+> Task :react-native-safe-area-context:compileReleaseKotlin UP-TO-DATE
+> Task :react-native-safe-area-context:javaPreCompileRelease UP-TO-DATE
+> Task :react-native-safe-area-context:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :react-native-safe-area-context:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :react-native-device-info:generateReleaseRFile
+> Task :react-native-device-info:javaPreCompileRelease
+> Task :react-native-config:javaPreCompileRelease
+> Task :react-native-fs:generateReleaseBuildConfig
+> Task :react-native-fs:generateReleaseResValues
+> Task :react-native-fs:generateReleaseResources
+> Task :react-native-fs:packageReleaseResources
+> Task :react-native-screens:configureCMakeRelWithDebInfo[x86_64]
+> Task :react-native-fs:parseReleaseLocalResources
+> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[x86_64]
+> Task :react-native-fs:generateReleaseRFile
+> Task :react-native-fs:javaPreCompileRelease
+> Task :react-native-screens:buildCMakeRelWithDebInfo[x86_64]
+> Task :react-native-screens:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :react-native-screens:mergeReleaseNativeLibs UP-TO-DATE
+> Task :react-native-screens:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :react-native-screens:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-screens:generateReleaseBuildConfig UP-TO-DATE
+> Task :react-native-screens:generateReleaseResValues UP-TO-DATE
+> Task :react-native-screens:generateReleaseResources UP-TO-DATE
+> Task :react-native-screens:packageReleaseResources UP-TO-DATE
+> Task :react-native-screens:parseReleaseLocalResources UP-TO-DATE
+
+> Task :react-native-config:compileReleaseJavaWithJavac
+Note: E:\pakuni\PakUni\node_modules\react-native-config\android\src\main\java\com\lugg\RNCConfig\RNCConfigPackage.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-screens:generateReleaseRFile UP-TO-DATE
+
+> Task :react-native-async-storage_async-storage:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: E:\pakuni\PakUni\node_modules\@react-native-async-storage\async-storage\android\src\javaPackage\java\com\reactnativecommunity\asyncstorage\AsyncStoragePackage.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :react-native-screens:compileReleaseKotlin UP-TO-DATE
+> Task :react-native-screens:javaPreCompileRelease UP-TO-DATE
+> Task :react-native-screens:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :react-native-screens:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :react-native-config:bundleLibRuntimeToDirRelease
+> Task :react-native-haptic-feedback:generateReleaseBuildConfig
+> Task :react-native-haptic-feedback:generateReleaseResValues
+> Task :react-native-haptic-feedback:generateReleaseResources
+> Task :react-native-haptic-feedback:packageReleaseResources
+> Task :react-native-haptic-feedback:parseReleaseLocalResources
+> Task :react-native-async-storage_async-storage:bundleLibRuntimeToDirRelease
+> Task :react-native-haptic-feedback:generateReleaseRFile
+
+> Task :react-native-community_netinfo:compileReleaseJavaWithJavac
+E:\pakuni\PakUni\node_modules\@react-native-community\netinfo\android\src\main\java\com\reactnativecommunity\netinfo\NetInfoModule.java:47: warning: [removal] onCatalystInstanceDestroy() in NativeModule has been deprecated and marked for removal
+    public void onCatalystInstanceDestroy() {
+                ^
+
+> Task :react-native-haptic-feedback:javaPreCompileRelease
+
+> Task :react-native-community_netinfo:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+1 warning
+
+> Task :react-native-community_netinfo:bundleLibRuntimeToDirRelease
+
+> Task :react-native-haptic-feedback:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-device-info:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-fs:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-device-info:bundleLibRuntimeToDirRelease
+> Task :react-native-haptic-feedback:bundleLibRuntimeToDirRelease
+> Task :react-native-fs:bundleLibRuntimeToDirRelease
+> Task :app:configureCMakeRelWithDebInfo[arm64-v8a]
+> Task :react-native-linear-gradient:generateReleaseBuildConfig UP-TO-DATE
+> Task :react-native-linear-gradient:generateReleaseResValues UP-TO-DATE
+> Task :react-native-linear-gradient:generateReleaseResources UP-TO-DATE
+> Task :react-native-linear-gradient:packageReleaseResources UP-TO-DATE
+> Task :react-native-share:generateReleaseBuildConfig
+> Task :react-native-linear-gradient:parseReleaseLocalResources UP-TO-DATE
+> Task :react-native-share:generateReleaseResValues
+> Task :react-native-linear-gradient:generateReleaseRFile UP-TO-DATE
+> Task :react-native-linear-gradient:javaPreCompileRelease UP-TO-DATE
+> Task :react-native-linear-gradient:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :react-native-share:generateReleaseResources
+> Task :react-native-linear-gradient:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :react-native-vector-icons:generateReleaseBuildConfig UP-TO-DATE
+> Task :react-native-vector-icons:generateReleaseResValues UP-TO-DATE
+> Task :react-native-vector-icons:generateReleaseResources UP-TO-DATE
+> Task :react-native-view-shot:generateReleaseBuildConfig UP-TO-DATE
+> Task :react-native-view-shot:generateReleaseResValues UP-TO-DATE
+> Task :react-native-view-shot:generateReleaseResources UP-TO-DATE
+> Task :react-native-vector-icons:packageReleaseResources UP-TO-DATE
+> Task :react-native-vector-icons:parseReleaseLocalResources UP-TO-DATE
+> Task :react-native-view-shot:packageReleaseResources UP-TO-DATE
+> Task :react-native-vector-icons:generateReleaseRFile UP-TO-DATE
+> Task :react-native-view-shot:parseReleaseLocalResources UP-TO-DATE
+> Task :react-native-vector-icons:javaPreCompileRelease UP-TO-DATE
+> Task :react-native-view-shot:generateReleaseRFile UP-TO-DATE
+> Task :react-native-view-shot:javaPreCompileRelease UP-TO-DATE
+> Task :react-native-vector-icons:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :react-native-view-shot:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :react-native-vector-icons:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :react-native-view-shot:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :react-native-async-storage_async-storage:writeReleaseAarMetadata
+> Task :react-native-community_netinfo:writeReleaseAarMetadata
+> Task :react-native-config:writeReleaseAarMetadata
+> Task :react-native-fs:writeReleaseAarMetadata
+> Task :react-native-device-info:writeReleaseAarMetadata
+> Task :react-native-haptic-feedback:writeReleaseAarMetadata
+> Task :react-native-linear-gradient:writeReleaseAarMetadata UP-TO-DATE
+> Task :react-native-safe-area-context:writeReleaseAarMetadata UP-TO-DATE
+> Task :react-native-vector-icons:writeReleaseAarMetadata UP-TO-DATE
+> Task :react-native-view-shot:writeReleaseAarMetadata UP-TO-DATE
+> Task :react-native-screens:writeReleaseAarMetadata UP-TO-DATE
+> Task :react-native-community_netinfo:extractDeepLinksRelease
+> Task :react-native-config:extractDeepLinksRelease
+> Task :react-native-async-storage_async-storage:extractDeepLinksRelease
+> Task :react-native-share:packageReleaseResources
+> Task :react-native-device-info:extractDeepLinksRelease
+> Task :react-native-share:parseReleaseLocalResources
+> Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[x86_64]
+> Task :react-native-share:generateReleaseRFile
+
+> Task :react-native-community_netinfo:processReleaseManifest
+package="com.reactnativecommunity.netinfo" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\@react-native-community\netinfo\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.reactnativecommunity.netinfo" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\@react-native-community\netinfo\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-config:processReleaseManifest
+
+> Task :react-native-async-storage_async-storage:processReleaseManifest
+package="com.reactnativecommunity.asyncstorage" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\@react-native-async-storage\async-storage\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.reactnativecommunity.asyncstorage" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\@react-native-async-storage\async-storage\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-fs:extractDeepLinksRelease
+
+> Task :react-native-device-info:processReleaseManifest
+package="com.learnium.RNDeviceInfo" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-device-info\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.learnium.RNDeviceInfo" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-device-info\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-haptic-feedback:extractDeepLinksRelease
+> Task :react-native-share:javaPreCompileRelease
+> Task :react-native-share:writeReleaseAarMetadata
+> Task :react-native-linear-gradient:extractDeepLinksRelease UP-TO-DATE
+> Task :react-native-safe-area-context:extractDeepLinksRelease UP-TO-DATE
+> Task :react-native-linear-gradient:processReleaseManifest UP-TO-DATE
+> Task :react-native-safe-area-context:processReleaseManifest UP-TO-DATE
+> Task :react-native-screens:extractDeepLinksRelease UP-TO-DATE
+> Task :react-native-vector-icons:extractDeepLinksRelease UP-TO-DATE
+> Task :react-native-view-shot:extractDeepLinksRelease UP-TO-DATE
+> Task :react-native-view-shot:processReleaseManifest UP-TO-DATE
+> Task :react-native-screens:processReleaseManifest UP-TO-DATE
+> Task :react-native-vector-icons:processReleaseManifest UP-TO-DATE
+> Task :react-native-async-storage_async-storage:compileReleaseLibraryResources
+> Task :react-native-device-info:compileReleaseLibraryResources
+> Task :react-native-community_netinfo:compileReleaseLibraryResources
+> Task :react-native-fs:compileReleaseLibraryResources
+> Task :react-native-linear-gradient:compileReleaseLibraryResources UP-TO-DATE
+> Task :react-native-safe-area-context:compileReleaseLibraryResources UP-TO-DATE
+> Task :react-native-config:compileReleaseLibraryResources
+> Task :react-native-vector-icons:compileReleaseLibraryResources UP-TO-DATE
+> Task :react-native-haptic-feedback:compileReleaseLibraryResources
+> Task :react-native-view-shot:compileReleaseLibraryResources UP-TO-DATE
+> Task :react-native-screens:compileReleaseLibraryResources UP-TO-DATE
+
+> Task :react-native-fs:processReleaseManifest
+package="com.rnfs" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-fs\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.rnfs" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-fs\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-haptic-feedback:processReleaseManifest
+package="com.mkuczera" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-haptic-feedback\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="com.mkuczera" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-haptic-feedback\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-community_netinfo:bundleLibCompileToJarRelease
+> Task :react-native-config:bundleLibCompileToJarRelease
+> Task :react-native-device-info:bundleLibCompileToJarRelease
+> Task :react-native-linear-gradient:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :react-native-screens:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :react-native-safe-area-context:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :react-native-view-shot:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :react-native-vector-icons:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :react-native-async-storage_async-storage:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-community_netinfo:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-config:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-device-info:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-fs:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-haptic-feedback:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-linear-gradient:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-safe-area-context:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-screens:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-async-storage_async-storage:bundleLibCompileToJarRelease
+> Task :react-native-vector-icons:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-safe-area-context:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :react-native-view-shot:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-screens:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :react-native-haptic-feedback:bundleLibCompileToJarRelease
+> Task :react-native-community_netinfo:bundleLibRuntimeToJarRelease
+> Task :react-native-config:bundleLibRuntimeToJarRelease
+> Task :react-native-fs:bundleLibCompileToJarRelease
+> Task :react-native-async-storage_async-storage:bundleLibRuntimeToJarRelease
+> Task :react-native-device-info:bundleLibRuntimeToJarRelease
+> Task :react-native-fs:bundleLibRuntimeToJarRelease
+> Task :react-native-linear-gradient:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :react-native-haptic-feedback:bundleLibRuntimeToJarRelease
+> Task :react-native-vector-icons:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :react-native-view-shot:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeReleaseShaders
+> Task :react-native-community_netinfo:mergeReleaseShaders
+> Task :react-native-async-storage_async-storage:compileReleaseShaders NO-SOURCE
+> Task :react-native-async-storage_async-storage:generateReleaseAssets UP-TO-DATE
+> Task :react-native-community_netinfo:compileReleaseShaders NO-SOURCE
+> Task :react-native-community_netinfo:generateReleaseAssets UP-TO-DATE
+> Task :react-native-community_netinfo:mergeReleaseAssets
+> Task :react-native-config:mergeReleaseShaders
+> Task :react-native-config:compileReleaseShaders NO-SOURCE
+> Task :react-native-config:generateReleaseAssets UP-TO-DATE
+> Task :react-native-config:mergeReleaseAssets
+> Task :react-native-device-info:mergeReleaseShaders
+> Task :react-native-device-info:compileReleaseShaders NO-SOURCE
+> Task :react-native-device-info:generateReleaseAssets UP-TO-DATE
+> Task :react-native-device-info:mergeReleaseAssets
+> Task :react-native-fs:mergeReleaseShaders
+> Task :react-native-fs:compileReleaseShaders NO-SOURCE
+> Task :react-native-fs:generateReleaseAssets UP-TO-DATE
+> Task :react-native-fs:mergeReleaseAssets
+> Task :react-native-haptic-feedback:mergeReleaseShaders
+> Task :react-native-haptic-feedback:compileReleaseShaders NO-SOURCE
+> Task :react-native-haptic-feedback:generateReleaseAssets UP-TO-DATE
+> Task :react-native-haptic-feedback:mergeReleaseAssets
+> Task :react-native-linear-gradient:mergeReleaseShaders UP-TO-DATE
+> Task :react-native-linear-gradient:compileReleaseShaders NO-SOURCE
+> Task :react-native-linear-gradient:generateReleaseAssets UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseAssets UP-TO-DATE
+> Task :react-native-screens:mergeReleaseShaders UP-TO-DATE
+> Task :react-native-screens:compileReleaseShaders NO-SOURCE
+> Task :react-native-screens:generateReleaseAssets UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseShaders UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeReleaseAssets
+> Task :react-native-screens:mergeReleaseAssets UP-TO-DATE
+> Task :react-native-safe-area-context:compileReleaseShaders NO-SOURCE
+> Task :react-native-safe-area-context:generateReleaseAssets UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseAssets UP-TO-DATE
+> Task :react-native-async-storage_async-storage:processReleaseJavaRes NO-SOURCE
+> Task :react-native-view-shot:mergeReleaseShaders UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseShaders UP-TO-DATE
+> Task :react-native-vector-icons:compileReleaseShaders NO-SOURCE
+> Task :react-native-vector-icons:generateReleaseAssets UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseAssets UP-TO-DATE
+> Task :react-native-community_netinfo:processReleaseJavaRes NO-SOURCE
+> Task :react-native-view-shot:compileReleaseShaders NO-SOURCE
+> Task :react-native-view-shot:generateReleaseAssets UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseAssets UP-TO-DATE
+> Task :react-native-config:processReleaseJavaRes NO-SOURCE
+> Task :react-native-config:createFullJarRelease
+> Task :react-native-device-info:processReleaseJavaRes NO-SOURCE
+> Task :react-native-config:extractProguardFiles
+> Task :react-native-device-info:createFullJarRelease
+> Task :react-native-device-info:extractProguardFiles
+> Task :react-native-community_netinfo:createFullJarRelease
+> Task :react-native-async-storage_async-storage:createFullJarRelease
+> Task :react-native-community_netinfo:extractProguardFiles
+> Task :react-native-async-storage_async-storage:extractProguardFiles
+> Task :react-native-fs:processReleaseJavaRes NO-SOURCE
+> Task :react-native-fs:createFullJarRelease
+> Task :react-native-fs:extractProguardFiles
+> Task :react-native-community_netinfo:generateReleaseLintModel
+> Task :react-native-async-storage_async-storage:generateReleaseLintModel
+> Task :react-native-community_netinfo:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-async-storage_async-storage:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-haptic-feedback:processReleaseJavaRes NO-SOURCE
+> Task :react-native-config:generateReleaseLintModel
+> Task :react-native-device-info:generateReleaseLintModel
+> Task :react-native-linear-gradient:processReleaseJavaRes NO-SOURCE
+> Task :react-native-device-info:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-config:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-safe-area-context:processReleaseJavaRes UP-TO-DATE
+> Task :react-native-screens:processReleaseJavaRes UP-TO-DATE
+> Task :react-native-safe-area-context:createFullJarRelease UP-TO-DATE
+> Task :react-native-linear-gradient:createFullJarRelease UP-TO-DATE
+> Task :react-native-safe-area-context:extractProguardFiles UP-TO-DATE
+> Task :react-native-linear-gradient:extractProguardFiles UP-TO-DATE
+> Task :react-native-screens:createFullJarRelease UP-TO-DATE
+> Task :react-native-screens:extractProguardFiles UP-TO-DATE
+> Task :react-native-safe-area-context:generateReleaseLintModel UP-TO-DATE
+> Task :react-native-safe-area-context:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-vector-icons:processReleaseJavaRes NO-SOURCE
+> Task :react-native-vector-icons:createFullJarRelease UP-TO-DATE
+> Task :react-native-vector-icons:extractProguardFiles UP-TO-DATE
+> Task :react-native-linear-gradient:generateReleaseLintModel UP-TO-DATE
+> Task :react-native-linear-gradient:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-vector-icons:generateReleaseLintModel UP-TO-DATE
+> Task :react-native-vector-icons:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-safe-area-context:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-safe-area-context:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :react-native-view-shot:processReleaseJavaRes NO-SOURCE
+> Task :react-native-safe-area-context:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-haptic-feedback:createFullJarRelease
+> Task :react-native-fs:generateReleaseLintModel
+> Task :react-native-view-shot:createFullJarRelease UP-TO-DATE
+> Task :react-native-view-shot:extractProguardFiles UP-TO-DATE
+> Task :react-native-screens:generateReleaseLintModel UP-TO-DATE
+> Task :react-native-fs:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-screens:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-safe-area-context:extractReleaseAnnotations UP-TO-DATE
+> Task :react-native-async-storage_async-storage:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-screens:stripReleaseDebugSymbols UP-TO-DATE
+> Task :react-native-haptic-feedback:extractProguardFiles
+> Task :react-native-view-shot:generateReleaseLintModel UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-view-shot:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-community_netinfo:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-community_netinfo:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-screens:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-community_netinfo:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-screens:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseJavaResource UP-TO-DATE
+> Task :react-native-async-storage_async-storage:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-safe-area-context:syncReleaseLibJars UP-TO-DATE
+> Task :react-native-async-storage_async-storage:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-screens:extractReleaseAnnotations UP-TO-DATE
+> Task :react-native-safe-area-context:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :react-native-screens:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-screens:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-community_netinfo:extractReleaseAnnotations
+> Task :react-native-screens:mergeReleaseJavaResource UP-TO-DATE
+> Task :react-native-config:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-community_netinfo:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-screens:syncReleaseLibJars UP-TO-DATE
+> Task :react-native-haptic-feedback:generateReleaseLintModel
+> Task :react-native-community_netinfo:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-haptic-feedback:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-screens:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :react-native-device-info:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-config:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-async-storage_async-storage:extractReleaseAnnotations
+> Task :react-native-async-storage_async-storage:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-config:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-device-info:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-device-info:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-fs:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-fs:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-fs:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-async-storage_async-storage:mergeReleaseJavaResource
+> Task :react-native-community_netinfo:mergeReleaseJavaResource
+> Task :react-native-fs:extractReleaseAnnotations
+> Task :react-native-config:extractReleaseAnnotations
+> Task :react-native-device-info:extractReleaseAnnotations
+> Task :react-native-fs:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-config:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-device-info:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-config:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-device-info:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-fs:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-device-info:mergeReleaseJavaResource
+> Task :react-native-config:mergeReleaseJavaResource
+> Task :react-native-fs:mergeReleaseJavaResource
+> Task :react-native-community_netinfo:syncReleaseLibJars
+> Task :react-native-async-storage_async-storage:syncReleaseLibJars
+> Task :react-native-config:syncReleaseLibJars
+> Task :react-native-async-storage_async-storage:bundleReleaseLocalLintAar
+> Task :react-native-device-info:syncReleaseLibJars
+> Task :react-native-community_netinfo:bundleReleaseLocalLintAar
+> Task :react-native-haptic-feedback:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-linear-gradient:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-linear-gradient:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :react-native-linear-gradient:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-fs:syncReleaseLibJars
+> Task :react-native-haptic-feedback:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-haptic-feedback:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-linear-gradient:extractReleaseAnnotations UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseJavaResource UP-TO-DATE
+> Task :react-native-device-info:bundleReleaseLocalLintAar
+> Task :react-native-linear-gradient:syncReleaseLibJars UP-TO-DATE
+> Task :react-native-linear-gradient:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :react-native-vector-icons:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-vector-icons:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :react-native-view-shot:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-fs:bundleReleaseLocalLintAar
+> Task :react-native-view-shot:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :react-native-view-shot:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-vector-icons:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-config:bundleReleaseLocalLintAar
+> Task :react-native-view-shot:extractReleaseAnnotations UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-vector-icons:extractReleaseAnnotations UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseJavaResource UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-view-shot:syncReleaseLibJars UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-view-shot:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseJavaResource UP-TO-DATE
+> Task :react-native-haptic-feedback:extractReleaseAnnotations
+> Task :react-native-vector-icons:syncReleaseLibJars UP-TO-DATE
+> Task :react-native-haptic-feedback:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-vector-icons:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :react-native-haptic-feedback:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-haptic-feedback:mergeReleaseJavaResource
+> Task :react-native-share:compileReleaseJavaWithJavac
+> Task :react-native-haptic-feedback:syncReleaseLibJars
+> Task :react-native-haptic-feedback:bundleReleaseLocalLintAar
+> Task :react-native-async-storage_async-storage:writeReleaseLintModelMetadata
+> Task :react-native-community_netinfo:writeReleaseLintModelMetadata
+> Task :react-native-config:writeReleaseLintModelMetadata
+> Task :react-native-device-info:writeReleaseLintModelMetadata
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
+
+> Task :react-native-share:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[x86_64]
+C/C++: Hard link from 'C:\Users\ghula\.gradle\caches\9.0.0\transforms\b6cf5fe63d7843ed031aa3363c7fc617\transformed\react-android-0.83.1-release\prefab\modules\reactnative\libs\android.x86_64\libreactnative.so' to 'E:\pakuni\PakUni\node_modules\react-native-gesture-handler\android\build\intermediates\cxx\RelWithDebInfo\5k602xe7\obj\x86_64\libreactnative.so' failed. Doing a slower copy instead.
+C/C++: Hard link from 'C:\Users\ghula\.gradle\caches\9.0.0\transforms\b6cf5fe63d7843ed031aa3363c7fc617\transformed\react-android-0.83.1-release\prefab\modules\reactnative\libs\android.x86_64\libreactnative.so' to 'E:\pakuni\PakUni\node_modules\react-native-gesture-handler\android\build\intermediates\cxx\RelWithDebInfo\5k602xe7\obj\x86_64\libreactnative.so' failed. Doing a slower copy instead.
+
+> Task :react-native-gesture-handler:mergeReleaseJniLibFolders
+> Task :react-native-share:bundleLibRuntimeToDirRelease
+> Task :react-native-gesture-handler:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-gesture-handler:mergeReleaseNativeLibs
+> Task :react-native-gesture-handler:copyReleaseJniLibsProjectOnly
+> Task :react-native-gesture-handler:generateReleaseBuildConfig
+> Task :react-native-gesture-handler:generateReleaseResValues
+> Task :react-native-gesture-handler:generateReleaseResources
+> Task :react-native-gesture-handler:packageReleaseResources
+> Task :react-native-gesture-handler:parseReleaseLocalResources
+> Task :react-native-gesture-handler:generateReleaseRFile
+> Task :react-native-share:extractDeepLinksRelease
+
+> Task :react-native-share:processReleaseManifest
+package="cl.json" found in source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-share\android\src\main\AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="cl.json" from the source AndroidManifest.xml: E:\pakuni\PakUni\node_modules\react-native-share\android\src\main\AndroidManifest.xml.
+
+> Task :react-native-share:compileReleaseLibraryResources
+> Task :react-native-gesture-handler:javaPreCompileRelease
+> Task :react-native-gesture-handler:writeReleaseAarMetadata
+> Task :react-native-gesture-handler:extractDeepLinksRelease
+> Task :react-native-gesture-handler:processReleaseManifest
+> Task :react-native-gesture-handler:compileReleaseLibraryResources
+> Task :react-native-share:bundleLibCompileToJarRelease
+> Task :react-native-gesture-handler:prepareReleaseArtProfile UP-TO-DATE
+> Task :react-native-share:prepareReleaseArtProfile
+> Task :react-native-share:bundleLibRuntimeToJarRelease
+> Task :react-native-gesture-handler:mergeReleaseShaders
+> Task :react-native-gesture-handler:compileReleaseShaders NO-SOURCE
+> Task :react-native-gesture-handler:generateReleaseAssets UP-TO-DATE
+> Task :react-native-gesture-handler:mergeReleaseAssets
+> Task :react-native-share:mergeReleaseShaders
+> Task :react-native-share:compileReleaseShaders NO-SOURCE
+> Task :react-native-share:generateReleaseAssets UP-TO-DATE
+> Task :react-native-share:mergeReleaseAssets
+> Task :react-native-async-storage_async-storage:lintVitalAnalyzeRelease
+> Task :react-native-community_netinfo:lintVitalAnalyzeRelease
+> Task :react-native-gesture-handler:extractProguardFiles
+> Task :react-native-gesture-handler:prepareLintJarForPublish UP-TO-DATE
+> Task :react-native-share:processReleaseJavaRes NO-SOURCE
+> Task :react-native-config:lintVitalAnalyzeRelease
+> Task :react-native-device-info:lintVitalAnalyzeRelease
+> Task :react-native-share:createFullJarRelease
+> Task :react-native-share:extractProguardFiles
+> Task :react-native-share:generateReleaseLintModel
+> Task :react-native-share:prepareLintJarForPublish
+> Task :react-native-gesture-handler:stripReleaseDebugSymbols
+> Task :react-native-gesture-handler:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-gesture-handler:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :react-native-share:stripReleaseDebugSymbols NO-SOURCE
+> Task :react-native-share:copyReleaseJniLibsProjectAndLocalJars
+> Task :react-native-share:extractDeepLinksForAarRelease
+> Task :react-native-share:extractReleaseAnnotations
+> Task :react-native-share:mergeReleaseGeneratedProguardFiles
+> Task :react-native-share:mergeReleaseConsumerProguardFiles
+> Task :react-native-share:mergeReleaseJavaResource
+> Task :react-native-share:syncReleaseLibJars
+> Task :react-native-fs:lintVitalAnalyzeRelease
+> Task :react-native-share:bundleReleaseLocalLintAar
+> Task :react-native-fs:writeReleaseLintModelMetadata
+> Task :react-native-gesture-handler:writeReleaseLintModelMetadata
+> Task :react-native-haptic-feedback:writeReleaseLintModelMetadata
+> Task :react-native-linear-gradient:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :react-native-safe-area-context:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :react-native-screens:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :react-native-share:writeReleaseLintModelMetadata
+> Task :react-native-vector-icons:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :react-native-view-shot:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :react-native-async-storage_async-storage:generateReleaseLintVitalModel
+> Task :react-native-community_netinfo:generateReleaseLintVitalModel
+> Task :react-native-config:generateReleaseLintVitalModel
+> Task :react-native-device-info:generateReleaseLintVitalModel
+> Task :react-native-fs:generateReleaseLintVitalModel
+> Task :react-native-haptic-feedback:generateReleaseLintVitalModel
+> Task :react-native-linear-gradient:generateReleaseLintVitalModel UP-TO-DATE
+> Task :react-native-safe-area-context:generateReleaseLintVitalModel UP-TO-DATE
+> Task :react-native-screens:generateReleaseLintVitalModel UP-TO-DATE
+> Task :react-native-share:generateReleaseLintVitalModel
+> Task :react-native-vector-icons:generateReleaseLintVitalModel UP-TO-DATE
+> Task :react-native-view-shot:generateReleaseLintVitalModel UP-TO-DATE
+> Task :react-native-async-storage_async-storage:bundleReleaseAar
+> Task :react-native-async-storage_async-storage:mapReleaseSourceSetPaths
+> Task :react-native-gesture-handler:compileReleaseKotlin
+> Task :react-native-async-storage_async-storage:mergeReleaseResources
+
+> Task :react-native-gesture-handler:compileReleaseKotlin
+w: file:///E:/pakuni/PakUni/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/Extensions.kt:8:8 'class UIManagerModule : ReactContextBaseJavaModule, OnBatchCompleteListener, LifecycleEventListener, UIManager' is deprecated. Deprecated in Java.
+w: file:///E:/pakuni/PakUni/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/Extensions.kt:13:29 'class UIManagerModule : ReactContextBaseJavaModule, OnBatchCompleteListener, LifecycleEventListener, UIManager' is deprecated. Deprecated in Java.
+w: file:///E:/pakuni/PakUni/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/Extensions.kt:14:32 'class UIManagerModule : ReactContextBaseJavaModule, OnBatchCompleteListener, LifecycleEventListener, UIManager' is deprecated. Deprecated in Java.
+w: file:///E:/pakuni/PakUni/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerModule.kt:173:53 This synthetic property is based on the getter function 'fun getRootViewTag(): Int' from Kotlin. In the future, synthetic properties will be available only if the base getter function came from Java. Consider replacing this property access with a 'getRootViewTag()' function call.
+
+> Task :react-native-gesture-handler:compileReleaseJavaWithJavac
+> Task :react-native-gesture-handler:bundleLibRuntimeToDirRelease
+> Task :react-native-linear-gradient:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :react-native-safe-area-context:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :react-native-gesture-handler:bundleLibCompileToJarRelease
+> Task :react-native-gesture-handler:bundleLibRuntimeToJarRelease
+> Task :react-native-screens:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :react-native-gesture-handler:processReleaseJavaRes
+> Task :react-native-vector-icons:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :react-native-gesture-handler:createFullJarRelease
+> Task :react-native-gesture-handler:generateReleaseLintModel
+> Task :react-native-gesture-handler:extractReleaseAnnotations
+> Task :react-native-gesture-handler:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :react-native-gesture-handler:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :react-native-view-shot:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :react-native-gesture-handler:generateReleaseLintVitalModel
+> Task :react-native-gesture-handler:mergeReleaseJavaResource
+> Task :react-native-gesture-handler:syncReleaseLibJars
+> Task :react-native-gesture-handler:bundleReleaseLocalLintAar
+> Task :react-native-community_netinfo:bundleReleaseAar
+> Task :react-native-community_netinfo:mapReleaseSourceSetPaths
+> Task :react-native-haptic-feedback:lintVitalAnalyzeRelease
+> Task :react-native-config:bundleReleaseAar
+> Task :react-native-config:mapReleaseSourceSetPaths
+> Task :react-native-share:lintVitalAnalyzeRelease
+> Task :react-native-device-info:bundleReleaseAar
+> Task :react-native-gesture-handler:lintVitalAnalyzeRelease
+> Task :react-native-fs:bundleReleaseAar
+> Task :react-native-fs:mapReleaseSourceSetPaths
+> Task :react-native-async-storage_async-storage:verifyReleaseResources
+> Task :react-native-gesture-handler:bundleReleaseAar
+> Task :react-native-device-info:mapReleaseSourceSetPaths
+> Task :react-native-gesture-handler:mapReleaseSourceSetPaths
+> Task :react-native-community_netinfo:mergeReleaseResources
+> Task :react-native-config:mergeReleaseResources
+> Task :react-native-async-storage_async-storage:assembleRelease
+> Task :react-native-haptic-feedback:bundleReleaseAar
+> Task :react-native-haptic-feedback:mapReleaseSourceSetPaths
+> Task :react-native-fs:mergeReleaseResources
+> Task :react-native-device-info:mergeReleaseResources
+> Task :react-native-gesture-handler:mergeReleaseResources
+> Task :react-native-haptic-feedback:mergeReleaseResources
+> Task :react-native-device-info:verifyReleaseResources
+> Task :react-native-gesture-handler:verifyReleaseResources
+> Task :react-native-config:verifyReleaseResources
+> Task :react-native-community_netinfo:verifyReleaseResources
+> Task :react-native-haptic-feedback:verifyReleaseResources
+> Task :react-native-fs:verifyReleaseResources
+> Task :react-native-device-info:assembleRelease
+> Task :react-native-linear-gradient:bundleReleaseAar UP-TO-DATE
+> Task :react-native-linear-gradient:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :react-native-linear-gradient:mergeReleaseResources UP-TO-DATE
+> Task :react-native-linear-gradient:verifyReleaseResources UP-TO-DATE
+> Task :react-native-linear-gradient:assembleRelease UP-TO-DATE
+> Task :react-native-safe-area-context:bundleReleaseAar UP-TO-DATE
+> Task :react-native-safe-area-context:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :react-native-safe-area-context:mergeReleaseResources UP-TO-DATE
+> Task :react-native-safe-area-context:verifyReleaseResources UP-TO-DATE
+> Task :react-native-safe-area-context:assembleRelease UP-TO-DATE
+> Task :react-native-screens:bundleReleaseAar UP-TO-DATE
+> Task :react-native-screens:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :react-native-screens:mergeReleaseResources UP-TO-DATE
+> Task :react-native-haptic-feedback:assembleRelease
+> Task :react-native-share:bundleReleaseAar
+> Task :react-native-share:mapReleaseSourceSetPaths
+> Task :react-native-screens:verifyReleaseResources UP-TO-DATE
+> Task :react-native-screens:assembleRelease UP-TO-DATE
+> Task :react-native-vector-icons:bundleReleaseAar UP-TO-DATE
+> Task :react-native-vector-icons:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :react-native-vector-icons:mergeReleaseResources UP-TO-DATE
+> Task :react-native-vector-icons:verifyReleaseResources UP-TO-DATE
+> Task :react-native-vector-icons:assembleRelease UP-TO-DATE
+> Task :react-native-view-shot:bundleReleaseAar UP-TO-DATE
+> Task :react-native-view-shot:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :react-native-view-shot:mergeReleaseResources UP-TO-DATE
+> Task :react-native-view-shot:verifyReleaseResources UP-TO-DATE
+> Task :react-native-view-shot:assembleRelease UP-TO-DATE
+> Task :react-native-community_netinfo:assembleRelease
+> Task :react-native-config:assembleRelease
+> Task :react-native-fs:assembleRelease
+> Task :react-native-gesture-handler:assembleRelease
+> Task :react-native-share:mergeReleaseResources
+> Task :react-native-share:verifyReleaseResources
+> Task :react-native-share:assembleRelease
+
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
+C/C++: Hard link from 'C:\Users\ghula\.gradle\caches\9.0.0\transforms\b6cf5fe63d7843ed031aa3363c7fc617\transformed\react-android-0.83.1-release\prefab\modules\reactnative\libs\android.arm64-v8a\libreactnative.so' to 'E:\pakuni\PakUni\android\app\build\intermediates\cxx\RelWithDebInfo\5b3z757t\obj\arm64-v8a\libreactnative.so' failed. Doing a slower copy instead.
+C/C++: Hard link from 'C:\Users\ghula\.gradle\caches\9.0.0\transforms\b6cf5fe63d7843ed031aa3363c7fc617\transformed\react-android-0.83.1-release\prefab\modules\reactnative\libs\android.arm64-v8a\libreactnative.so' to 'E:\pakuni\PakUni\android\app\build\intermediates\cxx\RelWithDebInfo\5b3z757t\obj\arm64-v8a\libreactnative.so' failed. Doing a slower copy instead.

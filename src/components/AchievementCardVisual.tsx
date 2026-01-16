@@ -522,7 +522,10 @@ export const ShareableAchievementCard: React.FC<ShareableAchievementCardProps> =
   const style = CARD_STYLES[achievement.type] || CARD_STYLES.custom;
 
   const handleShareWithImage = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     
     setIsSharing(true);
     try {
@@ -553,11 +556,12 @@ export const ShareableAchievementCard: React.FC<ShareableAchievementCardProps> =
       
       onShareComplete?.(result.shared);
       
-      if (result.shared) {
-        // Optional: Show success feedback
+      if (!result.success && result.error) {
+        Alert.alert('Sharing Failed', result.error);
       }
     } catch (error) {
       console.error('Error sharing card:', error);
+      Alert.alert('Error', 'Failed to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -565,7 +569,10 @@ export const ShareableAchievementCard: React.FC<ShareableAchievementCardProps> =
   };
 
   const handleSaveCard = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Error', 'Unable to capture card. Please try again.');
+      return;
+    }
     
     setIsSaving(true);
     try {
@@ -575,16 +582,17 @@ export const ShareableAchievementCard: React.FC<ShareableAchievementCardProps> =
       if (result.success) {
         Alert.alert(
           '✅ Saved!',
-          'Achievement card saved to your device.',
+          'Card saved to your gallery in Pictures/PakUni folder.',
           [{text: 'OK'}]
         );
         onSaveComplete?.(true, result.uri);
       } else {
-        Alert.alert('Error', result.error || 'Failed to save card');
+        Alert.alert('Save Failed', result.error || 'Could not save card.');
         onSaveComplete?.(false);
       }
     } catch (error) {
       console.error('Error saving card:', error);
+      Alert.alert('Error', 'Failed to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);

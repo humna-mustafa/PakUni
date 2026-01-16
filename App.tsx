@@ -13,13 +13,19 @@ import AppNavigator from './src/navigation/AppNavigator';
 import {ThemeProvider, useTheme, AuthProvider} from './src/contexts';
 import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast} from './src/components';
 import {analytics} from './src/services/analytics';
+import {supabase} from './src/services/supabase';
 
 // Deep linking configuration for OAuth callbacks
 const linking = {
-  prefixes: ['pakuni://', 'https://pakuni.app'],
+  prefixes: [
+    'pakuni://',
+    'https://pakuni.app',
+    'https://therewjnnidxlddgkaca.supabase.co',
+  ],
   config: {
     screens: {
       Auth: 'auth',
+      AuthCallback: 'auth/callback',
       MainTabs: {
         screens: {
           Home: 'home',
@@ -42,7 +48,44 @@ function AppContent(): React.JSX.Element {
     analytics.initialize();
     analytics.trackEvent('app_opened');
     
+    // Handle deep links for OAuth
+    const handleDeepLink = async (event: {url: string}) => {
+      console.log('[DeepLink] Received URL:', event.url);
+      
+      // Handle Supabase OAuth callback
+      if (event.url.includes('auth/callback') || event.url.includes('auth/v1/callback')) {
+        try {
+          const url = new URL(event.url);
+          const accessToken = url.searchParams.get('access_token') || 
+                             url.hash?.match(/access_token=([^&]*)/)?.[1];
+          const refreshToken = url.searchParams.get('refresh_token') || 
+                              url.hash?.match(/refresh_token=([^&]*)/)?.[1];
+          
+          if (accessToken && refreshToken) {
+            console.log('[DeepLink] Setting session from OAuth callback');
+            await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+          }
+        } catch (error) {
+          console.error('[DeepLink] Error processing OAuth callback:', error);
+        }
+      }
+    };
+
+    // Listen for deep links
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+    
+    // Check for initial URL (app opened via deep link)
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({url});
+      }
+    });
+    
     return () => {
+      subscription.remove();
       analytics.endSession();
       analytics.cleanup();
     };

@@ -22,6 +22,22 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+        <!-- Deep link for OAuth callback -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="pakuni" android:host="auth" />
+        </intent-filter>
+        <!-- HTTPS deep link for Supabase OAuth redirect -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" 
+                  android:host="therewjnnidxlddgkaca.supabase.co"
+                  android:pathPrefix="/auth/v1/callback" />
+        </intent-filter>
       </activity>
     </application>
 </manifest>

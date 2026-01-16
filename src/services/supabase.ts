@@ -10,19 +10,39 @@ import {logger} from '../utils/logger';
 const supabaseUrl = Config.SUPABASE_URL;
 const supabaseAnonKey = Config.SUPABASE_ANON_KEY;
 
+// Security: Validate and prevent localhost/test credentials
+const isLocalhost = (url: string): boolean => {
+  return (
+    url.includes('localhost') ||
+    url.includes('127.0.0.1') ||
+    url.includes('0.0.0.0') ||
+    url.includes('placeholder')
+  );
+};
+
 // Validate configuration
 if (!supabaseUrl || !supabaseAnonKey) {
   logger.warn(
-    'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env file.',
+    'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your .env file. App will operate in offline mode.',
     undefined,
     'Supabase'
   );
 }
 
+// SECURITY: Block localhost/placeholder credentials from being used
+if (supabaseUrl && isLocalhost(supabaseUrl)) {
+  logger.error(
+    'SECURITY ERROR: Detected localhost/placeholder Supabase URL in configuration. This prevents login on local development machines.',
+    undefined,
+    'Supabase'
+  );
+  throw new Error('Invalid Supabase configuration: localhost/test credentials detected. Use production credentials only.');
+}
+
 // Use fallback empty values to prevent crash during development
 // App will work in offline mode with bundled data
-const safeSupabaseUrl = supabaseUrl || 'https://placeholder.supabase.co';
-const safeSupabaseAnonKey = supabaseAnonKey || 'placeholder_key';
+const safeSupabaseUrl = supabaseUrl || '';
+const safeSupabaseAnonKey = supabaseAnonKey || '';
 
 export const supabase = createClient(safeSupabaseUrl, safeSupabaseAnonKey, {
   auth: {
