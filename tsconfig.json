@@ -1,7 +1,12 @@
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["es2019"],
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -9,10 +14,12 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
-    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
-    "moduleResolution": "bundler"
+    "types": ["jest", "node"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods", "**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/_legacy/**", "**/data-import/**"]

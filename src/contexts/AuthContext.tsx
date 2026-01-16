@@ -23,7 +23,7 @@ import {
 
 // Configure Google Sign-In with Web Client ID
 GoogleSignin.configure({
-  webClientId: '69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com',
+  webClientId: '69201457652-q8n88n7sf55dl0sp70488agcrjctttc9.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
@@ -238,13 +238,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       let profile: UserProfile;
 
       if (data && !error) {
+        // Get avatar from Google if not in profile
+        let avatarUrl = data.avatar_url;
+        if (!avatarUrl && provider === 'google') {
+          const {data: authUser} = await supabase.auth.getUser();
+          avatarUrl = authUser?.user?.user_metadata?.picture 
+            || authUser?.user?.user_metadata?.avatar_url 
+            || null;
+          
+          // Update profile with avatar if found
+          if (avatarUrl) {
+            await supabase
+              .from('profiles')
+              .update({ avatar_url: avatarUrl })
+              .eq('id', userId);
+          }
+        }
+        
         // Map database field names (snake_case) to app field names (camelCase)
         profile = {
           ...DEFAULT_USER,
           id: data.id,
           email: data.email,
           fullName: data.full_name || 'Student',
-          avatarUrl: data.avatar_url,
+          avatarUrl: avatarUrl,
           phone: data.phone,
           city: data.city,
           currentClass: data.current_class,
@@ -286,13 +303,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         const now = new Date().toISOString();
         
         console.log('[Auth] Creating missing profile for user:', userId);
+        console.log('[Auth] User metadata:', JSON.stringify(authUser?.user?.user_metadata));
+        
+        // Google stores avatar in 'picture' or 'avatar_url' field
+        const avatarUrl = authUser?.user?.user_metadata?.avatar_url 
+          || authUser?.user?.user_metadata?.picture 
+          || null;
         
         profile = {
           ...DEFAULT_USER,
           id: userId,
           email: authUser?.user?.email || null,
-          fullName: authUser?.user?.user_metadata?.full_name || 'Student',
-          avatarUrl: authUser?.user?.user_metadata?.avatar_url || null,
+          fullName: authUser?.user?.user_metadata?.full_name || authUser?.user?.user_metadata?.name || 'Student',
+          avatarUrl: avatarUrl,
           provider,
           isGuest: false,
           isVerified: !!authUser?.user?.confirmed_at,  // ✅ Add verification check

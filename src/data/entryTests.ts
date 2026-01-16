@@ -24,7 +24,40 @@ export interface EntryTestData {
   };
   tips: string[];
   provinces: string[];
+  // NEW FIELDS for enhanced UX
+  application_steps?: string[];
+  status_notes?: string;
+  brand_colors?: {
+    primary: string;
+    secondary: string;
+    gradient: string[];
+  };
 }
+
+export const ENTRY_TEST_BRAND_COLORS: Record<string, { primary: string; secondary: string; gradient: string[] }> = {
+  'mdcat': { primary: '#1A5F2A', secondary: '#2E8B3D', gradient: ['#1A5F2A', '#2E8B3D', '#3CB371'] }, // Medical Green
+  'ecat': { primary: '#8B4513', secondary: '#A0522D', gradient: ['#663311', '#8B4513', '#A0522D'] }, // Engineering Brown
+  'nust': { primary: '#003366', secondary: '#0055A5', gradient: ['#002244', '#003366', '#0055A5'] }, // NUST Blue
+  'nums': { primary: '#800000', secondary: '#A52A2A', gradient: ['#600000', '#800000', '#A52A2A'] }, // NUMS Maroon
+  'etea': { primary: '#006400', secondary: '#008000', gradient: ['#004D00', '#006400', '#008000'] }, // KPK Green
+  'uat': { primary: '#004B87', secondary: '#0066B3', gradient: ['#003366', '#004B87', '#0066B3'] },  // Agriculture Blue
+  'sat': { primary: '#003399', secondary: '#0055CC', gradient: ['#001144', '#003399', '#0055CC'] }, // Global Blue
+  'default': { primary: '#6366F1', secondary: '#8B5CF6', gradient: ['#4F46E5', '#6366F1', '#8B5CF6'] },
+};
+
+export const getEntryTestBrandColors = (nameOrId: string): { primary: string; secondary: string; gradient: string[] } => {
+  const searchTerm = nameOrId.toLowerCase();
+  
+  if (searchTerm.includes('mdcat')) return ENTRY_TEST_BRAND_COLORS.mdcat;
+  if (searchTerm.includes('ecat')) return ENTRY_TEST_BRAND_COLORS.ecat;
+  if (searchTerm.includes('nust') || searchTerm.includes('net-')) return ENTRY_TEST_BRAND_COLORS.nust;
+  if (searchTerm.includes('nums')) return ENTRY_TEST_BRAND_COLORS.nums;
+  if (searchTerm.includes('etea')) return ENTRY_TEST_BRAND_COLORS.etea;
+  if (searchTerm.includes('uat')) return ENTRY_TEST_BRAND_COLORS.uat;
+  if (searchTerm.includes('sat')) return ENTRY_TEST_BRAND_COLORS.sat;
+  
+  return ENTRY_TEST_BRAND_COLORS.default;
+};
 
 export const ENTRY_TESTS_DATA: EntryTestData[] = [
   {
@@ -65,6 +98,14 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Time management is key - 1 min per question',
     ],
     provinces: ['All Pakistan'],
+    status_notes: 'Registration Opening June 2026',
+    application_steps: [
+      'Create profile on PMC Online Portal',
+      'Upload Scanned Documents (Form-B/CNIC, FSc Result)',
+      'Generate Fee Challan and pay at any HBL/ABL branch',
+      'Upload paid challan and select preferred test city',
+      'Download Admit Card 1 week before the test',
+    ],
   },
   {
     id: 'ecat-2026',
@@ -103,6 +144,14 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Focus on FSc Part 2 topics',
     ],
     provinces: ['Punjab', 'KPK'],
+    status_notes: 'Admissions for Fall 2026 starting soon',
+    application_steps: [
+      'Buy ECAT Token from HBL branches (Rs. 2500)',
+      'Log in to UET Admission Portal using token serial number',
+      'Fill personal and academic details',
+      'Select Test Center and Date slot',
+      'Print Admit Card immediately after registration',
+    ],
   },
   {
     id: 'net-2026',
@@ -126,7 +175,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       total_marks: 200,
       total_questions: 200,
       duration_minutes: 180,
-      negative_marking: true,
+      negative_marking: false,
       sections: [
         {name: 'Mathematics', questions: 80, marks: 80},
         {name: 'Physics', questions: 60, marks: 60},
@@ -142,6 +191,14 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'English vocabulary is important',
     ],
     provinces: ['All Pakistan'],
+    status_notes: 'NET-1 Registration Open',
+    application_steps: [
+      'Create account on NUST Admission Portal',
+      'Complete Profile with Matric/FSc marks',
+      'Select Series (NET-1, 2, 3, or 4) and Program',
+      'Pay fee online or via bank challan',
+      'Select Test Center (Islamabad, Karachi, or Quetta) and Date',
+    ],
   },
   {
     id: 'giki-2026',
@@ -218,6 +275,14 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'English includes vocabulary',
     ],
     provinces: ['All Pakistan'],
+    status_notes: 'Admission Schedule Released',
+    application_steps: [
+      'Apply online at nu.edu.pk/Admissions',
+      'Choose preferred campus (ISB, LHR, KHI, PWR, CFD)',
+      'Upload certificates and pay fee online',
+      'Schedule entry test at any of the NUCES campuses',
+      'Bring original CNIC and Admit Card on test day',
+    ],
   },
   {
     id: 'lums-sat-2026',
@@ -255,6 +320,14 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Apply early for NOP scholarship',
     ],
     provinces: ['All Pakistan'],
+    status_notes: 'Round 1 Deadline Approaching',
+    application_steps: [
+      'Complete online application form',
+      'Identify two referees for recommendation letters',
+      'Upload academic records (O/A Levels or Matric/FSc)',
+      'Submit SAT/ACT scores or register for LCBT',
+      'Pay application fee via designated bank or credit card',
+    ],
   },
   {
     id: 'nat-ie-2026',

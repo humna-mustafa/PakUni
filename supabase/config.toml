@@ -314,7 +314,7 @@ email_optional = false
 # Google OAuth Provider
 [auth.external.google]
 enabled = true
-client_id = "69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com"
+client_id = "69201457652-q8n88n7sf55dl0sp70488agcrjctttc9.apps.googleusercontent.com"
 # DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
 secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 # Overrides the default auth redirectUrl.

@@ -63,26 +63,28 @@ const LOGO_SIZES: Record<LogoSize, {
   hero: {icon: 140, text: 56, tagline: 20, gap: 16, containerPadding: 16},
 };
 
-// Brand Colors
+// Brand Colors - Matching App Theme
 const BRAND_COLORS = {
-  primary: '#6366F1',       // Indigo
-  primaryDark: '#4F46E5',   // Darker indigo
-  secondary: '#10B981',     // Emerald
-  accent: '#8B5CF6',        // Violet
-  gold: '#F59E0B',          // Amber
-  goldLight: '#FBBF24',     // Light amber
-  pakistanGreen: '#01411C', // Pakistan flag green
+  primary: '#1E88E5',       // Professional Blue (app primary)
+  primaryDark: '#1565C0',   // Darker blue
+  primaryLight: '#3399FF',  // Lighter blue
+  secondary: '#00897B',     // Teal (app secondary)
+  accent: '#0077E6',        // Deep blue accent
+  gold: '#FFC107',          // Classic academic gold
+  goldLight: '#FFD54F',     // Light gold
+  goldDark: '#FF8F00',      // Dark gold
+  pakistanGreen: '#00695C', // Pakistan-inspired green
   white: '#FFFFFF',
 };
 
-// Premium gradients
+// Premium gradients - Matching App Theme
 const GRADIENT_PRESETS = {
-  primary: ['#6366F1', '#8B5CF6'],
-  emerald: ['#10B981', '#059669'],
-  golden: ['#F59E0B', '#D97706'],
-  royal: ['#6366F1', '#4F46E5', '#7C3AED'],
-  pakistan: ['#01411C', '#115740'],
-  premium: ['#6366F1', '#8B5CF6', '#EC4899'],
+  primary: ['#3399FF', '#1E88E5'],
+  emerald: ['#00897B', '#00695C'],
+  golden: ['#FFD54F', '#FFC107'],
+  royal: ['#1E88E5', '#1565C0', '#0D47A1'],
+  pakistan: ['#00897B', '#00695C'],
+  premium: ['#3399FF', '#1E88E5', '#0077E6'],
 };
 
 // ============================================================================
@@ -188,7 +190,7 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
       <View style={[iconStyles.bookContainer, {bottom: size * 0.05}]}>
         {/* Left Book Page */}
         <LinearGradient
-          colors={['#10B981', '#059669']}
+          colors={['#00897B', '#00695C']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[
@@ -209,7 +211,7 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
         
         {/* Right Book Page */}
         <LinearGradient
-          colors={['#059669', '#10B981']}
+          colors={['#00695C', '#00897B']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[
@@ -478,7 +480,7 @@ const iconStyles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#F59E0B',
+        shadowColor: '#FFC107',
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.5,
         shadowRadius: 4,
@@ -784,8 +786,8 @@ export const LogoBadge: React.FC<LogoBadgeProps> = memo(({size = 'md', showGlow 
               height: badgeSize + 16,
               borderRadius: (badgeSize + 16) / 2,
               backgroundColor: isDark 
-                ? 'rgba(99, 102, 241, 0.2)' 
-                : 'rgba(99, 102, 241, 0.15)',
+                ? 'rgba(30, 136, 229, 0.2)' 
+                : 'rgba(30, 136, 229, 0.15)',
             },
           ]}
         />

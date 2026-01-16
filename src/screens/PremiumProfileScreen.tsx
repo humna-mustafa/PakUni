@@ -353,7 +353,7 @@ const PremiumProfileScreen = () => {
         </View>
         <View style={[styles.completionBar, {backgroundColor: colors.border}]}>
           <LinearGradient
-            colors={[colors.primary, '#0D47A1']}
+            colors={[colors.primary, colors.primaryDark || '#0284C7']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={[styles.completionFill, {width: `${getProfileCompletion()}%`}]}
@@ -596,7 +596,7 @@ const PremiumProfileScreen = () => {
 
       {/* Action Buttons */}
       <TouchableOpacity style={styles.actionBtnWrapper} onPress={() => navigation.navigate('Calculator')}>
-        <LinearGradient colors={[colors.primary, '#0D47A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
+        <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
           <Icon name="analytics-outline" family="Ionicons" size={22} color="#FFFFFF" />
           <Text style={styles.actionBtnText}>Calculate My Merit</Text>
         </LinearGradient>
@@ -692,41 +692,10 @@ const PremiumProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Quick Actions - Compact grid */}
-      <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-          <Icon name="rocket-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Quick Actions</Text>
-        </View>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm}}>
-          {[
-            {iconName: 'analytics-outline', label: 'Calculator', screen: 'Calculator' as const, color: '#6366F1'},
-            {iconName: 'bulb-outline', label: 'Career Quiz', screen: 'InterestQuiz' as const, color: '#F59E0B'},
-            {iconName: 'flag-outline', label: 'My Goals', screen: 'GoalSetting' as const, color: '#10B981'},
-            {iconName: 'ribbon-outline', label: 'Achievements', screen: 'Achievements' as const, color: '#8B5CF6'},
-            {iconName: 'book-outline', label: 'Guides', screen: 'Guides' as const, color: '#3B82F6'},
-            {iconName: 'game-controller-outline', label: 'Predict', screen: 'ResultGame' as const, color: '#EC4899'},
-            {iconName: 'clipboard-outline', label: 'Tools', screen: 'Tools' as const, color: '#14B8A6'},
-            {iconName: 'home-outline', label: 'Career Tips', screen: 'KidsHub' as const, color: '#F59E0B'},
-          ].map(action => (
-            <TouchableOpacity 
-              key={action.screen} 
-              style={[styles.quickActionCompact, {backgroundColor: colors.card}]} 
-              onPress={() => navigation.navigate(action.screen)}
-              activeOpacity={0.7}>
-              <View style={[styles.quickActionIconSmall, {backgroundColor: `${action.color}15`}]}>
-                <Icon name={action.iconName} family="Ionicons" size={18} color={action.color} />
-              </View>
-              <Text style={[styles.quickActionLabelSmall, {color: colors.text}]}>{action.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
       {/* Auth Button */}
       {isGuest ? (
         <TouchableOpacity style={styles.logoutBtn} onPress={() => navigation.navigate('Auth')}>
-          <LinearGradient colors={[colors.primary, '#0D47A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
+          <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-in-outline" family="Ionicons" size={22} color="#FFFFFF" />
             <Text style={styles.logoutText}>Sign In / Create Account</Text>
           </LinearGradient>
@@ -764,7 +733,7 @@ const PremiumProfileScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Header */}
           <Animated.View style={{opacity: headerAnim, transform: [{translateY: headerAnim.interpolate({inputRange: [0, 1], outputRange: [-20, 0]})}]}}>
-            <LinearGradient colors={isDark ? ['#0F172A', '#1E3A5F', '#1A7AEB'] : ['#1A7AEB', '#0D5BC4', '#0847A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.headerGradient}>
+            <LinearGradient colors={isDark ? [colors.backgroundSecondary, colors.background, colors.primaryDark] : [colors.primary, colors.primaryDark, '#0369A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.headerGradient}>
               <View style={styles.headerDecoCircle1} />
               <View style={styles.headerDecoCircle2} />
               <View style={styles.headerDecoCircle3} />

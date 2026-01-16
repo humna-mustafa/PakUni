@@ -321,6 +321,13 @@ const AdminDashboardScreen: React.FC = () => {
             />
             
             <QuickAction
+              title="Push Notifications"
+              iconName="notifications-outline"
+              color="#EC4899"
+              onPress={() => navigation.navigate('AdminNotifications' as never)}
+            />
+            
+            <QuickAction
               title="User Feedback"
               iconName="chatbubbles-outline"
               color="#F59E0B"
@@ -329,10 +336,24 @@ const AdminDashboardScreen: React.FC = () => {
             />
             
             <QuickAction
+              title="Error Reports"
+              iconName="bug-outline"
+              color="#DC2626"
+              onPress={() => navigation.navigate('AdminErrorReports' as never)}
+            />
+            
+            <QuickAction
               title="Analytics"
               iconName="analytics-outline"
               color="#06B6D4"
               onPress={() => navigation.navigate('AdminAnalytics' as never)}
+            />
+            
+            <QuickAction
+              title="Data Management"
+              iconName="server-outline"
+              color="#14B8A6"
+              onPress={() => navigation.navigate('AdminDataManagement' as never)}
             />
             
             <QuickAction

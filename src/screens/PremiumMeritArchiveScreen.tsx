@@ -496,7 +496,7 @@ const PremiumMeritArchiveScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
-          stickyHeaderIndices={[3]}
+          stickyHeaderIndices={[1]}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -506,8 +506,9 @@ const PremiumMeritArchiveScreen = () => {
             />
           }>
 
-          {/* Year Selector */}
-          <ScrollView
+          <View>
+            {/* Year Selector */}
+            <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.yearContainer}>
@@ -629,6 +630,7 @@ const PremiumMeritArchiveScreen = () => {
           {trendData.length > 1 && (
             <TrendChart data={trendData} colors={colors} isDark={isDark} />
           )}
+          </View>
 
           {/* Table Header - Sticky */}
           <View style={[styles.tableHeader, {backgroundColor: colors.background}]}>

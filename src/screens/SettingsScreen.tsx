@@ -137,9 +137,12 @@ const SettingsScreen: React.FC = () => {
   const checkGoogleLinkStatus = async () => {
     try {
       // Check if user signed in with Google or has Google linked
-      const isSignedIn = await GoogleSignin.isSignedIn();
-      setIsGoogleLinked(isSignedIn || user?.provider === 'google');
+      // Note: isSignedIn() was removed in newer versions - check provider instead
+      const currentUser = await GoogleSignin.getCurrentUser();
+      setIsGoogleLinked(!!currentUser || user?.provider === 'google');
     } catch (error) {
+      // If error, just check provider
+      setIsGoogleLinked(user?.provider === 'google');
       console.log('Error checking Google status:', error);
     }
   };
@@ -541,7 +544,7 @@ const SettingsScreen: React.FC = () => {
           <Section title="HELP & SUPPORT" colors={colors}>
             <SettingItem
               icon="chatbubbles-outline"
-              iconColor="#1A7AEB"
+              iconColor="#0EA5E9"
               title="Contact & Support Center"
               subtitle="Report issues, suggest features, share resources"
               colors={colors}

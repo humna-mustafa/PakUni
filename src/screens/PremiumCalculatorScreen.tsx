@@ -1540,7 +1540,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xl,
     overflow: 'hidden',
     elevation: 4,
-    shadowColor: '#1A7AEB',
+    shadowColor: '#0EA5E9',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,

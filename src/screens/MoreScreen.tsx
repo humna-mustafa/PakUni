@@ -30,13 +30,12 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 // ============================================================================
-// MENU ITEM DATA
+// MENU ITEM DATA - Compact Grid Layout
 // ============================================================================
 
-interface MenuItem {
+interface GridItem {
   id: string;
   title: string;
-  subtitle?: string;
   icon: string;
   color: string;
   screen: keyof RootStackParamList | 'Universities' | 'Scholarships';
@@ -46,233 +45,70 @@ interface MenuItem {
 interface MenuSection {
   title: string;
   icon: string;
-  iconColor: string;
-  items: MenuItem[];
+  items: GridItem[];
 }
 
+// Organized into logical sections with grid layout
 const MENU_SECTIONS: MenuSection[] = [
   {
-    title: 'Tools & Calculators',
+    title: 'Tools',
     icon: 'calculator-outline',
-    iconColor: '#6366F1',
     items: [
-      {
-        id: 'tools',
-        title: 'All Tools',
-        subtitle: 'Merit calculator, grade converter & more',
-        icon: 'calculator',
-        color: '#6366F1',
-        screen: 'Tools',
-      },
-      {
-        id: 'calculator',
-        title: 'Merit Calculator',
-        subtitle: 'Calculate your admission score',
-        icon: 'calculator-outline',
-        color: '#8B5CF6',
-        screen: 'Calculator',
-      },
-      {
-        id: 'compare',
-        title: 'Compare Universities',
-        subtitle: 'Side-by-side comparison',
-        icon: 'git-compare-outline',
-        color: '#0891B2',
-        screen: 'Compare',
-      },
+      {id: 'tools', title: 'All Tools', icon: 'calculator', color: '#6366F1', screen: 'Tools'},
+      {id: 'calculator', title: 'Merit Calc', icon: 'calculator-outline', color: '#8B5CF6', screen: 'Calculator'},
+      {id: 'compare', title: 'Compare', icon: 'git-compare-outline', color: '#0891B2', screen: 'Compare'},
+      {id: 'meritarchive', title: 'Merit Data', icon: 'archive-outline', color: '#64748B', screen: 'MeritArchive'},
     ],
   },
   {
-    title: 'Career & Guidance',
+    title: 'Career',
     icon: 'compass-outline',
-    iconColor: '#059669',
     items: [
-      {
-        id: 'career',
-        title: 'Career Guidance',
-        subtitle: 'Find your ideal career path',
-        icon: 'compass-outline',
-        color: '#059669',
-        screen: 'CareerGuidance',
-      },
-      {
-        id: 'recommendations',
-        title: 'AI Recommendations',
-        subtitle: 'Personalized university matches',
-        icon: 'sparkles-outline',
-        color: '#EC4899',
-        screen: 'Recommendations',
-      },
-      {
-        id: 'roadmaps',
-        title: 'Career Roadmaps',
-        subtitle: 'Step-by-step career paths',
-        icon: 'map-outline',
-        color: '#F59E0B',
-        screen: 'CareerRoadmaps',
-      },
+      {id: 'career', title: 'Guidance', icon: 'compass-outline', color: '#059669', screen: 'CareerGuidance'},
+      {id: 'recommendations', title: 'AI Match', icon: 'sparkles-outline', color: '#EC4899', screen: 'Recommendations'},
+      {id: 'roadmaps', title: 'Roadmaps', icon: 'map-outline', color: '#F59E0B', screen: 'CareerRoadmaps'},
+      {id: 'interestquiz', title: 'Quiz', icon: 'help-circle-outline', color: '#06B6D4', screen: 'InterestQuiz'},
     ],
   },
   {
-    title: 'Resources & Guides',
+    title: 'Study',
     icon: 'library-outline',
-    iconColor: '#7C3AED',
     items: [
-      {
-        id: 'entrytests',
-        title: 'Entry Tests',
-        subtitle: 'MDCAT, ECAT, NET & more',
-        icon: 'clipboard-outline',
-        color: '#DC2626',
-        screen: 'EntryTests',
-      },
-      {
-        id: 'guides',
-        title: 'Study Guides',
-        subtitle: 'Subject-wise preparation',
-        icon: 'library-outline',
-        color: '#7C3AED',
-        screen: 'Guides',
-      },
-      {
-        id: 'studytips',
-        title: 'Study Tips',
-        subtitle: 'Improve your learning',
-        icon: 'bulb-outline',
-        color: '#FBBF24',
-        screen: 'StudyTips',
-      },
-      {
-        id: 'meritarchive',
-        title: 'Merit Archive',
-        subtitle: 'Historical merit data',
-        icon: 'archive-outline',
-        color: '#64748B',
-        screen: 'MeritArchive',
-      },
+      {id: 'entrytests', title: 'Entry Tests', icon: 'clipboard-outline', color: '#DC2626', screen: 'EntryTests'},
+      {id: 'guides', title: 'Guides', icon: 'library-outline', color: '#7C3AED', screen: 'Guides'},
+      {id: 'studytips', title: 'Study Tips', icon: 'bulb-outline', color: '#FBBF24', screen: 'StudyTips'},
+      {id: 'goals', title: 'My Goals', icon: 'flag-outline', color: '#10B981', screen: 'GoalSetting'},
     ],
   },
   {
-    title: 'Deadlines & Updates',
-    icon: 'calendar-outline',
-    iconColor: '#EF4444',
-    items: [
-      {
-        id: 'deadlines',
-        title: 'Deadlines',
-        subtitle: 'Application due dates',
-        icon: 'calendar-outline',
-        color: '#EF4444',
-        screen: 'Deadlines',
-        badge: 'NEW',
-      },
-      {
-        id: 'polls',
-        title: 'Live Polls',
-        subtitle: 'Community voting',
-        icon: 'stats-chart-outline',
-        color: '#8B5CF6',
-        screen: 'Polls',
-      },
-    ],
-  },
-  {
-    title: 'Fun & Learning',
+    title: 'Explore',
     icon: 'game-controller-outline',
-    iconColor: '#10B981',
     items: [
-      {
-        id: 'resultgame',
-        title: 'Score Prediction Game',
-        subtitle: 'Guess your results',
-        icon: 'game-controller-outline',
-        color: '#10B981',
-        screen: 'ResultGame',
-      },
-      {
-        id: 'achievements',
-        title: 'Achievements',
-        subtitle: 'Track your progress',
-        icon: 'trophy-outline',
-        color: '#F59E0B',
-        screen: 'Achievements',
-      },
-      {
-        id: 'kidshub',
-        title: 'Kids Zone',
-        subtitle: 'Fun learning for young ones',
-        icon: 'happy-outline',
-        color: '#EC4899',
-        screen: 'KidsHub',
-      },
-      {
-        id: 'interestquiz',
-        title: 'Interest Quiz',
-        subtitle: 'Discover your interests',
-        icon: 'help-circle-outline',
-        color: '#06B6D4',
-        screen: 'InterestQuiz',
-      },
-    ],
-  },
-  {
-    title: 'Settings & Support',
-    icon: 'settings-outline',
-    iconColor: '#64748B',
-    items: [
-      {
-        id: 'settings',
-        title: 'Settings',
-        subtitle: 'App preferences',
-        icon: 'settings-outline',
-        color: '#64748B',
-        screen: 'Settings',
-      },
-      {
-        id: 'favorites',
-        title: 'Favorites',
-        subtitle: 'Your saved items',
-        icon: 'heart-outline',
-        color: '#EF4444',
-        screen: 'Favorites',
-      },
-      {
-        id: 'notifications',
-        title: 'Notifications',
-        subtitle: 'Manage alerts',
-        icon: 'notifications-outline',
-        color: '#3B82F6',
-        screen: 'Notifications',
-      },
-      {
-        id: 'support',
-        title: 'Contact Support',
-        subtitle: 'Get help',
-        icon: 'chatbubbles-outline',
-        color: '#0891B2',
-        screen: 'ContactSupport',
-      },
+      {id: 'deadlines', title: 'Deadlines', icon: 'calendar-outline', color: '#EF4444', screen: 'Deadlines', badge: 'NEW'},
+      {id: 'polls', title: 'Polls', icon: 'stats-chart-outline', color: '#8B5CF6', screen: 'Polls'},
+      {id: 'resultgame', title: 'Predict', icon: 'game-controller-outline', color: '#10B981', screen: 'ResultGame'},
+      {id: 'achievements', title: 'Badges', icon: 'trophy-outline', color: '#F59E0B', screen: 'Achievements'},
     ],
   },
 ];
 
 // ============================================================================
-// MENU ITEM COMPONENT
+// GRID ITEM COMPONENT - Compact 4-column grid
 // ============================================================================
 
-interface MenuItemCardProps {
-  item: MenuItem;
+interface GridItemCardProps {
+  item: GridItem;
   colors: any;
   isDark: boolean;
   onPress: () => void;
 }
 
-const MenuItemCard = memo<MenuItemCardProps>(({item, colors, isDark, onPress}) => {
+const GridItemCard = memo<GridItemCardProps>(({item, colors, isDark, onPress}) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.97,
+      toValue: 0.95,
       useNativeDriver: true,
       tension: 400,
       friction: 15,
@@ -288,43 +124,35 @@ const MenuItemCard = memo<MenuItemCardProps>(({item, colors, isDark, onPress}) =
     }).start();
   };
 
-  const iconBg = isDark ? `${item.color}25` : `${item.color}12`;
+  const iconBg = isDark ? `${item.color}30` : `${item.color}15`;
 
   return (
-    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+    <Animated.View style={[styles.gridItemWrapper, {transform: [{scale: scaleAnim}]}]}>
       <TouchableOpacity
-        style={[styles.menuItem, {backgroundColor: colors.card}]}
+        style={[styles.gridItem, {backgroundColor: colors.card}]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={1}
         accessibilityRole="button"
         accessibilityLabel={item.title}>
-        <View style={[styles.menuIconContainer, {backgroundColor: iconBg}]}>
+        <View style={[styles.gridIconContainer, {backgroundColor: iconBg}]}>
           <Icon name={item.icon} family="Ionicons" size={22} color={item.color} />
-        </View>
-        <View style={styles.menuContent}>
-          <View style={styles.menuTitleRow}>
-            <Text style={[styles.menuTitle, {color: colors.text}]}>{item.title}</Text>
-            {item.badge && (
-              <View style={[styles.menuBadge, {backgroundColor: '#EF4444'}]}>
-                <Text style={styles.menuBadgeText}>{item.badge}</Text>
-              </View>
-            )}
-          </View>
-          {item.subtitle && (
-            <Text style={[styles.menuSubtitle, {color: colors.textSecondary}]} numberOfLines={1}>
-              {item.subtitle}
-            </Text>
+          {item.badge && (
+            <View style={styles.gridBadge}>
+              <Text style={styles.gridBadgeText}>{item.badge}</Text>
+            </View>
           )}
         </View>
-        <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.textSecondary} />
+        <Text style={[styles.gridTitle, {color: colors.text}]} numberOfLines={1}>
+          {item.title}
+        </Text>
       </TouchableOpacity>
     </Animated.View>
   );
 });
 
-MenuItemCard.displayName = 'MenuItemCard';
+GridItemCard.displayName = 'GridItemCard';
 
 // ============================================================================
 // MAIN SCREEN
@@ -374,7 +202,7 @@ const MoreScreen = () => {
             onPress={handleProfilePress}
             accessibilityRole="button"
             accessibilityLabel="View profile">
-            <Icon name="person" family="Ionicons" size={20} color="#FFFFFF" />
+            <Icon name="person-outline" family="Ionicons" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
@@ -382,30 +210,18 @@ const MoreScreen = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}>
           
-          {/* Quick Access Cards */}
+          {/* Quick Access Row - Top 4 most used */}
           <View style={styles.quickAccessRow}>
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
-              onPress={() => handleNavigate('Tools')}
+              onPress={() => handleNavigate('Calculator')}
               activeOpacity={0.8}>
               <LinearGradient
                 colors={['#6366F1', '#8B5CF6']}
                 style={styles.quickCardGradient}>
-                <Icon name="calculator" family="Ionicons" size={28} color="#FFFFFF" />
+                <Icon name="calculator-outline" family="Ionicons" size={24} color="#FFFFFF" />
               </LinearGradient>
-              <Text style={[styles.quickCardTitle, {color: colors.text}]}>Tools</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.quickCard, {backgroundColor: colors.card}]}
-              onPress={() => handleNavigate('Guides')}
-              activeOpacity={0.8}>
-              <LinearGradient
-                colors={['#059669', '#10B981']}
-                style={styles.quickCardGradient}>
-                <Icon name="library" family="Ionicons" size={28} color="#FFFFFF" />
-              </LinearGradient>
-              <Text style={[styles.quickCardTitle, {color: colors.text}]}>Guides</Text>
+              <Text style={[styles.quickCardTitle, {color: colors.text}]}>Merit</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -415,9 +231,21 @@ const MoreScreen = () => {
               <LinearGradient
                 colors={['#DC2626', '#EF4444']}
                 style={styles.quickCardGradient}>
-                <Icon name="clipboard" family="Ionicons" size={28} color="#FFFFFF" />
+                <Icon name="clipboard-outline" family="Ionicons" size={24} color="#FFFFFF" />
               </LinearGradient>
               <Text style={[styles.quickCardTitle, {color: colors.text}]}>Tests</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.quickCard, {backgroundColor: colors.card}]}
+              onPress={() => handleNavigate('Deadlines')}
+              activeOpacity={0.8}>
+              <LinearGradient
+                colors={['#EF4444', '#F87171']}
+                style={styles.quickCardGradient}>
+                <Icon name="calendar-outline" family="Ionicons" size={24} color="#FFFFFF" />
+              </LinearGradient>
+              <Text style={[styles.quickCardTitle, {color: colors.text}]}>Dates</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -425,9 +253,9 @@ const MoreScreen = () => {
               onPress={() => handleNavigate('CareerGuidance')}
               activeOpacity={0.8}>
               <LinearGradient
-                colors={['#F59E0B', '#FBBF24']}
+                colors={['#059669', '#10B981']}
                 style={styles.quickCardGradient}>
-                <Icon name="compass" family="Ionicons" size={28} color="#FFFFFF" />
+                <Icon name="compass-outline" family="Ionicons" size={24} color="#FFFFFF" />
               </LinearGradient>
               <Text style={[styles.quickCardTitle, {color: colors.text}]}>Career</Text>
             </TouchableOpacity>
@@ -435,75 +263,117 @@ const MoreScreen = () => {
 
           {/* Admin Section (if admin) */}
           {isAdmin && (
-            <View style={styles.section}>
-              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm, marginLeft: SPACING.xs}}>
-                <Icon name="shield-checkmark-outline" family="Ionicons" size={18} color="#7C3AED" />
-                <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0, marginLeft: 0}]}>Admin Panel</Text>
-              </View>
-              <TouchableOpacity
-                style={[styles.adminCard, {backgroundColor: colors.card}]}
-                onPress={() => navigation.navigate('AdminDashboard')}
-                activeOpacity={0.8}>
-                <LinearGradient
-                  colors={['#7C3AED', '#A855F7']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  style={styles.adminCardGradient}>
-                  <Icon name="shield-checkmark" family="Ionicons" size={24} color="#FFFFFF" />
-                  <View style={styles.adminCardContent}>
-                    <Text style={styles.adminCardTitle}>Admin Dashboard</Text>
-                    <Text style={styles.adminCardSubtitle}>Manage users, content & settings</Text>
-                  </View>
-                  <Icon name="chevron-forward" family="Ionicons" size={20} color="#FFFFFF" />
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[styles.adminCard, {backgroundColor: colors.card}]}
+              onPress={() => navigation.navigate('AdminDashboard')}
+              activeOpacity={0.8}>
+              <LinearGradient
+                colors={['#7C3AED', '#A855F7']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.adminCardGradient}>
+                <Icon name="shield-checkmark" family="Ionicons" size={22} color="#FFFFFF" />
+                <View style={styles.adminCardContent}>
+                  <Text style={styles.adminCardTitle}>Admin Dashboard</Text>
+                  <Text style={styles.adminCardSubtitle}>Manage app content</Text>
+                </View>
+                <Icon name="chevron-forward" family="Ionicons" size={18} color="#FFFFFF" />
+              </LinearGradient>
+            </TouchableOpacity>
           )}
 
-          {/* Menu Sections */}
+          {/* Compact Grid Sections */}
           {MENU_SECTIONS.map((section) => (
             <View key={section.title} style={styles.section}>
-              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm, marginLeft: SPACING.xs}}>
-                <Icon name={section.icon} family="Ionicons" size={18} color={section.iconColor} />
-                <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0, marginLeft: 0}]}>{section.title}</Text>
+              <View style={styles.sectionHeader}>
+                <Icon name={section.icon} family="Ionicons" size={16} color={colors.textSecondary} />
+                <Text style={[styles.sectionTitle, {color: colors.textSecondary}]}>{section.title}</Text>
               </View>
-              <View style={[styles.sectionCard, {backgroundColor: colors.card}]}>
-                {section.items.map((item, index) => (
-                  <View key={item.id}>
-                    <MenuItemCard
-                      item={item}
-                      colors={colors}
-                      isDark={isDark}
-                      onPress={() => handleNavigate(item.screen)}
-                    />
-                    {index < section.items.length - 1 && (
-                      <View style={[styles.divider, {backgroundColor: colors.border}]} />
-                    )}
-                  </View>
+              <View style={styles.gridContainer}>
+                {section.items.map((item) => (
+                  <GridItemCard
+                    key={item.id}
+                    item={item}
+                    colors={colors}
+                    isDark={isDark}
+                    onPress={() => handleNavigate(item.screen)}
+                  />
                 ))}
               </View>
             </View>
           ))}
 
-          {/* Legal Links */}
-          <View style={styles.legalSection}>
+          {/* Bottom Quick Links - Settings & Support in compact row */}
+          <View style={styles.bottomLinks}>
             <TouchableOpacity
-              style={styles.legalLink}
-              onPress={() => navigation.navigate('PrivacyPolicy')}>
-              <Text style={[styles.legalText, {color: colors.textSecondary}]}>Privacy Policy</Text>
+              style={[styles.bottomLinkItem, {backgroundColor: colors.card}]}
+              onPress={() => handleNavigate('Settings')}
+              activeOpacity={0.8}>
+              <Icon name="settings-outline" family="Ionicons" size={20} color={colors.textSecondary} />
+              <Text style={[styles.bottomLinkText, {color: colors.text}]}>Settings</Text>
             </TouchableOpacity>
-            <Text style={[styles.legalDot, {color: colors.textSecondary}]}>•</Text>
+            
             <TouchableOpacity
-              style={styles.legalLink}
-              onPress={() => navigation.navigate('TermsOfService')}>
-              <Text style={[styles.legalText, {color: colors.textSecondary}]}>Terms of Service</Text>
+              style={[styles.bottomLinkItem, {backgroundColor: colors.card}]}
+              onPress={() => handleNavigate('Favorites')}
+              activeOpacity={0.8}>
+              <Icon name="heart-outline" family="Ionicons" size={20} color="#EF4444" />
+              <Text style={[styles.bottomLinkText, {color: colors.text}]}>Saved</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.bottomLinkItem, {backgroundColor: colors.card}]}
+              onPress={() => handleNavigate('Notifications')}
+              activeOpacity={0.8}>
+              <Icon name="notifications-outline" family="Ionicons" size={20} color="#3B82F6" />
+              <Text style={[styles.bottomLinkText, {color: colors.text}]}>Alerts</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.bottomLinkItem, {backgroundColor: colors.card}]}
+              onPress={() => handleNavigate('ContactSupport')}
+              activeOpacity={0.8}>
+              <Icon name="chatbubbles-outline" family="Ionicons" size={20} color="#10B981" />
+              <Text style={[styles.bottomLinkText, {color: colors.text}]}>Help</Text>
             </TouchableOpacity>
           </View>
 
-          {/* App Version */}
-          <Text style={[styles.versionText, {color: colors.textSecondary}]}>
-            PakUni v1.2.0
-          </Text>
+          {/* Kids Hub - Special link */}
+          <TouchableOpacity
+            style={[styles.kidsHubCard, {backgroundColor: colors.card}]}
+            onPress={() => handleNavigate('KidsHub')}
+            activeOpacity={0.8}>
+            <LinearGradient
+              colors={['#EC4899', '#F472B6']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.kidsHubGradient}>
+              <Icon name="happy-outline" family="Ionicons" size={22} color="#FFFFFF" />
+              <Text style={styles.kidsHubTitle}>Kids Zone</Text>
+              <Text style={styles.kidsHubSubtitle}>Fun learning!</Text>
+              <Icon name="chevron-forward" family="Ionicons" size={18} color="rgba(255,255,255,0.7)" />
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Legal & Version */}
+          <View style={styles.footer}>
+            <View style={styles.legalSection}>
+              <TouchableOpacity
+                style={styles.legalLink}
+                onPress={() => navigation.navigate('PrivacyPolicy')}>
+                <Text style={[styles.legalText, {color: colors.textSecondary}]}>Privacy</Text>
+              </TouchableOpacity>
+              <Text style={[styles.legalDot, {color: colors.textSecondary}]}>•</Text>
+              <TouchableOpacity
+                style={styles.legalLink}
+                onPress={() => navigation.navigate('TermsOfService')}>
+                <Text style={[styles.legalText, {color: colors.textSecondary}]}>Terms</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={[styles.versionText, {color: colors.textSecondary}]}>
+              PakUni v1.2.0
+            </Text>
+          </View>
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -528,23 +398,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.md,
+    paddingTop: SPACING.sm,
+    paddingBottom: SPACING.sm,
   },
   headerLeft: {},
   headerTitle: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '800',
     letterSpacing: -0.5,
   },
   headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: TYPOGRAPHY.sizes.xs,
     marginTop: 2,
   },
   profileButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -560,19 +430,21 @@ const styles = StyleSheet.create({
     }),
   },
   scrollContent: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.xs,
   },
+  // Quick Access Row
   quickAccessRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: SPACING.lg,
-    gap: SPACING.sm,
+    marginBottom: SPACING.md,
+    gap: SPACING.xs,
   },
   quickCard: {
     flex: 1,
     alignItems: 'center',
-    padding: SPACING.md,
-    borderRadius: RADIUS.xl,
+    padding: SPACING.sm,
+    borderRadius: RADIUS.lg,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -586,128 +458,182 @@ const styles = StyleSheet.create({
     }),
   },
   quickCardGradient: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   quickCardTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     textAlign: 'center',
   },
-  section: {
-    marginBottom: SPACING.lg,
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
-    marginBottom: SPACING.sm,
-    marginLeft: SPACING.xs,
-  },
-  sectionCard: {
-    borderRadius: RADIUS.xl,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 1,
-      },
-    }),
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.md,
-  },
-  menuIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: SPACING.md,
-  },
-  menuContent: {
-    flex: 1,
-  },
-  menuTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  menuTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
-  },
-  menuBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  menuBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 9,
-    fontWeight: '700',
-  },
-  menuSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: 2,
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginLeft: 56 + SPACING.md,
-  },
+  // Admin Card
   adminCard: {
-    borderRadius: RADIUS.xl,
+    borderRadius: RADIUS.lg,
     overflow: 'hidden',
+    marginBottom: SPACING.md,
   },
   adminCardGradient: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.md,
+    padding: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.sm,
   },
   adminCardContent: {
     flex: 1,
   },
   adminCardTitle: {
     color: '#FFFFFF',
-    fontSize: TYPOGRAPHY.sizes.md,
+    fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '700',
   },
   adminCardSubtitle: {
-    color: 'rgba(255,255,255,0.8)',
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: 11,
+    marginTop: 1,
+  },
+  // Section
+  section: {
+    marginBottom: SPACING.md,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: SPACING.xs,
+    marginLeft: SPACING.xs,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  // Grid Layout
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.xs,
+  },
+  gridItemWrapper: {
+    width: (SCREEN_WIDTH - SPACING.md * 2 - SPACING.xs * 3) / 4,
+  },
+  gridItem: {
+    alignItems: 'center',
+    padding: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.04,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  gridIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+    position: 'relative',
+  },
+  gridTitle: {
+    fontSize: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  gridBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#EF4444',
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  gridBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 7,
+    fontWeight: '700',
+  },
+  // Bottom Links Row
+  bottomLinks: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: SPACING.xs,
+    marginBottom: SPACING.md,
+  },
+  bottomLinkItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    gap: 6,
+  },
+  bottomLinkText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  // Kids Hub Card
+  kidsHubCard: {
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+    marginBottom: SPACING.md,
+  },
+  kidsHubGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.sm,
+  },
+  kidsHubTitle: {
+    color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: 2,
+    fontWeight: '700',
+    flex: 1,
+  },
+  kidsHubSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 11,
+    fontWeight: '500',
+  },
+  // Footer
+  footer: {
+    alignItems: 'center',
+    paddingTop: SPACING.xs,
   },
   legalSection: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: SPACING.lg,
     gap: SPACING.sm,
   },
   legalLink: {
     padding: SPACING.xs,
   },
   legalText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 11,
   },
   legalDot: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 11,
   },
   versionText: {
     textAlign: 'center',
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginTop: SPACING.md,
+    fontSize: 10,
+    marginTop: SPACING.xs,
   },
 });
 

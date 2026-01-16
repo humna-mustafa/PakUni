@@ -63,6 +63,9 @@ import {
   AdminAnalyticsScreen,
   AdminSettingsScreen,
   AdminAuditLogsScreen,
+  AdminNotificationsScreen,
+  AdminErrorReportsScreen,
+  AdminDataManagementScreen,
 } from '../screens/admin';
 
 // Components
@@ -128,6 +131,9 @@ export type RootStackParamList = {
   AdminAnalytics: undefined;
   AdminSettings: undefined;
   AdminAuditLogs: undefined;
+  AdminNotifications: undefined;
+  AdminErrorReports: undefined;
+  AdminDataManagement: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -456,6 +462,21 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="AdminAuditLogs"
             component={AdminAuditLogsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminNotifications"
+            component={AdminNotificationsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminErrorReports"
+            component={AdminErrorReportsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminDataManagement"
+            component={AdminDataManagementScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

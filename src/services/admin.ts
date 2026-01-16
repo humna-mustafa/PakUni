@@ -1922,6 +1922,527 @@ class AdminService {
       throw error;
     }
   }
+
+  // ============================================================================
+  // DATA EXPORT FUNCTIONS
+  // ============================================================================
+
+  /**
+   * Export universities data to CSV format
+   */
+  async exportUniversitiesCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('universities')
+        .select('id, name, location, city, province, type, ranking, website, contact_email, contact_phone, established_year, description')
+        .order('name');
+
+      if (error) throw error;
+
+      const headers = ['ID', 'Name', 'Location', 'City', 'Province', 'Type', 'Ranking', 'Website', 'Email', 'Phone', 'Established', 'Description'];
+      const rows = data?.map(u => [
+        u.id, u.name || '', u.location || '', u.city || '', u.province || '',
+        u.type || '', u.ranking || '', u.website || '', u.contact_email || '',
+        u.contact_phone || '', u.established_year || '', (u.description || '').substring(0, 100)
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting universities:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export scholarships data to CSV format
+   */
+  async exportScholarshipsCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('scholarships')
+        .select('id, name, provider, amount, deadline, eligibility, level, field_of_study, is_active')
+        .order('name');
+
+      if (error) throw error;
+
+      const headers = ['ID', 'Name', 'Provider', 'Amount', 'Deadline', 'Eligibility', 'Level', 'Field', 'Active'];
+      const rows = data?.map(s => [
+        s.id, s.name || '', s.provider || '', s.amount || '', s.deadline || '',
+        (s.eligibility || '').substring(0, 100), s.level || '', s.field_of_study || '', s.is_active ? 'Yes' : 'No'
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting scholarships:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export programs data to CSV format
+   */
+  async exportProgramsCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('programs')
+        .select('id, name, degree_type, duration, university_id, department, fee, intake_capacity')
+        .order('name');
+
+      if (error) throw error;
+
+      const headers = ['ID', 'Name', 'Degree Type', 'Duration', 'University ID', 'Department', 'Fee', 'Intake'];
+      const rows = data?.map(p => [
+        p.id, p.name || '', p.degree_type || '', p.duration || '',
+        p.university_id || '', p.department || '', p.fee || '', p.intake_capacity || ''
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting programs:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export users data to CSV format (non-sensitive fields only)
+   */
+  async exportUsersCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('profiles')
+        .select('id, full_name, role, is_verified, created_at, last_login_at, login_count')
+        .order('created_at', {ascending: false});
+
+      if (error) throw error;
+
+      const headers = ['ID', 'Name', 'Role', 'Verified', 'Created At', 'Last Login', 'Login Count'];
+      const rows = data?.map(u => [
+        u.id, u.full_name || 'Anonymous', u.role || 'user', u.is_verified ? 'Yes' : 'No',
+        new Date(u.created_at).toLocaleDateString(),
+        u.last_login_at ? new Date(u.last_login_at).toLocaleDateString() : 'Never',
+        u.login_count || 0
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting users:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export feedback data to CSV format
+   */
+  async exportFeedbackCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('user_feedback')
+        .select('id, type, category, title, message, rating, status, created_at')
+        .order('created_at', {ascending: false});
+
+      if (error) throw error;
+
+      const headers = ['ID', 'Type', 'Category', 'Title', 'Message', 'Rating', 'Status', 'Created'];
+      const rows = data?.map(f => [
+        f.id, f.type || '', f.category || '', f.title || '',
+        (f.message || '').substring(0, 200), f.rating || '', f.status || '',
+        new Date(f.created_at).toLocaleDateString()
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting feedback:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export merit lists data to CSV format
+   */
+  async exportMeritListsCSV(): Promise<string> {
+    try {
+      const {data, error} = await supabase
+        .from('merit_lists')
+        .select('*')
+        .order('year', {ascending: false});
+
+      if (error) throw error;
+
+      const headers = ['ID', 'University', 'Program', 'Merit %', 'Year', 'Round', 'Seats', 'Closing Date'];
+      const rows = data?.map(m => [
+        m.id, m.university_name || '', m.program_name || '', m.merit_percentage || '',
+        m.year || '', m.round || '', m.seats_available || '', m.closing_date || ''
+      ]) || [];
+
+      return this.buildCSV(headers, rows);
+    } catch (error) {
+      console.error('Error exporting merit lists:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export all data combined to CSV format
+   */
+  async exportAllDataCSV(): Promise<string> {
+    try {
+      const sections: string[] = [];
+
+      // Universities
+      sections.push('=== UNIVERSITIES ===');
+      sections.push(await this.exportUniversitiesCSV());
+
+      sections.push('\n=== SCHOLARSHIPS ===');
+      sections.push(await this.exportScholarshipsCSV());
+
+      sections.push('\n=== PROGRAMS ===');
+      sections.push(await this.exportProgramsCSV());
+
+      sections.push('\n=== USERS (Non-sensitive) ===');
+      sections.push(await this.exportUsersCSV());
+
+      sections.push('\n=== FEEDBACK ===');
+      sections.push(await this.exportFeedbackCSV());
+
+      sections.push('\n=== MERIT LISTS ===');
+      sections.push(await this.exportMeritListsCSV());
+
+      return sections.join('\n\n');
+    } catch (error) {
+      console.error('Error exporting all data:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Helper function to build CSV from headers and rows
+   */
+  private buildCSV(headers: string[], rows: any[][]): string {
+    const escapeCsvValue = (val: any): string => {
+      const str = String(val ?? '');
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    return [
+      headers.join(','),
+      ...rows.map(row => row.map(escapeCsvValue).join(','))
+    ].join('\n');
+  }
+
+  // ============================================================================
+  // MERIT LISTS MANAGEMENT
+  // ============================================================================
+
+  /**
+   * Get all merit lists
+   */
+  async getMeritLists(year?: number): Promise<any[]> {
+    try {
+      let query = supabase
+        .from('merit_lists')
+        .select('*')
+        .order('year', {ascending: false})
+        .order('university_name');
+
+      if (year) {
+        query = query.eq('year', year);
+      }
+
+      const {data, error} = await query;
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching merit lists:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Create a new merit list entry
+   */
+  async createMeritList(meritData: {
+    university_name: string;
+    program_name: string;
+    merit_percentage: number;
+    year: number;
+    round: number;
+    seats_available?: number;
+    closing_date?: string;
+  }): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('merit_lists')
+        .insert([{
+          ...meritData,
+          created_at: new Date().toISOString(),
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating merit list:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a merit list entry
+   */
+  async updateMeritList(id: string, meritData: Partial<{
+    university_name: string;
+    program_name: string;
+    merit_percentage: number;
+    year: number;
+    round: number;
+    seats_available: number;
+    closing_date: string;
+  }>): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('merit_lists')
+        .update({
+          ...meritData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error updating merit list:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a merit list entry
+   */
+  async deleteMeritList(id: string): Promise<void> {
+    try {
+      const {error} = await supabase
+        .from('merit_lists')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting merit list:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // ENTRY TEST DATES MANAGEMENT
+  // ============================================================================
+
+  /**
+   * Get all entry test dates
+   */
+  async getEntryTestDates(): Promise<any[]> {
+    try {
+      const {data, error} = await supabase
+        .from('entry_test_dates')
+        .select('*')
+        .order('test_date', {ascending: true});
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching entry test dates:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Create a new entry test date
+   */
+  async createEntryTestDate(testData: {
+    test_name: string;
+    conducting_body: string;
+    test_date: string;
+    registration_start: string;
+    registration_end: string;
+    result_date?: string;
+    fee?: number;
+    website?: string;
+    is_active: boolean;
+  }): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('entry_test_dates')
+        .insert([{
+          ...testData,
+          created_at: new Date().toISOString(),
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating entry test date:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an entry test date
+   */
+  async updateEntryTestDate(id: string, testData: Partial<{
+    test_name: string;
+    conducting_body: string;
+    test_date: string;
+    registration_start: string;
+    registration_end: string;
+    result_date: string;
+    fee: number;
+    website: string;
+    is_active: boolean;
+  }>): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('entry_test_dates')
+        .update({
+          ...testData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error updating entry test date:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete an entry test date
+   */
+  async deleteEntryTestDate(id: string): Promise<void> {
+    try {
+      const {error} = await supabase
+        .from('entry_test_dates')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting entry test date:', error);
+      throw error;
+    }
+  }
+
+  // ============================================================================
+  // ADMISSION DATES MANAGEMENT
+  // ============================================================================
+
+  /**
+   * Get all admission dates
+   */
+  async getAdmissionDates(): Promise<any[]> {
+    try {
+      const {data, error} = await supabase
+        .from('admission_dates')
+        .select('*')
+        .order('admission_start', {ascending: true});
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching admission dates:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Create a new admission date
+   */
+  async createAdmissionDate(admissionData: {
+    university_name: string;
+    program_type: string;
+    admission_start: string;
+    admission_end: string;
+    classes_start?: string;
+    fee_deadline?: string;
+    year: number;
+    is_active: boolean;
+  }): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('admission_dates')
+        .insert([{
+          ...admissionData,
+          created_at: new Date().toISOString(),
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error creating admission date:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an admission date
+   */
+  async updateAdmissionDate(id: string, admissionData: Partial<{
+    university_name: string;
+    program_type: string;
+    admission_start: string;
+    admission_end: string;
+    classes_start: string;
+    fee_deadline: string;
+    year: number;
+    is_active: boolean;
+  }>): Promise<any> {
+    try {
+      const {data, error} = await supabase
+        .from('admission_dates')
+        .update({
+          ...admissionData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error updating admission date:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete an admission date
+   */
+  async deleteAdmissionDate(id: string): Promise<void> {
+    try {
+      const {error} = await supabase
+        .from('admission_dates')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting admission date:', error);
+      throw error;
+    }
+  }
 }
 
 // ============================================================================

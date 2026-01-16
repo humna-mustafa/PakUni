@@ -205,6 +205,10 @@ export {
   useGlobalError,
 } from './EnhancedErrorBoundary';
 
+// Enhanced Error Toast with reporting functionality
+export {default as EnhancedErrorToast} from './EnhancedErrorToast';
+export type {EnhancedErrorToastConfig} from './EnhancedErrorToast';
+
 // ============================================================================
 // OPTIMIZED IMAGE
 // ============================================================================

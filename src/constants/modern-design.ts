@@ -22,17 +22,17 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 /**
  * Color Philosophy:
- * - Primary: Used sparingly for key actions and branding
+ * - Primary: Used sparingly for key actions and branding (Sky Blue)
  * - Neutral: Dominant for backgrounds, text, and UI elements
  * - Semantic: Reserved for status communication only
  */
 export const MODERN_COLORS = {
-  // Brand Primary - Refined Indigo (Used sparingly)
+  // Brand Primary - Beautiful Sky Blue
   primary: {
-    main: '#4F46E5',      // Primary brand color
-    light: '#EEF2FF',     // Subtle backgrounds
-    lighter: '#F5F3FF',   // Very subtle tints
-    dark: '#4338CA',      // Pressed states
+    main: '#0EA5E9',      // Primary brand color (Sky Blue)
+    light: '#E0F2FE',     // Subtle backgrounds
+    lighter: '#F0F9FF',   // Very subtle tints
+    dark: '#0284C7',      // Pressed states
     onPrimary: '#FFFFFF', // Text on primary
   },
 
@@ -82,11 +82,11 @@ export const MODERN_COLORS = {
 // Dark mode palette
 export const MODERN_COLORS_DARK = {
   primary: {
-    main: '#4DA3FF',
-    light: '#1A3A5C',
-    lighter: '#0D2137',
-    dark: '#66B3FF',
-    onPrimary: '#0D2137',
+    main: '#38BDF8',      // Softer Sky Blue for dark mode
+    light: '#082F49',
+    lighter: '#0C4A6E',
+    dark: '#7DD3FC',
+    onPrimary: '#FFFFFF',
   },
 
   neutral: {

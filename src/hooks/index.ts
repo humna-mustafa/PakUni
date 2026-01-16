@@ -107,3 +107,14 @@ export {
   useIsOnline,
   useOfflineRetry,
 } from './useNetworkStatus';
+
+// ============================================================================
+// ERROR HANDLING HOOKS
+// ============================================================================
+
+export {
+  ErrorHandlerProvider,
+  useErrorHandler,
+  useAsyncHandler,
+  useFormErrorHandler,
+} from './useErrorHandler';

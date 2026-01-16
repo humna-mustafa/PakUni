@@ -29,14 +29,14 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
  * - Never use color purely for decoration
  */
 export const CLEAN_COLORS = {
-  // Brand Primary - Refined indigo, sophisticated and modern
+  // Brand Primary - Beautiful sky blue, trust, learning, wisdom
   primary: {
-    50: '#EEF2FF',     // Subtle backgrounds
-    100: '#E0E7FF',    // Hover states, badges
-    200: '#C7D2FE',    // Light accents
-    500: '#4F46E5',    // Primary action color
-    600: '#4338CA',    // Pressed/active states
-    700: '#3730A3',    // Dark text on light primary bg
+    50: '#F0F9FF',     // Subtle backgrounds
+    100: '#E0F2FE',    // Hover states, badges
+    200: '#BAE6FD',    // Light accents
+    500: '#0EA5E9',    // Primary action color (Sky Blue)
+    600: '#0284C7',    // Pressed/active states
+    700: '#0369A1',    // Dark text on light primary bg
   },
 
   // Neutral Palette - Zinc-based for clean look
@@ -92,12 +92,12 @@ export const CLEAN_COLORS = {
 // Dark mode - True dark with proper contrast
 export const CLEAN_COLORS_DARK = {
   primary: {
-    50: '#0C1929',
-    100: '#122440',
-    200: '#1E3A5F',
-    500: '#60A5FA',
-    600: '#93C5FD',
-    700: '#BFDBFE',
+    50: '#082F49',
+    100: '#0C4A6E',
+    200: '#075985',
+    500: '#38BDF8',     // Softer Sky Blue for dark mode
+    600: '#7DD3FC',
+    700: '#BAE6FD',
   },
 
   neutral: {

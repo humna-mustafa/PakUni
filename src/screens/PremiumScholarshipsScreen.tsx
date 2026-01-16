@@ -20,12 +20,22 @@ import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {SCHOLARSHIPS} from '../data';
+import {
+  getScholarshipAvailabilityText,
+  getScholarshipSpecificUniversities,
+  hasBroadAvailability,
+  getScholarshipBrandColors,
+  APPLICATION_METHOD_LABELS,
+  ScholarshipData,
+} from '../data/scholarships';
+import {UNIVERSITIES} from '../data/universities';
 import {useDebouncedValue} from '../hooks/useDebounce';
 import {Haptics} from '../utils/haptics';
-import type {ScholarshipData} from '../data';
 import {Icon} from '../components/icons';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
+import SearchableDropdown, { createUniversityOptions } from '../components/SearchableDropdown';
 import FloatingToolsButton from '../components/FloatingToolsButton';
+import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
 
 // Fallback LinearGradient
@@ -34,7 +44,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#0EA5E9'}]} {...props}>
       {children}
     </View>
   );
@@ -111,7 +121,7 @@ const FilterChip = ({
   );
 };
 
-// Scholarship Card with Premium Design
+// Scholarship Card with Premium Design - Enhanced with University Availability & Application Methods
 const ScholarshipCard = ({
   item,
   colors,
@@ -178,6 +188,23 @@ const ScholarshipCard = ({
     return `PKR ${amount.toLocaleString()}`;
   };
 
+  // Get scholarship brand colors for accent
+  const brandColors = getScholarshipBrandColors(item.name);
+  const accentColor = brandColors?.primary || colors.primary;
+
+  // Get availability info
+  const availabilityText = getScholarshipAvailabilityText(item);
+  const specificUniversities = getScholarshipSpecificUniversities(item);
+  const isBroadlyAvailable = hasBroadAvailability(item);
+  const universityCount = specificUniversities.length;
+
+  // Get application method info
+  const applicationMethod = item.application_method || 'online_portal';
+  const methodInfo = APPLICATION_METHOD_LABELS[applicationMethod];
+
+  // Check if active
+  const isActive = item.is_active !== false;
+
   return (
     <Animated.View
       style={[
@@ -201,24 +228,39 @@ const ScholarshipCard = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         accessibilityRole="button"
-        accessibilityLabel={`${item.name} by ${item.provider}, ${item.coverage_percentage}% coverage`}
+        accessibilityLabel={`${item.name} by ${item.provider}, ${item.coverage_percentage}% coverage${!isActive ? ', currently inactive' : ''}`}
         accessibilityHint="Double tap to view scholarship details">
-        <View style={[styles.card, {backgroundColor: colors.card}]}>
-          {/* Coverage Badge */}
-          <View
-            style={[
-              styles.coverageBadge,
-              {backgroundColor: getCoverageColor(item.coverage_percentage) + '20'},
-            ]}>
-            <Text style={[styles.coverageText, {color: getCoverageColor(item.coverage_percentage)}]}>
-              {item.coverage_percentage}% Coverage
-            </Text>
+        <View style={[styles.card, {backgroundColor: colors.card, borderLeftColor: accentColor, borderLeftWidth: 4}]}>
+          {/* Top Badges Row */}
+          <View style={styles.badgesRow}>
+            {/* Status Badge */}
+            <View
+              style={[
+                styles.statusBadge,
+                {backgroundColor: isActive ? '#10B98120' : '#EF444420'},
+              ]}>
+              <View style={[styles.statusDot, {backgroundColor: isActive ? '#10B981' : '#EF4444'}]} />
+              <Text style={[styles.statusText, {color: isActive ? '#10B981' : '#EF4444'}]}>
+                {isActive ? 'Active' : 'Inactive'}
+              </Text>
+            </View>
+
+            {/* Coverage Badge */}
+            <View
+              style={[
+                styles.coverageBadge,
+                {backgroundColor: getCoverageColor(item.coverage_percentage) + '20'},
+              ]}>
+              <Text style={[styles.coverageText, {color: getCoverageColor(item.coverage_percentage)}]}>
+                {item.coverage_percentage}% Coverage
+              </Text>
+            </View>
           </View>
 
           {/* Header */}
           <View style={styles.cardHeader}>
-            <View style={[styles.iconContainer, {backgroundColor: colors.primaryLight}]}>
-              <Icon name={getTypeIconName(item.type)} family="Ionicons" size={24} color={colors.primary} />
+            <View style={[styles.iconContainer, {backgroundColor: accentColor + '20'}]}>
+              <Icon name={getTypeIconName(item.type)} family="Ionicons" size={24} color={accentColor} />
             </View>
             <View style={styles.titleContainer}>
               <Text style={[styles.cardTitle, {color: colors.text}]} numberOfLines={2}>
@@ -234,6 +276,38 @@ const ScholarshipCard = ({
           <Text style={[styles.cardDescription, {color: colors.textSecondary}]} numberOfLines={2}>
             {item.description}
           </Text>
+
+          {/* University Availability Section */}
+          <View style={[styles.availabilitySection, {backgroundColor: colors.background}]}>
+            <View style={styles.availabilityHeader}>
+              <Icon name="school-outline" family="Ionicons" size={16} color={colors.primary} />
+              <Text style={[styles.availabilityTitle, {color: colors.text}]}>Available At</Text>
+            </View>
+            <Text style={[styles.availabilityText, {color: colors.textSecondary}]}>
+              {availabilityText}
+            </Text>
+            {!isBroadlyAvailable && universityCount > 0 && universityCount <= 4 && (
+              <View style={styles.universityLogosRow}>
+                {specificUniversities.slice(0, 4).map((uni: any) => (
+                  <View key={uni.id} style={styles.miniLogoContainer}>
+                    <UniversityLogo
+                      universityName={uni.name}
+                      size={28}
+                      style={styles.miniLogo}
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+
+          {/* Application Method Badge */}
+          <View style={[styles.applicationMethodBadge, {backgroundColor: colors.background}]}>
+            <Icon name={methodInfo.icon} family="Ionicons" size={14} color={accentColor} />
+            <Text style={[styles.applicationMethodText, {color: colors.textSecondary}]}>
+              {methodInfo.label}
+            </Text>
+          </View>
 
           {/* Stats Row */}
           <View style={styles.statsRow}>
@@ -269,8 +343,9 @@ const ScholarshipCard = ({
                 {item.eligibility[0]}
               </Text>
             </View>
-            <View style={[styles.viewBtn, {backgroundColor: colors.primary + '15'}]}>
-              <Text style={[styles.viewBtnText, {color: colors.primary}]}>Details</Text>
+            <View style={[styles.viewBtn, {backgroundColor: accentColor + '15'}]}>
+              <Text style={[styles.viewBtnText, {color: accentColor}]}>Details</Text>
+              <Icon name="chevron-forward" family="Ionicons" size={14} color={accentColor} />
             </View>
           </View>
         </View>
@@ -287,6 +362,7 @@ const PremiumScholarshipsScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<FilterType>('all');
+  const [selectedUniversity, setSelectedUniversity] = useState<string | null>(null);
   const [selectedScholarship, setSelectedScholarship] = useState<ScholarshipData | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -356,18 +432,31 @@ const PremiumScholarshipsScreen = () => {
     [],
   );
 
+  const universityOptions = useMemo(() => createUniversityOptions(UNIVERSITIES), []);
+
   const filteredScholarships = useMemo(() => {
     return SCHOLARSHIPS.filter((scholarship: ScholarshipData) => {
+      // Basic search
       const matchesSearch =
         scholarship.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
         scholarship.provider.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
         scholarship.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
 
+      // Type filter
       const matchesType = selectedType === 'all' || scholarship.type === selectedType;
 
-      return matchesSearch && matchesType;
+      // University filter
+      let matchesUni = true;
+      if (selectedUniversity) {
+        const isBroad = hasBroadAvailability(scholarship.available_at);
+        const specificUnis = getScholarshipSpecificUniversities(scholarship.available_at);
+        
+        matchesUni = isBroad || specificUnis.includes(selectedUniversity);
+      }
+
+      return matchesSearch && matchesType && matchesUni;
     });
-  }, [debouncedSearchQuery, selectedType]);
+  }, [debouncedSearchQuery, selectedType, selectedUniversity]);
 
   const openLink = useCallback((url?: string) => {
     if (url) {
@@ -600,6 +689,95 @@ const PremiumScholarshipsScreen = () => {
                   {selectedScholarship.description}
                 </Text>
               </View>
+
+              {/* NEW: University Availability Section */}
+              {(() => {
+                const availabilityText = getScholarshipAvailabilityText(selectedScholarship);
+                const specificUniversities = getScholarshipSpecificUniversities(selectedScholarship);
+                const isBroadlyAvailable = hasBroadAvailability(selectedScholarship);
+                const brandColors = getScholarshipBrandColors(selectedScholarship.name);
+                const accentColor = brandColors?.primary || colors.primary;
+
+                return (
+                  <View style={styles.section}>
+                    <Text style={[styles.sectionTitle, {color: colors.text}]}>
+                      <Icon name="school-outline" family="Ionicons" size={16} color={accentColor} />
+                      {'  '}Where Available
+                    </Text>
+                    <View style={[styles.availabilitySectionModal, {backgroundColor: colors.background, borderLeftColor: accentColor}]}>
+                      <Text style={[styles.availabilityTextModal, {color: colors.text}]}>
+                        {availabilityText}
+                      </Text>
+                      {!isBroadlyAvailable && specificUniversities.length > 0 && (
+                        <View style={styles.universityListModal}>
+                          {specificUniversities.slice(0, 8).map((uni: any) => (
+                            <View key={uni.id} style={[styles.universityItemModal, {backgroundColor: colors.card}]}>
+                              <UniversityLogo
+                                universityName={uni.name}
+                                size={32}
+                                style={styles.uniLogoModal}
+                              />
+                              <Text style={[styles.uniNameModal, {color: colors.text}]} numberOfLines={2}>
+                                {uni.name}
+                              </Text>
+                            </View>
+                          ))}
+                          {specificUniversities.length > 8 && (
+                            <Text style={[styles.moreUnisText, {color: colors.textSecondary}]}>
+                              +{specificUniversities.length - 8} more universities
+                            </Text>
+                          )}
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                );
+              })()}
+
+              {/* NEW: Application Method Section */}
+              {(() => {
+                const applicationMethod = selectedScholarship.application_method || 'online_portal';
+                const methodInfo = APPLICATION_METHOD_LABELS[applicationMethod];
+                const brandColors = getScholarshipBrandColors(selectedScholarship.name);
+                const accentColor = brandColors?.primary || colors.primary;
+
+                return (
+                  <View style={styles.section}>
+                    <Text style={[styles.sectionTitle, {color: colors.text}]}>
+                      <Icon name="clipboard-outline" family="Ionicons" size={16} color={accentColor} />
+                      {'  '}How to Apply
+                    </Text>
+                    <View style={[styles.applicationMethodCard, {backgroundColor: accentColor + '15'}]}>
+                      <View style={styles.methodHeaderRow}>
+                        <View style={[styles.methodIconBg, {backgroundColor: accentColor + '30'}]}>
+                          <Icon name={methodInfo.icon} family="Ionicons" size={24} color={accentColor} />
+                        </View>
+                        <View style={styles.methodInfo}>
+                          <Text style={[styles.methodLabel, {color: accentColor}]}>{methodInfo.label}</Text>
+                          <Text style={[styles.methodDescription, {color: colors.textSecondary}]}>
+                            {methodInfo.description}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    
+                    {/* Application Steps */}
+                    {selectedScholarship.application_steps && selectedScholarship.application_steps.length > 0 && (
+                      <View style={styles.applicationStepsContainer}>
+                        <Text style={[styles.stepsTitle, {color: colors.text}]}>Application Steps:</Text>
+                        {selectedScholarship.application_steps.map((step: string, index: number) => (
+                          <View key={index} style={[styles.stepItem, {backgroundColor: colors.background}]}>
+                            <View style={[styles.stepNumber, {backgroundColor: accentColor}]}>
+                              <Text style={styles.stepNumberText}>{index + 1}</Text>
+                            </View>
+                            <Text style={[styles.stepText, {color: colors.text}]}>{step}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                );
+              })()}
 
               {/* Eligibility */}
               <View style={styles.section}>
@@ -1058,9 +1236,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   viewBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.xs + 2,
     borderRadius: RADIUS.md,
+    gap: 4,
   },
   viewBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1315,6 +1496,190 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.lg,
     marginLeft: SPACING.sm,
+  },
+  // NEW: Enhanced card styles for university availability and status
+  badgesRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm + 2,
+    paddingVertical: 4,
+    borderRadius: RADIUS.md,
+    gap: 4,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statusText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+  },
+  availabilitySection: {
+    marginBottom: SPACING.md,
+    padding: SPACING.sm + 2,
+    borderRadius: RADIUS.lg,
+  },
+  availabilityHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    gap: 6,
+  },
+  availabilityTitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  availabilityText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 18,
+  },
+  universityLogosRow: {
+    flexDirection: 'row',
+    marginTop: SPACING.xs,
+    gap: SPACING.xs,
+  },
+  miniLogoContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.08)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  miniLogo: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+  },
+  applicationMethodBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 6,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.md,
+    gap: 6,
+    alignSelf: 'flex-start',
+  },
+  applicationMethodText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '500',
+  },
+  // NEW: Modal university availability styles
+  availabilitySectionModal: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    borderLeftWidth: 3,
+    marginTop: SPACING.xs,
+  },
+  availabilityTextModal: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 20,
+    fontWeight: '500',
+  },
+  universityListModal: {
+    marginTop: SPACING.sm,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.sm,
+  },
+  universityItemModal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.md,
+    gap: SPACING.xs,
+    maxWidth: '48%',
+  },
+  uniLogoModal: {
+    borderRadius: 16,
+  },
+  uniNameModal: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '500',
+    flex: 1,
+  },
+  moreUnisText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontStyle: 'italic',
+    marginTop: SPACING.xs,
+    width: '100%',
+  },
+  // NEW: Application method modal styles
+  applicationMethodCard: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    marginTop: SPACING.xs,
+  },
+  methodHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+  },
+  methodIconBg: {
+    width: 48,
+    height: 48,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  methodInfo: {
+    flex: 1,
+  },
+  methodLabel: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+  },
+  methodDescription: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginTop: 2,
+    lineHeight: 18,
+  },
+  applicationStepsContainer: {
+    marginTop: SPACING.md,
+  },
+  stepsTitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    marginBottom: SPACING.sm,
+  },
+  stepItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: SPACING.sm,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.xs,
+    gap: SPACING.sm,
+  },
+  stepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stepNumberText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  stepText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 20,
   },
 });
 

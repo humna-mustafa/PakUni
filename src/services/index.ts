@@ -136,6 +136,22 @@ export type {
 } from './admin';
 
 // ============================================================================
+// ADMIN NOTIFICATION SERVICE
+// ============================================================================
+
+export {
+  adminNotificationService,
+} from './adminNotifications';
+export type {
+  AdminNotification,
+  NotificationStats,
+  NotificationType,
+  NotificationPriority,
+  NotificationStatus,
+  CreateNotificationInput,
+} from './adminNotifications';
+
+// ============================================================================
 // SHARE SERVICE
 // ============================================================================
 
@@ -258,3 +274,18 @@ export type {
   MyAchievement,
   AchievementTemplate,
 } from './achievements';
+
+// ============================================================================
+// ERROR REPORTING SERVICE - User-friendly error handling with admin reporting
+// ============================================================================
+
+export {
+  errorReportingService,
+  ErrorCategory,
+  ErrorSeverity,
+} from './errorReporting';
+export type {
+  ErrorReport as UserErrorReport,
+  ErrorReportStatus,
+  UserFeedbackOnError,
+} from './errorReporting';

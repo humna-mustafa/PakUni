@@ -19,6 +19,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {UNIVERSITIES, UniversityData} from '../data';
 import {Icon} from '../components/icons';
 import {ComparisonCard} from '../components/ShareableCard';
+import {SearchableDropdown} from '../components/SearchableDropdown';
 import {shareComparison} from '../services/share';
 import {Haptics} from '../utils/haptics';
 
@@ -247,15 +248,11 @@ const ComparisonRow = ({
 const PremiumCompareScreen = () => {
   const {colors, isDark} = useTheme();
   const navigation = useNavigation();
-  const [selectedUniversities, setSelectedUniversities] = useState<
-    (UniversityData | null)[]
-  >([null, null, null]);
+  const [selectedUniversities, setSelectedUniversities] = useState<(UniversityData | null)[]>([null, null, null]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeSlot, setActiveSlot] = useState<number>(0);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const headerAnim = useRef(new Animated.Value(0)).current;
-  const modalAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(headerAnim, {
@@ -268,40 +265,37 @@ const PremiumCompareScreen = () => {
   const openModal = (slotIndex: number) => {
     setActiveSlot(slotIndex);
     setModalVisible(true);
-    Animated.spring(modalAnim, {
-      toValue: 1,
-      tension: 50,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
   };
 
   const closeModal = () => {
-    Animated.timing(modalAnim, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => setModalVisible(false));
+    setModalVisible(false);
   };
 
   const selectUniversity = (university: UniversityData) => {
     const newSelection = [...selectedUniversities];
     newSelection[activeSlot] = university;
     setSelectedUniversities(newSelection);
-    closeModal();
+    setModalVisible(false);
+    Haptics.success();
   };
 
   const removeUniversity = (index: number) => {
     const newSelection = [...selectedUniversities];
     newSelection[index] = null;
     setSelectedUniversities(newSelection);
+    Haptics.impact('light');
   };
 
-  const filteredUniversities = UNIVERSITIES.filter(
-    uni =>
-      uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      uni.city.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const universityOptions = useMemo(() => {
+    return UNIVERSITIES.map(u => ({
+      id: u.short_name,
+      label: u.name,
+      value: u,
+      subtitle: `${u.city} • ${u.type}`,
+      icon: u.type === 'public' ? 'business-outline' : 'school-outline',
+      universityShortName: u.short_name
+    }));
+  }, []);
 
   const hasComparison = selectedUniversities.some(u => u !== null);
   const canShare = selectedUniversities.filter(u => u !== null).length >= 2;
@@ -469,118 +463,15 @@ const PremiumCompareScreen = () => {
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
-      {/* University Selection Modal */}
-      <Modal
+      {/* University Selection Dropdown */}
+      <SearchableDropdown
+        label="Select University"
+        placeholder="Search for a university..."
         visible={modalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            activeOpacity={1}
-            onPress={closeModal}
-          />
-          <Animated.View
-            style={[
-              styles.modalContent,
-              {
-                backgroundColor: colors.card,
-                transform: [
-                  {
-                    translateY: modalAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [600, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}>
-            <View style={styles.modalHandle} />
-            <Text style={[styles.modalTitle, {color: colors.text}]}>
-              Select University
-            </Text>
-
-            {/* Search */}
-            <View
-              style={[styles.searchContainer, {backgroundColor: colors.background}]}>
-              <Icon name="search-outline" family="Ionicons" size={16} color={colors.textSecondary} />
-              <Text style={[styles.searchPlaceholder, {color: colors.textSecondary}]}>
-                Search universities...
-              </Text>
-            </View>
-
-            {/* University List */}
-            <FlatList
-              data={filteredUniversities}
-              keyExtractor={item => item.short_name}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.listContent}
-              renderItem={({item}) => {
-                const isSelected = selectedUniversities.some(
-                  u => u?.short_name === item.short_name,
-                );
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.universityItem,
-                      {
-                        backgroundColor: isSelected
-                          ? colors.primary + '10'
-                          : colors.background,
-                        borderColor: isSelected ? colors.primary : colors.border,
-                      },
-                    ]}
-                    onPress={() => !isSelected && selectUniversity(item)}
-                    disabled={isSelected}>
-                    <View style={styles.universityInfo}>
-                      <Text style={[styles.universityName, {color: colors.text}]}>
-                        {item.name}
-                      </Text>
-                      <View style={styles.universityMeta}>
-                        <View style={{flexDirection: 'row', alignItems: 'center', gap: 4, marginRight: SPACING.sm}}>
-                          <Icon name="location-outline" family="Ionicons" size={12} color={colors.textSecondary} />
-                          <Text style={[styles.universityCity, {color: colors.textSecondary}]}>
-                            {item.city}
-                          </Text>
-                        </View>
-                        <View
-                          style={[
-                            styles.universityType,
-                            {
-                              backgroundColor:
-                                item.type === 'public'
-                                  ? colors.success + '20'
-                                  : colors.primary + '20',
-                            },
-                          ]}>
-                          <Text
-                            style={{
-                              color:
-                                item.type === 'public'
-                                  ? colors.success
-                                  : colors.primary,
-                              fontSize: 10,
-                              fontWeight: '600',
-                            }}>
-                            {item.type.toUpperCase()}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    {isSelected && (
-                      <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-                        <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.primary} />
-                        <Text style={[styles.selectedBadge, {color: colors.primary}]}>Selected</Text>
-                      </View>
-                    )}
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </Animated.View>
-        </View>
-      </Modal>
+        options={universityOptions}
+        onSelect={(uni) => selectUniversity(uni as UniversityData)}
+        onClose={closeModal}
+      />
     </SafeAreaView>
   );
 };

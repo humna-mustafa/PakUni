@@ -204,8 +204,8 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
       >
         <LinearGradient
           colors={isDark 
-            ? [colors.primary, '#6366F1']
-            : [colors.primary, '#6366F1']
+            ? [colors.primary, colors.primaryDark || '#0284C7']
+            : [colors.primary, colors.primaryDark || '#0284C7']
           }
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0.5}}
@@ -690,11 +690,11 @@ const PremiumHomeScreen = () => {
   // Universities, Scholarships, Profile are in bottom tabs - REMOVED
   // Using outline icons for consistency with navbar and profile page
   const quickActions = [
-    {id: '1', iconName: 'calculator-outline', title: 'Calculate Merit', color: '#4F46E5', screen: 'Calculator'},
-    {id: '2', iconName: 'clipboard-outline', title: 'Entry Tests', color: '#059669', screen: 'EntryTests'},
-    {id: '3', iconName: 'sparkles-outline', title: 'AI Match', color: '#8B5CF6', screen: 'Recommendations'},
-    {id: '4', iconName: 'compass-outline', title: 'Career Guide', color: '#0891B2', screen: 'CareerGuidance'},
-    {id: '5', iconName: 'library-outline', title: 'Study Guides', color: '#DC2626', screen: 'Guides'},
+    {id: '1', iconName: 'calculator-outline', title: 'Calculate Merit', color: colors.primary, screen: 'Calculator'},
+    {id: '2', iconName: 'clipboard-outline', title: 'Entry Tests', color: '#10B981', screen: 'EntryTests'},
+    {id: '3', iconName: 'sparkles-outline', title: 'AI Match', color: '#0EA5E9', screen: 'Recommendations'},
+    {id: '4', iconName: 'compass-outline', title: 'Career Guide', color: '#0284C7', screen: 'CareerGuidance'},
+    {id: '5', iconName: 'library-outline', title: 'Study Guides', color: '#0EA5E9', screen: 'Guides'},
     {id: '6', iconName: 'game-controller-outline', title: 'Score Game', color: '#F59E0B', screen: 'ResultGame'},
   ];
 

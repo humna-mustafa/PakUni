@@ -6,16 +6,20 @@
  * - Premium PakUni branding with graduation cap logo
  * - High quality graphics optimized for social sharing
  * - Instagram Story, WhatsApp Status compatible (1080px quality)
+ * - Personalized brand colors for scholarships and universities
  * 
  * @author PakUni Team
- * @version 2.0.0
+ * @version 2.1.0
  */
 
 import React, {forwardRef} from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet, Platform, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from './icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
+import {getScholarshipBrandColors} from '../data/scholarships';
+import {getUniversityBrandColor, UNIVERSITY_LOGO_MAP} from '../utils/universityLogos';
+import UniversityLogo from './UniversityLogo';
 
 // ============================================================================
 // BRAND CONSTANTS - PakUni Identity
@@ -1595,6 +1599,765 @@ const celebrationStyles = StyleSheet.create({
   },
 });
 
+// ============================================================================
+// PERSONALIZED SCHOLARSHIP CARD - With Real Brand Colors & Logos 🎓💰
+// ============================================================================
+
+interface PersonalizedScholarshipCardProps {
+  scholarshipName: string;
+  provider: string;
+  coverage?: string;
+  coveragePercentage?: number;
+  studentName?: string;
+  universityName?: string;
+  programName?: string;
+  yearAwarded?: string;
+}
+
+export const PersonalizedScholarshipCard = forwardRef<View, PersonalizedScholarshipCardProps>(
+  ({scholarshipName, provider, coverage, coveragePercentage, studentName, universityName, programName, yearAwarded}, ref) => {
+    // Get brand colors for the scholarship provider
+    const brandColors = getScholarshipBrandColors(scholarshipName) || getScholarshipBrandColors(provider);
+    const uniColor = universityName ? getUniversityBrandColor(universityName) : null;
+    
+    // Default gradient if no brand colors found
+    const gradientColors: string[] = brandColors 
+      ? [brandColors.primary, brandColors.secondary, brandColors.accent || brandColors.secondary]
+      : ['#8B5CF6', '#7C3AED', '#5B21B6'];
+    
+    // Determine provider type for decorative elements
+    const getProviderIcon = () => {
+      const lowerName = scholarshipName.toLowerCase();
+      if (lowerName.includes('ehsaas') || lowerName.includes('ehsas')) return '🌙';
+      if (lowerName.includes('hec')) return '📚';
+      if (lowerName.includes('peef')) return '🏛️';
+      if (lowerName.includes('lums')) return '🎓';
+      if (lowerName.includes('nust')) return '⚙️';
+      if (lowerName.includes('sef')) return '📖';
+      if (lowerName.includes('bef')) return '📘';
+      if (lowerName.includes('pm') || lowerName.includes('prime minister')) return '🇵🇰';
+      return '💰';
+    };
+
+    const hasUniversity = universityName && universityName.length > 0;
+
+    return (
+      <View ref={ref} style={personalizedStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={gradientColors}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={personalizedStyles.gradient}>
+          
+          {/* Decorative Pattern */}
+          <View style={personalizedStyles.patternOverlay}>
+            <View style={personalizedStyles.pattern1} />
+            <View style={personalizedStyles.pattern2} />
+            <View style={personalizedStyles.pattern3} />
+          </View>
+
+          {/* Decorative Elements */}
+          <View style={personalizedStyles.confetti1}>
+            <Text style={{fontSize: 22}}>{getProviderIcon()}</Text>
+          </View>
+          <View style={personalizedStyles.confetti2}>
+            <Text style={{fontSize: 18}}>✨</Text>
+          </View>
+          <View style={personalizedStyles.confetti3}>
+            <Text style={{fontSize: 16}}>🎓</Text>
+          </View>
+          
+          {/* Header with Logo */}
+          <View style={personalizedStyles.header}>
+            <PakUniLogoBadge size={40} variant="light" />
+            <View style={{marginLeft: 10, flex: 1}}>
+              <Text style={personalizedStyles.brand}>PakUni</Text>
+              <Text style={personalizedStyles.subBrand}>Scholarship Award Certificate</Text>
+            </View>
+            {yearAwarded && (
+              <View style={personalizedStyles.yearBadge}>
+                <Text style={personalizedStyles.yearText}>{yearAwarded}</Text>
+              </View>
+            )}
+          </View>
+
+          {/* Main Content */}
+          <View style={personalizedStyles.mainContent}>
+            {/* Award Icon */}
+            <View style={personalizedStyles.awardIconContainer}>
+              <LinearGradient
+                colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0.1)']}
+                style={personalizedStyles.awardIconBg}>
+                <Text style={{fontSize: 42}}>🏆</Text>
+              </LinearGradient>
+            </View>
+            
+            <Text style={personalizedStyles.awardedText}>SCHOLARSHIP</Text>
+            <Text style={personalizedStyles.awardedSubText}>AWARDED!</Text>
+            
+            {studentName && (
+              <View style={personalizedStyles.studentBadge}>
+                <Text style={personalizedStyles.studentName}>{studentName}</Text>
+              </View>
+            )}
+            
+            <Text style={personalizedStyles.receivedText}>has been selected for</Text>
+            
+            {/* Scholarship Box */}
+            <View style={personalizedStyles.scholarshipBox}>
+              <Text style={personalizedStyles.scholarshipName}>{scholarshipName}</Text>
+              <Text style={personalizedStyles.providerName}>by {provider}</Text>
+              
+              {/* Coverage Badge */}
+              {(coverage || coveragePercentage) && (
+                <View style={personalizedStyles.coverageBadgeRow}>
+                  <LinearGradient
+                    colors={['#FFD700', '#FFA500']}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
+                    style={personalizedStyles.coverageBadgeGradient}>
+                    <Icon name="star" family="Ionicons" size={14} color="#000" />
+                    <Text style={personalizedStyles.coverageBadgeText}>
+                      {coveragePercentage ? `${coveragePercentage}% Coverage` : coverage}
+                    </Text>
+                  </LinearGradient>
+                </View>
+              )}
+            </View>
+
+            {/* University Info if provided */}
+            {hasUniversity && (
+              <View style={personalizedStyles.universitySection}>
+                <Text style={personalizedStyles.atText}>at</Text>
+                <View style={[personalizedStyles.universityCard, uniColor && {borderColor: uniColor}]}>
+                  <UniversityLogo
+                    universityName={universityName}
+                    size={44}
+                    style={personalizedStyles.uniLogo}
+                  />
+                  <View style={personalizedStyles.uniInfo}>
+                    <Text style={personalizedStyles.uniName} numberOfLines={2}>{universityName}</Text>
+                    {programName && (
+                      <Text style={personalizedStyles.programText}>{programName}</Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+            )}
+          </View>
+
+          {/* Footer */}
+          <View style={personalizedStyles.footerSection}>
+            <View style={personalizedStyles.footerDivider} />
+            <Text style={personalizedStyles.hashtags}>
+              #Scholarship #{provider.replace(/\s/g, '')} #EducationFunding
+            </Text>
+            <Text style={personalizedStyles.cta}>Find scholarships on PakUni 📱</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// ============================================================================
+// PERSONALIZED CARD STYLES
+// ============================================================================
+
+const personalizedStyles = StyleSheet.create({
+  container: {
+    width: 360,
+    borderRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 16},
+        shadowOpacity: 0.35,
+        shadowRadius: 24,
+      },
+      android: {
+        elevation: 16,
+      },
+    }),
+  },
+  gradient: {
+    paddingVertical: SPACING.lg + 4,
+    paddingHorizontal: SPACING.lg,
+    position: 'relative',
+  },
+  patternOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'hidden',
+  },
+  pattern1: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  pattern2: {
+    position: 'absolute',
+    bottom: -30,
+    left: -30,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  pattern3: {
+    position: 'absolute',
+    top: '40%',
+    right: -20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+  },
+  confetti1: {
+    position: 'absolute',
+    top: 24,
+    right: 24,
+  },
+  confetti2: {
+    position: 'absolute',
+    top: 90,
+    left: 20,
+  },
+  confetti3: {
+    position: 'absolute',
+    bottom: 120,
+    right: 28,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  brand: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+  subBrand: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.85)',
+    fontWeight: '500',
+    letterSpacing: 0.3,
+  },
+  yearBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: SPACING.sm + 2,
+    paddingVertical: 4,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  yearText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  mainContent: {
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+  },
+  awardIconContainer: {
+    marginBottom: SPACING.sm,
+  },
+  awardIconBg: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  awardedText: {
+    fontSize: 34,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 3,
+    textShadowColor: 'rgba(0,0,0,0.25)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 6,
+  },
+  awardedSubText: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: SPACING.sm,
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 4,
+  },
+  studentBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.full,
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  studentName: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  receivedText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: SPACING.md,
+    fontWeight: '500',
+  },
+  scholarshipBox: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: RADIUS.lg + 4,
+    paddingVertical: SPACING.md + 4,
+    paddingHorizontal: SPACING.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+    width: '100%',
+  },
+  scholarshipName: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 28,
+  },
+  providerName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginTop: 4,
+    fontWeight: '500',
+  },
+  coverageBadgeRow: {
+    marginTop: SPACING.sm + 2,
+  },
+  coverageBadgeGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md + 2,
+    paddingVertical: 6,
+    borderRadius: RADIUS.full,
+    gap: 6,
+  },
+  coverageBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+    color: '#000',
+  },
+  universitySection: {
+    marginTop: SPACING.md,
+    alignItems: 'center',
+    width: '100%',
+  },
+  atText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: SPACING.xs,
+    fontWeight: '500',
+  },
+  universityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.sm + 2,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.3)',
+    width: '100%',
+  },
+  uniLogo: {
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+  },
+  uniInfo: {
+    flex: 1,
+    marginLeft: SPACING.sm,
+  },
+  uniName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    lineHeight: 18,
+  },
+  programText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.85)',
+    marginTop: 2,
+  },
+  footerSection: {
+    alignItems: 'center',
+    paddingTop: SPACING.md,
+    marginTop: SPACING.sm,
+  },
+  footerDivider: {
+    width: '60%',
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    marginBottom: SPACING.sm,
+  },
+  hashtags: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.75)',
+    marginBottom: 6,
+  },
+  cta: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+});
+
+// ============================================================================
+// PERSONALIZED MERIT CARD - With University Logo & Brand Colors 🎯
+// ============================================================================
+
+interface PersonalizedMeritCardProps {
+  aggregate: number;
+  universityName: string;
+  universityShortName?: string;
+  programName?: string;
+  chance: 'high' | 'medium' | 'low';
+  studentName?: string;
+  breakdown?: {
+    matricContribution: number;
+    interContribution: number;
+    testContribution: number;
+  };
+}
+
+export const PersonalizedMeritCard = forwardRef<View, PersonalizedMeritCardProps>(
+  ({aggregate, universityName, universityShortName, programName, chance, studentName, breakdown}, ref) => {
+    // Get university brand color
+    const uniColor = getUniversityBrandColor(universityName);
+    const brandColor = uniColor || PAKUNI_BRAND.colors.primary;
+    
+    const getChanceConfig = () => {
+      switch (chance) {
+        case 'high':
+          return {
+            text: 'Excellent Chance',
+            emoji: '🎯',
+            gradient: [brandColor, shadeColor(brandColor, -20), shadeColor(brandColor, -40)] as [string, string, string],
+          };
+        case 'medium':
+          return {
+            text: 'Good Chance',
+            emoji: '📈',
+            gradient: [brandColor, shadeColor(brandColor, -15), shadeColor(brandColor, -30)] as [string, string, string],
+          };
+        case 'low':
+          return {
+            text: 'Fair Chance',
+            emoji: '💪',
+            gradient: ['#F59E0B', '#D97706', '#B45309'] as [string, string, string],
+          };
+      }
+    };
+
+    const config = getChanceConfig();
+
+    return (
+      <View ref={ref} style={meritPersonalizedStyles.container} collapsable={false}>
+        <LinearGradient
+          colors={config.gradient}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={meritPersonalizedStyles.gradient}>
+          
+          {/* Decorative Elements */}
+          <View style={meritPersonalizedStyles.decoCircle1} />
+          <View style={meritPersonalizedStyles.decoCircle2} />
+          
+          {/* Header */}
+          <View style={meritPersonalizedStyles.header}>
+            <PakUniLogoBadge size={36} variant="light" />
+            <View style={{marginLeft: 10, flex: 1}}>
+              <Text style={meritPersonalizedStyles.brand}>PakUni</Text>
+              <Text style={meritPersonalizedStyles.subBrand}>Merit Calculator</Text>
+            </View>
+            <Text style={{fontSize: 28}}>{config.emoji}</Text>
+          </View>
+
+          {/* University Logo Section */}
+          <View style={meritPersonalizedStyles.uniSection}>
+            <View style={meritPersonalizedStyles.uniLogoContainer}>
+              <UniversityLogo
+                universityName={universityName}
+                size={64}
+                style={meritPersonalizedStyles.uniLogoImage}
+              />
+            </View>
+            <Text style={meritPersonalizedStyles.uniNameText} numberOfLines={2}>
+              {universityName}
+            </Text>
+            {programName && (
+              <Text style={meritPersonalizedStyles.programNameText}>{programName}</Text>
+            )}
+          </View>
+
+          {/* Main Score Section */}
+          <View style={meritPersonalizedStyles.scoreSection}>
+            {studentName && (
+              <Text style={meritPersonalizedStyles.studentText}>{studentName}</Text>
+            )}
+            <View style={meritPersonalizedStyles.aggregateBox}>
+              <Text style={meritPersonalizedStyles.aggregateValue}>{aggregate.toFixed(2)}%</Text>
+              <Text style={meritPersonalizedStyles.aggregateLabel}>Merit Aggregate</Text>
+            </View>
+            <View style={meritPersonalizedStyles.chanceBadge}>
+              <Text style={meritPersonalizedStyles.chanceText}>{config.text}</Text>
+            </View>
+          </View>
+
+          {/* Breakdown */}
+          {breakdown && (
+            <View style={meritPersonalizedStyles.breakdownRow}>
+              <View style={meritPersonalizedStyles.breakdownItem}>
+                <Text style={meritPersonalizedStyles.breakdownLabel}>Matric</Text>
+                <Text style={meritPersonalizedStyles.breakdownValue}>{breakdown.matricContribution.toFixed(1)}%</Text>
+              </View>
+              <View style={meritPersonalizedStyles.breakdownDivider} />
+              <View style={meritPersonalizedStyles.breakdownItem}>
+                <Text style={meritPersonalizedStyles.breakdownLabel}>Inter</Text>
+                <Text style={meritPersonalizedStyles.breakdownValue}>{breakdown.interContribution.toFixed(1)}%</Text>
+              </View>
+              <View style={meritPersonalizedStyles.breakdownDivider} />
+              <View style={meritPersonalizedStyles.breakdownItem}>
+                <Text style={meritPersonalizedStyles.breakdownLabel}>Test</Text>
+                <Text style={meritPersonalizedStyles.breakdownValue}>{breakdown.testContribution.toFixed(1)}%</Text>
+              </View>
+            </View>
+          )}
+
+          {/* Footer */}
+          <View style={meritPersonalizedStyles.footerSection}>
+            <Text style={meritPersonalizedStyles.hashtag}>
+              #{universityShortName || universityName.split(' ')[0]} #MeritCalculation
+            </Text>
+            <Text style={meritPersonalizedStyles.ctaText}>Calculate yours on PakUni 🎯</Text>
+          </View>
+        </LinearGradient>
+      </View>
+    );
+  },
+);
+
+// Helper function to shade colors
+function shadeColor(color: string, percent: number): string {
+  const num = parseInt(color.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = (num >> 16) + amt;
+  const G = (num >> 8 & 0x00FF) + amt;
+  const B = (num & 0x0000FF) + amt;
+  return '#' + (
+    0x1000000 +
+    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+    (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+    (B < 255 ? (B < 1 ? 0 : B) : 255)
+  ).toString(16).slice(1);
+}
+
+const meritPersonalizedStyles = StyleSheet.create({
+  container: {
+    width: 340,
+    borderRadius: RADIUS.xxl,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 12},
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+      },
+      android: {
+        elevation: 14,
+      },
+    }),
+  },
+  gradient: {
+    padding: SPACING.lg,
+    position: 'relative',
+  },
+  decoCircle1: {
+    position: 'absolute',
+    top: -40,
+    right: -40,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  decoCircle2: {
+    position: 'absolute',
+    bottom: -20,
+    left: -20,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  brand: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  subBrand: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.85)',
+    fontWeight: '500',
+  },
+  uniSection: {
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  uniLogoContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  uniLogoImage: {
+    borderRadius: 32,
+  },
+  uniNameText: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  programNameText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginTop: 2,
+    fontWeight: '500',
+  },
+  scoreSection: {
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  studentText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: SPACING.xs,
+  },
+  aggregateBox: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: RADIUS.xl,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  aggregateValue: {
+    fontSize: 42,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: -1,
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 4,
+  },
+  aggregateLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  chanceBadge: {
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.xs + 2,
+    borderRadius: RADIUS.full,
+    marginTop: SPACING.sm,
+  },
+  chanceText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  breakdownRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.sm + 2,
+    marginBottom: SPACING.md,
+  },
+  breakdownItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  breakdownLabel: {
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.8)',
+    fontWeight: '500',
+  },
+  breakdownValue: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginTop: 2,
+  },
+  breakdownDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  footerSection: {
+    alignItems: 'center',
+    paddingTop: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.15)',
+  },
+  hashtag: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: 'rgba(255,255,255,0.8)',
+    marginBottom: 4,
+  },
+  ctaText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+});
+
 export default {
   MeritSuccessCard,
   ComparisonCard,
@@ -1603,4 +2366,6 @@ export default {
   EntryTestSuccessCard,
   MeritListCard,
   ScholarshipCelebrationCard,
+  PersonalizedScholarshipCard,
+  PersonalizedMeritCard,
 };

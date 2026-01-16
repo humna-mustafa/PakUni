@@ -2,6 +2,9 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+// React Native Config - Load environment variables from .env
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 // React Native Vector Icons
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
@@ -93,6 +96,9 @@ android {
         
         // Disable unused vectorDrawable support library
         vectorDrawables.useSupportLibrary false
+        
+        // Expose BuildConfig fields from .env
+        resValue "string", "build_config_package", "com.pakuni"
         
         // Exclude unnecessary native architectures
         ndk {

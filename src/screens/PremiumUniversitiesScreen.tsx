@@ -26,6 +26,12 @@ import {Icon} from '../components/icons';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import FloatingToolsButton from '../components/FloatingToolsButton';
 import {analytics} from '../services/analytics';
+import SearchableDropdown, {
+  PROVINCE_OPTIONS,
+  createUniversityOptions,
+} from '../components/SearchableDropdown';
+import UniversityLogo from '../components/UniversityLogo';
+import {getUniversityBrandColor} from '../utils/universityLogos';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -210,26 +216,26 @@ const UniversityCard = ({
         accessibilityLabel={`${item.name}, ${item.type} university in ${item.city}${item.ranking_national ? `, ranked number ${item.ranking_national} nationally` : ''}`}
         accessibilityHint="Double tap to view university details">
         <View style={[styles.universityCard, {backgroundColor: colors.card}]}>
-          {/* Compact Header Row - No Logo */}
+          {/* Enhanced Header Row - With Logo */}
           <View style={styles.cardHeader}>
-            {/* Rank Badge on Left */}
-            {item.ranking_national && (
-              <LinearGradient
-                colors={getRankColor(item.ranking_national)}
-                style={styles.rankBadgeCompact}>
-                <Text style={styles.rankText}>#{item.ranking_national}</Text>
-              </LinearGradient>
-            )}
+            {/* University Logo */}
+            <View style={[styles.logoContainer, {backgroundColor: colors.background}]}>
+              <UniversityLogo
+                universityName={item.name}
+                size={44}
+                style={styles.uniLogo}
+              />
+            </View>
 
             {/* Info */}
-            <View style={[styles.headerInfo, !item.ranking_national && {marginLeft: 0}]}>
+            <View style={styles.headerInfo}>
               <View style={styles.nameRow}>
                 <Text style={[styles.universityName, {color: colors.text}]} numberOfLines={1}>
                   {item.name}
                 </Text>
               </View>
               <View style={styles.shortNameRow}>
-                <Text style={[styles.shortName, {color: colors.primary, fontWeight: '700'}]}>
+                <Text style={[styles.shortName, {color: getUniversityBrandColor(item.name) || colors.primary, fontWeight: '700'}]}>
                   {item.short_name}
                 </Text>
                 <View style={[
@@ -252,8 +258,17 @@ const UniversityCard = ({
               </View>
             </View>
 
-            {/* Arrow */}
-            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textSecondary} />
+            {/* Rank + Arrow */}
+            <View style={styles.cardHeaderRight}>
+              {item.ranking_national && (
+                <LinearGradient
+                  colors={getRankColor(item.ranking_national)}
+                  style={styles.rankBadgeCompact}>
+                  <Text style={styles.rankText}>#{item.ranking_national}</Text>
+                </LinearGradient>
+              )}
+              <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textSecondary} />
+            </View>
           </View>
 
           {/* Compact Details Row */}
@@ -428,24 +443,49 @@ const PremiumUniversitiesScreen = () => {
             </View>
           </View>
 
-          {/* Province Filter */}
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={PROVINCES}
-            keyExtractor={item => item.value}
-            style={styles.provinceList}
-            contentContainerStyle={styles.provinceListContent}
-            renderItem={({item}) => (
-              <FilterChip
-                label={item.label}
-                isSelected={selectedProvince === item.value}
-                onPress={() => setSelectedProvince(item.value)}
-                colors={colors}
-                variant="primary"
+          {/* Enhanced Province Filter with SearchableDropdown */}
+          <View style={styles.filterRow}>
+            <View style={styles.filterDropdownContainer}>
+              <SearchableDropdown
+                options={PROVINCE_OPTIONS}
+                value={selectedProvince}
+                onSelect={(option) => setSelectedProvince(option?.value || 'all')}
+                placeholder="Select Province"
+                searchPlaceholder="Search provinces..."
+                emptyMessage="No provinces found"
+                showSearch={false}
+                variant="compact"
               />
-            )}
-          />
+            </View>
+            
+            {/* Quick Filter Pills */}
+            <View style={styles.quickFiltersRow}>
+              {PROVINCES.slice(0, 4).map(prov => (
+                <TouchableOpacity
+                  key={prov.value}
+                  onPress={() => setSelectedProvince(prov.value)}
+                  style={[
+                    styles.quickFilterPill,
+                    {
+                      backgroundColor: selectedProvince === prov.value 
+                        ? colors.primary 
+                        : `${colors.primary}10`,
+                      borderColor: selectedProvince === prov.value 
+                        ? colors.primary 
+                        : colors.border,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.quickFilterText,
+                      {color: selectedProvince === prov.value ? '#FFFFFF' : colors.text},
+                    ]}>
+                    {prov.label.length > 6 ? prov.label.slice(0, 6) + '.' : prov.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
 
           {/* Type Filter */}
           <View style={styles.typeFilter}>
@@ -880,6 +920,48 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '700',
+  },
+  // NEW: Enhanced filter styles
+  filterRow: {
+    paddingHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+  },
+  filterDropdownContainer: {
+    marginBottom: SPACING.sm,
+  },
+  quickFiltersRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.xs,
+  },
+  quickFilterPill: {
+    paddingHorizontal: SPACING.sm + 2,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.full,
+    borderWidth: 1,
+  },
+  quickFilterText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+  },
+  // University card logo styles
+  logoContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  uniLogo: {
+    borderRadius: RADIUS.md,
+  },
+  cardHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
   },
 });
 

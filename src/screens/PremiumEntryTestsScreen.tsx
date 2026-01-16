@@ -19,6 +19,8 @@ import {TYPOGRAPHY, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {ENTRY_TESTS_DATA, EntryTestData} from '../data';
 import {Icon} from '../components/icons';
+import SearchableDropdown from '../components/SearchableDropdown';
+import {getEntryTestBrandColors} from '../data/entryTests';
 
 // Storage key for custom test dates
 const CUSTOM_TEST_DATES_KEY = '@pakuni_custom_test_dates';
@@ -169,21 +171,7 @@ const TestCard = ({
     }).start();
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Engineering':
-        return '#3498db';
-      case 'Medical':
-        return '#e74c3c';
-      case 'Business':
-        return '#9b59b6';
-      default:
-        return '#27ae60';
-    }
-  };
-
-  const category = getTestCategory(test);
-  const categoryColor = getCategoryColor(category);
+  const brandColors = getEntryTestBrandColors(test.name);
 
   return (
     <Animated.View
@@ -200,27 +188,32 @@ const TestCard = ({
         onPressOut={handlePressOut}>
         <View style={[styles.testCard, {backgroundColor: colors.card}]}>
           <LinearGradient
-            colors={[categoryColor + '15', 'transparent']}
+            colors={[brandColors.primary + '15', 'transparent']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.cardGradient}
           />
-          <View style={[styles.categoryStrip, {backgroundColor: categoryColor}]} />
+          <View style={[styles.categoryStrip, {backgroundColor: brandColors.primary}]} />
           
           <View style={styles.cardContent}>
             <View style={styles.cardHeader}>
-              <View style={[styles.iconContainer, {backgroundColor: categoryColor + '20'}]}>
-                <Icon name="document-text-outline" family="Ionicons" size={28} color={categoryColor} />
+              <View style={[styles.iconContainer, {backgroundColor: brandColors.primary + '20'}]}>
+                <Icon name="document-text-outline" family="Ionicons" size={28} color={brandColors.primary} />
               </View>
               <View style={styles.cardTitleContainer}>
-                <Text style={[styles.testName, {color: colors.text}]}>
-                  {test.name}
-                </Text>
-                <View style={[styles.categoryBadge, {backgroundColor: categoryColor + '20'}]}>
-                  <Text style={[styles.categoryText, {color: categoryColor}]}>
-                    {category}
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1}}>
+                  <Text style={[styles.testName, {color: colors.text}]}>
+                    {test.name}
                   </Text>
+                  {test.status_notes && (
+                    <View style={[styles.categoryBadge, {backgroundColor: brandColors.primary + '20'}]}>
+                      <Text style={[styles.categoryText, {color: brandColors.primary, fontSize: 10}]}>
+                        {test.status_notes}
+                      </Text>
+                    </View>
+                  )}
                 </View>
+                <Text style={{color: colors.textSecondary, fontSize: 12}}>{test.conducting_body}</Text>
               </View>
             </View>
 
@@ -234,16 +227,16 @@ const TestCard = ({
               <View style={styles.metaItem}>
                 <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.textSecondary} />
                 <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                  {test.date || 'TBA'}
+                  {test.test_date || 'TBA'}
                 </Text>
               </View>
               <View style={styles.metaItem}>
                 <Icon name="cash-outline" family="Ionicons" size={14} color={colors.textSecondary} />
                 <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                  {test.fee || 'Varies'}
+                  Rs. {test.fee?.toLocaleString()}
                 </Text>
               </View>
-              <View style={[styles.viewBtn, {backgroundColor: categoryColor}]}>
+              <View style={[styles.viewBtn, {backgroundColor: brandColors.primary}]}>
                 <Text style={styles.viewBtnText}>Details</Text>
                 <Icon name="arrow-forward" family="Ionicons" size={12} color="#FFFFFF" containerStyle={{marginLeft: 4}} />
               </View>
@@ -493,6 +486,22 @@ const PremiumEntryTestsScreen = () => {
         </ScrollView>
       </View>
 
+      {/* Quick Search Dropdown */}
+      <View style={{paddingHorizontal: SPACING.md, marginBottom: SPACING.sm}}>
+        <SearchableDropdown
+          options={ENTRY_TESTS_DATA.map(t => ({
+            label: `${t.name} - ${t.full_name}`,
+            value: t.id,
+            subLabel: t.conducting_body,
+          }))}
+          onSelect={(option) => {
+            const test = ENTRY_TESTS_DATA.find(t => t.id === option.value);
+            if (test) openModal(test);
+          }}
+          placeholder="Search for an entry test (e.g. MDCAT, ECAT)"
+        />
+      </View>
+
       {/* Stats Bar */}
       <View style={[styles.statsBar, {backgroundColor: colors.card}]}>
         <View style={styles.statItem}>
@@ -569,19 +578,18 @@ const PremiumEntryTestsScreen = () => {
               <ScrollView showsVerticalScrollIndicator={false}>
                 {/* Modal Header */}
                 <LinearGradient
-                  colors={
-                    getTestCategory(selectedTest) === 'Engineering'
-                      ? ['#3498db', '#2980b9']
-                      : getTestCategory(selectedTest) === 'Medical'
-                      ? ['#e74c3c', '#c0392b']
-                      : ['#9b59b6', '#8e44ad']
-                  }
+                  colors={getEntryTestBrandColors(selectedTest.name).gradient}
                   style={styles.modalHeader}>
                   <Icon name="document-text-outline" family="Ionicons" size={60} color="#FFFFFF" />
                   <Text style={styles.modalTitle}>{selectedTest.name}</Text>
                   <Text style={styles.modalSubtitle}>
                     {selectedTest.full_name || selectedTest.name}
                   </Text>
+                  {selectedTest.status_notes && (
+                    <View style={styles.modalStatusBadge}>
+                      <Text style={styles.modalStatusText}>{selectedTest.status_notes}</Text>
+                    </View>
+                  )}
                 </LinearGradient>
 
                 {/* Countdown Widget */}
@@ -632,17 +640,25 @@ const PremiumEntryTestsScreen = () => {
                 </View>
 
                 {/* Test Format */}
-                {selectedTest.format && (
+                {selectedTest.test_format && (
                   <View style={styles.section}>
                     <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
                       <Icon name="list-outline" family="Ionicons" size={18} color={colors.text} />
                       <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Test Format</Text>
                     </View>
-                    {selectedTest.format.map((item: string, i: number) => (
+                    <View style={[styles.infoCard, {backgroundColor: colors.background, marginBottom: SPACING.sm}]}>
+                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Total Marks: {selectedTest.test_format.total_marks}</Text>
+                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Questions: {selectedTest.test_format.total_questions}</Text>
+                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Duration: {selectedTest.test_format.duration_minutes} mins</Text>
+                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>
+                        Negative Marking: {selectedTest.test_format.negative_marking ? 'Yes' : 'No'}
+                      </Text>
+                    </View>
+                    {selectedTest.test_format.sections.map((section: any, i: number) => (
                       <View key={i} style={styles.formatItem}>
                         <View style={[styles.formatDot, {backgroundColor: colors.primary}]} />
                         <Text style={[styles.formatText, {color: colors.textSecondary}]}>
-                          {item}
+                          {section.name}: {section.questions} Questions ({section.marks} Marks)
                         </Text>
                       </View>
                     ))}
@@ -657,10 +673,39 @@ const PremiumEntryTestsScreen = () => {
                       <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Eligibility</Text>
                     </View>
                     <View style={[styles.eligibilityCard, {backgroundColor: colors.background}]}>
-                      <Text style={[styles.eligibilityText, {color: colors.textSecondary}]}>
-                        {selectedTest.eligibility}
-                      </Text>
+                      {Array.isArray(selectedTest.eligibility) ? (
+                        selectedTest.eligibility.map((item: string, i: number) => (
+                          <View key={i} style={{flexDirection: 'row', marginBottom: 4}}>
+                            <Text style={{color: colors.primary, marginRight: 8}}>•</Text>
+                            <Text style={[styles.eligibilityText, {color: colors.textSecondary, flex: 1}]}>
+                              {item}
+                            </Text>
+                          </View>
+                        ))
+                      ) : (
+                        <Text style={[styles.eligibilityText, {color: colors.textSecondary}]}>
+                          {selectedTest.eligibility}
+                        </Text>
+                      )}
                     </View>
+                  </View>
+                )}
+
+                {/* Application Steps */}
+                {selectedTest.application_steps && (
+                  <View style={styles.section}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
+                      <Icon name="walk-outline" family="Ionicons" size={18} color={colors.text} />
+                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>How to Apply</Text>
+                    </View>
+                    {selectedTest.application_steps.map((step: string, i: number) => (
+                      <View key={i} style={styles.formatItem}>
+                        <View style={[styles.formatDot, {backgroundColor: colors.success || '#27ae60'}]} />
+                        <Text style={[styles.formatText, {color: colors.textSecondary}]}>
+                          {step}
+                        </Text>
+                      </View>
+                    ))}
                   </View>
                 )}
 
@@ -978,6 +1023,18 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
     textAlign: 'center',
+  },
+  modalStatusBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 12,
+  },
+  modalStatusText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
   },
   quickInfo: {
     flexDirection: 'row',

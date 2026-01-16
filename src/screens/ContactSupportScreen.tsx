@@ -42,7 +42,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#0EA5E9'}]} {...props}>
       {children}
     </View>
   );
@@ -764,7 +764,7 @@ const ContactSupportScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#1A7AEB', '#0D5BC4']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#0EA5E9', '#0284C7']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>

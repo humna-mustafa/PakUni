@@ -1,11 +1,22 @@
 // Comprehensive Scholarships Data for Pakistani Students
 // Real and verified scholarship information with university availability
 
+export type ScholarshipType = 'need_based' | 'merit_based' | 'hafiz_e_quran' | 'sports' | 'disabled' | 'government' | 'private';
+
+export type ApplicationMethod = 
+  | 'online_portal'           // Apply through scholarship provider's portal
+  | 'university_office'       // Apply through university financial aid office
+  | 'both_portal_university'  // Apply through both portal and university
+  | 'direct_admission'        // Applied automatically during admission
+  | 'government_portal'       // Apply through government portal (NADRA, etc.)
+  | 'embassy'                 // Apply through embassy (for foreign scholarships)
+  | 'mail_application';       // Physical mail application
+
 export interface ScholarshipData {
   id: string;
   name: string;
   provider: string;
-  type: 'need_based' | 'merit_based' | 'hafiz_e_quran' | 'sports' | 'disabled' | 'government' | 'private';
+  type: ScholarshipType;
   description: string;
   eligibility: string[];
   coverage_percentage: number;
@@ -23,7 +34,115 @@ export interface ScholarshipData {
   // Use 'ALL_PUBLIC', 'ALL_PRIVATE', 'ALL_HEC' for broad availability
   // Use specific university short_names like 'NUST', 'LUMS', 'UET' for specific universities
   available_at: string[];
+  // NEW FIELDS for enhanced UX (optional for backward compatibility)
+  application_method?: ApplicationMethod;
+  application_steps?: string[];
+  renewal_required?: boolean;
+  renewal_criteria?: string;
+  status_notes?: string; // Any current status notes (e.g., "Applications open for Fall 2024")
 }
+
+// Brand colors for scholarship providers
+export const SCHOLARSHIP_BRAND_COLORS: Record<string, { primary: string; secondary: string; gradient: string[] }> = {
+  // Government Programs
+  'ehsaas': { primary: '#1A5F2A', secondary: '#2E8B3D', gradient: ['#1A5F2A', '#2E8B3D', '#3CB371'] },
+  'hec': { primary: '#1B5E20', secondary: '#4CAF50', gradient: ['#0d3311', '#1B5E20', '#388E3C'] },
+  'peef': { primary: '#11783B', secondary: '#FFD700', gradient: ['#0a4a24', '#11783B', '#FFD700'] },
+  'bef': { primary: '#006633', secondary: '#228B22', gradient: ['#004D26', '#006633', '#228B22'] },
+  'sef': { primary: '#003366', secondary: '#0055A5', gradient: ['#002244', '#003366', '#0055A5'] },
+  
+  // University Programs
+  'nust': { primary: '#003366', secondary: '#0055A5', gradient: ['#002244', '#003366', '#0055A5'] },
+  'lums': { primary: '#8B0000', secondary: '#B22222', gradient: ['#660000', '#8B0000', '#B22222'] },
+  'iba': { primary: '#00274C', secondary: '#003366', gradient: ['#001A33', '#00274C', '#003366'] },
+  'giki': { primary: '#006633', secondary: '#228B22', gradient: ['#004D26', '#006633', '#228B22'] },
+  'fast': { primary: '#0066CC', secondary: '#0099FF', gradient: ['#004499', '#0066CC', '#0099FF'] },
+  'cui': { primary: '#004B87', secondary: '#0066B3', gradient: ['#003366', '#004B87', '#0066B3'] },
+  'uet': { primary: '#8B4513', secondary: '#A0522D', gradient: ['#663311', '#8B4513', '#A0522D'] },
+  
+  // Private/NGO Programs
+  'ihsan': { primary: '#006633', secondary: '#228B22', gradient: ['#004D26', '#006633', '#228B22'] },
+  'dawood': { primary: '#003366', secondary: '#0055A5', gradient: ['#002244', '#003366', '#0055A5'] },
+  'usaid': { primary: '#B22234', secondary: '#3C3B6E', gradient: ['#8B0000', '#B22234', '#3C3B6E'] },
+  'csc': { primary: '#DE2910', secondary: '#FFDE00', gradient: ['#B01E0E', '#DE2910', '#FF4433'] },
+  
+  // Default
+  'default': { primary: '#6366F1', secondary: '#8B5CF6', gradient: ['#4F46E5', '#6366F1', '#8B5CF6'] },
+};
+
+// Get brand colors for a scholarship
+export const getScholarshipBrandColors = (scholarshipNameOrId: string, provider?: string): { primary: string; secondary: string; accent?: string; gradient: string[] } | null => {
+  const searchTerm = scholarshipNameOrId.toLowerCase();
+  
+  // Check by scholarship ID/name patterns
+  if (searchTerm.includes('ehsaas') || searchTerm.includes('ehsas')) return SCHOLARSHIP_BRAND_COLORS.ehsaas;
+  if (searchTerm.includes('hec') || searchTerm.includes('pm-fee') || searchTerm.includes('prime minister')) return SCHOLARSHIP_BRAND_COLORS.hec;
+  if (searchTerm.includes('peef')) return SCHOLARSHIP_BRAND_COLORS.peef;
+  if (searchTerm.includes('bef') || searchTerm.includes('balochistan education')) return SCHOLARSHIP_BRAND_COLORS.bef;
+  if (searchTerm.includes('sef') || searchTerm.includes('sindh education')) return SCHOLARSHIP_BRAND_COLORS.sef;
+  if (searchTerm.includes('nust')) return SCHOLARSHIP_BRAND_COLORS.nust;
+  if (searchTerm.includes('lums')) return SCHOLARSHIP_BRAND_COLORS.lums;
+  if (searchTerm.includes('iba')) return SCHOLARSHIP_BRAND_COLORS.iba;
+  if (searchTerm.includes('giki')) return SCHOLARSHIP_BRAND_COLORS.giki;
+  if (searchTerm.includes('fast')) return SCHOLARSHIP_BRAND_COLORS.fast;
+  if (searchTerm.includes('cui') || searchTerm.includes('comsats')) return SCHOLARSHIP_BRAND_COLORS.cui;
+  if (searchTerm.includes('uet')) return SCHOLARSHIP_BRAND_COLORS.uet;
+  if (searchTerm.includes('ihsan')) return SCHOLARSHIP_BRAND_COLORS.ihsan;
+  if (searchTerm.includes('dawood')) return SCHOLARSHIP_BRAND_COLORS.dawood;
+  if (searchTerm.includes('usaid')) return SCHOLARSHIP_BRAND_COLORS.usaid;
+  if (searchTerm.includes('csc') || searchTerm.includes('chinese')) return SCHOLARSHIP_BRAND_COLORS.csc;
+  
+  // Check by provider name if provided
+  if (provider) {
+    const providerLower = provider.toLowerCase();
+    if (providerLower.includes('ehsaas')) return SCHOLARSHIP_BRAND_COLORS.ehsaas;
+    if (providerLower.includes('hec') || providerLower.includes('higher education')) return SCHOLARSHIP_BRAND_COLORS.hec;
+    if (providerLower.includes('peef') || providerLower.includes('punjab education')) return SCHOLARSHIP_BRAND_COLORS.peef;
+    if (providerLower.includes('lums')) return SCHOLARSHIP_BRAND_COLORS.lums;
+    if (providerLower.includes('nust')) return SCHOLARSHIP_BRAND_COLORS.nust;
+  }
+  
+  return null;
+};
+
+// Application method labels for display
+export const APPLICATION_METHOD_LABELS: Record<ApplicationMethod, { label: string; icon: string; description: string }> = {
+  'online_portal': { 
+    label: 'Online Portal', 
+    icon: 'globe-outline', 
+    description: 'Apply through the scholarship provider\'s official website' 
+  },
+  'university_office': { 
+    label: 'University Office', 
+    icon: 'business-outline', 
+    description: 'Submit application through your university\'s financial aid office' 
+  },
+  'both_portal_university': { 
+    label: 'Portal + University', 
+    icon: 'layers-outline', 
+    description: 'Apply online and submit documents to university' 
+  },
+  'direct_admission': { 
+    label: 'During Admission', 
+    icon: 'checkmark-circle-outline', 
+    description: 'Automatically considered during admission process' 
+  },
+  'government_portal': { 
+    label: 'Government Portal', 
+    icon: 'shield-checkmark-outline', 
+    description: 'Apply through official government website (NADRA, etc.)' 
+  },
+  'embassy': { 
+    label: 'Embassy Application', 
+    icon: 'flag-outline', 
+    description: 'Apply through the relevant country\'s embassy' 
+  },
+  'mail_application': { 
+    label: 'Mail Application', 
+    icon: 'mail-outline', 
+    description: 'Send physical application by mail' 
+  },
+};
 
 export const SCHOLARSHIPS: ScholarshipData[] = [
   // ========== GOVERNMENT SCHOLARSHIPS ==========
@@ -59,6 +178,19 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 45000,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'QAU', 'NUST', 'CUI', 'PIEAS', 'UET', 'PU', 'UoK', 'UoS', 'UoP', 'BZU', 'GCU', 'IIU', 'NED', 'MUET', 'UAF', 'UVAS', 'UoG', 'UoB', 'UoAJK', 'KUST', 'BUITEMS', 'UoBalochistan', 'IST', 'GCWU', 'KU', 'SZABIST', 'FCC', 'FAST', 'GIKI'],
+    application_method: 'government_portal',
+    application_steps: [
+      'Visit ehsaas.nadra.gov.pk/ehsaasUnderGrad/',
+      'Register with your CNIC and mobile number',
+      'Complete the online application form',
+      'Upload required documents (scanned copies)',
+      'Submit application before deadline',
+      'University will verify your enrollment',
+      'Wait for merit list announcement',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain minimum 2.0 CGPA and submit renewal application each year',
+    status_notes: 'Applications typically open in November-December for the academic year',
   },
   {
     id: 'hec-need-based',
@@ -90,6 +222,18 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 50000,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'QAU', 'NUST', 'CUI', 'PIEAS', 'UET', 'PU', 'UoK', 'UoS', 'UoP', 'BZU', 'GCU', 'IIU', 'NED', 'MUET', 'UAF', 'UVAS', 'UoG', 'UoB', 'UoAJK', 'KUST', 'BUITEMS', 'IST', 'KU', 'AIOU'],
+    application_method: 'university_office',
+    application_steps: [
+      'Collect NBS application form from university financial aid office',
+      'Get income affidavit on judicial stamp paper',
+      'Gather all required documents',
+      'Submit complete application to university office',
+      'University forwards applications to HEC',
+      'HEC reviews and approves scholarships',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain minimum CGPA 2.5 and clear all courses',
+    status_notes: 'Apply within first 2 months of admission',
   },
   {
     id: 'peef-scholarship',
@@ -121,6 +265,19 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 30000,
     is_active: true,
     available_at: ['PU', 'UET', 'GCU', 'BZU', 'GCWU', 'KEMU', 'UAF', 'UVAS', 'UoG', 'UoS', 'LCWU', 'FCC', 'UoE', 'UMT', 'LUMS', 'FAST', 'ITU', 'UCP', 'UoL'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Visit www.peef.org.pk and create account',
+      'Fill online application form completely',
+      'Upload scanned documents',
+      'Get income certificate from DC office beforehand',
+      'Submit application before deadline',
+      'Print application receipt',
+      'Attend interview if shortlisted',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain 2.5 CGPA and submit renewal application',
+    status_notes: 'Only for Punjab domicile holders',
   },
   {
     id: 'bef-scholarship',
@@ -150,6 +307,16 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 40000,
     is_active: true,
     available_at: ['UoB', 'BUITEMS', 'BUHS', 'SBK', 'LUAWMS', 'UoBalochistan'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Visit BEF official website',
+      'Create account and fill application',
+      'Upload required documents',
+      'Submit before deadline',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain passing grades',
+    status_notes: 'Only for Balochistan domicile holders',
   },
   {
     id: 'sef-scholarship',
@@ -179,6 +346,16 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 35000,
     is_active: true,
     available_at: ['UoK', 'KU', 'NED', 'MUET', 'SALU', 'IBA', 'SZABIST', 'LUMHS', 'SMIU', 'DUHS', 'UoS'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Visit SEF website',
+      'Complete online application',
+      'Upload documents',
+      'Submit before deadline',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain satisfactory academic progress',
+    status_notes: 'Only for Sindh domicile holders',
   },
   {
     id: 'pm-fee-reimbursement',
@@ -208,6 +385,16 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'QAU', 'NUST', 'CUI', 'UET', 'PU', 'UoK', 'BZU', 'GCU', 'IIU', 'NED', 'UoP', 'UoB', 'UoAJK', 'KUST', 'BUITEMS', 'KIU'],
+    application_method: 'university_office',
+    application_steps: [
+      'Collect form from university financial aid office',
+      'Submit domicile from eligible area',
+      'Provide admission and fee documents',
+      'University processes with HEC',
+    ],
+    renewal_required: true,
+    renewal_criteria: 'Maintain enrollment and satisfactory progress',
+    status_notes: 'Eligible areas: Balochistan, FATA/Merged Districts, GB, AJK, Southern Punjab',
   },
   // ========== MERIT-BASED SCHOLARSHIPS ==========
   {
@@ -240,6 +427,15 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'QAU', 'NUST', 'CUI', 'PIEAS', 'UET', 'PU', 'UoK', 'GCU', 'IIU', 'NED', 'MUET'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Visit HEC scholarship portal',
+      'Select Indigenous PhD program',
+      'Fill profile and academic details',
+      'Upload GAT score and research proposal',
+      'Submit before deadline'
+    ],
+    status_notes: 'Check HEC portal for current call for applications',
   },
   {
     id: 'nust-undergraduate-merit',
@@ -268,6 +464,13 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['NUST'],
+    application_method: 'direct_admission',
+    application_steps: [
+      'Appear in NUST Entry Test (NET)',
+      'Secure top position in merit list',
+      'Scholarship is automatically awarded during admission'
+    ],
+    status_notes: 'Based purely on NET performance',
   },
   {
     id: 'lums-nos',
@@ -298,6 +501,16 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 150000,
     is_active: true,
     available_at: ['LUMS'],
+    application_method: 'both_portal_university',
+    application_steps: [
+      'Apply for LUMS admission',
+      'Select NOP option in application',
+      'Fill separate financial aid section',
+      'Submit family income and wealth documents',
+      'Clear LUMS entrance test (SAT/LUMS test)',
+      'Attend NOP summer workshop if selected'
+    ],
+    status_notes: 'One of Pakistans most prestigious need-based programs',
   },
   {
     id: 'iba-talent-hunt',
@@ -328,6 +541,15 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 50000,
     is_active: true,
     available_at: ['IBA'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Register on IBA Talent Hunt portal',
+      'Submit government school proof',
+      'Appear in assessment test',
+      'Selected candidates get free training for IBA test',
+      'Clear final IBA admission test'
+    ],
+    status_notes: 'Focused on students from marginalized areas',
   },
   {
     id: 'giki-scholarship',
@@ -356,6 +578,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 100000,
     is_active: true,
     available_at: ['GIKI'],
+    application_method: 'university_office',
+    application_steps: [
+      'Apply to GIKI admission',
+      'Submit financial aid form with admission desk',
+      'Provide income and asset details',
+      'Initial grant awarded for first year'
+    ],
+    status_notes: 'Assistance is reviewed annually',
   },
   {
     id: 'fast-merit',
@@ -383,6 +613,13 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['FAST'],
+    application_method: 'direct_admission',
+    application_steps: [
+      'Take NU Admission Test',
+      'Scholarship awarded to top merit list candidates',
+      'Maintain CGPA to continue'
+    ],
+    status_notes: 'Partial waiver for high achievers',
   },
   {
     id: 'cui-merit',
@@ -410,6 +647,13 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['CUI'],
+    application_method: 'direct_admission',
+    application_steps: [
+      'Apply to COMSATS through their portal',
+      'Merit is calculated automatically',
+      'High achievers receive fee waivers in offer letter'
+    ],
+    status_notes: 'Available across all COMSATS campuses',
   },
   {
     id: 'uet-merit',
@@ -437,6 +681,13 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['UET'],
+    application_method: 'direct_admission',
+    application_steps: [
+      'Participate in ECAT',
+      'Secure top rank for free-ship program',
+      'Verification of documents at admission desk'
+    ],
+    status_notes: 'Only for open merit candidates',
   },
   // ========== HAFIZ-E-QURAN SCHOLARSHIPS ==========
   {
@@ -464,6 +715,13 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'ALL_PRIVATE', 'UET', 'PU', 'BZU', 'GCU', 'IIU', 'CUI', 'UoK', 'NED', 'UAF', 'UMT', 'LUMS', 'FAST', 'NUST'],
+    application_method: 'university_office',
+    application_steps: [
+      'Check checkbox for Hafiz-e-Quran in admission form',
+      'Submit Hafiz certificate during document submission',
+      'Appear for interview/test at university department'
+    ],
+    status_notes: 'Standard across most public universities in Pakistan',
   },
   {
     id: 'merit-hafiz-bonus',
@@ -491,6 +749,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['UET', 'KEMU', 'UHS', 'PU', 'BZU', 'GCU', 'UAF', 'UVAS', 'UoG', 'AIMC', 'SMC', 'RMC', 'NMC', 'FMC'],
+    application_method: 'university_office',
+    application_steps: [
+      'Select Hafiz category in admission portal',
+      'Download and print special Hafiz form',
+      'Visit UHS/UET for oral test',
+      'Bonus marks added to final aggregate'
+    ],
+    status_notes: 'Critical for competitive medical/engineering admissions',
   },
   // ========== PRIVATE SECTOR SCHOLARSHIPS ==========
   {
@@ -522,6 +788,15 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: 100000,
     is_active: true,
     available_at: ['ALL_HEC', 'LUMS', 'IBA', 'NUST', 'GIKI', 'FAST', 'CUI', 'NED', 'UET', 'PU', 'UoK', 'QAU'],
+    application_method: 'mail_application',
+    application_steps: [
+      'Download application form from Ihsan Trust website',
+      'Fill and attach all required documents',
+      'Mail to their Karachi office',
+      'Attend interview in Karachi or regional center',
+      'Amount is disbursed directly to university'
+    ],
+    status_notes: 'Repaid in easy installments after getting a job',
   },
   {
     id: 'csc-scholarship',
@@ -551,6 +826,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['FOREIGN'],
+    application_method: 'both_portal_university',
+    application_steps: [
+      'Apply online at CSC portal',
+      'Choose category A (through HEC) or category B (Direct to Uni)',
+      'Submit separate application to Chinese university through their portal',
+      'Wait for result on HEC website for Category A'
+    ],
+    status_notes: 'One of best foreign scholarship options for Pakistanis',
   },
   {
     id: 'usaid-merit-scholarship',
@@ -661,6 +944,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'PU', 'UoK', 'UET', 'BZU', 'GCU', 'NED', 'MUET', 'UoP', 'LUMS', 'NUST'],
+    application_method: 'university_office',
+    application_steps: [
+      'Apply during university trials',
+      'Submit sports certificates with admission form',
+      'Appear for trials at university grounds',
+      'Verification from Sports Board'
+    ],
+    status_notes: 'Based on active sports involvement',
   },
   {
     id: 'fata-scholarship',
@@ -688,6 +979,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'UoP', 'KUST', 'IMS', 'QAU', 'NUST', 'CUI', 'IIU', 'UET'],
+    application_method: 'online_portal',
+    application_steps: [
+      'Wait for advertisement on HEC website',
+      'Create account and fill special FATA form',
+      'Upload domicile and academic records',
+      'Submit and print application'
+    ],
+    status_notes: 'Highly recommended for students from merged districts',
   },
   {
     id: 'kinship-orphan',
@@ -715,6 +1014,14 @@ export const SCHOLARSHIPS: ScholarshipData[] = [
     max_family_income: null,
     is_active: true,
     available_at: ['ALL_PUBLIC', 'PU', 'UoK', 'UET', 'BZU', 'GCU', 'IIU', 'NED', 'QAU', 'CUI', 'NUST'],
+    application_method: 'university_office',
+    application_steps: [
+      'Submit parent death certificate with admission docs',
+      'Visit financial aid office',
+      'Submit guardian income affidavit',
+      'Waiver applies from first semester'
+    ],
+    status_notes: 'Most public universities offer 100% waiver',
   },
 ];
 
@@ -747,6 +1054,102 @@ export const isScholarshipAvailableAt = (scholarship: ScholarshipData, universit
 export const getScholarshipsForUniversity = (universityShortName: string, universityType: string): ScholarshipData[] => {
   return SCHOLARSHIPS.filter(scholarship => 
     isScholarshipAvailableAt(scholarship, universityShortName, universityType)
+  );
+};
+
+// Get count of universities where scholarship is available
+export const getScholarshipUniversityCount = (scholarship: ScholarshipData): { specific: number; categories: string[] } => {
+  const specificUnis = scholarship.available_at.filter(
+    uni => !['ALL_PUBLIC', 'ALL_PRIVATE', 'ALL_HEC', 'FOREIGN'].includes(uni)
+  );
+  
+  const categories = scholarship.available_at.filter(
+    uni => ['ALL_PUBLIC', 'ALL_PRIVATE', 'ALL_HEC'].includes(uni)
+  );
+  
+  return {
+    specific: specificUnis.length,
+    categories,
+  };
+};
+
+// Get human-readable availability text
+export const getScholarshipAvailabilityText = (scholarship: ScholarshipData): string => {
+  const { specific, categories } = getScholarshipUniversityCount(scholarship);
+  
+  if (scholarship.available_at.includes('FOREIGN')) {
+    return 'Foreign universities';
+  }
+  
+  const parts: string[] = [];
+  
+  if (categories.includes('ALL_PUBLIC')) {
+    parts.push('All public universities');
+  }
+  if (categories.includes('ALL_PRIVATE')) {
+    parts.push('All private universities');
+  }
+  if (categories.includes('ALL_HEC')) {
+    parts.push('All HEC recognized universities');
+  }
+  
+  if (specific > 0) {
+    if (parts.length > 0) {
+      parts.push(`+ ${specific} specific universities`);
+    } else {
+      parts.push(`${specific} universities`);
+    }
+  }
+  
+  return parts.join(', ') || 'Not specified';
+};
+
+// Get list of specific universities (short names) for a scholarship
+export const getScholarshipSpecificUniversities = (scholarship: ScholarshipData): string[] => {
+  return scholarship.available_at.filter(
+    uni => !['ALL_PUBLIC', 'ALL_PRIVATE', 'ALL_HEC', 'FOREIGN'].includes(uni)
+  );
+};
+
+// Check if scholarship has broad availability (ALL_PUBLIC, etc.)
+export const hasBroadAvailability = (scholarship: ScholarshipData): boolean => {
+  return scholarship.available_at.some(
+    uni => ['ALL_PUBLIC', 'ALL_PRIVATE', 'ALL_HEC'].includes(uni)
+  );
+};
+
+// Get active scholarships only
+export const getActiveScholarships = (): ScholarshipData[] => {
+  return SCHOLARSHIPS.filter(s => s.is_active);
+};
+
+// Get scholarships by type
+export const getScholarshipsByType = (type: ScholarshipType): ScholarshipData[] => {
+  return SCHOLARSHIPS.filter(s => s.type === type);
+};
+
+// Get scholarships with stipend
+export const getScholarshipsWithStipend = (): ScholarshipData[] => {
+  return SCHOLARSHIPS.filter(s => s.monthly_stipend && s.monthly_stipend > 0);
+};
+
+// Filter scholarships by income limit
+export const getScholarshipsByIncomeLimit = (monthlyIncome: number): ScholarshipData[] => {
+  return SCHOLARSHIPS.filter(s => 
+    s.max_family_income === null || s.max_family_income >= monthlyIncome
+  );
+};
+
+// Search scholarships by text
+export const searchScholarships = (query: string): ScholarshipData[] => {
+  const searchLower = query.toLowerCase().trim();
+  if (!searchLower) return SCHOLARSHIPS;
+  
+  return SCHOLARSHIPS.filter(s => 
+    s.name.toLowerCase().includes(searchLower) ||
+    s.provider.toLowerCase().includes(searchLower) ||
+    s.description.toLowerCase().includes(searchLower) ||
+    s.type.toLowerCase().includes(searchLower)
   );
 };
 
