@@ -1,0 +1,9 @@
+{
+    "port":  8081,
+    "error":  "Max restarts reached",
+    "pid":  0,
+    "lastUpdate":  "2026-01-16 15:37:41",
+    "localIP":  "172.24.64.1",
+    "restartCount":  10,
+    "state":  "Failed"
+}

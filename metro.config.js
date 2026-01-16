@@ -7,13 +7,23 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  * @type {import('@react-native/metro-config').MetroConfig}
  */
 const config = {
-  // SECURITY: Restrict Metro server to localhost only in development
-  // Prevents exposure of dev server on public networks (0.0.0.0)
-  // Never expose dev server to public networks where credentials might be visible
   server: {
-    // Only bind to localhost for development
-    // In production, bundled JS is used, not Metro
     port: 8081,
+    // Allow connections from physical devices over WiFi
+    // Use reliable-metro-server.ps1 which binds to 0.0.0.0 for device access
+    enhanceMiddleware: (middleware) => {
+      return (req, res, next) => {
+        // Add CORS headers for device access
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        return middleware(req, res, next);
+      };
+    },
+  },
+  // Watchman settings for reliability
+  watchFolders: [],
+  resolver: {
+    // Improve resolution stability
+    nodeModulesPaths: [],
   },
 };
 

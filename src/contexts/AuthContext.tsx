@@ -16,6 +16,16 @@ import React, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert, Platform, Linking} from 'react-native';
 import {supabase} from '../services/supabase';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+// Configure Google Sign-In with Web Client ID
+GoogleSignin.configure({
+  webClientId: '69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com',
+  offlineAccess: true,
+});
 
 // ============================================================================
 // TYPES
@@ -341,46 +351,60 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     try {
       setState(prev => ({...prev, isLoading: true, authError: null}));
 
-      // Use the custom scheme for mobile app deep linking
-      const redirectUrl = 'pakuni://auth/callback';
+      // Check if Google Play Services are available
+      await GoogleSignin.hasPlayServices();
       
-      const {data, error} = await supabase.auth.signInWithOAuth({
+      // Sign in with Google natively
+      const userInfo = await GoogleSignin.signIn();
+      
+      console.log('[Auth] Google sign-in successful, getting ID token...');
+      
+      // Get the ID token
+      const tokens = await GoogleSignin.getTokens();
+      const idToken = tokens.idToken;
+      
+      if (!idToken) {
+        throw new Error('No ID token received from Google');
+      }
+
+      console.log('[Auth] Signing in to Supabase with Google ID token...');
+      
+      // Sign in to Supabase using the ID token
+      const {data, error} = await supabase.auth.signInWithIdToken({
         provider: 'google',
-        options: {
-          redirectTo: redirectUrl,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-          skipBrowserRedirect: true, // We'll handle the redirect manually
-        },
+        token: idToken,
       });
 
       if (error) {
         throw error;
       }
 
-      // Open the OAuth URL in the browser
-      if (data?.url) {
-        console.log('[Auth] Opening Google OAuth URL:', data.url);
-        const canOpen = await Linking.canOpenURL(data.url);
-        if (canOpen) {
-          await Linking.openURL(data.url);
-        } else {
-          throw new Error('Cannot open browser for Google sign-in');
-        }
+      if (data.user) {
+        console.log('[Auth] Supabase sign-in successful:', data.user.email);
+        await loadUserProfile(data.user.id, 'google');
+        return true;
       }
 
-      // The callback will be handled by the deep link handler in App.tsx
-      // Set loading to false since we're waiting for callback
-      setState(prev => ({...prev, isLoading: false}));
-      return true;
+      return false;
     } catch (error: any) {
       console.error('Google sign-in error:', error);
+      
+      let errorMessage = 'Failed to sign in with Google';
+      
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        errorMessage = 'Sign in was cancelled';
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        errorMessage = 'Sign in is already in progress';
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        errorMessage = 'Google Play Services not available';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setState(prev => ({
         ...prev,
         isLoading: false,
-        authError: error.message || 'Failed to sign in with Google',
+        authError: errorMessage,
       }));
       return false;
     }

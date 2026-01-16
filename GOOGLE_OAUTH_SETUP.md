@@ -1,115 +1,104 @@
-# Google OAuth Setup for PakUni
+# Google OAuth Setup for PakUni (Native Android)
 
 ## Overview
-This guide will help you complete the Google OAuth setup for PakUni mobile app.
+This guide uses **Native Google Sign-In** which provides a better user experience for mobile apps.
+No redirect URIs needed - authentication happens natively on the device!
 
-## Google Client ID (Already Configured)
+## Google Client ID (Already Configured in App)
 ```
 69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com
 ```
 
+## Android SHA-1 Fingerprint (Debug)
+```
+5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
+```
+
 ## Required Steps in Google Cloud Console
 
-### 1. Configure OAuth Consent Screen
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Select your project
-3. Navigate to **APIs & Services** > **OAuth consent screen**
-4. Add the following authorized domains:
-   - `supabase.co`
-   - `therewjnnidxlddgkaca.supabase.co`
+### Step 1: Create Android OAuth Client (if not exists)
+1. Go to [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials)
+2. Click **+ CREATE CREDENTIALS** > **OAuth client ID**
+3. Select **Android** as Application type
+4. Enter:
+   - **Name**: `PakUni Android`
+   - **Package name**: `com.pakuni`
+   - **SHA-1 certificate fingerprint**: `5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25`
+5. Click **CREATE**
 
-### 2. Configure OAuth Credentials
-1. Go to **APIs & Services** > **Credentials**
-2. Find your OAuth 2.0 Client ID
-3. Add the following **Authorized redirect URIs**:
-   ```
-   https://therewjnnidxlddgkaca.supabase.co/auth/v1/callback
-   ```
+### Step 2: Verify Web Client ID in Supabase Dashboard
+1. Go to [Supabase Dashboard - Auth Providers](https://supabase.com/dashboard/project/therewjnnidxlddgkaca/auth/providers)
+2. Enable **Google** provider
+3. Enter your **Web Client ID**: `69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com`
+4. Enter the **Web Client Secret** from Google Cloud Console (required by Supabase)
+5. Save changes
 
-### 3. Get Client Secret
-1. In the Credentials page, click on your OAuth Client ID
-2. Copy the **Client Secret** (starts with `GOCSPX-`)
-3. Run the following command to set it in Supabase:
+### Step 3: Configure OAuth Consent Screen
+1. Go to [OAuth Consent Screen](https://console.cloud.google.com/apis/credentials/consent)
+2. Ensure the app is set to **External** (or Internal for testing)
+3. Add required scopes:
+   - `email`
+   - `profile`
+   - `openid`
 
-```powershell
-# In the PakUni directory
-$env:SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET = "YOUR_GOOGLE_CLIENT_SECRET"
-supabase config push --project-ref therewjnnidxlddgkaca --yes
+## How Native Google Sign-In Works
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   PakUni App    │────▶│  Google Sign-In │────▶│   Supabase      │
+│                 │     │   (Native SDK)  │     │   Auth          │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                       │                       │
+        │  1. User taps        │                       │
+        │     "Sign in with    │                       │
+        │      Google"         │                       │
+        │                      │                       │
+        │──────────────────────▶                       │
+        │  2. Native Google    │                       │
+        │     picker appears   │                       │
+        │                      │                       │
+        │◀─────────────────────│                       │
+        │  3. Receives ID      │                       │
+        │     Token            │                       │
+        │                      │                       │
+        │──────────────────────────────────────────────▶
+        │  4. signInWithIdToken(token)                 │
+        │                                              │
+        │◀─────────────────────────────────────────────│
+        │  5. Session created, user logged in          │
+        └──────────────────────────────────────────────┘
 ```
 
-Or use the Supabase CLI secrets command:
-```powershell
-supabase secrets set SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET=YOUR_GOOGLE_CLIENT_SECRET --project-ref therewjnnidxlddgkaca
+## Files Modified
+- `src/contexts/AuthContext.tsx` - Uses `@react-native-google-signin/google-signin` + `signInWithIdToken`
+- `android/app/src/main/AndroidManifest.xml` - Deep link handlers (for fallback)
+- `supabase/config.toml` - Google OAuth enabled with `skip_nonce_check = true`
+
+## Build and Test
+
+```bash
+# Clean and rebuild
+cd android && ./gradlew clean && cd ..
+
+# Run on Android device
+npx react-native run-android
 ```
-
-## Alternative: Configure via Supabase Dashboard
-
-1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Select the **pakuniofficial's Project**
-3. Navigate to **Authentication** > **Providers**
-4. Enable **Google**
-5. Enter:
-   - **Client ID**: `69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com`
-   - **Client Secret**: Your Google Client Secret
-6. Save changes
-
-## Supabase Configuration (Already Applied)
-
-The following settings have been configured in `supabase/config.toml`:
-
-```toml
-[auth.external.google]
-enabled = true
-client_id = "69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com"
-secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
-skip_nonce_check = true
-```
-
-### Redirect URLs Configured:
-- `pakuni://auth/callback` (Primary mobile deep link)
-- `https://therewjnnidxlddgkaca.supabase.co/auth/v1/callback`
-
-## Android Configuration
-
-The `AndroidManifest.xml` has been updated with:
-- Deep link scheme: `pakuni://`
-- OAuth callback handler for `pakuni://auth/callback`
-- HTTPS callback handler for Supabase
-
-## App Configuration
-
-The app has been configured to:
-1. Handle OAuth deep links in `App.tsx`
-2. Open Google OAuth in browser via `Linking.openURL()`
-3. Process OAuth callback tokens automatically
-
-## Testing
-
-1. Build and run the app:
-   ```bash
-   npx react-native run-android
-   ```
-
-2. Tap "Sign in with Google" button
-3. Complete Google sign-in in browser
-4. App should receive callback and authenticate user
 
 ## Troubleshooting
 
-### "redirect_uri_mismatch" Error
-- Ensure the redirect URI in Google Cloud Console matches exactly:
-  `https://therewjnnidxlddgkaca.supabase.co/auth/v1/callback`
+### "Developer Error" or "DEVELOPER_ERROR"
+- **Cause**: SHA-1 fingerprint mismatch
+- **Fix**: Verify SHA-1 in Google Cloud Console matches your keystore
+- Get SHA-1: `cd android && ./gradlew signingReport`
 
-### "access_denied" Error
-- Check OAuth consent screen is properly configured
-- Ensure app is not in "Testing" mode with restricted users
+### "Google Play Services not available"
+- **Cause**: Device doesn't have Google Play Services
+- **Fix**: Use an emulator with Google APIs or a real device
 
-### Deep link not working
-- Verify `AndroidManifest.xml` has correct intent filters
-- Test deep link: `adb shell am start -W -a android.intent.action.VIEW -d "pakuni://auth/callback"`
+### "No ID token received"
+- **Cause**: Web Client ID not configured in app
+- **Fix**: Check `GoogleSignin.configure({ webClientId: '...' })` in AuthContext.tsx
 
-## Files Modified
-- `supabase/config.toml` - Google OAuth provider enabled
-- `android/app/src/main/AndroidManifest.xml` - Deep link handlers
-- `App.tsx` - OAuth callback processing
-- `src/contexts/AuthContext.tsx` - Google sign-in with browser redirect
+### "Invalid token" from Supabase
+- **Cause**: Web Client ID mismatch between app and Supabase
+- **Fix**: Ensure same Web Client ID is used in both places
