@@ -65,26 +65,26 @@ const LOGO_SIZES: Record<LogoSize, {
 
 // Brand Colors - Matching App Theme
 const BRAND_COLORS = {
-  primary: '#1E88E5',       // Professional Blue (app primary)
-  primaryDark: '#1565C0',   // Darker blue
-  primaryLight: '#3399FF',  // Lighter blue
-  secondary: '#00897B',     // Teal (app secondary)
-  accent: '#0077E6',        // Deep blue accent
-  gold: '#FFC107',          // Classic academic gold
-  goldLight: '#FFD54F',     // Light gold
-  goldDark: '#FF8F00',      // Dark gold
-  pakistanGreen: '#00695C', // Pakistan-inspired green
+  primary: '#0EA5E9',       // Premium Sky Blue (app primary)
+  primaryDark: '#0284C7',   // Darker sky blue
+  primaryLight: '#38BDF8',  // Lighter sky blue
+  secondary: '#10B981',     // Emerald Green (app secondary)
+  accent: '#06B6D4',        // Cyan accent
+  gold: '#F59E0B',          // Warm academic gold
+  goldLight: '#FBBF24',     // Light gold
+  goldDark: '#B45309',      // Dark gold
+  pakistanGreen: '#059669', // Professional Pakistan Green
   white: '#FFFFFF',
 };
 
 // Premium gradients - Matching App Theme
 const GRADIENT_PRESETS = {
-  primary: ['#3399FF', '#1E88E5'],
-  emerald: ['#00897B', '#00695C'],
-  golden: ['#FFD54F', '#FFC107'],
-  royal: ['#1E88E5', '#1565C0', '#0D47A1'],
-  pakistan: ['#00897B', '#00695C'],
-  premium: ['#3399FF', '#1E88E5', '#0077E6'],
+  primary: ['#38BDF8', '#0EA5E9'],
+  emerald: ['#10B981', '#059669'],
+  golden: ['#FBBF24', '#F59E0B'],
+  royal: ['#0EA5E9', '#0284C7', '#0369A1'],
+  pakistan: ['#10B981', '#059669'],
+  premium: ['#38BDF8', '#0EA5E9', '#06B6D4'],
 };
 
 // ============================================================================

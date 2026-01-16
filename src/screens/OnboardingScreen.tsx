@@ -401,7 +401,7 @@ const OnboardingScreen: React.FC = () => {
                 onPress={handleGetStarted}
                 activeOpacity={0.9}>
                 <LinearGradient
-                  colors={[colors.primary, '#4F46E5']}
+                  colors={[colors.primary, colors.primaryDark]}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.getStartedGradient}>

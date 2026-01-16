@@ -27,8 +27,8 @@ import UniversityLogo from './UniversityLogo';
 
 const PAKUNI_BRAND = {
   colors: {
-    primary: '#6366F1',       // Indigo
-    primaryDark: '#4F46E5',
+    primary: '#0EA5E9',       // Sky Blue
+    primaryDark: '#0284C7',
     secondary: '#10B981',     // Emerald
     accent: '#8B5CF6',        // Violet
     gold: '#F59E0B',          // Amber
@@ -38,10 +38,10 @@ const PAKUNI_BRAND = {
     error: '#EF4444',
   },
   gradients: {
-    primary: ['#6366F1', '#8B5CF6'],
+    primary: ['#0EA5E9', '#38BDF8'],
     success: ['#10B981', '#059669'],
-    premium: ['#6366F1', '#8B5CF6', '#EC4899'],
-    dark: ['#1E293B', '#0F172A', '#020617'],
+    premium: ['#0EA5E9', '#38BDF8', '#0284C7'],
+    dark: ['#0B1118', '#010203'],
   },
 };
 
@@ -71,7 +71,7 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
       <View style={logoStyles.capWrapper}>
         {/* Cap Top (Mortarboard) */}
         <LinearGradient
-          colors={['#6366F1', '#8B5CF6']}
+          colors={['#0EA5E9', '#38BDF8']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[logoStyles.capTop, {
@@ -82,7 +82,7 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
         />
         {/* Cap Base */}
         <LinearGradient
-          colors={['#4F46E5', '#6366F1']}
+          colors={['#0284C7', '#0EA5E9']}
           style={[logoStyles.capBase, {
             width: capSize * 0.5,
             height: capSize * 0.3,

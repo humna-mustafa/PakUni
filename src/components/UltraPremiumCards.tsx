@@ -25,6 +25,7 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyAchievement} from '../services/achievements';
@@ -40,9 +41,16 @@ import {
   captureAndShareCard,
   captureAndSaveCard,
 } from '../services/cardCapture';
+import {CardCustomImages, CardImageCustomizer} from './CardImageCustomizer';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - 32;
+
+// ============================================================================
+// OPTIONAL IMAGE CUSTOMIZATION TYPES
+// ============================================================================
+
+export type {CardCustomImages};
 
 // ============================================================================
 // MERIT SUCCESS CARD - Gold & Royal Theme
@@ -53,6 +61,10 @@ interface MeritCardProps {
   onShareComplete?: (success: boolean) => void;
   onSaveComplete?: (success: boolean, path?: string) => void;
   showActions?: boolean;
+  /** Optional custom images to personalize the card */
+  customImages?: CardCustomImages;
+  /** Show the image customization button */
+  showCustomizer?: boolean;
 }
 
 export const MeritSuccessCard: React.FC<MeritCardProps> = ({
@@ -60,10 +72,14 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
   onShareComplete,
   onSaveComplete,
   showActions = true,
+  customImages = {},
+  showCustomizer = false,
 }) => {
   const cardRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [images, setImages] = useState<CardCustomImages>(customImages);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -118,6 +134,21 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
           colors={['#1a1a2e', '#16213e', '#0f3460']}
           style={meritStyles.container}
         >
+          {/* Optional Campus Background Image */}
+          {images.campusImage && (
+            <View style={customImageStyles.campusOverlay}>
+              <Image
+                source={{uri: images.campusImage}}
+                style={customImageStyles.campusImage}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['rgba(26,26,46,0.85)', 'rgba(22,33,62,0.92)', 'rgba(15,52,96,0.95)']}
+                style={customImageStyles.campusGradient}
+              />
+            </View>
+          )}
+
           {/* Gold accent strip */}
           <LinearGradient
             colors={['#FFD700', '#FFA500', '#FF8C00']}
@@ -125,6 +156,27 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
             end={{x: 1, y: 0}}
             style={meritStyles.accentStrip}
           />
+
+          {/* Optional Personal Photo */}
+          {images.personalPhoto && (
+            <View style={customImageStyles.personalPhotoContainer}>
+              <LinearGradient
+                colors={['#FFD700', '#FFA500']}
+                style={customImageStyles.photoRing}
+              >
+                <Image
+                  source={{uri: images.personalPhoto}}
+                  style={customImageStyles.personalPhoto}
+                  resizeMode="cover"
+                />
+              </LinearGradient>
+              {images.studentName && (
+                <Text style={[customImageStyles.studentName, {color: '#FFD700'}]}>
+                  {images.studentName}
+                </Text>
+              )}
+            </View>
+          )}
 
           {/* Decorative stars */}
           <View style={meritStyles.starsContainer}>
@@ -142,6 +194,16 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
             >
               <Text style={meritStyles.badgeText}>📜 MERIT LIST</Text>
             </LinearGradient>
+            {/* Optional University Logo */}
+            {images.universityLogo && (
+              <View style={customImageStyles.logoContainer}>
+                <Image
+                  source={{uri: images.universityLogo}}
+                  style={customImageStyles.universityLogo}
+                  resizeMode="contain"
+                />
+              </View>
+            )}
           </View>
 
           {/* Trophy icon */}
@@ -204,6 +266,19 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
         </LinearGradient>
       </View>
 
+      {/* Customize Images Button (Optional) */}
+      {showCustomizer && (
+        <TouchableOpacity
+          style={containerStyles.customizeBtn}
+          onPress={() => setShowImagePicker(true)}
+        >
+          <Icon name="images" family="Ionicons" size={18} color="#FFD700" />
+          <Text style={[containerStyles.customizeBtnText, {color: '#FFD700'}]}>
+            {Object.values(images).some(Boolean) ? '✓ Images Added' : 'Add Personal Images'}
+          </Text>
+        </TouchableOpacity>
+      )}
+
       {/* Actions */}
       {showActions && (
         <View style={containerStyles.actionsRow}>
@@ -234,6 +309,16 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Customizer Modal */}
+      <CardImageCustomizer
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onApply={setImages}
+        currentImages={images}
+        cardType="merit"
+        primaryColor="#FFD700"
+      />
     </View>
   );
 };
@@ -247,10 +332,14 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
   onShareComplete,
   onSaveComplete,
   showActions = true,
+  customImages = {},
+  showCustomizer = false,
 }) => {
   const cardRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [images, setImages] = useState<CardCustomImages>(customImages);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -305,6 +394,42 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           colors={['#00D4AA', '#00B894', '#009973']}
           style={admissionStyles.container}
         >
+          {/* Optional Campus Background Image */}
+          {images.campusImage && (
+            <View style={customImageStyles.campusOverlay}>
+              <Image
+                source={{uri: images.campusImage}}
+                style={customImageStyles.campusImage}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['rgba(0,212,170,0.88)', 'rgba(0,184,148,0.92)', 'rgba(0,153,115,0.95)']}
+                style={customImageStyles.campusGradient}
+              />
+            </View>
+          )}
+
+          {/* Optional Personal Photo */}
+          {images.personalPhoto && (
+            <View style={customImageStyles.personalPhotoContainer}>
+              <LinearGradient
+                colors={['#ffffff', '#e0f7ef']}
+                style={customImageStyles.photoRing}
+              >
+                <Image
+                  source={{uri: images.personalPhoto}}
+                  style={customImageStyles.personalPhoto}
+                  resizeMode="cover"
+                />
+              </LinearGradient>
+              {images.studentName && (
+                <Text style={[customImageStyles.studentName, {color: '#fff'}]}>
+                  {images.studentName}
+                </Text>
+              )}
+            </View>
+          )}
+
           {/* Confetti decorations */}
           <View style={admissionStyles.confettiContainer}>
             <Text style={[admissionStyles.confetti, {top: 15, left: 25}]}>🎊</Text>
@@ -323,6 +448,16 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           {/* Celebration badge */}
           <View style={admissionStyles.celebrationBadge}>
             <Text style={admissionStyles.celebrationText}>🎉 CELEBRATION TIME! 🎉</Text>
+            {/* Optional University Logo */}
+            {images.universityLogo && (
+              <View style={[customImageStyles.logoContainer, {right: -55}]}>
+                <Image
+                  source={{uri: images.universityLogo}}
+                  style={customImageStyles.universityLogo}
+                  resizeMode="contain"
+                />
+              </View>
+            )}
           </View>
 
           {/* Main icon */}
@@ -374,6 +509,19 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
         </LinearGradient>
       </View>
 
+      {/* Customize Images Button (Optional) */}
+      {showCustomizer && (
+        <TouchableOpacity
+          style={containerStyles.customizeBtn}
+          onPress={() => setShowImagePicker(true)}
+        >
+          <Icon name="images" family="Ionicons" size={18} color="#00B894" />
+          <Text style={[containerStyles.customizeBtnText, {color: '#00B894'}]}>
+            {Object.values(images).some(Boolean) ? '✓ Images Added' : 'Add Personal Images'}
+          </Text>
+        </TouchableOpacity>
+      )}
+
       {/* Actions */}
       {showActions && (
         <View style={containerStyles.actionsRow}>
@@ -404,6 +552,16 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Customizer Modal */}
+      <CardImageCustomizer
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onApply={setImages}
+        currentImages={images}
+        cardType="admission"
+        primaryColor="#00B894"
+      />
     </View>
   );
 };
@@ -417,10 +575,14 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
   onShareComplete,
   onSaveComplete,
   showActions = true,
+  customImages = {},
+  showCustomizer = false,
 }) => {
   const cardRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [images, setImages] = useState<CardCustomImages>(customImages);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -477,6 +639,44 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           end={{x: 1, y: 1}}
           style={testStyles.container}
         >
+          {/* Optional Campus Background Image */}
+          {images.campusImage && (
+            <View style={customImageStyles.campusOverlay}>
+              <Image
+                source={{uri: images.campusImage}}
+                style={customImageStyles.campusImage}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['rgba(102,126,234,0.88)', 'rgba(118,75,162,0.92)', 'rgba(142,84,233,0.95)']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={customImageStyles.campusGradient}
+              />
+            </View>
+          )}
+
+          {/* Optional Personal Photo */}
+          {images.personalPhoto && (
+            <View style={customImageStyles.personalPhotoContainer}>
+              <LinearGradient
+                colors={['#667eea', '#764ba2']}
+                style={customImageStyles.photoRing}
+              >
+                <Image
+                  source={{uri: images.personalPhoto}}
+                  style={customImageStyles.personalPhoto}
+                  resizeMode="cover"
+                />
+              </LinearGradient>
+              {images.studentName && (
+                <Text style={[customImageStyles.studentName, {color: '#fff'}]}>
+                  {images.studentName}
+                </Text>
+              )}
+            </View>
+          )}
+
           {/* Wave pattern */}
           <View style={testStyles.waveContainer}>
             <View style={[testStyles.wave, {opacity: 0.1}]} />
@@ -486,6 +686,16 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           {/* Top accent */}
           <View style={testStyles.topAccent}>
             <Text style={testStyles.accentText}>📝 ENTRY TEST</Text>
+            {/* Optional University Logo */}
+            {images.universityLogo && (
+              <View style={[customImageStyles.logoContainer, {right: -50}]}>
+                <Image
+                  source={{uri: images.universityLogo}}
+                  style={customImageStyles.universityLogo}
+                  resizeMode="contain"
+                />
+              </View>
+            )}
           </View>
 
           {/* Checkmark icon */}
@@ -541,6 +751,19 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
         </LinearGradient>
       </View>
 
+      {/* Customize Images Button (Optional) */}
+      {showCustomizer && (
+        <TouchableOpacity
+          style={containerStyles.customizeBtn}
+          onPress={() => setShowImagePicker(true)}
+        >
+          <Icon name="images" family="Ionicons" size={18} color="#764ba2" />
+          <Text style={[containerStyles.customizeBtnText, {color: '#764ba2'}]}>
+            {Object.values(images).some(Boolean) ? '✓ Images Added' : 'Add Personal Images'}
+          </Text>
+        </TouchableOpacity>
+      )}
+
       {/* Actions */}
       {showActions && (
         <View style={containerStyles.actionsRow}>
@@ -571,6 +794,16 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Customizer Modal */}
+      <CardImageCustomizer
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onApply={setImages}
+        currentImages={images}
+        cardType="test"
+        primaryColor="#764ba2"
+      />
     </View>
   );
 };
@@ -584,10 +817,14 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
   onShareComplete,
   onSaveComplete,
   showActions = true,
+  customImages = {},
+  showCustomizer = false,
 }) => {
   const cardRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [images, setImages] = useState<CardCustomImages>(customImages);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -644,6 +881,44 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           end={{x: 1, y: 1}}
           style={scholarshipStyles.container}
         >
+          {/* Optional Campus Background Image */}
+          {images.campusImage && (
+            <View style={customImageStyles.campusOverlay}>
+              <Image
+                source={{uri: images.campusImage}}
+                style={customImageStyles.campusImage}
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['rgba(240,147,251,0.88)', 'rgba(245,87,108,0.92)', 'rgba(255,107,107,0.95)']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 1}}
+                style={customImageStyles.campusGradient}
+              />
+            </View>
+          )}
+
+          {/* Optional Personal Photo */}
+          {images.personalPhoto && (
+            <View style={customImageStyles.personalPhotoContainer}>
+              <LinearGradient
+                colors={['#F093FB', '#F5576C']}
+                style={customImageStyles.photoRing}
+              >
+                <Image
+                  source={{uri: images.personalPhoto}}
+                  style={customImageStyles.personalPhoto}
+                  resizeMode="cover"
+                />
+              </LinearGradient>
+              {images.studentName && (
+                <Text style={[customImageStyles.studentName, {color: '#fff'}]}>
+                  {images.studentName}
+                </Text>
+              )}
+            </View>
+          )}
+
           {/* Diamond decorations */}
           <View style={scholarshipStyles.diamondContainer}>
             <Text style={[scholarshipStyles.diamond, {top: 20, left: 25}]}>💎</Text>
@@ -661,6 +936,16 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           {/* Badge */}
           <View style={scholarshipStyles.badge}>
             <Text style={scholarshipStyles.badgeText}>🏅 SCHOLARSHIP</Text>
+            {/* Optional University Logo */}
+            {images.universityLogo && (
+              <View style={[customImageStyles.logoContainer, {right: -50}]}>
+                <Image
+                  source={{uri: images.universityLogo}}
+                  style={customImageStyles.universityLogo}
+                  resizeMode="contain"
+                />
+              </View>
+            )}
           </View>
 
           {/* Diamond icon */}
@@ -715,6 +1000,19 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
         </LinearGradient>
       </View>
 
+      {/* Customize Images Button (Optional) */}
+      {showCustomizer && (
+        <TouchableOpacity
+          style={containerStyles.customizeBtn}
+          onPress={() => setShowImagePicker(true)}
+        >
+          <Icon name="images" family="Ionicons" size={18} color="#F5576C" />
+          <Text style={[containerStyles.customizeBtnText, {color: '#F5576C'}]}>
+            {Object.values(images).some(Boolean) ? '✓ Images Added' : 'Add Personal Images'}
+          </Text>
+        </TouchableOpacity>
+      )}
+
       {/* Actions */}
       {showActions && (
         <View style={containerStyles.actionsRow}>
@@ -745,6 +1043,16 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Customizer Modal */}
+      <CardImageCustomizer
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        onApply={setImages}
+        currentImages={images}
+        cardType="scholarship"
+        primaryColor="#F5576C"
+      />
     </View>
   );
 };
@@ -791,6 +1099,118 @@ const containerStyles = StyleSheet.create({
     borderRadius: RADIUS.lg,
     borderWidth: 2,
     backgroundColor: '#fff',
+  },
+  customizeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.sm,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    marginTop: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    borderStyle: 'dashed',
+  },
+  customizeBtnText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+});
+
+// ============================================================================
+// CUSTOM IMAGE STYLES - For Optional Personalization
+// ============================================================================
+
+const customImageStyles = StyleSheet.create({
+  // Campus Background Image
+  campusOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -1,
+  },
+  campusImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+  },
+  campusGradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  // Personal Photo Circle
+  personalPhotoContainer: {
+    position: 'absolute',
+    top: 12,
+    right: 16,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  photoRing: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    padding: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  personalPhoto: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  studentName: {
+    fontSize: 10,
+    fontWeight: '700',
+    marginTop: 4,
+    textAlign: 'center',
+    maxWidth: 80,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: {width: 0, height: 1},
+    textShadowRadius: 3,
+  },
+
+  // University Logo
+  logoContainer: {
+    position: 'absolute',
+    top: -8,
+    right: -50,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  universityLogo: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
+
+  // Custom Badge/Stamp
+  customBadgeContainer: {
+    position: 'absolute',
+    bottom: 80,
+    left: 16,
+    zIndex: 5,
+  },
+  customBadge: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
 });
 

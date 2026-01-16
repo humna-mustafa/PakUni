@@ -311,7 +311,7 @@ const AchievementsScreen = () => {
           transform: [{translateY: headerAnim.interpolate({inputRange: [0, 1], outputRange: [-20, 0]})}],
         }}>
         <LinearGradient
-          colors={isDark ? ['#6366f1', '#4f46e5'] : ['#818cf8', '#6366f1']}
+          colors={isDark ? [colors.primary, colors.primaryDark] : [colors.primaryLight, colors.primary]}
           style={styles.header}>
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />

@@ -526,6 +526,13 @@ export {
   TestCompletionCard as UltraTestCard,
   ScholarshipWinCard as UltraScholarshipCard,
 } from './UltraPremiumCards';
+export type {CardCustomImages} from './UltraPremiumCards';
+
+// Card Image Customizer (Optional Image Personalization)
+export {
+  CardImageCustomizer,
+  CompactImageCustomizer,
+} from './CardImageCustomizer';
 
 // Card Style Selector & Renderer (Easy card management)
 export {

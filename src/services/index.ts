@@ -111,6 +111,52 @@ export type {
 export {supabase} from './supabase';
 
 // ============================================================================
+// TURSO SERVICE - Static reference data (500M free reads)
+// ============================================================================
+
+export {
+  initTurso,
+  getTursoClient,
+  isTursoAvailable,
+  fetchUniversities,
+  fetchEntryTests,
+  fetchScholarships,
+  fetchDeadlines,
+  fetchPrograms,
+  fetchCareers,
+  fetchMeritFormulas,
+  fetchMeritArchive,
+  searchUniversities as tursoSearchUniversities,
+  searchScholarships as tursoSearchScholarships,
+  refreshAllData as refreshTursoData,
+  clearCache as clearTursoCache,
+  getLastSyncTime as getTursoLastSyncTime,
+  needsRefresh as tursoNeedsRefresh,
+} from './turso';
+export type {
+  TursoUniversity,
+  TursoEntryTest,
+  TursoScholarship,
+  TursoDeadline,
+  TursoProgram,
+  TursoCareer,
+  TursoMeritFormula,
+  TursoMeritArchive,
+} from './turso';
+
+// ============================================================================
+// HYBRID DATA SERVICE - Best of Turso + Supabase
+// ============================================================================
+
+export {
+  hybridDataService,
+  hybridDataService as hybridData,
+} from './hybridData';
+export type {
+  DataSource,
+} from './hybridData';
+
+// ============================================================================
 // ADMIN SERVICE
 // ============================================================================
 

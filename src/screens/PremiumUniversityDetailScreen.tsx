@@ -660,6 +660,37 @@ const PremiumUniversityDetailScreen = () => {
         </TouchableOpacity>
       )}
 
+      {/* Admission Status Note */}
+      {university.status_notes && (
+        <View style={[styles.statusNoteCard, {backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : '#EFF6FF', borderColor: colors.primary}]}>
+          <View style={styles.statusNoteHeader}>
+            <Icon name="notifications-outline" family="Ionicons" size={20} color={colors.primary} />
+            <Text style={[styles.statusNoteTitle, {color: colors.primary}]}>Latest Admission Status</Text>
+          </View>
+          <Text style={[styles.statusNoteText, {color: colors.text}]}>{university.status_notes}</Text>
+        </View>
+      )}
+
+      {/* Application Steps */}
+      {university.application_steps && university.application_steps.length > 0 && (
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Icon name="list-outline" family="Ionicons" size={22} color={colors.primary} />
+            <Text style={[styles.sectionTitle, {color: colors.text}]}>How to Apply (Steps)</Text>
+          </View>
+          <View style={[styles.stepsContainer, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
+            {university.application_steps.map((step, index) => (
+              <View key={index} style={styles.stepItem}>
+                <View style={[styles.stepNumber, {backgroundColor: colors.primary}]}>
+                  <Text style={styles.stepNumberText}>{index + 1}</Text>
+                </View>
+                <Text style={[styles.stepText, {color: colors.textSecondary}]}>{step}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
+
       {/* Merit Formulas */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -1526,6 +1557,54 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  statusNoteCard: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.lg,
+    borderWidth: 1,
+  },
+  statusNoteHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  statusNoteTitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+  },
+  statusNoteText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+  },
+  stepsContainer: {
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+  },
+  stepItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.md,
+    gap: SPACING.md,
+  },
+  stepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  stepNumberText: {
+    color: '#FFFFFF',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
+  },
+  stepText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 20,
   },
   admissionArrowText: {
     fontSize: 20,

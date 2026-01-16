@@ -577,6 +577,22 @@ const PremiumScholarshipsScreen = () => {
                 </Text>
               </LinearGradient>
 
+              {/* Status Note */}
+              {selectedScholarship.status_notes && (
+                <View style={[
+                  styles.statusNoteCard, 
+                  {
+                    backgroundColor: colors.primary + '10',
+                    borderColor: colors.primary + '30'
+                  }
+                ]}>
+                  <Icon name="notifications-outline" family="Ionicons" size={20} color={colors.primary} />
+                  <Text style={[styles.statusNoteText, {color: colors.text}]}>
+                    {selectedScholarship.status_notes}
+                  </Text>
+                </View>
+              )}
+
               {/* Coverage Details */}
               <View style={styles.coverageGrid}>
                 <View
@@ -894,6 +910,16 @@ const PremiumScholarshipsScreen = () => {
         {/* Collapsible Filters */}
         {showFilters && (
         <View style={styles.filterContainer}>
+          <View style={styles.universityDropdownWrapper}>
+            <SearchableDropdown
+              options={universityOptions}
+              onSelect={(value) => setSelectedUniversity(value)}
+              placeholder="Filter by University"
+              label="Selected University"
+              emptyMessage="All Universities"
+            />
+          </View>
+          
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -1092,6 +1118,10 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     marginBottom: SPACING.md,
+  },
+  universityDropdownWrapper: {
+    paddingHorizontal: SPACING.lg,
+    marginBottom: SPACING.sm,
   },
   filterList: {
     paddingHorizontal: SPACING.lg,
@@ -1679,6 +1709,21 @@ const styles = StyleSheet.create({
   stepText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 20,
+  },
+  statusNoteCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.lg,
+    borderWidth: 1,
+  },
+  statusNoteText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+    marginLeft: SPACING.sm,
     lineHeight: 20,
   },
 });
