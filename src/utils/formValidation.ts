@@ -3,7 +3,7 @@
  * Comprehensive validation schemas, error handling, and form state management
  */
 
-import {useState, useCallback, useMemo} from 'react';
+import {useState, useCallback, useMemo, useRef, useEffect} from 'react';
 import {validate, sanitize, ValidationResult} from './security';
 
 // ============================================================================
@@ -594,12 +594,14 @@ export const useForm = <T extends Record<string, any>>({
     [values, errors, touched, initialValues],
   );
 
-  // Validate on mount
-  useMemo(() => {
-    if (validateOnMount) {
+  // Validate on mount (using useEffect for side effects, not useMemo)
+  const isFirstMount = useRef(true);
+  useEffect(() => {
+    if (isFirstMount.current && validateOnMount) {
+      isFirstMount.current = false;
       validateAllFields();
     }
-  }, [validateOnMount]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [validateOnMount, validateAllFields]);
 
   return {
     // State

@@ -21,6 +21,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/AppNavigator';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -109,7 +113,7 @@ const NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
 const AdminTursoNotificationsScreen: React.FC = () => {
   const { colors, isDark } = useTheme();
   const { user } = useAuth();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp>();
 
   // State
   const [loading, setLoading] = useState(true);

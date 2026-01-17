@@ -47,7 +47,28 @@ export {
   useIsMounted,
   useSafeState,
   useStableCallback,
+  useActionLock,
+  useRateLimitedAction,
 } from './usePerformance';
+
+// ============================================================================
+// INPUT SANITIZATION HOOKS
+// ============================================================================
+
+export {
+  useSanitizedInput,
+  useSanitizedForm,
+  sanitizeValue,
+  validateValue,
+} from './useSanitizedInput';
+
+export type {
+  SanitizedInputConfig,
+  SanitizedInputState,
+  UseSanitizedInputReturn,
+  FormFieldConfigs,
+  UseSanitizedFormReturn,
+} from './useSanitizedInput';
 
 // ============================================================================
 // DEBOUNCE & SEARCH HOOKS

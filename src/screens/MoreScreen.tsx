@@ -64,7 +64,7 @@ const MENU_SECTIONS: MenuSection[] = [
     title: 'Career',
     icon: 'compass-outline',
     items: [
-      {id: 'career', title: 'Guidance', icon: 'compass-outline', color: '#059669', screen: 'CareerGuidance'},
+      {id: 'careercenter', title: 'Career Hub', icon: 'compass-outline', color: '#059669', screen: 'CareerCenter'},
       {id: 'recommendations', title: 'AI Match', icon: 'sparkles-outline', color: '#EC4899', screen: 'Recommendations'},
       {id: 'roadmaps', title: 'Roadmaps', icon: 'map-outline', color: '#F59E0B', screen: 'CareerRoadmaps'},
       {id: 'interestquiz', title: 'Quiz', icon: 'help-circle-outline', color: '#06B6D4', screen: 'InterestQuiz'},
@@ -88,6 +88,13 @@ const MENU_SECTIONS: MenuSection[] = [
       {id: 'polls', title: 'Polls', icon: 'stats-chart-outline', color: '#8B5CF6', screen: 'Polls'},
       {id: 'resultgame', title: 'Predict', icon: 'game-controller-outline', color: '#10B981', screen: 'ResultGame'},
       {id: 'achievements', title: 'Badges', icon: 'trophy-outline', color: '#F59E0B', screen: 'Achievements'},
+    ],
+  },
+  {
+    title: 'Contribute',
+    icon: 'hand-left-outline',
+    items: [
+      {id: 'submitcorrection', title: 'Fix Data', icon: 'create-outline', color: '#7C3AED', screen: 'SubmitDataCorrection', badge: 'HELP'},
     ],
   },
 ];
@@ -268,7 +275,7 @@ const MoreScreen = () => {
 
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
-              onPress={() => handleNavigate('CareerGuidance')}
+              onPress={() => handleNavigate('CareerCenter')}
               activeOpacity={0.8}>
               <LinearGradient
                 colors={['#059669', '#10B981']}

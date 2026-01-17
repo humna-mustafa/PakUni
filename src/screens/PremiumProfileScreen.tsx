@@ -15,7 +15,7 @@ import {
   Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation, CommonActions} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {useTheme, ThemeMode} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
@@ -696,12 +696,8 @@ const PremiumProfileScreen = () => {
       {/* Auth Button */}
       {isGuest ? (
         <TouchableOpacity style={styles.logoutBtn} onPress={() => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'Auth'}],
-            })
-          );
+          // Sign out guest to trigger navigation to Auth
+          signOut();
         }}>
           <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-in-outline" family="Ionicons" size={22} color="#FFFFFF" />
@@ -775,12 +771,8 @@ const PremiumProfileScreen = () => {
                 <TouchableOpacity 
                   style={styles.signInBadge}
                   onPress={() => {
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 0,
-                        routes: [{name: 'Auth'}],
-                      })
-                    );
+                    // Sign out guest to trigger navigation to Auth
+                    signOut();
                   }}>
                   <Icon name="log-in-outline" family="Ionicons" size={14} color="#1A7AEB" />
                   <Text style={styles.signInBadgeText}>Sign In</Text>

@@ -24,7 +24,7 @@ const PrivacyPolicyScreen: React.FC = () => {
   const {colors, isDark} = useTheme();
 
   const handleContactPress = () => {
-    Linking.openURL('mailto:support@pakuni.app');
+    navigation.navigate('ContactSupport' as never);
   };
 
   return (
@@ -250,7 +250,7 @@ const PrivacyPolicyScreen: React.FC = () => {
             >
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8}}>
                 <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
-                <Text style={styles.contactButtonText}>support@pakuni.app</Text>
+                <Text style={styles.contactButtonText}>Contact Support</Text>
               </View>
             </TouchableOpacity>
           </View>

@@ -130,7 +130,7 @@ export const generateMeritSuccessCardSVG = (
       </text>
 
       <text x="60" y="1100" font-size="18" fill="#999999" font-family="Arial" opacity="0.7">
-        Download PakUni • www.pakuni.app
+        Made with PakUni App
       </text>
 
       <!-- Hashtags -->
@@ -221,7 +221,7 @@ export const generateAdmissionCardSVG = (
         Share this moment with PakUni 📱
       </text>
       <text x="60" y="1280" font-size="16" fill="#999999" font-family="Arial" opacity="0.7">
-        www.pakuni.app
+        Made with PakUni App
       </text>
     </svg>
   `;
@@ -301,7 +301,7 @@ export const generateTestCompletionCardSVG = (
       </text>
 
       <text x="60" y="1280" font-size="16" fill="#999999" font-family="Arial" opacity="0.7">
-        www.pakuni.app • Your Gateway to Pakistani Universities
+        Made with PakUni App • Your Gateway to Pakistani Universities
       </text>
     </svg>
   `;
@@ -384,10 +384,11 @@ export const generateScholarshipCardSVG = (
 
       <!-- Download info -->
       <text x="60" y="1230" font-size="16" fill="#999999" font-family="Arial" opacity="0.7">
-        www.pakuni.app • Your Gateway to Pakistani Universities
+        Made with PakUni App • Your Gateway to Pakistani Universities
       </text>
     </svg>
   `;
+};
 };
 
 /**

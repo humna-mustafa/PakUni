@@ -298,7 +298,7 @@ const SettingsScreen: React.FC = () => {
           style: 'destructive',
           onPress: () => {
             // In production, implement actual account deletion
-            Alert.alert('Contact Support', 'Please contact support@pakuni.app to delete your account.');
+            Alert.alert('Contact Support', 'Please use the Contact Support option in Settings to delete your account.');
           },
         },
       ],

@@ -214,7 +214,7 @@ export class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     level: 'screen',
     showDetails: false,
     reportCrash: true,
-    supportEmail: 'support@pakuni.app',
+    supportEmail: 'PakUni Support',
   };
 
   constructor(props: ErrorBoundaryProps) {

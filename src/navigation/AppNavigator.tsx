@@ -22,6 +22,7 @@ import PremiumCompareScreen from '../screens/PremiumCompareScreen';
 import PremiumEntryTestsScreen from '../screens/PremiumEntryTestsScreen';
 import PremiumCareerGuidanceScreen from '../screens/PremiumCareerGuidanceScreen';
 import PremiumRecommendationsScreen from '../screens/PremiumRecommendationsScreen';
+import PremiumCareerCenterScreen from '../screens/PremiumCareerCenterScreen';
 
 // Premium Screens - Kids Zone
 import PremiumKidsHubScreen from '../screens/PremiumKidsHubScreen';
@@ -66,11 +67,24 @@ import {
   AdminNotificationsScreen,
   AdminErrorReportsScreen,
   AdminDataManagementScreen,
-  EnterpriseAdminDashboardScreen,
+  // EnterpriseAdminDashboardScreen removed - AdminDashboard wraps it
   AdminTursoDataManagementScreen,
   AdminTursoNotificationsScreen,
   AdminSystemHealthScreen,
+  // Advanced Admin Screens
+  AdminBulkOperationsScreen,
+  AdminAppConfigScreen,
+  AdminActivityDashboardScreen,
+  AdminContentModerationScreen,
+  // Data Management & Approval Workflow
+  AdminDataSubmissionsScreen,
+  AdminAutoApprovalRulesScreen,
+  AdminMeritDeadlinesScreen,
+  AdminNotificationTriggersScreen,
 } from '../screens/admin';
+
+// User Feature Screens - Data Submission
+import UserDataSubmissionScreen from '../screens/UserDataSubmissionScreen';
 
 // Components
 import {ErrorBoundary, PremiumTabBar} from '../components';
@@ -101,6 +115,7 @@ export type RootStackParamList = {
   Compare: undefined;
   EntryTests: undefined;
   CareerGuidance: undefined;
+  CareerCenter: undefined;
   Recommendations: undefined;
   CareerExplorerKids: undefined;
   InterestQuiz: undefined;
@@ -141,11 +156,22 @@ export type RootStackParamList = {
   AdminNotifications: undefined;
   AdminErrorReports: undefined;
   AdminDataManagement: undefined;
-  // Enterprise Admin Screens - Turso Integration
-  EnterpriseAdminDashboard: undefined;
+  // Turso Admin Screens
   AdminTursoDataManagement: undefined;
   AdminTursoNotifications: undefined;
   AdminSystemHealth: undefined;
+  // Advanced Admin Screens
+  AdminBulkOperations: undefined;
+  AdminAppConfig: undefined;
+  AdminActivityDashboard: undefined;
+  AdminContentModeration: undefined;
+  // Data Management & Approval Workflow
+  AdminDataSubmissions: undefined;
+  AdminAutoApprovalRules: undefined;
+  AdminMeritDeadlines: undefined;
+  AdminNotificationTriggers: undefined;
+  // User Screens
+  SubmitDataCorrection: {type?: string; entityName?: string; fieldName?: string; currentValue?: string; showHistory?: boolean} | undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -316,6 +342,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="CareerGuidance"
             component={PremiumCareerGuidanceScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CareerCenter"
+            component={PremiumCareerCenterScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -491,12 +522,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={AdminDataManagementScreen}
             options={{headerShown: false}}
           />
-          {/* Enterprise Admin Screens - Turso Integration */}
-          <Stack.Screen
-            name="EnterpriseAdminDashboard"
-            component={EnterpriseAdminDashboardScreen}
-            options={{headerShown: false}}
-          />
+          {/* Turso Admin Screens */}
           <Stack.Screen
             name="AdminTursoDataManagement"
             component={AdminTursoDataManagementScreen}
@@ -510,6 +536,54 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="AdminSystemHealth"
             component={AdminSystemHealthScreen}
+            options={{headerShown: false}}
+          />
+          {/* Advanced Admin Screens */}
+          <Stack.Screen
+            name="AdminBulkOperations"
+            component={AdminBulkOperationsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminAppConfig"
+            component={AdminAppConfigScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminActivityDashboard"
+            component={AdminActivityDashboardScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminContentModeration"
+            component={AdminContentModerationScreen}
+            options={{headerShown: false}}
+          />
+          {/* Data Management & Approval Workflow */}
+          <Stack.Screen
+            name="AdminDataSubmissions"
+            component={AdminDataSubmissionsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminAutoApprovalRules"
+            component={AdminAutoApprovalRulesScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminMeritDeadlines"
+            component={AdminMeritDeadlinesScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminNotificationTriggers"
+            component={AdminNotificationTriggersScreen}
+            options={{headerShown: false}}
+          />
+          {/* User Data Submission */}
+          <Stack.Screen
+            name="SubmitDataCorrection"
+            component={UserDataSubmissionScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

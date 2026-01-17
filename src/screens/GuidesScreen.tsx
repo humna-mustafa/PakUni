@@ -1076,7 +1076,7 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
           <View style={detailStyles.suggestContent}>
             <Text style={[detailStyles.suggestTitle, {color: colors.text}]}>Have suggestions?</Text>
             <Text style={[detailStyles.suggestText, {color: colors.textSecondary}]}>
-              Email us at guides@pakuni.com
+              Contact us through the app settings
             </Text>
           </View>
         </View>
@@ -1474,7 +1474,7 @@ const GuidesScreen: React.FC = () => {
                 Missing a guide?
               </Text>
               <Text style={[styles.suggestText, {color: colors.textSecondary}]}>
-                Email us at guides@pakuni.com and we'll create it!
+                Contact us through the app settings and we'll create it!
               </Text>
             </View>
           </View>

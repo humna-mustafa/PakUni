@@ -24,7 +24,32 @@ import {logger} from '../utils/logger';
 export const TURSO_DATABASE_URL = Config.TURSO_DATABASE_URL || '';
 export const TURSO_AUTH_TOKEN = Config.TURSO_AUTH_TOKEN || '';
 
-// Lazy load createClient only when needed (prevents bundling Node.js modules)
+/**
+ * LIBSQL CLIENT WORKAROUND - React Native / Metro Bundler Compatibility
+ * 
+ * WHY THIS EXISTS:
+ * - @libsql/client is a Node.js-only package that uses native modules
+ * - Metro bundler (React Native) fails when trying to bundle it
+ * - But we DO need it for server-side data import scripts (npm run turso:import)
+ * 
+ * HOW IT WORKS:
+ * 1. Lazy load createClient only when actually needed
+ * 2. Use eval('require') to completely hide the import from Metro's static analysis
+ * 3. Check for Node.js environment before attempting import
+ * 4. In React Native, we use HTTP API or bundled fallback data instead
+ * 
+ * ALTERNATIVE APPROACHES CONSIDERED:
+ * - Separate packages: Would require monorepo setup, overkill for this use case
+ * - Custom Metro config: Gets complex and fragile with native module exclusions
+ * - Different Turso client: @turso/client-http exists but has different API
+ * 
+ * WHEN TO CHANGE:
+ * - If Turso releases a React Native compatible client
+ * - If we move data import to a separate service/package
+ * - If we switch to @turso/client-http for all operations
+ * 
+ * See: LIBSQL_METRO_FIX.md for full documentation
+ */
 let createClient: any = null;
 let libsqlImportAttempted = false;
 
@@ -57,18 +82,34 @@ const getLibsqlClient = async () => {
   }
 };
 
-// Cache keys
+/**
+ * CACHE VERSION - Increment to invalidate all cached Turso data
+ * 
+ * When to increment:
+ * - After schema changes that affect data structure
+ * - After major data imports that change existing records
+ * - When cached data format changes (e.g., new fields added)
+ * - After bug fixes that require fresh data
+ * 
+ * History:
+ * - v1: Initial release
+ * - v2: Added job_market_stats table
+ * - v3: Updated university logo URLs
+ */
+const CACHE_VERSION = 3;
+
+// Cache keys (version-prefixed for cache invalidation)
 const CACHE_KEYS = {
-  UNIVERSITIES: '@turso_universities',
-  ENTRY_TESTS: '@turso_entry_tests',
-  SCHOLARSHIPS: '@turso_scholarships',
-  PROGRAMS: '@turso_programs',
-  CAREERS: '@turso_careers',
-  DEADLINES: '@turso_deadlines',
-  MERIT_FORMULAS: '@turso_merit_formulas',
-  MERIT_ARCHIVE: '@turso_merit_archive',
-  JOB_MARKET_STATS: '@turso_job_market_stats',
-  LAST_SYNC: '@turso_last_sync',
+  UNIVERSITIES: `@turso_v${CACHE_VERSION}_universities`,
+  ENTRY_TESTS: `@turso_v${CACHE_VERSION}_entry_tests`,
+  SCHOLARSHIPS: `@turso_v${CACHE_VERSION}_scholarships`,
+  PROGRAMS: `@turso_v${CACHE_VERSION}_programs`,
+  CAREERS: `@turso_v${CACHE_VERSION}_careers`,
+  DEADLINES: `@turso_v${CACHE_VERSION}_deadlines`,
+  MERIT_FORMULAS: `@turso_v${CACHE_VERSION}_merit_formulas`,
+  MERIT_ARCHIVE: `@turso_v${CACHE_VERSION}_merit_archive`,
+  JOB_MARKET_STATS: `@turso_v${CACHE_VERSION}_job_market_stats`,
+  LAST_SYNC: `@turso_v${CACHE_VERSION}_last_sync`,
 };
 
 // Cache expiry (24 hours for static data - can be longer)

@@ -21,10 +21,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { logger } from '../../utils/logger';
+import type { RootStackParamList } from '../../navigation/AppNavigator';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 import {
   tursoAdminService,
   University,
@@ -195,7 +199,7 @@ const TABLE_CONFIGS: TableConfig[] = [
 
 const AdminTursoDataManagementScreen: React.FC = () => {
   const { colors, isDark } = useTheme();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp>();
 
   // State
   const [selectedTable, setSelectedTable] = useState<TableConfig>(TABLE_CONFIGS[0]);

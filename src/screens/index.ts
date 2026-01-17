@@ -13,6 +13,7 @@ export {default as CareerGuidanceScreen} from './PremiumCareerGuidanceScreen';
 export {default as RecommendationsScreen} from './PremiumRecommendationsScreen';
 export {default as CareerRoadmapsScreen} from './PremiumCareerRoadmapsScreen';
 export {default as StudyTipsScreen} from './PremiumStudyTipsScreen';
+export {default as CareerCenterScreen} from './PremiumCareerCenterScreen';
 
 // Kids Zone screens - Premium versions
 export {default as KidsHubScreen} from './PremiumKidsHubScreen';
@@ -63,3 +64,4 @@ export {default as PremiumStudyTipsScreen} from './PremiumStudyTipsScreen';
 export {default as PremiumPollsScreen} from './PremiumPollsScreen';
 export {default as PremiumDeadlinesScreen} from './PremiumDeadlinesScreen';
 export {default as PremiumMeritArchiveScreen} from './PremiumMeritArchiveScreen';
+export {default as PremiumCareerCenterScreen} from './PremiumCareerCenterScreen';

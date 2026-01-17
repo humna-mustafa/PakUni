@@ -40,7 +40,7 @@
 ║  └──────────────────────────────┘ ║     Large percentage
 ║                                    ║
 ║  Calculated using PakUni 📱       ║  ← Info text
-║  www.pakuni.app                   ║
+║  Made with PakUni                   ║
 ║                                    ║
 ║  #PakUni #MeritCalculator          ║  ← Hashtags
 ║  #AdmissionReady                   ║
@@ -94,7 +94,7 @@
 ║  #2024                             ║
 ║                                    ║
 ║  Share this moment with PakUni 📱  ║
-║  www.pakuni.app                    ║
+║  Made with PakUni                    ║
 ║                                    ║
 ╚════════════════════════════════════╝
 ```
@@ -143,7 +143,7 @@
 ║  #AdmissionJourney                 ║
 ║                                    ║
 ║  Calculated & shared using PakUni 📱
-║  www.pakuni.app                    ║
+║  Made with PakUni                    ║
 ║                                    ║
 ╚════════════════════════════════════╝
 ```
@@ -191,7 +191,7 @@
 ║                                    ║
 ║  #PakUni #Scholarship #Future      ║  ← Hashtags
 ║                                    ║
-║  www.pakuni.app                    ║
+║  Made with PakUni                    ║
 ║                                    ║
 ╚════════════════════════════════════╝
 ```
@@ -240,7 +240,7 @@
 ║                                    ║
 ║  #PakUni #Achievement #Success     ║  ← Hashtags
 ║                                    ║
-║  www.pakuni.app                    ║
+║  Made with PakUni                    ║
 ║                                    ║
 ╚════════════════════════════════════╝
 ```
@@ -386,7 +386,7 @@ Drop Shadow:      None (clean flat design)
 All cards include:
 - "Calculated using PakUni 📱" (in-card)
 - "Download PakUni" (footer)
-- "www.pakuni.app" (URL)
+- "Made with PakUni" (URL)
 - Hashtag: #PakUni (always)
 ```
 

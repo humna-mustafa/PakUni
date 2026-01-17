@@ -149,7 +149,7 @@ export const shareUniversity = async (data: UniversityShareData): Promise<boolea
   return shareContent({
     title: `Share ${data.shortName}`,
     message,
-    url: data.website || 'https://pakuni.app',
+    url: data.website || undefined,
   });
 };
 
@@ -166,7 +166,6 @@ export const shareScholarship = async (data: ScholarshipShareData): Promise<bool
   return shareContent({
     title: `Share ${data.name}`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -181,7 +180,6 @@ export const shareProgram = async (data: ProgramShareData): Promise<boolean> => 
   return shareContent({
     title: `Share ${data.name}`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -194,7 +192,6 @@ export const shareApp = async (): Promise<boolean> => {
   return shareContent({
     title: 'Share PakUni',
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -213,7 +210,6 @@ export const shareMeritResults = async (
   return shareContent({
     title: 'Share My Merit Score',
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -229,7 +225,6 @@ export const shareQuizResults = async (
   return shareContent({
     title: 'Share My Career Match',
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -256,7 +251,6 @@ export const shareMeritSuccessCard = async (
   return shareContent({
     title: `Share My ${data.universityShortName} Chances`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -277,7 +271,6 @@ export const shareComparison = async (
   return shareContent({
     title: `${uni1.shortName} vs ${uni2.shortName}`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -297,7 +290,6 @@ export const sharePollResults = async (
   return shareContent({
     title: 'Share Poll Results',
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -332,12 +324,11 @@ export const shareAdmissionCelebration = async (
   const programText = data.programName ? `\n📚 ${data.programName}` : '';
   const yearText = data.year ? ` ${data.year}` : '';
   
-  const message = `🎉🎓 ADMISSION SECURED! 🎓🎉\n\n${nameText ? `👤${nameText}` : 'I'} got admitted to:\n\n🏛️ ${data.universityName}${programText}${yearText}\n\n✨ Dreams do come true! ✨\n\n#Alhamdulillah #${data.universityShortName}${data.year || ''} #PakUni\n\n📱 Plan your university journey: https://pakuni.app`;
+  const message = `🎉🎓 ADMISSION SECURED! 🎓🎉\n\n${nameText ? `👤${nameText}` : 'I'} got admitted to:\n\n🏛️ ${data.universityName}${programText}${yearText}\n\n✨ Dreams do come true! ✨\n\n#Alhamdulillah #${data.universityShortName}${data.year || ''} #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: `I got into ${data.universityShortName}!`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -351,12 +342,11 @@ export const shareEntryTestSuccess = async (
   const scoreText = data.score ? `\n📈 Score: ${data.score}` : '';
   const percentileText = data.percentile ? `\n🏆 Percentile: ${data.percentile}%` : '';
   
-  const message = `📝 ${data.testName} CLEARED! ✅\n\n${nameText} successfully passed the ${data.testShortName}!${scoreText}${percentileText}\n\n💪 One step closer to the dream!\n\n#${data.testShortName}Cleared #AdmissionSeason #PakUni\n\n📱 Prepare for your tests: https://pakuni.app`;
+  const message = `📝 ${data.testName} CLEARED! ✅\n\n${nameText} successfully passed the ${data.testShortName}!${scoreText}${percentileText}\n\n💪 One step closer to the dream!\n\n#${data.testShortName}Cleared #AdmissionSeason #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: `${data.testShortName} Cleared!`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -372,12 +362,11 @@ export const shareMeritListCelebration = async (
   const nameText = studentName || 'I';
   const meritText = meritListNumber ? `Merit List ${meritListNumber}` : 'the merit list';
   
-  const message = `📜 MERIT LISTED! 🎯\n\n${nameText} made it to ${meritText} at:\n\n🏛️ ${universityName}\n\n✨ Alhamdulillah! Hard work pays off! ✨\n\n#MeritListed #${universityShortName} #PakUni\n\n📱 Calculate your merit: https://pakuni.app`;
+  const message = `📜 MERIT LISTED! 🎯\n\n${nameText} made it to ${meritText} at:\n\n🏛️ ${universityName}\n\n✨ Alhamdulillah! Hard work pays off! ✨\n\n#MeritListed #${universityShortName} #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: `Merit Listed at ${universityShortName}!`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -393,12 +382,11 @@ export const shareScholarshipCelebration = async (
   const nameText = studentName || 'I';
   const coverageText = coverage ? `\n💰 Coverage: ${coverage}` : '';
   
-  const message = `🎓💰 SCHOLARSHIP RECEIVED! 💰🎓\n\n${nameText} has been awarded:\n\n📝 ${scholarshipName}\n🏢 By: ${provider}${coverageText}\n\n✨ Dreams + Hard work = Success! ✨\n\n#Scholarship #EducationFunding #PakUni\n\n📱 Find scholarships: https://pakuni.app`;
+  const message = `🎓💰 SCHOLARSHIP RECEIVED! 💰🎓\n\n${nameText} has been awarded:\n\n📝 ${scholarshipName}\n🏢 By: ${provider}${coverageText}\n\n✨ Dreams + Hard work = Success! ✨\n\n#Scholarship #EducationFunding #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: 'Scholarship Received!',
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -413,39 +401,38 @@ export const shareMilestone = async (
   
   switch (data.type) {
     case 'first_calc':
-      message = `🎯 Started my university journey!\n\nJust calculated my first merit score on PakUni App. Taking the first step towards my dream university!\n\n#AdmissionPrep #PakUni\n\n📱 Calculate your merit: https://pakuni.app`;
+      message = `🎯 Started my university journey!\n\nJust calculated my first merit score on PakUni App. Taking the first step towards my dream university!\n\n#AdmissionPrep #PakUni\n\n📱 Made with PakUni App`;
       title = 'Started My Journey!';
       break;
       
     case 'merit_listed':
-      message = `📜 MERIT LISTED! 🎯\n\nI made it to the merit list at ${data.details.universityName}!\n\nAlhamdulillah! Hard work pays off! ✨\n\n#MeritListed #PakUni\n\n📱 https://pakuni.app`;
+      message = `📜 MERIT LISTED! 🎯\n\nI made it to the merit list at ${data.details.universityName}!\n\nAlhamdulillah! Hard work pays off! ✨\n\n#MeritListed #PakUni\n\n📱 Made with PakUni App`;
       title = 'Merit Listed!';
       break;
       
     case 'accepted':
-      message = `🎉 ADMISSION SECURED! 🎓\n\nI got admitted to ${data.details.universityName}!\n\nDreams coming true! ✨\n\n#AdmissionSecured #PakUni\n\n📱 https://pakuni.app`;
+      message = `🎉 ADMISSION SECURED! 🎓\n\nI got admitted to ${data.details.universityName}!\n\nDreams coming true! ✨\n\n#AdmissionSecured #PakUni\n\n📱 Made with PakUni App`;
       title = 'Admission Secured!';
       break;
       
     case 'scholarship':
-      message = `🎓💰 SCHOLARSHIP AWARDED!\n\nI received ${data.details.scholarshipName}!\n\nAlhamdulillah! Education is now more accessible! ✨\n\n#Scholarship #PakUni\n\n📱 https://pakuni.app`;
+      message = `🎓💰 SCHOLARSHIP AWARDED!\n\nI received ${data.details.scholarshipName}!\n\nAlhamdulillah! Education is now more accessible! ✨\n\n#Scholarship #PakUni\n\n📱 Made with PakUni App`;
       title = 'Scholarship Awarded!';
       break;
       
     case 'test_passed':
-      message = `📝 TEST CLEARED! ✅\n\nI successfully passed ${data.details.testName}!\n\nOne step closer to my dream! 💪\n\n#EntryTest #PakUni\n\n📱 https://pakuni.app`;
+      message = `📝 TEST CLEARED! ✅\n\nI successfully passed ${data.details.testName}!\n\nOne step closer to my dream! 💪\n\n#EntryTest #PakUni\n\n📱 Made with PakUni App`;
       title = 'Test Cleared!';
       break;
       
     default:
-      message = `🎯 New milestone achieved on PakUni!\n\n#PakUni\n\n📱 https://pakuni.app`;
+      message = `🎯 New milestone achieved on PakUni!\n\n#PakUni\n\n📱 Made with PakUni App`;
       title = 'Milestone Achieved!';
   }
   
   return shareContent({
     title,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -464,12 +451,11 @@ export const shareResultPrediction = async (
     ? 'Keep pushing!' 
     : 'Every effort counts!';
   
-  const message = `${emoji} My ${universityShortName} Prediction: ${chancePercentage}%!\n\n🏛️ ${universityName}\n💭 ${motivationText}\n\nJust played the Result Prediction Game on PakUni! 🎮\n\n#ResultPrediction #${universityShortName} #PakUni\n\n📱 Try it: https://pakuni.app`;
+  const message = `${emoji} My ${universityShortName} Prediction: ${chancePercentage}%!\n\n🏛️ ${universityName}\n💭 ${motivationText}\n\nJust played the Result Prediction Game on PakUni! 🎮\n\n#ResultPrediction #${universityShortName} #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: `My ${universityShortName} Chances`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 
@@ -479,12 +465,11 @@ export const shareResultPrediction = async (
 export const shareStudyStreak = async (
   streakDays: number
 ): Promise<boolean> => {
-  const message = `🔥 ${streakDays}-Day Study Streak!\n\nStaying consistent with my university prep on PakUni!\n\n💪 Discipline is the bridge between goals and accomplishments.\n\n#StudyStreak #Consistency #PakUni\n\n📱 Join me: https://pakuni.app`;
+  const message = `🔥 ${streakDays}-Day Study Streak!\n\nStaying consistent with my university prep on PakUni!\n\n💪 Discipline is the bridge between goals and accomplishments.\n\n#StudyStreak #Consistency #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
     title: `${streakDays}-Day Streak!`,
     message,
-    url: 'https://pakuni.app',
   });
 };
 

@@ -11,10 +11,11 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Platform, Linking} from 'react-native';
+import {Alert, Platform, Linking, AppState, AppStateStatus} from 'react-native';
 import {logger} from '../utils/logger';
 import {supabase} from '../services/supabase';
 import {
@@ -115,7 +116,12 @@ const STORAGE_KEYS = {
   GUEST_ID: '@pakuni_guest_id',
   FAVORITES: '@pakuni_favorites',
   RECENT: '@pakuni_recent',
+  LAST_ACTIVITY: '@pakuni_last_activity',
 };
+
+// Session timeout configuration (30 minutes for non-guest users)
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+const ACTIVITY_CHECK_INTERVAL_MS = 60 * 1000; // Check every minute
 
 // ============================================================================
 // DEFAULT VALUES
@@ -178,6 +184,68 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [state, setState] = useState<AuthState>(DEFAULT_STATE);
+  const lastActivityRef = useRef<number>(Date.now());
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+
+  // =========================================================================
+  // SESSION TIMEOUT MANAGEMENT
+  // =========================================================================
+
+  // Update last activity timestamp
+  const updateLastActivity = useCallback(async () => {
+    const now = Date.now();
+    lastActivityRef.current = now;
+    await AsyncStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, now.toString());
+  }, []);
+
+  // Check if session has timed out
+  const checkSessionTimeout = useCallback(async () => {
+    // Skip timeout check for guests
+    if (state.isGuest || !state.isAuthenticated) return;
+
+    const lastActivityStr = await AsyncStorage.getItem(STORAGE_KEYS.LAST_ACTIVITY);
+    const lastActivity = lastActivityStr ? parseInt(lastActivityStr, 10) : Date.now();
+    const timeSinceActivity = Date.now() - lastActivity;
+
+    if (timeSinceActivity > SESSION_TIMEOUT_MS) {
+      logger.info('Session timeout - signing out due to inactivity', null, 'Auth');
+      Alert.alert(
+        'Session Expired',
+        'You have been signed out due to inactivity. Please sign in again.',
+        [{ text: 'OK' }]
+      );
+      // Clear session without showing another alert
+      await supabase.auth.signOut();
+      await clearLocalData();
+      setState({...DEFAULT_STATE, isLoading: false});
+    }
+  }, [state.isGuest, state.isAuthenticated]);
+
+  // Handle app state changes for session timeout
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (
+        appStateRef.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        // App came to foreground - check session timeout
+        await checkSessionTimeout();
+      } else if (nextAppState === 'active') {
+        // User is active - update timestamp
+        await updateLastActivity();
+      }
+      appStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    // Initial activity timestamp
+    updateLastActivity();
+
+    return () => {
+      subscription.remove();
+    };
+  }, [checkSessionTimeout, updateLastActivity]);
 
   // =========================================================================
   // INITIALIZATION

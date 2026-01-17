@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
+import {LIST_ITEM_HEIGHTS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {RootStackParamList} from '../navigation/AppNavigator';
@@ -365,7 +366,7 @@ const PremiumUniversitiesScreen = () => {
   }, []);
 
   // FlatList optimization: getItemLayout for fixed height items
-  const ITEM_HEIGHT = 180; // Approximate card height
+  const ITEM_HEIGHT = LIST_ITEM_HEIGHTS.UNIVERSITY_CARD;
   const getItemLayout = useCallback(
     (_data: ArrayLike<UniversityItem> | null | undefined, index: number) => ({
       length: ITEM_HEIGHT,

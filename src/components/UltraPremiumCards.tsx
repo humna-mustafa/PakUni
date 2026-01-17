@@ -94,7 +94,7 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Calculated with PakUni Merit Calculator!\n\n#PakUni #MeritList #Pakistan #2026\n\n📱 https://pakuni.app`;
+      const message = `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Calculated with PakUni Merit Calculator!\n\n#PakUni #MeritList #Pakistan #2026\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Merit Success', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -267,7 +267,7 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
 
           {/* Branding */}
           <View style={meritStyles.branding}>
-            <Text style={meritStyles.brandText}>📱 PakUni • pakuni.app</Text>
+            <Text style={meritStyles.brandText}>📱 Made with PakUni</Text>
           </View>
         </LinearGradient>
       </View>
@@ -344,7 +344,7 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 https://pakuni.app`;
+      const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Admission', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -500,7 +500,7 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
 
           {/* Branding */}
           <View style={admissionStyles.branding}>
-            <Text style={admissionStyles.brandText}>📱 PakUni • pakuni.app</Text>
+            <Text style={admissionStyles.brandText}>📱 Made with PakUni</Text>
           </View>
         </LinearGradient>
       </View>
@@ -577,7 +577,7 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to my dream university!\n\n#PakUni #EntryTest #Success\n\n📱 https://pakuni.app`;
+      const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to my dream university!\n\n#PakUni #EntryTest #Success\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Test Complete', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -732,7 +732,7 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
 
           {/* Branding */}
           <View style={testStyles.branding}>
-            <Text style={testStyles.brandText}>📱 PakUni • pakuni.app</Text>
+            <Text style={testStyles.brandText}>📱 Made with PakUni</Text>
           </View>
         </LinearGradient>
       </View>
@@ -809,7 +809,7 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `💎 SCHOLARSHIP WON! 🏅\n\n📝 ${achievement.scholarshipName || 'Scholarship'}\n${achievement.percentage ? `💰 Coverage: ${achievement.percentage}\n` : ''}${achievement.universityName ? `🏛️ At: ${achievement.universityName}\n` : ''}\n#PakUni #Scholarship #Success\n\n📱 https://pakuni.app`;
+      const message = `💎 SCHOLARSHIP WON! 🏅\n\n📝 ${achievement.scholarshipName || 'Scholarship'}\n${achievement.percentage ? `💰 Coverage: ${achievement.percentage}\n` : ''}${achievement.universityName ? `🏛️ At: ${achievement.universityName}\n` : ''}\n#PakUni #Scholarship #Success\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Scholarship', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -971,7 +971,7 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
 
           {/* Branding */}
           <View style={scholarshipStyles.branding}>
-            <Text style={scholarshipStyles.brandText}>📱 PakUni • pakuni.app</Text>
+            <Text style={scholarshipStyles.brandText}>📱 Made with PakUni</Text>
           </View>
         </LinearGradient>
       </View>

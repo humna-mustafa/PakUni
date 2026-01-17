@@ -231,7 +231,7 @@ export const updateAchievement = async (
 const buildShareMessage = (achievement: MyAchievement): string => {
   const template = ACHIEVEMENT_TEMPLATES.find(t => t.type === achievement.type);
   if (!template) {
-    return `${achievement.title} ${achievement.icon}\n\n📱 PakUni App\nhttps://pakuni.app`;
+    return `${achievement.title} ${achievement.icon}\n\n📱 Made with PakUni App`;
   }
 
   let message = template.shareTemplate;
@@ -251,24 +251,21 @@ const buildShareMessage = (achievement: MyAchievement): string => {
   message = message.replace(/\s*Percentage:\s*$/m, '');
   message = message.replace(/\s*\|\s*$/m, '');
   
-  // Generate shareable deep link
-  const shareLink = `https://pakuni.app/achievement/${achievement.id}`;
-  
-  return `${message}\n\n📱 Create your own achievement card!\n🔗 ${shareLink}`;
+  return `${message}\n\n📱 Made with PakUni App`;
 };
 
 /**
- * Generate a shareable deep link URL for an achievement
+ * Generate a shareable message for an achievement
  */
 export const generateShareLink = (achievement: MyAchievement): string => {
-  return `https://pakuni.app/achievement/${achievement.id}`;
+  return `Made with PakUni App • ${achievement.id}`;
 };
 
 /**
- * Generate a shareable deep link URL for a card type
+ * Generate a shareable card identifier
  */
 export const generateCardShareLink = (cardType: string, cardId: string): string => {
-  return `https://pakuni.app/card/${cardType}/${cardId}`;
+  return `PakUni • ${cardType}/${cardId}`;
 };
 
 /**
@@ -336,7 +333,7 @@ export const shareQuickCard = async (
     }
     
     const result = await Share.share({
-      message: `${message}\n\n📱 Download PakUni App!\nhttps://pakuni.app`,
+      message: `${message}\n\n📱 Made with PakUni App!`,
     });
     return result.action === Share.sharedAction;
   } catch (error) {

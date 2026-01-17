@@ -310,7 +310,7 @@ const DateEditModal = ({
             <Icon name="information-circle-outline" family="Ionicons" size={18} color={colors.primary} />
             <Text style={[styles.infoText, {color: colors.textSecondary}]}>
               Dates may change. If our date differs from the official date, you can update it here.
-              Send us updates at support@pakuni.app
+              Help us keep dates accurate through the app feedback option.
             </Text>
           </View>
 

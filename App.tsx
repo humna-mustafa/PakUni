@@ -14,6 +14,7 @@ import {ThemeProvider, useTheme, AuthProvider} from './src/contexts';
 import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast} from './src/components';
 import {analytics} from './src/services/analytics';
 import {supabase} from './src/services/supabase';
+import {logger} from './src/utils/logger';
 
 // Deep linking configuration for OAuth callbacks and shared content
 const linking = {
@@ -60,7 +61,7 @@ function AppContent(): React.JSX.Element {
     
     // Handle deep links for OAuth
     const handleDeepLink = async (event: {url: string}) => {
-      console.log('[DeepLink] Received URL:', event.url);
+      logger.debug('Received deep link URL', {url: event.url}, 'DeepLink');
       
       // Handle Supabase OAuth callback
       if (event.url.includes('auth/callback') || event.url.includes('auth/v1/callback')) {
@@ -72,14 +73,14 @@ function AppContent(): React.JSX.Element {
                               url.hash?.match(/refresh_token=([^&]*)/)?.[1];
           
           if (accessToken && refreshToken) {
-            console.log('[DeepLink] Setting session from OAuth callback');
+            logger.debug('Setting session from OAuth callback', null, 'DeepLink');
             await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
           }
         } catch (error) {
-          console.error('[DeepLink] Error processing OAuth callback:', error);
+          logger.error('Error processing OAuth callback', error as Error, 'DeepLink');
         }
       }
     };

@@ -45,7 +45,7 @@ interface AppConfig {
 // ============================================================================
 
 const DEFAULTS: AppConfig = {
-  apiUrl: 'https://api.pakuni.app',
+  apiUrl: '', // App is offline-first - no external API dependency
   apiTimeout: 30000,
   
   appName: 'PakUni',

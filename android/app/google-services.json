@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "273626117629",
+    "project_id": "pakuni-9c4aa",
+    "storage_bucket": "pakuni-9c4aa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273626117629:android:ee758fcb3e720b673e1594",
+        "android_client_info": {
+          "package_name": "com.pakuni"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM8w7Ifu6jmNtze9b7MLvDtyUqYsJOEKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

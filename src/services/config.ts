@@ -96,9 +96,9 @@ export interface AppConfig {
 
 const defaultConfig: AppConfig = {
   api: {
-    // Always use production API URL - app is offline-first with bundled data
-    // No localhost dependency - this prevents crashes when API is unavailable
-    baseUrl: 'https://api.pakuni.app',
+    // App is offline-first with bundled data - no API dependency
+    // API URL left empty as we're not using external domain
+    baseUrl: '',
     supabaseUrl: process.env.SUPABASE_URL || '',
     supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
     timeout: 30000,
@@ -137,16 +137,16 @@ const defaultConfig: AppConfig = {
   },
 
   content: {
-    supportEmail: 'support@pakuni.com',
-    privacyPolicyUrl: 'https://pakuni.com/privacy',
-    termsOfServiceUrl: 'https://pakuni.com/terms',
-    appStoreUrl: 'https://apps.apple.com/app/pakuni',
-    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.pakuni',
-    websiteUrl: 'https://pakuni.com',
+    supportEmail: '',
+    privacyPolicyUrl: '',
+    termsOfServiceUrl: '',
+    appStoreUrl: '',
+    playStoreUrl: '',
+    websiteUrl: '',
     socialMedia: {
-      facebook: 'https://facebook.com/pakuni',
-      twitter: 'https://twitter.com/pakuni',
-      instagram: 'https://instagram.com/pakuni',
+      facebook: '',
+      twitter: '',
+      instagram: '',
     },
   },
 
@@ -172,7 +172,7 @@ const defaultConfig: AppConfig = {
 // ============================================================================
 
 const CONFIG_STORAGE_KEY = '@pakuni_config';
-const REMOTE_CONFIG_URL = 'https://pakuni.com/api/config';
+const REMOTE_CONFIG_URL = ''; // No external config endpoint
 
 class ConfigService {
   private config: AppConfig = defaultConfig;

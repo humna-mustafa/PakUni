@@ -18,11 +18,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { logger } from '../../utils/logger';
+import type { RootStackParamList } from '../../navigation/AppNavigator';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 import {
   tursoAdminService,
   DatabaseHealth,
@@ -38,7 +42,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const AdminSystemHealthScreen: React.FC = () => {
   const { colors, isDark } = useTheme();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp>();
 
   // State
   const [loading, setLoading] = useState(true);
@@ -47,7 +51,7 @@ const AdminSystemHealthScreen: React.FC = () => {
   const [stats, setStats] = useState<TursoStats | null>(null);
   const [syncInProgress, setSyncInProgress] = useState(false);
   const [clearCacheInProgress, setClearCacheInProgress] = useState(false);
-  const [healthCheckInterval, setHealthCheckInterval] = useState<NodeJS.Timeout | null>(null);
+  // Auto-refresh removed to comply with free tier guidelines - use manual refresh
 
   // ============================================================================
   // Data Fetching
@@ -71,17 +75,8 @@ const AdminSystemHealthScreen: React.FC = () => {
 
   useEffect(() => {
     fetchHealthData();
-    
-    // Auto-refresh every 10 seconds for real-time monitoring
-    const interval = setInterval(fetchHealthData, 10000);
-    setHealthCheckInterval(interval);
-    
-    return () => {
-      if (healthCheckInterval) {
-        clearInterval(healthCheckInterval);
-      }
-      clearInterval(interval);
-    };
+    // Note: Auto-refresh removed to comply with Turso free tier limits
+    // Use pull-to-refresh or the manual refresh button instead
   }, [fetchHealthData]);
 
   const onRefresh = useCallback(() => {

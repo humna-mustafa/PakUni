@@ -426,6 +426,91 @@ export const useStableCallback = <T extends (...args: any[]) => any>(
   );
 };
 
+// ============================================================================
+// ACTION LOCK - Prevent duplicate submissions/actions
+// ============================================================================
+
+/**
+ * Hook to prevent duplicate action submissions (rate limiting)
+ * Perfect for favorite buttons, vote submissions, form submissions
+ * 
+ * @param lockDurationMs - Minimum time between actions (default: 1000ms)
+ * @returns { isLocked, lockAction, unlockAction }
+ */
+export const useActionLock = (lockDurationMs = 1000) => {
+  const [isLocked, setIsLocked] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastActionRef = useRef<number>(0);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
+  const lockAction = useCallback(() => {
+    const now = Date.now();
+    const timeSinceLastAction = now - lastActionRef.current;
+    
+    if (timeSinceLastAction < lockDurationMs) {
+      return false; // Action is locked
+    }
+
+    setIsLocked(true);
+    lastActionRef.current = now;
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      setIsLocked(false);
+    }, lockDurationMs);
+
+    return true; // Action is allowed
+  }, [lockDurationMs]);
+
+  const unlockAction = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    setIsLocked(false);
+  }, []);
+
+  return { isLocked, lockAction, unlockAction };
+};
+
+/**
+ * Hook to wrap an async action with rate limiting
+ * Automatically prevents rapid repeated calls
+ * 
+ * @param action - The async action to wrap
+ * @param lockDurationMs - Minimum time between actions (default: 1000ms)
+ */
+export const useRateLimitedAction = <T extends (...args: any[]) => Promise<any>>(
+  action: T,
+  lockDurationMs = 1000,
+) => {
+  const { isLocked, lockAction } = useActionLock(lockDurationMs);
+  const [isExecuting, setIsExecuting] = useState(false);
+
+  const execute = useCallback(async (...args: Parameters<T>): Promise<ReturnType<T> | null> => {
+    if (!lockAction()) {
+      return null; // Rate limited
+    }
+
+    setIsExecuting(true);
+    try {
+      return await action(...args);
+    } finally {
+      setIsExecuting(false);
+    }
+  }, [action, lockAction]);
+
+  return { execute, isLocked, isExecuting };
+};
+
 export default {
   useDeferredValue,
   useDeferredRender,
@@ -444,4 +529,6 @@ export default {
   useSafeState,
   useLazy,
   useStableCallback,
+  useActionLock,
+  useRateLimitedAction,
 };

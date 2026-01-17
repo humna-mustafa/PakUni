@@ -324,7 +324,7 @@ export const useRouteParam = <
  * Deep link configuration for the app
  */
 export const deepLinkConfig = {
-  prefixes: ['pakuni://', 'https://pakuni.app', 'https://www.pakuni.app'],
+  prefixes: ['pakuni://'],
   config: {
     screens: {
       MainTabs: {
@@ -360,7 +360,7 @@ export const generateDeepLink = <T extends keyof AllParamList>(
   },
 ): string => {
   const {scheme = 'app'} = options || {};
-  const base = scheme === 'app' ? 'pakuni://' : 'https://pakuni.app/';
+  const base = 'pakuni://'; // App scheme only
 
   // Map screen to path
   const screenPaths: Record<string, string> = {
@@ -410,9 +410,7 @@ export const parseDeepLink = (url: string): {
 } => {
   try {
     const cleaned = url
-      .replace('pakuni://', '')
-      .replace('https://pakuni.app/', '')
-      .replace('https://www.pakuni.app/', '');
+      .replace('pakuni://', ''); // App scheme only
 
     const [path, queryString] = cleaned.split('?');
     const segments = path.split('/').filter(Boolean);

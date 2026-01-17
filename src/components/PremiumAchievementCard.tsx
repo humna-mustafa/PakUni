@@ -296,7 +296,7 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
       }
     })();
 
-    return `${baseMessage}\n#PakUni #Pakistan #Education #Success #2026\n\n📱 Download PakUni App!\nhttps://pakuni.app`;
+    return `${baseMessage}\n#PakUni #Pakistan #Education #Success #2026\n\n📱 Made with PakUni App`;
   };
 
   const handleShare = async () => {
@@ -479,7 +479,7 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
                 <Text style={premiumStyles.brandingEmoji}>📱</Text>
                 <Text style={premiumStyles.brandingText}>PakUni</Text>
                 <View style={premiumStyles.brandingDot} />
-                <Text style={premiumStyles.brandingUrl}>pakuni.app</Text>
+                <Text style={premiumStyles.brandingUrl}>PakUni App</Text>
               </View>
             </View>
           </View>

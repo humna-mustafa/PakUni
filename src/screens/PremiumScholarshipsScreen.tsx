@@ -19,6 +19,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
+import {LIST_ITEM_HEIGHTS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {SCHOLARSHIPS} from '../data';
@@ -319,7 +320,7 @@ const ScholarshipCard = ({
           <View style={styles.statsRow}>
             {item.monthly_stipend && (
               <View style={[styles.statBox, {backgroundColor: colors.successLight}]}>
-                <Icon name="cash-outline" family="Ionicons" size={24} color={colors.success} />
+                <Icon name="cash-outline" family="Ionicons" size={18} color={colors.success} />
                 <View>
                   <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Stipend</Text>
                   <Text style={[styles.statValue, {color: colors.success}]}>
@@ -330,7 +331,7 @@ const ScholarshipCard = ({
             )}
             {item.max_family_income && (
               <View style={[styles.statBox, {backgroundColor: colors.warningLight}]}>
-                <Icon name="analytics-outline" family="Ionicons" size={20} color={colors.warning} />
+                <Icon name="analytics-outline" family="Ionicons" size={16} color={colors.warning} />
                 <View>
                   <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Max Income</Text>
                   <Text style={[styles.statValue, {color: colors.warning}]}>
@@ -360,7 +361,8 @@ const ScholarshipCard = ({
   );
 };
 
-const ITEM_HEIGHT = 200; // Approximate height of scholarship card
+// Use constant from centralized UI config
+const ITEM_HEIGHT = LIST_ITEM_HEIGHTS.SCHOLARSHIP_CARD;
 
 const PremiumScholarshipsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -1221,16 +1223,16 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
   cardWrapper: {
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   card: {
-    borderRadius: RADIUS.xl,
-    padding: SPACING.lg,
-    elevation: 3,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
   },
   coverageBadge: {
     position: 'absolute',
@@ -1250,12 +1252,12 @@ const styles = StyleSheet.create({
     paddingRight: 80,
   },
   iconContainer: {
-    width: 52,
-    height: 52,
-    borderRadius: RADIUS.lg,
+    width: 44,
+    height: 44,
+    borderRadius: RADIUS.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: SPACING.md,
+    marginRight: SPACING.sm,
   },
   typeIcon: {
     fontSize: 26,
@@ -1280,25 +1282,26 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: SPACING.sm,
-    marginBottom: SPACING.md,
+    gap: SPACING.xs,
+    marginBottom: SPACING.sm,
   },
   statBox: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.sm,
-    borderRadius: RADIUS.lg,
+    padding: SPACING.xs,
+    borderRadius: RADIUS.md,
+    gap: 4,
   },
   statIcon: {
     fontSize: 20,
     marginRight: SPACING.sm,
   },
   statLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
+    fontSize: 10,
   },
   statValue: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 11,
     fontWeight: '700',
   },
   cardFooter: {
@@ -1610,9 +1613,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   availabilitySection: {
-    marginBottom: SPACING.md,
-    padding: SPACING.sm + 2,
-    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.sm,
+    padding: SPACING.xs + 2,
+    borderRadius: RADIUS.md,
   },
   availabilityHeader: {
     flexDirection: 'row',
@@ -1654,11 +1657,11 @@ const styles = StyleSheet.create({
   applicationMethodBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 6,
-    borderRadius: RADIUS.md,
-    marginBottom: SPACING.md,
-    gap: 6,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
+    marginBottom: SPACING.sm,
+    gap: 4,
     alignSelf: 'flex-start',
   },
   applicationMethodText: {

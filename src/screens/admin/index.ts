@@ -23,3 +23,15 @@ export {default as EnterpriseAdminDashboardScreen} from './EnterpriseAdminDashbo
 export {default as AdminTursoDataManagementScreen} from './AdminTursoDataManagementScreen';
 export {default as AdminTursoNotificationsScreen} from './AdminTursoNotificationsScreen';
 export {default as AdminSystemHealthScreen} from './AdminSystemHealthScreen';
+
+// Advanced Admin Screens - Enhanced Features
+export {default as AdminBulkOperationsScreen} from './AdminBulkOperationsScreen';
+export {default as AdminAppConfigScreen} from './AdminAppConfigScreen';
+export {default as AdminActivityDashboardScreen} from './AdminActivityDashboardScreen';
+export {default as AdminContentModerationScreen} from './AdminContentModerationScreen';
+
+// Data Management & Approval Workflow
+export {default as AdminDataSubmissionsScreen} from './AdminDataSubmissionsScreen';
+export {default as AdminAutoApprovalRulesScreen} from './AdminAutoApprovalRulesScreen';
+export {default as AdminMeritDeadlinesScreen} from './AdminMeritDeadlinesScreen';
+export {default as AdminNotificationTriggersScreen} from './AdminNotificationTriggersScreen';

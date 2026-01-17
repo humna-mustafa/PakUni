@@ -22,6 +22,16 @@ export const UNIVERSITY_LOGO_MAP: Record<string, string> = {
   'NUML': 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/National_University_of_Modern_Languages_logo.png/200px-National_University_of_Modern_Languages_logo.png',
   'FUUAST': 'https://upload.wikimedia.org/wikipedia/en/4/44/Federal_Urdu_University_logo.png',
   'CUST': 'https://cust.edu.pk/wp-content/uploads/2023/01/cust-logo.png',
+  'GIKI': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/3d/GIK_Institute_logo.svg/200px-GIK_Institute_logo.svg.png',
+  'UET Taxila': 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f7/University_of_Engineering_and_Technology%2C_Taxila_logo.png/200px-University_of_Engineering_and_Technology%2C_Taxila_logo.png',
+  'Sukkur IBA': 'https://upload.wikimedia.org/wikipedia/en/thumb/c/ce/Sukkur_IBA_University_logo.png/200px-Sukkur_IBA_University_logo.png',
+  'NCA': 'https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/National_College_of_Arts_logo.png/200px-National_College_of_Arts_logo.png',
+  'FUI': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Foundation_University_Islamabad_logo.png/200px-Foundation_University_Islamabad_logo.png',
+  'VU': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Virtual_University_of_Pakistan_logo.png/200px-Virtual_University_of_Pakistan_logo.png',
+  'AIOU': 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a5/Allama_Iqbal_Open_University_logo.png/200px-Allama_Iqbal_Open_University_logo.png',
+  'UVAS': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/University_of_Veterinary_and_Animal_Sciences_logo.png/200px-University_of_Veterinary_and_Animal_Sciences_logo.png',
+  'UETP': 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/University_of_Engineering_%26_Technology_Peshawar_logo.png/200px-University_of_Engineering_%26_Technology_Peshawar_logo.png',
+  'KIU': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Karakoram_International_University_logo.png/200px-Karakoram_International_University_logo.png',
   
   // ========== PUNJAB ==========
   'PU': 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b7/University_of_the_Punjab_logo.png/200px-University_of_the_Punjab_logo.png',

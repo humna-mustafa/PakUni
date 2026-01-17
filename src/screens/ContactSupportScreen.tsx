@@ -394,7 +394,8 @@ const ContactSupportScreen: React.FC = () => {
   };
 
   const handleEmailSupport = () => {
-    Linking.openURL('mailto:support@pakuni.app?subject=PakUni Support Request');
+    // Open in-app feedback form instead of email
+    setShowFeedbackModal(true);
   };
 
   // -------------------------------------------------------------------------
@@ -920,7 +921,7 @@ const ContactSupportScreen: React.FC = () => {
                 style={[styles.contactMethod, {backgroundColor: colors.background}]}
                 onPress={handleEmailSupport}>
                 <Icon name="mail-outline" family="Ionicons" size={22} color={colors.primary} />
-                <Text style={[styles.contactMethodText, {color: colors.text}]}>support@pakuni.app</Text>
+                <Text style={[styles.contactMethodText, {color: colors.text}]}>Send Feedback</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.contactMethod, {backgroundColor: colors.background}]}

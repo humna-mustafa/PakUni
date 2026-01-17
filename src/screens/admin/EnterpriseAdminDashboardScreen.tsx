@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,6 +27,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { logger } from '../../utils/logger';
 import { tursoAdminService, TursoStats, DatabaseHealth } from '../../services/tursoAdmin';
 import { adminService } from '../../services/admin';
+import type { RootStackParamList } from '../../navigation/AppNavigator';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+// Extract admin screen names from RootStackParamList for type safety
+type AdminScreenName = Extract<keyof RootStackParamList, `Admin${string}`>;
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
@@ -39,15 +46,15 @@ interface QuickAction {
   title: string;
   icon: string;
   iconSet: 'ion' | 'material';
-  screen: string;
+  screen: AdminScreenName;
   color: string;
   badge?: number;
   description: string;
 }
 
 interface SystemStatus {
-  turso: 'online' | 'offline' | 'degraded';
-  supabase: 'online' | 'offline' | 'degraded';
+  turso: 'online' | 'offline' | 'degraded' | 'checking';
+  supabase: 'online' | 'offline' | 'degraded' | 'checking';
   cache: 'fresh' | 'stale' | 'expired' | 'unknown';
   lastSync: string | null;
 }
@@ -56,10 +63,47 @@ interface SystemStatus {
 // Component
 // ============================================================================
 
+// Helper functions for status display
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case 'online':
+    case 'fresh':
+      return '#10B981'; // Green
+    case 'offline':
+    case 'expired':
+      return '#EF4444'; // Red
+    case 'degraded':
+    case 'stale':
+      return '#F59E0B'; // Amber
+    case 'checking':
+      return '#6B7280'; // Gray
+    default:
+      return '#6B7280'; // Gray
+  }
+};
+
+const getStatusIcon = (status: string): string => {
+  switch (status) {
+    case 'online':
+    case 'fresh':
+      return 'checkmark-circle';
+    case 'offline':
+    case 'expired':
+      return 'close-circle';
+    case 'degraded':
+    case 'stale':
+      return 'warning';
+    case 'checking':
+      return 'ellipsis-horizontal-circle';
+    default:
+      return 'help-circle';
+  }
+};
+
 const EnterpriseAdminDashboardScreen: React.FC = () => {
   const { colors, isDark } = useTheme();
   const { user } = useAuth();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp>();
 
   // State
   const [loading, setLoading] = useState(true);
@@ -68,18 +112,20 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
   const [dbHealth, setDbHealth] = useState<DatabaseHealth | null>(null);
   const [supabaseStats, setSupabaseStats] = useState<any>(null);
   const [systemStatus, setSystemStatus] = useState<SystemStatus>({
-    turso: 'offline',
-    supabase: 'offline',
-    cache: 'expired',
+    turso: 'checking', // New: show 'checking' while loading
+    supabase: 'checking',
+    cache: 'unknown',
     lastSync: null,
   });
   const [syncInProgress, setSyncInProgress] = useState(false);
+  const [tursoError, setTursoError] = useState<string | null>(null);
 
   // ============================================================================
   // Data Fetching
   // ============================================================================
 
   const fetchAllData = useCallback(async () => {
+    setTursoError(null);
     try {
       // Fetch Turso stats and health in parallel
       const [tursoStatsResult, healthResult, supabaseStatsResult] = await Promise.all([
@@ -99,8 +145,14 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
         cache: tursoStatsResult.cacheStatus,
         lastSync: tursoStatsResult.lastSync,
       });
+      
+      // Clear any previous errors - bundled data is always available
+      setTursoError(null);
     } catch (error) {
       logger.error('Error fetching data', error, 'EnterpriseAdmin');
+      // Even on error, bundled data should work - don't show scary errors
+      setSystemStatus((prev) => ({ ...prev, turso: 'degraded' }));
+      setTursoError(null); // Don't show error - bundled data works
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -172,7 +224,9 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
   // Quick Actions
   // ============================================================================
 
+  // Primary Quick Actions - Most used admin features
   const quickActions: QuickAction[] = [
+    // === DATABASE MANAGEMENT ===
     {
       id: 'turso-data',
       title: 'Turso Data',
@@ -180,17 +234,18 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       iconSet: 'material',
       screen: 'AdminTursoDataManagement',
       color: '#00D4AA',
-      description: 'Manage all Turso tables',
+      description: 'Universities, Scholarships, Careers',
     },
     {
-      id: 'notifications',
-      title: 'Notifications',
-      icon: 'notifications',
+      id: 'supabase-data',
+      title: 'Data Export',
+      icon: 'download-outline',
       iconSet: 'ion',
-      screen: 'AdminTursoNotifications',
-      color: '#FF6B6B',
-      description: 'Push notifications',
+      screen: 'AdminDataManagement',
+      color: '#6366F1',
+      description: 'Export, Merit Lists, Entry Tests',
     },
+    // === USER MANAGEMENT ===
     {
       id: 'users',
       title: 'Users',
@@ -201,23 +256,34 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       badge: supabaseStats?.totalUsers,
       description: 'User management',
     },
+    // === NOTIFICATIONS ===
     {
-      id: 'health',
-      title: 'System Health',
-      icon: 'heart-pulse',
-      iconSet: 'material',
-      screen: 'AdminSystemHealth',
+      id: 'turso-notifications',
+      title: 'Notifications',
+      icon: 'notifications',
+      iconSet: 'ion',
+      screen: 'AdminTursoNotifications',
       color: '#FF6B6B',
-      description: 'Database monitoring',
+      description: 'Turso notifications',
     },
     {
-      id: 'analytics',
-      title: 'Analytics',
-      icon: 'analytics',
+      id: 'push-notifications',
+      title: 'Push Notify',
+      icon: 'send',
       iconSet: 'ion',
-      screen: 'AdminAnalytics',
-      color: '#9B59B6',
-      description: 'App analytics',
+      screen: 'AdminNotifications',
+      color: '#EC4899',
+      description: 'Push notifications',
+    },
+    // === CONTENT & REPORTS ===
+    {
+      id: 'content',
+      title: 'Content',
+      icon: 'document-text',
+      iconSet: 'ion',
+      screen: 'AdminContent',
+      color: '#8B5CF6',
+      description: 'Manage app content',
     },
     {
       id: 'reports',
@@ -229,6 +295,35 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       badge: supabaseStats?.pendingReports,
       description: 'Content reports',
     },
+    {
+      id: 'error-reports',
+      title: 'Errors',
+      icon: 'bug',
+      iconSet: 'ion',
+      screen: 'AdminErrorReports',
+      color: '#DC2626',
+      description: 'Error tracking',
+    },
+    // === MONITORING ===
+    {
+      id: 'health',
+      title: 'System Health',
+      icon: 'heart-pulse',
+      iconSet: 'material',
+      screen: 'AdminSystemHealth',
+      color: '#10B981',
+      description: 'Database monitoring',
+    },
+    {
+      id: 'analytics',
+      title: 'Analytics',
+      icon: 'analytics',
+      iconSet: 'ion',
+      screen: 'AdminAnalytics',
+      color: '#9B59B6',
+      description: 'App analytics',
+    },
+    // === COMMUNICATION ===
     {
       id: 'feedback',
       title: 'Feedback',
@@ -247,6 +342,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       color: '#F39C12',
       description: 'App announcements',
     },
+    // === SYSTEM ===
     {
       id: 'settings',
       title: 'Settings',
@@ -265,6 +361,71 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       color: '#1ABC9C',
       description: 'Activity history',
     },
+    // === ADVANCED FEATURES ===
+    {
+      id: 'bulk-operations',
+      title: 'Bulk Actions',
+      icon: 'layers',
+      iconSet: 'ion',
+      screen: 'AdminBulkOperations',
+      color: '#7C3AED',
+      description: 'Bulk user & content ops',
+    },
+    {
+      id: 'app-config',
+      title: 'App Config',
+      icon: 'options',
+      iconSet: 'ion',
+      screen: 'AdminAppConfig',
+      color: '#059669',
+      description: 'Feature flags & settings',
+    },
+    {
+      id: 'activity',
+      title: 'Activity',
+      icon: 'pulse',
+      iconSet: 'ion',
+      screen: 'AdminActivityDashboard',
+      color: '#0EA5E9',
+      description: 'Real-time activity logs',
+    },
+    {
+      id: 'moderation',
+      title: 'Moderation',
+      icon: 'shield-checkmark',
+      iconSet: 'ion',
+      screen: 'AdminContentModeration',
+      color: '#D97706',
+      description: 'Content review queue',
+    },
+    // === DATA MANAGEMENT & APPROVAL WORKFLOW ===
+    {
+      id: 'data-submissions',
+      title: 'Submissions',
+      icon: 'document-attach',
+      iconSet: 'ion',
+      screen: 'AdminDataSubmissions',
+      color: '#7C3AED',
+      description: 'User data corrections',
+    },
+    {
+      id: 'merit-deadlines',
+      title: 'Merit & Dates',
+      icon: 'trophy',
+      iconSet: 'ion',
+      screen: 'AdminMeritDeadlines',
+      color: '#F59E0B',
+      description: 'Merit lists & deadlines',
+    },
+    {
+      id: 'notification-triggers',
+      title: 'Triggers',
+      icon: 'notifications-circle',
+      iconSet: 'ion',
+      screen: 'AdminNotificationTriggers',
+      color: '#EF4444',
+      description: 'Auto notifications',
+    },
   ];
 
   // ============================================================================
@@ -272,51 +433,16 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
   // ============================================================================
 
   const renderSystemStatus = () => {
-    const getStatusColor = (status: string) => {
-      switch (status) {
-        case 'online':
-        case 'fresh':
-          return '#00D4AA';
-        case 'degraded':
-        case 'stale':
-          return '#F39C12';
-        default:
-          return '#E74C3C';
-      }
-    };
-
-    const getStatusIcon = (status: string) => {
-      switch (status) {
-        case 'online':
-        case 'fresh':
-          return 'checkmark-circle';
-        case 'degraded':
-        case 'stale':
-          return 'warning';
-        default:
-          return 'close-circle';
-      }
-    };
-
     return (
-      <View style={[styles.systemStatusContainer, { backgroundColor: colors.card }]}>
-        <View style={styles.systemStatusHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>System Status</Text>
-          <TouchableOpacity
-            style={[styles.syncButton, syncInProgress && styles.syncButtonDisabled]}
-            onPress={handleSyncData}
-            disabled={syncInProgress}
-          >
-            {syncInProgress ? (
-              <ActivityIndicator size="small" color="#FFFFFF" />
-            ) : (
-              <Icon name="sync" size={16} color="#FFFFFF" />
-            )}
-            <Text style={styles.syncButtonText}>
-              {syncInProgress ? 'Syncing...' : 'Sync Now'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.statsSection, { backgroundColor: colors.card, padding: 16, borderRadius: 16, marginBottom: 20 }]}> 
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>System Status</Text>
+
+        {/* Error message if Turso unreachable */}
+        {tursoError && (
+          <View style={{ backgroundColor: '#FFEAEA', padding: 10, borderRadius: 8, marginBottom: 10 }}>
+            <Text style={{ color: '#E74C3C', fontWeight: 'bold' }}>{tursoError}</Text>
+          </View>
+        )}
 
         <View style={styles.statusGrid}>
           {/* Turso Status */}
@@ -325,7 +451,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
             <Icon name={getStatusIcon(systemStatus.turso)} size={20} color={getStatusColor(systemStatus.turso)} />
             <Text style={[styles.statusLabel, { color: colors.text }]}>Turso</Text>
             <Text style={[styles.statusValue, { color: getStatusColor(systemStatus.turso) }]}>
-              {systemStatus.turso.toUpperCase()}
+              {systemStatus.turso === 'checking' ? 'CHECKING...' : systemStatus.turso.toUpperCase()}
             </Text>
           </View>
 
@@ -335,7 +461,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
             <Icon name={getStatusIcon(systemStatus.supabase)} size={20} color={getStatusColor(systemStatus.supabase)} />
             <Text style={[styles.statusLabel, { color: colors.text }]}>Supabase</Text>
             <Text style={[styles.statusValue, { color: getStatusColor(systemStatus.supabase) }]}>
-              {systemStatus.supabase.toUpperCase()}
+              {systemStatus.supabase === 'checking' ? 'CHECKING...' : systemStatus.supabase.toUpperCase()}
             </Text>
           </View>
 
@@ -388,7 +514,10 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
   };
 
   const renderTursoStats = () => {
-    if (!tursoStats) return null;
+    if (!tursoStats) {
+      // Still loading or error - will show loading indicator
+      return null;
+    }
 
     const statCards = [
       { label: 'Universities', value: tursoStats.totalUniversities, icon: 'school', color: '#00D4AA' },
@@ -403,7 +532,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
 
     return (
       <View style={styles.statsSection}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Turso Database</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Data Statistics</Text>
         <View style={styles.statsGrid}>
           {statCards.map((stat, index) => (
             <LinearGradient
