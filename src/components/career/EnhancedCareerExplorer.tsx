@@ -74,7 +74,7 @@ const CAREERS_DATA: Career[] = [
     title: 'Software Engineer',
     field: 'Technology',
     icon: 'code-slash-outline',
-    color: '#6366F1',
+    color: '#4573DF',
     description: 'Design, develop, and maintain software applications and systems.',
     requiredDegrees: ['BS Computer Science', 'BS Software Engineering', 'BS IT'],
     entryLevelSalary: {min: 60000, max: 120000, currency: 'PKR'},
@@ -98,7 +98,7 @@ const CAREERS_DATA: Career[] = [
     title: 'Data Scientist',
     field: 'Technology',
     icon: 'analytics-outline',
-    color: '#8B5CF6',
+    color: '#4573DF',
     description: 'Analyze complex data to help organizations make better decisions.',
     requiredDegrees: ['BS Computer Science', 'BS Data Science', 'MS Statistics'],
     entryLevelSalary: {min: 80000, max: 150000, currency: 'PKR'},
@@ -529,7 +529,7 @@ const CareerCard: React.FC<CareerCardProps> = ({career, onPress, isExpanded}) =>
             <View style={cardStyles.degreesContainer}>
               {career.requiredDegrees.map(degree => (
                 <View key={degree} style={cardStyles.degreeChip}>
-                  <Icon name="school-outline" size={14} color="#6366F1" />
+                  <Icon name="school-outline" size={14} color="#4573DF" />
                   <Text style={cardStyles.degreeText}>{degree}</Text>
                 </View>
               ))}
@@ -726,7 +726,7 @@ const cardStyles = StyleSheet.create({
   statNumber: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '800',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -779,7 +779,7 @@ const cardStyles = StyleSheet.create({
   },
   degreeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '500',
     marginLeft: 4,
   },
@@ -964,8 +964,8 @@ const styles = StyleSheet.create({
     borderColor: '#E2E8F0',
   },
   filterChipActive: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
+    backgroundColor: '#4573DF',
+    borderColor: '#4573DF',
   },
   filterText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -991,3 +991,5 @@ const styles = StyleSheet.create({
 });
 
 export default EnhancedCareerExplorer;
+
+

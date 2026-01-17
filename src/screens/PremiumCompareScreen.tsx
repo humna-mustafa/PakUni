@@ -350,7 +350,7 @@ const PremiumCompareScreen = () => {
           },
         ]}>
         <LinearGradient
-          colors={isDark ? ['#1a5276', '#154360'] : ['#3498db', '#2980b9']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#3660C9']}
           style={styles.header}>
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />
@@ -435,7 +435,7 @@ const PremiumCompareScreen = () => {
           <LinearGradient
             colors={['rgba(52, 152, 219, 0.1)', 'rgba(52, 152, 219, 0.05)']}
             style={styles.tipsGradient}>
-            <Icon name="bulb-outline" family="Ionicons" size={28} color="#3498db" />
+            <Icon name="bulb-outline" family="Ionicons" size={28} color="#4573DF" />
             <Text style={[styles.tipsTitle, {color: colors.text}]}>
               Pro Tips
             </Text>
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
   tipBullet: {
     fontSize: 14,
     marginRight: 6,
-    color: '#3498db',
+    color: '#4573DF',
   },
   tipText: {
     flex: 1,

@@ -35,7 +35,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -293,7 +293,7 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#6366F1', '#4F46E5']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -346,9 +346,9 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
                 <Text style={[styles.sectionTitle, {color: colors.text}]}>Overview</Text>
               </View>
               <View style={styles.statsGrid}>
-                {renderStatCard('Total Users', formatNumber(analytics.overview.totalUsers), 'people-outline', '#3B82F6', 12)}
+                {renderStatCard('Total Users', formatNumber(analytics.overview.totalUsers), 'people-outline', '#4573DF', 12)}
                 {renderStatCard('Active Users', formatNumber(analytics.overview.activeUsers), 'person-outline', '#10B981', 8)}
-                {renderStatCard('New Users', formatNumber(analytics.overview.newUsers), 'person-add-outline', '#8B5CF6', 15)}
+                {renderStatCard('New Users', formatNumber(analytics.overview.newUsers), 'person-add-outline', '#4573DF', 15)}
                 {renderStatCard('Sessions', formatNumber(analytics.overview.totalSessions), 'cellular-outline', '#F59E0B', 5)}
               </View>
 
@@ -358,22 +358,22 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
                 <Text style={[styles.sectionTitle, {color: colors.text}]}>Content Engagement</Text>
               </View>
               <View style={styles.statsGrid}>
-                {renderStatCard('Total Views', formatNumber(analytics.contentStats.totalViews), 'eye-outline', '#3B82F6')}
+                {renderStatCard('Total Views', formatNumber(analytics.contentStats.totalViews), 'eye-outline', '#4573DF')}
                 {renderStatCard('University Views', formatNumber(analytics.contentStats.universityViews), 'school-outline', '#10B981')}
                 {renderStatCard('Scholarship Views', formatNumber(analytics.contentStats.scholarshipViews), 'cash-outline', '#F59E0B')}
-                {renderStatCard('Searches', formatNumber(analytics.contentStats.searches), 'search-outline', '#8B5CF6')}
+                {renderStatCard('Searches', formatNumber(analytics.contentStats.searches), 'search-outline', '#4573DF')}
               </View>
 
               {/* Daily Active Users Chart */}
               <View style={[styles.chartCard, {backgroundColor: colors.card}]}>
                 <View style={styles.chartHeader}>
                   <Text style={[styles.chartTitle, {color: colors.text}]}>Daily Active Users</Text>
-                  <View style={[styles.chartBadge, {backgroundColor: '#3B82F620'}]}>
-                    <Text style={[styles.chartBadgeText, {color: '#3B82F6'}]}>Last 7 days</Text>
+                  <View style={[styles.chartBadge, {backgroundColor: '#4573DF20'}]}>
+                    <Text style={[styles.chartBadgeText, {color: '#4573DF'}]}>Last 7 days</Text>
                   </View>
                 </View>
                 {analytics.dailyActiveUsers.length > 0 ? (
-                  renderMiniChart(analytics.dailyActiveUsers, '#3B82F6')
+                  renderMiniChart(analytics.dailyActiveUsers, '#4573DF')
                 ) : (
                   <View style={styles.noDataContainer}>
                     <Icon name="analytics-outline" family="Ionicons" size={24} color={colors.textSecondary} />
@@ -395,9 +395,9 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
               <View style={[styles.chartCard, {backgroundColor: colors.card}]}>
                 <View style={styles.chartHeader}>
                   <Text style={[styles.chartTitle, {color: colors.text}]}>Top Scholarships</Text>
-                  <Icon name="ribbon-outline" family="Ionicons" size={18} color="#8B5CF6" />
+                  <Icon name="ribbon-outline" family="Ionicons" size={18} color="#4573DF" />
                 </View>
-                {renderBarChart(analytics.topContent.scholarships, '#8B5CF6')}
+                {renderBarChart(analytics.topContent.scholarships, '#4573DF')}
               </View>
 
               {/* Popular Searches */}
@@ -406,7 +406,7 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
                   <Text style={[styles.chartTitle, {color: colors.text}]}>Popular Searches</Text>
                   <Icon name="search-outline" family="Ionicons" size={18} color={colors.primary} />
                 </View>
-                {renderBarChart(analytics.topContent.searches, '#3B82F6')}
+                {renderBarChart(analytics.topContent.searches, '#4573DF')}
               </View>
 
               {/* Quick Actions */}
@@ -688,3 +688,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminAnalyticsScreen;
+
+

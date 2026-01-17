@@ -49,6 +49,7 @@ import {
 } from '../services/dataSubmissions';
 import { hybridDataService } from '../services/hybridData';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../constants/design';
+import { GRADIENTS, STATUS, SEMANTIC, BRAND, DARK_BG, LIGHT_BG } from '../constants/brand';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -102,7 +103,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Merit & Cutoffs',
     subtitle: 'Closing merit, aggregate scores',
     icon: 'trending-up',
-    gradient: ['#6366F1', '#8B5CF6', '#A78BFA'],
+    gradient: GRADIENTS.accent as [string, string, string],
     emoji: '📊',
     fields: [
       { id: 'closing_merit', label: 'Closing Merit', placeholder: 'e.g., 89.5%', icon: 'analytics' },
@@ -116,7 +117,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Fee Structure',
     subtitle: 'Tuition, hostel, admission fees',
     icon: 'wallet',
-    gradient: ['#10B981', '#059669', '#047857'],
+    gradient: GRADIENTS.success as [string, string, string],
     emoji: '💰',
     fields: [
       { id: 'tuition', label: 'Tuition Fee', placeholder: 'e.g., PKR 500,000', icon: 'school' },
@@ -130,7 +131,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Dates & Deadlines',
     subtitle: 'Application, test, result dates',
     icon: 'calendar',
-    gradient: ['#EF4444', '#DC2626', '#B91C1C'],
+    gradient: GRADIENTS.error as [string, string, string],
     emoji: '📅',
     fields: [
       { id: 'app_deadline', label: 'Application Deadline', placeholder: 'e.g., March 15, 2025', icon: 'time' },
@@ -144,7 +145,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Entry Tests',
     subtitle: 'MDCAT, ECAT, NAT, GAT info',
     icon: 'document-text',
-    gradient: ['#F59E0B', '#D97706', '#B45309'],
+    gradient: GRADIENTS.warning as [string, string, string],
     emoji: '📝',
     fields: [
       { id: 'test_fee', label: 'Test Fee', placeholder: 'e.g., PKR 3,500', icon: 'cash' },
@@ -158,7 +159,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'University Info',
     subtitle: 'Contact, website, ranking',
     icon: 'business',
-    gradient: ['#3B82F6', '#2563EB', '#1D4ED8'],
+    gradient: [BRAND.primary, BRAND.primaryDark, BRAND.primaryDarkest] as [string, string, string],
     emoji: '🏛️',
     fields: [
       { id: 'website', label: 'Website URL', placeholder: 'e.g., www.nust.edu.pk', icon: 'globe' },
@@ -172,7 +173,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Scholarships',
     subtitle: 'Eligibility, amount, coverage',
     icon: 'ribbon',
-    gradient: ['#EC4899', '#DB2777', '#BE185D'],
+    gradient: GRADIENTS.highlight as [string, string, string],
     emoji: '🎓',
     fields: [
       { id: 'amount', label: 'Scholarship Amount', placeholder: 'e.g., 100% tuition', icon: 'cash' },
@@ -184,11 +185,11 @@ const CATEGORIES: CategoryOption[] = [
 ];
 
 const STATUS_CONFIG = {
-  pending: { bg: '#FEF3C7', text: '#92400E', icon: 'time', label: 'Pending' },
-  under_review: { bg: '#DBEAFE', text: '#1E40AF', icon: 'eye', label: 'Reviewing' },
-  approved: { bg: '#D1FAE5', text: '#065F46', icon: 'checkmark-circle', label: 'Approved' },
-  rejected: { bg: '#FEE2E2', text: '#991B1B', icon: 'close-circle', label: 'Rejected' },
-  auto_approved: { bg: '#EDE9FE', text: '#5B21B6', icon: 'flash', label: 'Auto-Approved' },
+  pending: { bg: STATUS.pending.bg, text: STATUS.pending.text, icon: 'time', label: 'Pending' },
+  under_review: { bg: STATUS.under_review.bg, text: STATUS.under_review.text, icon: 'eye', label: 'Reviewing' },
+  approved: { bg: STATUS.approved.bg, text: STATUS.approved.text, icon: 'checkmark-circle', label: 'Approved' },
+  rejected: { bg: STATUS.rejected.bg, text: STATUS.rejected.text, icon: 'close-circle', label: 'Rejected' },
+  auto_approved: { bg: STATUS.auto_approved.bg, text: STATUS.auto_approved.text, icon: 'flash', label: 'Auto-Approved' },
 };
 
 const QUICK_REASONS = [
@@ -341,11 +342,11 @@ const ConfettiParticle: React.FC<{ delay: number; color: string }> = ({ delay, c
 const ConfettiExplosion: React.FC<{ visible: boolean }> = ({ visible }) => {
   if (!visible) return null;
 
-  const colors = ['#6366F1', '#EC4899', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+  const confettiColors = [BRAND.primary, GRADIENTS.highlight[0], SEMANTIC.success, SEMANTIC.warning, SEMANTIC.error, GRADIENTS.accent[0]];
   const particles = Array.from({ length: 50 }, (_, i) => ({
     id: i,
     delay: Math.random() * 500,
-    color: colors[Math.floor(Math.random() * colors.length)],
+    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
   }));
 
   return (
@@ -363,8 +364,8 @@ const VerificationBadge: React.FC<{ type: 'google' | 'trusted' | 'new'; size?: n
 }) => {
   const config = {
     google: { icon: 'logo-google', bg: '#4285F4', label: 'Google Verified' },
-    trusted: { icon: 'shield-checkmark', bg: '#10B981', label: 'Trusted' },
-    new: { icon: 'star', bg: '#F59E0B', label: 'New User' },
+    trusted: { icon: 'shield-checkmark', bg: SEMANTIC.success, label: 'Trusted' },
+    new: { icon: 'star', bg: SEMANTIC.warning, label: 'New User' },
   };
   const { icon, bg } = config[type];
 
@@ -427,7 +428,7 @@ const StepIndicator: React.FC<{
       {steps.map((step, index) => {
         const isActive = currentStep === step.num;
         const isCompleted = currentStep > step.num;
-        const dotColor = isActive ? colors.primary : isCompleted ? '#10B981' : colors.border;
+        const dotColor = isActive ? colors.primary : isCompleted ? SEMANTIC.success : colors.border;
         
         return (
           <React.Fragment key={step.num}>
@@ -454,7 +455,7 @@ const StepIndicator: React.FC<{
             {index < steps.length - 1 && (
               <View style={[
                 styles.stepLine,
-                { backgroundColor: isCompleted ? '#10B981' : colors.border },
+                { backgroundColor: isCompleted ? SEMANTIC.success : colors.border },
               ]} />
             )}
           </React.Fragment>
@@ -508,7 +509,7 @@ const CategorySelectionStep: React.FC<{
               }}
               style={[
                 styles.categoryCard,
-                { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' },
+                { backgroundColor: isDark ? DARK_BG.card : LIGHT_BG.card },
                 isSelected && { borderColor: category.gradient[0], borderWidth: 2 },
               ]}>
               <LinearGradient
@@ -632,7 +633,7 @@ const EntitySelectionStep: React.FC<{
       </View>
 
       {/* Search Input */}
-      <View style={[styles.searchContainer, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+      <View style={[styles.searchContainer, { backgroundColor: isDark ? DARK_BG.card : LIGHT_BG.cardHover }]}>
         <Icon name="search" size={20} color={colors.textSecondary} />
         <TextInput
           ref={searchInputRef}
@@ -670,7 +671,7 @@ const EntitySelectionStep: React.FC<{
               </Text>
             </View>
           </View>
-          <Icon name="checkmark-circle" size={24} color="#10B981" />
+          <Icon name="checkmark-circle" size={24} color={SEMANTIC.success} />
         </View>
       )}
 
@@ -713,8 +714,8 @@ const EntitySelectionStep: React.FC<{
             verified: false,
           })}
           style={[styles.manualEntryCard, { backgroundColor: colors.card }]}>
-          <View style={[styles.entityAvatar, { backgroundColor: '#F59E0B20' }]}>
-            <Icon name="add" size={20} color="#F59E0B" />
+          <View style={[styles.entityAvatar, { backgroundColor: SEMANTIC.warningBg }]}>
+            <Icon name="add" size={20} color={SEMANTIC.warning} />
           </View>
           <View style={styles.manualEntryContent}>
             <Text style={[styles.manualEntryTitle, { color: colors.text }]}>
@@ -792,8 +793,8 @@ const UpdateDetailsStep: React.FC<{
     return Object.keys(newErrors).length === 0;
   };
 
-  const inputBg = isDark ? '#1F2937' : '#F9FAFB';
-  const cardBg = isDark ? '#111827' : '#FFFFFF';
+  const inputBg = isDark ? DARK_BG.card : LIGHT_BG.cardHover;
+  const cardBg = isDark ? DARK_BG.background : LIGHT_BG.card;
 
   return (
     <Animated.ScrollView 
@@ -882,7 +883,7 @@ const UpdateDetailsStep: React.FC<{
         />
         {errors.field && (
           <View style={styles.errorContainer}>
-            <Icon name="alert-circle" size={14} color="#EF4444" />
+            <Icon name="alert-circle" size={14} color={SEMANTIC.error} />
             <Text style={styles.errorText}>{errors.field}</Text>
           </View>
         )}
@@ -891,7 +892,7 @@ const UpdateDetailsStep: React.FC<{
       {/* Section 2: Value Comparison */}
       <View style={[styles.formSection, { backgroundColor: cardBg }]}>
         <View style={styles.formSectionHeader}>
-          <View style={[styles.sectionNumber, { backgroundColor: '#F59E0B' }]}>
+          <View style={[styles.sectionNumber, { backgroundColor: SEMANTIC.warning }]}>
             <Text style={styles.sectionNumberText}>2</Text>
           </View>
           <Text style={[styles.formSectionTitle, { color: colors.text }]}>
@@ -900,13 +901,13 @@ const UpdateDetailsStep: React.FC<{
         </View>
 
         {/* Wrong Value Box */}
-        <View style={[styles.valueCard, { backgroundColor: isDark ? '#1F1F2E' : '#FEF2F2' }]}>
+        <View style={[styles.valueCard, { backgroundColor: isDark ? SEMANTIC.errorBgDark : SEMANTIC.errorBg }]}>
           <View style={styles.valueCardHeader}>
-            <View style={[styles.valueIconBg, { backgroundColor: '#FEE2E2' }]}>
-              <Icon name="close-circle" size={18} color="#EF4444" />
+            <View style={[styles.valueIconBg, { backgroundColor: SEMANTIC.errorBg }]}>
+              <Icon name="close-circle" size={18} color={SEMANTIC.error} />
             </View>
             <View>
-              <Text style={[styles.valueCardLabel, { color: '#991B1B' }]}>
+              <Text style={[styles.valueCardLabel, { color: SEMANTIC.errorText }]}>
                 Currently Shows (Wrong)
               </Text>
               <Text style={[styles.valueCardHint, { color: colors.textSecondary }]}>
@@ -917,7 +918,7 @@ const UpdateDetailsStep: React.FC<{
           <TextInput
             style={[
               styles.valueInput,
-              { backgroundColor: isDark ? '#374151' : '#FFFFFF', color: colors.text },
+              { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.card, color: colors.text },
             ]}
             value={formData.currentValue}
             onChangeText={(text) => onUpdate({ currentValue: text })}
@@ -929,20 +930,20 @@ const UpdateDetailsStep: React.FC<{
         {/* Arrow */}
         <View style={styles.valueArrow}>
           <View style={[styles.valueArrowLine, { backgroundColor: colors.border }]} />
-          <View style={[styles.valueArrowCircle, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.valueArrowCircle, { backgroundColor: SEMANTIC.success }]}>
             <Icon name="arrow-down" size={16} color="#FFFFFF" />
           </View>
           <View style={[styles.valueArrowLine, { backgroundColor: colors.border }]} />
         </View>
 
         {/* Correct Value Box */}
-        <View style={[styles.valueCard, { backgroundColor: isDark ? '#1F2937' : '#F0FDF4' }]}>
+        <View style={[styles.valueCard, { backgroundColor: isDark ? SEMANTIC.successBgDark : SEMANTIC.successBg }]}>
           <View style={styles.valueCardHeader}>
-            <View style={[styles.valueIconBg, { backgroundColor: '#D1FAE5' }]}>
-              <Icon name="checkmark-circle" size={18} color="#10B981" />
+            <View style={[styles.valueIconBg, { backgroundColor: SEMANTIC.successBg }]}>
+              <Icon name="checkmark-circle" size={18} color={SEMANTIC.success} />
             </View>
             <View>
-              <Text style={[styles.valueCardLabel, { color: '#065F46' }]}>
+              <Text style={[styles.valueCardLabel, { color: SEMANTIC.successText }]}>
                 Should Be (Correct) *
               </Text>
             </View>
@@ -950,8 +951,8 @@ const UpdateDetailsStep: React.FC<{
           <TextInput
             style={[
               styles.valueInput,
-              { backgroundColor: isDark ? '#374151' : '#FFFFFF', color: colors.text },
-              errors.newValue && { borderColor: '#EF4444', borderWidth: 1 },
+              { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.card, color: colors.text },
+              errors.newValue && { borderColor: SEMANTIC.error, borderWidth: 1 },
             ]}
             value={formData.newValue}
             onChangeText={(text) => onUpdate({ newValue: text })}
@@ -960,7 +961,7 @@ const UpdateDetailsStep: React.FC<{
           />
           {errors.newValue && (
             <View style={styles.errorContainer}>
-              <Icon name="alert-circle" size={14} color="#EF4444" />
+              <Icon name="alert-circle" size={14} color={SEMANTIC.error} />
               <Text style={styles.errorText}>{errors.newValue}</Text>
             </View>
           )}
@@ -968,15 +969,15 @@ const UpdateDetailsStep: React.FC<{
 
         {/* Live Preview */}
         {formData.currentValue && formData.newValue && (
-          <View style={[styles.livePreview, { backgroundColor: isDark ? '#1E3A5F' : '#EEF2FF' }]}>
-            <Icon name="git-compare" size={18} color={isDark ? '#93C5FD' : '#4338CA'} />
+          <View style={[styles.livePreview, { backgroundColor: isDark ? SEMANTIC.infoBgDark : SEMANTIC.infoBg }]}>
+            <Icon name="git-compare" size={18} color={isDark ? BRAND.primaryLight : BRAND.primaryDark} />
             <View style={styles.livePreviewContent}>
-              <Text style={[styles.livePreviewLabel, { color: isDark ? '#93C5FD' : '#4338CA' }]}>
+              <Text style={[styles.livePreviewLabel, { color: isDark ? BRAND.primaryLight : BRAND.primaryDark }]}>
                 Preview:
               </Text>
               <View style={styles.livePreviewValues}>
                 <Text style={styles.previewOld}>{formData.currentValue}</Text>
-                <Icon name="arrow-forward" size={12} color={isDark ? '#93C5FD' : '#4338CA'} />
+                <Icon name="arrow-forward" size={12} color={isDark ? BRAND.primaryLight : BRAND.primaryDark} />
                 <Text style={styles.previewNew}>{formData.newValue}</Text>
               </View>
             </View>
@@ -987,7 +988,7 @@ const UpdateDetailsStep: React.FC<{
       {/* Section 3: Reason */}
       <View style={[styles.formSection, { backgroundColor: cardBg }]}>
         <View style={styles.formSectionHeader}>
-          <View style={[styles.sectionNumber, { backgroundColor: '#10B981' }]}>
+          <View style={[styles.sectionNumber, { backgroundColor: SEMANTIC.success }]}>
             <Text style={styles.sectionNumberText}>3</Text>
           </View>
           <Text style={[styles.formSectionTitle, { color: colors.text }]}>
@@ -1005,7 +1006,7 @@ const UpdateDetailsStep: React.FC<{
                 style={[
                   styles.quickReasonChip,
                   { 
-                    backgroundColor: isSelected ? '#10B981' : inputBg,
+                    backgroundColor: isSelected ? SEMANTIC.success : inputBg,
                   },
                 ]}
                 onPress={() => {
@@ -1033,7 +1034,7 @@ const UpdateDetailsStep: React.FC<{
             styles.formInput,
             styles.formInputMultiline,
             { backgroundColor: inputBg, color: colors.text },
-            errors.reason && { borderColor: '#EF4444', borderWidth: 1 },
+            errors.reason && { borderColor: SEMANTIC.error, borderWidth: 1 },
           ]}
           value={formData.reason}
           onChangeText={(text) => onUpdate({ reason: text })}
@@ -1044,7 +1045,7 @@ const UpdateDetailsStep: React.FC<{
         />
         {errors.reason && (
           <View style={styles.errorContainer}>
-            <Icon name="alert-circle" size={14} color="#EF4444" />
+            <Icon name="alert-circle" size={14} color={SEMANTIC.error} />
             <Text style={styles.errorText}>{errors.reason}</Text>
           </View>
         )}
@@ -1053,13 +1054,13 @@ const UpdateDetailsStep: React.FC<{
       {/* Section 4: Source (Optional) */}
       <View style={[styles.formSection, { backgroundColor: cardBg }]}>
         <View style={styles.formSectionHeader}>
-          <View style={[styles.sectionNumber, { backgroundColor: '#8B5CF6' }]}>
+          <View style={[styles.sectionNumber, { backgroundColor: GRADIENTS.accent[0] }]}>
             <Icon name="link" size={12} color="#FFFFFF" />
           </View>
           <Text style={[styles.formSectionTitle, { color: colors.text }]}>
             Source URL
           </Text>
-          <View style={[styles.optionalBadge, { backgroundColor: isDark ? '#374151' : '#E5E7EB' }]}>
+          <View style={[styles.optionalBadge, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover }]}>
             <Text style={[styles.optionalText, { color: colors.textSecondary }]}>Optional</Text>
           </View>
         </View>
@@ -1106,7 +1107,7 @@ const ReviewSubmitStep: React.FC<{
     }).start();
   }, []);
 
-  const cardBg = isDark ? '#111827' : '#FFFFFF';
+  const cardBg = isDark ? DARK_BG.background : LIGHT_BG.card;
   const fieldLabel = formData.field?.label || formData.customField;
 
   return (
@@ -1156,15 +1157,15 @@ const ReviewSubmitStep: React.FC<{
           <View style={styles.reviewChangeBox}>
             {formData.currentValue ? (
               <>
-                <View style={[styles.reviewOldBox, { backgroundColor: '#FEF2F2' }]}>
-                  <Icon name="close-circle" size={14} color="#EF4444" />
+                <View style={[styles.reviewOldBox, { backgroundColor: SEMANTIC.errorBg }]}>
+                  <Icon name="close-circle" size={14} color={SEMANTIC.error} />
                   <Text style={styles.reviewOldText} numberOfLines={1}>{formData.currentValue}</Text>
                 </View>
                 <Icon name="arrow-forward" size={16} color={colors.textSecondary} />
               </>
             ) : null}
-            <View style={[styles.reviewNewBox, { backgroundColor: '#F0FDF4' }]}>
-              <Icon name="checkmark-circle" size={14} color="#10B981" />
+            <View style={[styles.reviewNewBox, { backgroundColor: SEMANTIC.successBg }]}>
+              <Icon name="checkmark-circle" size={14} color={SEMANTIC.success} />
               <Text style={styles.reviewNewText} numberOfLines={1}>{formData.newValue}</Text>
             </View>
           </View>
@@ -1194,7 +1195,7 @@ const ReviewSubmitStep: React.FC<{
       </View>
 
       {/* Trust Indicator */}
-      <View style={[styles.trustCard, { backgroundColor: isDark ? '#1E3A5F' : '#EEF2FF' }]}>
+      <View style={[styles.trustCard, { backgroundColor: isDark ? SEMANTIC.infoBgDark : SEMANTIC.infoBg }]}>
         <View style={styles.trustLeft}>
           {user?.provider === 'google' ? (
             <VerificationBadge type="google" size={20} />
@@ -1202,10 +1203,10 @@ const ReviewSubmitStep: React.FC<{
             <VerificationBadge type="new" size={20} />
           )}
           <View>
-            <Text style={[styles.trustTitle, { color: isDark ? '#93C5FD' : '#4338CA' }]}>
+            <Text style={[styles.trustTitle, { color: isDark ? BRAND.primaryLight : BRAND.primaryDark }]}>
               {user?.provider === 'google' ? 'Google Verified User' : 'New Contributor'}
             </Text>
-            <Text style={[styles.trustSubtitle, { color: isDark ? '#93C5FD' : '#6366F1' }]}>
+            <Text style={[styles.trustSubtitle, { color: isDark ? BRAND.primaryLight : BRAND.primary }]}>
               {user?.provider === 'google' 
                 ? 'Your submission may be auto-approved!' 
                 : 'Build trust with accurate submissions'}
@@ -1213,7 +1214,7 @@ const ReviewSubmitStep: React.FC<{
           </View>
         </View>
         {user?.provider === 'google' && (
-          <Icon name="flash" size={24} color="#F59E0B" />
+          <Icon name="flash" size={24} color={SEMANTIC.warning} />
         )}
       </View>
 
@@ -1221,7 +1222,7 @@ const ReviewSubmitStep: React.FC<{
       <TouchableOpacity
         style={[
           styles.submitButton,
-          { backgroundColor: submitting ? colors.border : '#10B981' },
+          { backgroundColor: submitting ? colors.border : SEMANTIC.success },
         ]}
         onPress={onSubmit}
         disabled={submitting}
@@ -1299,7 +1300,7 @@ const SuccessModal: React.FC<{
           {/* Success Icon */}
           <View style={[
             styles.successIconContainer,
-            { backgroundColor: autoApproved ? '#8B5CF6' : '#10B981' },
+            { backgroundColor: autoApproved ? GRADIENTS.accent[0] : SEMANTIC.success },
           ]}>
             <Icon name={autoApproved ? 'flash' : 'checkmark'} size={48} color="#FFFFFF" />
           </View>
@@ -1319,12 +1320,12 @@ const SuccessModal: React.FC<{
           {/* Stats */}
           <View style={styles.successStats}>
             <View style={[styles.successStatCard, { backgroundColor: colors.card }]}>
-              <Icon name="trophy" size={24} color="#F59E0B" />
+              <Icon name="trophy" size={24} color={SEMANTIC.warning} />
               <Text style={[styles.successStatValue, { color: colors.text }]}>+10</Text>
               <Text style={[styles.successStatLabel, { color: colors.textSecondary }]}>Points</Text>
             </View>
             <View style={[styles.successStatCard, { backgroundColor: colors.card }]}>
-              <Icon name="flame" size={24} color="#EF4444" />
+              <Icon name="flame" size={24} color={SEMANTIC.error} />
               <Text style={[styles.successStatValue, { color: colors.text }]}>1</Text>
               <Text style={[styles.successStatLabel, { color: colors.textSecondary }]}>Streak</Text>
             </View>
@@ -1440,12 +1441,12 @@ const HistoryTab: React.FC<{
         </View>
         <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
         <View style={styles.statItem}>
-          <Text style={[styles.statValue, { color: '#10B981' }]}>{stats.approved}</Text>
+          <Text style={[styles.statValue, { color: SEMANTIC.success }]}>{stats.approved}</Text>
           <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Approved</Text>
         </View>
         <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
         <View style={styles.statItem}>
-          <Text style={[styles.statValue, { color: '#F59E0B' }]}>{stats.pending}</Text>
+          <Text style={[styles.statValue, { color: SEMANTIC.warning }]}>{stats.pending}</Text>
           <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Pending</Text>
         </View>
       </View>
@@ -1643,7 +1644,7 @@ export const UltraContributeScreen: React.FC<{ navigation: any; route?: any }> =
       />
 
       {/* Tab Switcher */}
-      <View style={[styles.tabContainer, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+      <View style={[styles.tabContainer, { backgroundColor: isDark ? DARK_BG.card : LIGHT_BG.cardHover }]}>
         {(['contribute', 'history'] as TabType[]).map((tab) => (
           <TouchableOpacity
             key={tab}
@@ -2194,7 +2195,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   errorText: {
-    color: '#EF4444',
+    color: SEMANTIC.error,
     fontSize: 12,
   },
   
@@ -2270,12 +2271,12 @@ const styles = StyleSheet.create({
   },
   previewOld: {
     fontSize: 12,
-    color: '#EF4444',
+    color: SEMANTIC.error,
     textDecorationLine: 'line-through',
   },
   previewNew: {
     fontSize: 12,
-    color: '#10B981',
+    color: SEMANTIC.success,
     fontWeight: '600',
   },
   quickReasonsWrap: {
@@ -2350,7 +2351,7 @@ const styles = StyleSheet.create({
   },
   reviewOldText: {
     fontSize: 12,
-    color: '#991B1B',
+    color: SEMANTIC.errorText,
     textDecorationLine: 'line-through',
   },
   reviewNewBox: {
@@ -2364,7 +2365,7 @@ const styles = StyleSheet.create({
   },
   reviewNewText: {
     fontSize: 12,
-    color: '#065F46',
+    color: SEMANTIC.successText,
     fontWeight: '600',
   },
   trustCard: {
@@ -2622,12 +2623,12 @@ const styles = StyleSheet.create({
   },
   historyOldValue: {
     fontSize: 12,
-    color: '#EF4444',
+    color: SEMANTIC.error,
     textDecorationLine: 'line-through',
   },
   historyNewValue: {
     fontSize: 12,
-    color: '#10B981',
+    color: SEMANTIC.success,
     fontWeight: '600',
   },
   historyDate: {

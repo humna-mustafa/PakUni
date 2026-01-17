@@ -264,7 +264,7 @@ const AuthScreen: React.FC = () => {
           onPress={handleGoogleSignIn}
           colors={colors}
           bgColor="#FFFFFF"
-          textColor="#1F2937"
+          textColor="#1D2127"
           loading={localLoading === 'google'}
         />
 
@@ -698,7 +698,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 8},
         shadowOpacity: 0.25,
         shadowRadius: 12,
@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.3,
         shadowRadius: 8,
@@ -936,3 +936,4 @@ const styles = StyleSheet.create({
 });
 
 export default AuthScreen;
+

@@ -38,7 +38,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -355,9 +355,9 @@ const AdminContentScreen: React.FC = () => {
               </View>
             )}
             {(item as any).is_static && (
-              <View style={[styles.badge, {backgroundColor: '#6366F120'}]}>
-                <Icon name="lock-closed" family="Ionicons" size={10} color="#6366F1" />
-                <Text style={[styles.badgeText, {color: '#6366F1'}]}>Static</Text>
+              <View style={[styles.badge, {backgroundColor: '#4573DF20'}]}>
+                <Icon name="lock-closed" family="Ionicons" size={10} color="#4573DF" />
+                <Text style={[styles.badgeText, {color: '#4573DF'}]}>Static</Text>
               </View>
             )}
             {item.is_verified !== false && !item.field && (
@@ -516,9 +516,9 @@ const AdminContentScreen: React.FC = () => {
                   </Text>
 
                   {(selectedItem as any).is_static && (
-                    <View style={[styles.staticNotice, {backgroundColor: '#6366F110'}]}>
-                      <Icon name="information-circle" family="Ionicons" size={18} color="#6366F1" />
-                      <Text style={[styles.staticNoticeText, {color: '#6366F1'}]}>
+                    <View style={[styles.staticNotice, {backgroundColor: '#4573DF10'}]}>
+                      <Icon name="information-circle" family="Ionicons" size={18} color="#4573DF" />
+                      <Text style={[styles.staticNoticeText, {color: '#4573DF'}]}>
                         This is static data bundled with the app
                       </Text>
                     </View>
@@ -557,7 +557,7 @@ const AdminContentScreen: React.FC = () => {
                   <View style={styles.actionButtons}>
                     {!(selectedItem as any).is_static && (
                       <TouchableOpacity
-                        style={[styles.actionBtn, {backgroundColor: '#3B82F6'}]}
+                        style={[styles.actionBtn, {backgroundColor: '#4573DF'}]}
                         onPress={handleEdit}>
                         <Icon name="create-outline" family="Ionicons" size={18} color="#FFFFFF" />
                         <Text style={styles.actionBtnText}>Edit</Text>

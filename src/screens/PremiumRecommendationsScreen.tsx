@@ -161,7 +161,7 @@ const ChipSelector = ({
           <TouchableOpacity key={option} onPress={() => handleSelect(option)}>
             {isSelected ? (
               <LinearGradient
-                colors={['#3498db', '#2980b9']}
+                colors={['#4573DF', '#3660C9']}
                 style={styles.chip}>
                 <Text style={styles.chipTextActive}>{option}</Text>
               </LinearGradient>
@@ -1142,7 +1142,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '700',
     marginRight: 6,
-    color: '#3498db',
+    color: '#4573DF',
   },
   tipText: {
     flex: 1,

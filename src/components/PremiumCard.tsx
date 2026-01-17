@@ -22,6 +22,7 @@ import {
   Animated,
   Platform,
   AccessibilityProps,
+  DimensionValue,
 } from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
 import {RADIUS, SPACING, SHADOWS, ANIMATION} from '../constants/design';
@@ -209,7 +210,7 @@ export const PremiumCard: React.FC<PremiumCardProps> = memo(({
         // Premium glassmorphism (Apple-style)
         return {
           backgroundColor: isDark 
-            ? 'rgba(15, 23, 42, 0.85)' 
+            ? 'rgba(29, 33, 39, 0.92)' 
             : 'rgba(255, 255, 255, 0.82)',
           borderWidth: 1,
           borderColor: isDark 
@@ -217,7 +218,7 @@ export const PremiumCard: React.FC<PremiumCardProps> = memo(({
             : 'rgba(255, 255, 255, 0.7)',
           ...(Platform.OS === 'ios' && {
             // iOS glass effect
-            shadowColor: isDark ? '#1E293B' : '#94A3B8',
+            shadowColor: isDark ? '#1D2127' : '#94A3B8',
             shadowOffset: {width: 0, height: 8},
             shadowOpacity: isDark ? 0.4 : 0.15,
             shadowRadius: 16,
@@ -368,7 +369,7 @@ GlassCard.displayName = 'GlassCard';
 
 // Skeleton Card for loading states (Netflix pattern)
 interface SkeletonCardProps {
-  width?: number | string;
+  width?: DimensionValue;
   height?: number;
   borderRadius?: keyof typeof RADIUS | number;
   style?: ViewStyle;
@@ -446,3 +447,4 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumCard;
+

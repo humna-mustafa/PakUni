@@ -142,7 +142,7 @@ const PREDICTION_OPTIONS: PredictionOption[] = [
     label: 'Excellent',
     emoji: '🌟',
     description: '80-90% - Outstanding!',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   {
     id: 'good',
@@ -156,14 +156,14 @@ const PREDICTION_OPTIONS: PredictionOption[] = [
     label: 'Satisfactory',
     emoji: '✅',
     description: '60-70% - Passed!',
-    color: '#8B5CF6',
+    color: '#4573DF',
   },
   {
     id: 'surprise',
     label: 'Surprise Me!',
     emoji: '🎁',
     description: 'Random prediction',
-    color: '#EC4899',
+    color: '#4573DF',
   },
 ];
 
@@ -287,7 +287,7 @@ const ResultGameScreen: React.FC = () => {
           {/* Hero Section */}
           <View style={styles.heroSection}>
             <LinearGradient
-              colors={['#EC4899', '#8B5CF6']}
+              colors={['#4573DF', '#4573DF']}
               style={styles.heroCard}>
               <View style={styles.heroEmoji}>
                 <Text style={styles.heroEmojiText}>🎮</Text>
@@ -343,7 +343,7 @@ const ResultGameScreen: React.FC = () => {
             <View style={styles.loadingContainer}>
               <Animated.View style={{transform: [{rotate: loadingRotation}]}}>
                 <LinearGradient
-                  colors={['#6366F1', '#8B5CF6']}
+                  colors={['#4573DF', '#4573DF']}
                   style={styles.loadingCircle}>
                   <Icon name="sparkles" size={40} color="#FFF" />
                 </LinearGradient>
@@ -360,7 +360,7 @@ const ResultGameScreen: React.FC = () => {
               {/* Prediction Options */}
               <View style={styles.section}>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-                  <Icon name="analytics-outline" size={24} color="#6366F1" />
+                  <Icon name="analytics-outline" size={24} color="#4573DF" />
                   <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
                     Make Your Prediction
                   </Text>
@@ -405,7 +405,7 @@ const ResultGameScreen: React.FC = () => {
               {selectedOption && (
                 <TouchableOpacity onPress={handleReveal}>
                   <LinearGradient
-                    colors={['#EC4899', '#8B5CF6']}
+                    colors={['#4573DF', '#4573DF']}
                     style={styles.revealButton}>
                     <Icon name="sparkles" size={24} color="#FFF" />
                     <Text style={styles.revealButtonText}>Reveal My Future!</Text>
@@ -434,7 +434,7 @@ const ResultGameScreen: React.FC = () => {
               </Text>
             </View>
             <View style={styles.factItem}>
-              <Icon name="heart" size={16} color="#EC4899" />
+              <Icon name="heart" size={16} color="#4573DF" />
               <Text style={[styles.factText, {color: colors.textSecondary}]}>
                 Your worth is not defined by your grades. You're amazing!
               </Text>
@@ -690,3 +690,5 @@ const styles = StyleSheet.create({
 });
 
 export default ResultGameScreen;
+
+

@@ -778,7 +778,7 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
   universityBadge: {
-    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    backgroundColor: 'rgba(69, 115, 223, 0.1)',
     paddingHorizontal: SPACING.sm,
     paddingVertical: 4,
     borderRadius: RADIUS.sm,
@@ -909,3 +909,4 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumDeadlinesScreen;
+

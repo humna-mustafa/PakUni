@@ -18,7 +18,7 @@ export const CARD_HEIGHT = 1350;
 // Colors for different achievement types
 const CARD_COLORS = {
   entry_test: {
-    primary: '#3B82F6',
+    primary: '#4573DF',
     secondary: '#1D4ED8',
     accent: '#93C5FD',
     bg: '#F0F4FF',
@@ -42,14 +42,14 @@ const CARD_COLORS = {
     bg: '#FFFBF0',
   },
   result: {
-    primary: '#8B5CF6',
-    secondary: '#7C3AED',
+    primary: '#4573DF',
+    secondary: '#4573DF',
     accent: '#D8B4FE',
     bg: '#FAF5FF',
   },
   custom: {
-    primary: '#EC4899',
-    secondary: '#DB2777',
+    primary: '#4573DF',
+    secondary: '#3660C9',
     accent: '#F472B6',
     bg: '#FFF1F8',
   },
@@ -454,3 +454,5 @@ export default {
   CARD_WIDTH,
   CARD_HEIGHT,
 };
+
+

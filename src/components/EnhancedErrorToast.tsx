@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: '#374151',
+    color: '#272C34',
     marginBottom: SPACING.xs,
   },
   feedbackInput: {
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#1F2937',
+    color: '#1D2127',
     minHeight: 100,
     marginBottom: SPACING.md,
     borderWidth: 1,
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#1F2937',
+    color: '#1D2127',
     marginBottom: SPACING.md,
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -705,3 +705,4 @@ const styles = StyleSheet.create({
 });
 
 export default EnhancedErrorToast;
+

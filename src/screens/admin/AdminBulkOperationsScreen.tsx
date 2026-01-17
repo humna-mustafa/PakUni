@@ -25,9 +25,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { UniversalHeader } from '../../components';
 import { enhancedAdminService, BulkOperationResult } from '../../services/adminEnhanced';
-import { adminService } from '../../services/admin';
 import { supabase } from '../../services/supabase';
 
 interface UserSelection {
@@ -50,6 +50,7 @@ interface OperationHistoryItem {
 
 const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { colors, isDark } = useTheme();
+  const { user } = useAuth();
   
   // State
   const [activeTab, setActiveTab] = useState<'users' | 'content' | 'notifications'>('users');
@@ -62,7 +63,6 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
   // Modal states
   const [roleModalVisible, setRoleModalVisible] = useState(false);
   const [banModalVisible, setBanModalVisible] = useState(false);
-  const [notificationModalVisible, setNotificationModalVisible] = useState(false);
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('user');
   const [banReason, setBanReason] = useState('');
@@ -90,7 +90,7 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('id, full_name, email, role, is_banned')
         .order('created_at', { ascending: false })
@@ -164,7 +164,7 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
             const result = await enhancedAdminService.bulkUpdateUserRoles(
               selectedIds,
               selectedRole,
-              'admin' // TODO: Get current admin ID
+              user?.id || 'admin'
             );
 
             addToHistory('role_update', `Role update to ${selectedRole}`, result);
@@ -301,7 +301,6 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
           text: 'Send',
           onPress: async () => {
             setLoading(true);
-            setNotificationModalVisible(false);
             
             const result = await enhancedAdminService.bulkSendNotifications(
               selectedIds,
@@ -373,8 +372,8 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return '#8B5CF6';
-      case 'moderator': return '#3B82F6';
+      case 'admin': return '#4573DF';
+      case 'moderator': return '#4573DF';
       case 'content_editor': return '#10B981';
       default: return colors.border;
     }
@@ -469,7 +468,7 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
           {selectedCount > 0 && (
             <View style={styles.actionBar}>
               <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: '#8B5CF6' }]}
+                style={[styles.actionButton, { backgroundColor: '#4573DF' }]}
                 onPress={() => setRoleModalVisible(true)}
               >
                 <Icon name="shield-outline" size={20} color="#fff" />
@@ -776,7 +775,7 @@ const AdminBulkOperationsScreen: React.FC<{ navigation: any }> = ({ navigation }
   );
 };
 
-const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
+const createStyles = (colors: any, _isDark: boolean) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -1205,3 +1204,5 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
 });
 
 export default AdminBulkOperationsScreen;
+
+

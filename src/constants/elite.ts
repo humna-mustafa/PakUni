@@ -124,7 +124,7 @@ export const ELITE_COLORS = {
     20: '#E9D5FF',
     30: '#D8B4FE',
     40: '#C084FC',
-    50: '#A855F7',  // Main
+    50: '#4573DF',  // Main
     60: '#9333EA',
     70: '#7E22CE',
     80: '#6B21A8',
@@ -154,7 +154,7 @@ export const ELITE_COLORS = {
   },
   info: {
     light: '#DBEAFE',
-    main: '#3B82F6',
+    main: '#4573DF',
     dark: '#1D4ED8',
     contrast: '#FFFFFF',
   },
@@ -482,12 +482,12 @@ export const ELITE_GLASS = {
     blur: 16,
   },
   dark: {
-    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+    backgroundColor: 'rgba(29, 33, 39, 0.75)',
     borderColor: 'rgba(255, 255, 255, 0.08)',
     blur: 20,
   },
   darkSolid: {
-    backgroundColor: 'rgba(30, 41, 59, 0.95)',
+    backgroundColor: 'rgba(39, 44, 52, 0.95)',
     borderColor: 'rgba(255, 255, 255, 0.12)',
     blur: 16,
   },
@@ -506,12 +506,12 @@ export const ELITE_GRADIENTS = {
   primary: ['#1A73E8', '#1557B0'],
   primarySoft: ['#E8F2FF', '#CCDCFF'],
   secondary: ['#14B8A6', '#0D9488'],
-  tertiary: ['#A855F7', '#7E22CE'],
+  tertiary: ['#4573DF', '#7E22CE'],
 
   // Premium Gradients
-  sunset: ['#F97316', '#EC4899'],
-  ocean: ['#06B6D4', '#3B82F6'],
-  aurora: ['#22D3EE', '#A78BFA', '#EC4899'],
+  sunset: ['#F97316', '#4573DF'],
+  ocean: ['#06B6D4', '#4573DF'],
+  aurora: ['#22D3EE', '#A78BFA', '#4573DF'],
   gold: ['#F59E0B', '#D97706'],
   emerald: ['#10B981', '#059669'],
 
@@ -521,8 +521,8 @@ export const ELITE_GRADIENTS = {
 
   // Mesh-like multi-color
   mesh: {
-    purple: ['#667EEA', '#764BA2', '#EC4899'],
-    blue: ['#06B6D4', '#3B82F6', '#8B5CF6'],
+    purple: ['#667EEA', '#764BA2', '#4573DF'],
+    blue: ['#06B6D4', '#4573DF', '#4573DF'],
     green: ['#22C55E', '#14B8A6', '#06B6D4'],
   },
 };
@@ -617,3 +617,6 @@ export default {
   ELITE_SCREEN,
   ELITE_ICON_SIZE,
 };
+
+
+

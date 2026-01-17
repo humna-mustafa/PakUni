@@ -60,7 +60,7 @@ const PREMIUM_CARD_CONFIG = {
     title: 'MERIT SUCCESS',
     subtitle: 'Your Score is Ready!',
     accentColor: '#FF8C00',
-    textColor: '#1a1a2e',
+    textColor: '#1D2127',
     glowColor: 'rgba(255, 193, 7, 0.4)',
   },
   admission: {
@@ -75,68 +75,68 @@ const PREMIUM_CARD_CONFIG = {
     title: 'ADMISSION SECURED',
     subtitle: 'Dreams Coming True!',
     accentColor: '#00B894',
-    textColor: '#1a1a2e',
+    textColor: '#1D2127',
     glowColor: 'rgba(0, 184, 148, 0.4)',
   },
   entry_test: {
     gradients: {
       primary: ['#667eea', '#764ba2', '#8E54E9'],
       glow: ['rgba(102, 126, 234, 0.3)', 'rgba(118, 75, 162, 0.1)'],
-      accent: '#7C3AED',
+      accent: '#3660C9',
     },
     icon: '✅',
     badge: '📝',
     pattern: 'waves',
     title: 'TEST COMPLETED',
     subtitle: 'One Step Closer to Success!',
-    accentColor: '#7C3AED',
-    textColor: '#1a1a2e',
+    accentColor: '#3660C9',
+    textColor: '#1D2127',
     glowColor: 'rgba(124, 58, 237, 0.4)',
   },
   scholarship: {
     gradients: {
       primary: ['#F093FB', '#F5576C', '#FF6B6B'],
       glow: ['rgba(240, 147, 251, 0.3)', 'rgba(245, 87, 108, 0.1)'],
-      accent: '#EC4899',
+      accent: '#4573DF',
     },
     icon: '💎',
     badge: '🏅',
     pattern: 'diamonds',
     title: 'SCHOLARSHIP WON',
     subtitle: 'Financial Freedom Achieved!',
-    accentColor: '#EC4899',
-    textColor: '#1a1a2e',
+    accentColor: '#4573DF',
+    textColor: '#1D2127',
     glowColor: 'rgba(236, 72, 153, 0.4)',
   },
   result: {
     gradients: {
-      primary: ['#3B82F6', '#2563EB', '#1D4ED8'],
-      glow: ['rgba(59, 130, 246, 0.3)', 'rgba(37, 99, 235, 0.1)'],
-      accent: '#3B82F6',
+      primary: ['#4573DF', '#3660C9', '#2A4FA8'],
+      glow: ['rgba(69, 115, 223, 0.3)', 'rgba(54, 96, 201, 0.1)'],
+      accent: '#4573DF',
     },
     icon: '📊',
     badge: '⭐',
     pattern: 'dots',
     title: 'RESULT ACHIEVED',
     subtitle: 'Excellence Unlocked!',
-    accentColor: '#3B82F6',
-    textColor: '#1a1a2e',
-    glowColor: 'rgba(59, 130, 246, 0.4)',
+    accentColor: '#4573DF',
+    textColor: '#1D2127',
+    glowColor: 'rgba(69, 115, 223, 0.4)',
   },
   custom: {
     gradients: {
       primary: ['#667eea', '#764ba2'],
       glow: ['rgba(102, 126, 234, 0.3)', 'rgba(118, 75, 162, 0.1)'],
-      accent: '#8B5CF6',
+      accent: '#4573DF',
     },
     icon: '⭐',
     badge: '🌟',
     pattern: 'circles',
     title: 'ACHIEVEMENT',
     subtitle: 'Milestone Reached!',
-    accentColor: '#8B5CF6',
-    textColor: '#1a1a2e',
-    glowColor: 'rgba(139, 92, 246, 0.4)',
+    accentColor: '#4573DF',
+    textColor: '#1D2127',
+    glowColor: 'rgba(107, 147, 240, 0.4)',
   },
 };
 
@@ -828,3 +828,6 @@ const premiumStyles = StyleSheet.create({
 // Export types
 export type {PremiumAchievementCardProps};
 export default PremiumAchievementCard;
+
+
+

@@ -411,8 +411,8 @@ export class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
         ]}>
         <LinearGradient
           colors={isCritical 
-            ? ['#2D1B1B', '#1A1A2E'] 
-            : ['#1A1A2E', '#16213E']}
+            ? ['#2A1F1F', '#1D2127'] 
+            : ['#1D2127', '#272C34']}
           style={styles.gradient}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -506,7 +506,7 @@ export class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
                 onPress={this.handleContactSupport}
                 activeOpacity={0.8}>
                 <View style={styles.buttonContent}>
-                  <Icon name="mail" family="Ionicons" size={18} color="#3B82F6" />
+                  <Icon name="mail" family="Ionicons" size={18} color="#4573DF" />
                   <Text style={styles.secondaryButtonText}>Contact Support</Text>
                 </View>
               </TouchableOpacity>

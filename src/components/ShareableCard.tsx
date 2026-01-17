@@ -27,10 +27,10 @@ import UniversityLogo from './UniversityLogo';
 
 const PAKUNI_BRAND = {
   colors: {
-    primary: '#0EA5E9',       // Sky Blue
-    primaryDark: '#0284C7',
+    primary: '#4573DF',       // Brand Blue
+    primaryDark: '#3660C9',
     secondary: '#10B981',     // Emerald
-    accent: '#8B5CF6',        // Violet
+    accent: '#4573DF',        // Violet
     gold: '#F59E0B',          // Amber
     goldLight: '#FBBF24',
     success: '#10B981',
@@ -38,9 +38,9 @@ const PAKUNI_BRAND = {
     error: '#EF4444',
   },
   gradients: {
-    primary: ['#0EA5E9', '#38BDF8'],
+    primary: ['#4573DF', '#4573DF'],
     success: ['#10B981', '#059669'],
-    premium: ['#0EA5E9', '#38BDF8', '#0284C7'],
+    premium: ['#4573DF', '#4573DF', '#3660C9'],
     dark: ['#0B1118', '#010203'],
   },
 };
@@ -60,7 +60,7 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
 }) => {
   const bgColor = variant === 'light' 
     ? 'rgba(255,255,255,0.2)' 
-    : 'rgba(99,102,241,0.15)';
+    : 'rgba(69, 115, 223,0.15)';
   
   const capSize = size * 0.6;
   const bookSize = size * 0.35;
@@ -71,7 +71,7 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
       <View style={logoStyles.capWrapper}>
         {/* Cap Top (Mortarboard) */}
         <LinearGradient
-          colors={['#0EA5E9', '#38BDF8']}
+          colors={['#4573DF', '#4573DF']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[logoStyles.capTop, {
@@ -82,7 +82,7 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
         />
         {/* Cap Base */}
         <LinearGradient
-          colors={['#0284C7', '#0EA5E9']}
+          colors={['#3660C9', '#4573DF']}
           style={[logoStyles.capBase, {
             width: capSize * 0.5,
             height: capSize * 0.3,
@@ -194,7 +194,7 @@ export const MeritSuccessCard = forwardRef<View, MeritSuccessCardProps>(
         case 'high':
           return ['#10B981', '#059669', '#047857'];
         case 'medium':
-          return ['#6366F1', '#4F46E5', '#3730A3'];
+          return ['#4573DF', '#3660C9', '#3730A3'];
         case 'low':
           return ['#F59E0B', '#D97706', '#B45309'];
       }
@@ -341,7 +341,7 @@ export const ComparisonCard = forwardRef<View, ComparisonCardProps>(
             {/* University 1 */}
             <View style={styles.uniBox}>
               <LinearGradient
-                colors={['#3B82F6', '#2563EB']}
+                colors={['#4573DF', '#3660C9']}
                 style={styles.uniIconCircle}>
                 <Icon name="school" family="Ionicons" size={24} color="#FFFFFF" />
               </LinearGradient>
@@ -429,7 +429,7 @@ export const PollResultCard = forwardRef<View, PollResultCardProps>(
     return (
       <View ref={ref} style={styles.pollContainer} collapsable={false}>
         <LinearGradient
-          colors={['#6366F1', '#7C3AED', '#5B21B6']}
+          colors={['#4573DF', '#3660C9', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.pollGradient}>
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: 'rgba(99,102,241,0.15)',
+    backgroundColor: 'rgba(69, 115, 223,0.15)',
   },
   comparisonDeco2: {
     position: 'absolute',
@@ -911,7 +911,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 10},
         shadowOpacity: 0.35,
         shadowRadius: 20,
@@ -1165,7 +1165,7 @@ export const EntryTestSuccessCard = forwardRef<View, EntryTestSuccessCardProps>(
     return (
       <View ref={ref} style={celebrationStyles.container} collapsable={false}>
         <LinearGradient
-          colors={['#6366F1', '#4F46E5', '#3730A3']}
+          colors={['#4573DF', '#3660C9', '#3730A3']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={celebrationStyles.gradient}>
@@ -1323,7 +1323,7 @@ export const ScholarshipCelebrationCard = forwardRef<View, ScholarshipCelebratio
     return (
       <View ref={ref} style={celebrationStyles.container} collapsable={false}>
         <LinearGradient
-          colors={['#8B5CF6', '#7C3AED', '#5B21B6']}
+          colors={['#4573DF', '#3660C9', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={celebrationStyles.gradient}>
@@ -1623,7 +1623,7 @@ export const PersonalizedScholarshipCard = forwardRef<View, PersonalizedScholars
     // Default gradient if no brand colors found
     const gradientColors: string[] = brandColors 
       ? [brandColors.primary, brandColors.secondary, brandColors.accent || brandColors.secondary]
-      : ['#8B5CF6', '#7C3AED', '#5B21B6'];
+      : ['#4573DF', '#3660C9', '#3660C9'];
     
     // Determine provider type for decorative elements
     const getProviderIcon = () => {
@@ -2369,3 +2369,7 @@ export default {
   PersonalizedScholarshipCard,
   PersonalizedMeritCard,
 };
+
+
+
+

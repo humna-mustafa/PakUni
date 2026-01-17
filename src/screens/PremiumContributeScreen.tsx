@@ -95,7 +95,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Merit List',
     description: 'Update closing merit, cutoffs, aggregate scores',
     icon: 'trending-up',
-    gradient: ['#6366F1', '#8B5CF6'],
+    gradient: ['#4573DF', '#4573DF'],
     examples: ['NUST closing merit: 89.5%', 'FAST aggregate cutoff'],
     fields: ['Closing Merit', '1st Merit', '2nd Merit', 'Aggregate', 'Total Seats'],
   },
@@ -131,7 +131,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'University Info',
     description: 'Contact, address, website corrections',
     icon: 'business',
-    gradient: ['#3B82F6', '#2563EB'],
+    gradient: ['#4573DF', '#3660C9'],
     examples: ['IBA address update', 'UET website URL'],
     fields: ['Address', 'Phone', 'Email', 'Website', 'Ranking'],
   },
@@ -140,7 +140,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Scholarship',
     description: 'Eligibility, amount, deadline updates',
     icon: 'ribbon',
-    gradient: ['#EC4899', '#DB2777'],
+    gradient: ['#4573DF', '#3660C9'],
     examples: ['HEC scholarship criteria', 'Need-based aid amount'],
     fields: ['Eligibility', 'Amount', 'Coverage', 'Deadline', 'Requirements'],
   },
@@ -149,7 +149,7 @@ const CATEGORIES: CategoryOption[] = [
     title: 'Program Details',
     description: 'Course info, duration, eligibility',
     icon: 'school',
-    gradient: ['#8B5CF6', '#7C3AED'],
+    gradient: ['#4573DF', '#3660C9'],
     examples: ['MBBS duration', 'CS prerequisites'],
     fields: ['Duration', 'Credit Hours', 'Eligibility', 'Specializations'],
   },
@@ -166,10 +166,10 @@ const CATEGORIES: CategoryOption[] = [
 
 const STATUS_CONFIG: Record<string, { bg: string; text: string; icon: string; label: string }> = {
   pending: { bg: '#FEF3C7', text: '#92400E', icon: 'time-outline', label: 'Pending Review' },
-  under_review: { bg: '#DBEAFE', text: '#1E40AF', icon: 'eye-outline', label: 'Under Review' },
+  under_review: { bg: '#E8EFFC', text: '#3660C9', icon: 'eye-outline', label: 'Under Review' },
   approved: { bg: '#D1FAE5', text: '#065F46', icon: 'checkmark-circle', label: 'Approved' },
   rejected: { bg: '#FEE2E2', text: '#991B1B', icon: 'close-circle', label: 'Rejected' },
-  auto_approved: { bg: '#EDE9FE', text: '#5B21B6', icon: 'flash', label: 'Auto-Approved' },
+  auto_approved: { bg: '#EDE9FE', text: '#3660C9', icon: 'flash', label: 'Auto-Approved' },
 };
 
 // ============================================================================
@@ -447,7 +447,7 @@ const EntitySearchStep: React.FC<{
       </Text>
 
       {/* Search Input */}
-      <View style={[styles.searchBox, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+      <View style={[styles.searchBox, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
         <Icon name="search-outline" size={20} color={colors.textSecondary} />
         <TextInput
           style={[styles.searchInput, { color: colors.text }]}
@@ -612,8 +612,8 @@ const DetailsEntryStep: React.FC<{
     setShowComparison(formData.currentValue.trim().length > 0 && formData.proposedValue.trim().length > 0);
   }, [formData.currentValue, formData.proposedValue]);
 
-  const inputBg = isDark ? '#1F2937' : '#F3F4F6';
-  const cardBg = isDark ? '#111827' : '#FFFFFF';
+  const inputBg = isDark ? '#272C34' : '#F3F4F6';
+  const cardBg = isDark ? '#1D2127' : '#FFFFFF';
 
   return (
     <ScrollView style={styles.stepContainer} showsVerticalScrollIndicator={false}>
@@ -656,7 +656,7 @@ const DetailsEntryStep: React.FC<{
                   { 
                     backgroundColor: formData.fieldName === field 
                       ? colors.primary 
-                      : (isDark ? '#374151' : '#F3F4F6'),
+                      : (isDark ? '#272C34' : '#F3F4F6'),
                     borderColor: formData.fieldName === field ? colors.primary : 'transparent',
                   },
                 ]}
@@ -708,7 +708,7 @@ const DetailsEntryStep: React.FC<{
         </View>
 
         {/* Current Value Box */}
-        <View style={[styles.valueBox, { backgroundColor: isDark ? '#1F2937' : '#FEF2F2' }]}>
+        <View style={[styles.valueBox, { backgroundColor: isDark ? '#272C34' : '#FEF2F2' }]}>
           <View style={styles.valueBoxHeader}>
             <View style={[styles.valueBoxIcon, { backgroundColor: '#FEE2E2' }]}>
               <Icon name="close-circle" size={18} color="#EF4444" />
@@ -716,7 +716,7 @@ const DetailsEntryStep: React.FC<{
             <Text style={[styles.valueBoxLabel, { color: '#991B1B' }]}>Currently Shows (Wrong)</Text>
           </View>
           <TextInput
-            style={[styles.valueInput, { color: colors.text, backgroundColor: isDark ? '#374151' : '#FFFFFF' }]}
+            style={[styles.valueInput, { color: colors.text, backgroundColor: isDark ? '#272C34' : '#FFFFFF' }]}
             value={formData.currentValue}
             onChangeText={(text) => onUpdate({ currentValue: text })}
             placeholder="What does the app show now? (e.g., PKR 500,000)"
@@ -737,7 +737,7 @@ const DetailsEntryStep: React.FC<{
         </View>
 
         {/* New Value Box */}
-        <View style={[styles.valueBox, { backgroundColor: isDark ? '#1F2937' : '#F0FDF4' }]}>
+        <View style={[styles.valueBox, { backgroundColor: isDark ? '#272C34' : '#F0FDF4' }]}>
           <View style={styles.valueBoxHeader}>
             <View style={[styles.valueBoxIcon, { backgroundColor: '#D1FAE5' }]}>
               <Icon name="checkmark-circle" size={18} color="#10B981" />
@@ -748,7 +748,7 @@ const DetailsEntryStep: React.FC<{
           <TextInput
             style={[
               styles.valueInput, 
-              { color: colors.text, backgroundColor: isDark ? '#374151' : '#FFFFFF' },
+              { color: colors.text, backgroundColor: isDark ? '#272C34' : '#FFFFFF' },
               getFieldError('proposedValue') && { borderColor: '#EF4444', borderWidth: 1 },
             ]}
             value={formData.proposedValue}
@@ -766,13 +766,13 @@ const DetailsEntryStep: React.FC<{
 
         {/* Live Comparison Preview */}
         {showComparison && (
-          <View style={[styles.comparisonPreview, { backgroundColor: isDark ? '#1E3A5F' : '#EEF2FF' }]}>
-            <Icon name="git-compare-outline" size={18} color={isDark ? '#93C5FD' : '#4338CA'} />
+          <View style={[styles.comparisonPreview, { backgroundColor: isDark ? '#1E3A5F' : '#E8EFFC' }]}>
+            <Icon name="git-compare-outline" size={18} color={isDark ? '#4573DF' : '#4573DF'} />
             <View style={styles.comparisonContent}>
-              <Text style={[styles.comparisonLabel, { color: isDark ? '#93C5FD' : '#4338CA' }]}>Change Preview:</Text>
+              <Text style={[styles.comparisonLabel, { color: isDark ? '#4573DF' : '#4573DF' }]}>Change Preview:</Text>
               <View style={styles.comparisonValues}>
                 <Text style={styles.comparisonOld} numberOfLines={1}>{formData.currentValue}</Text>
-                <Icon name="arrow-forward" size={12} color={isDark ? '#93C5FD' : '#4338CA'} />
+                <Icon name="arrow-forward" size={12} color={isDark ? '#4573DF' : '#4573DF'} />
                 <Text style={styles.comparisonNew} numberOfLines={1}>{formData.proposedValue}</Text>
               </View>
             </View>
@@ -799,7 +799,7 @@ const DetailsEntryStep: React.FC<{
               style={[
                 styles.quickReasonChip,
                 { 
-                  backgroundColor: formData.reason === reason ? '#10B981' : (isDark ? '#374151' : '#F3F4F6'),
+                  backgroundColor: formData.reason === reason ? '#10B981' : (isDark ? '#272C34' : '#F3F4F6'),
                 },
               ]}
               onPress={() => {
@@ -842,7 +842,7 @@ const DetailsEntryStep: React.FC<{
           <View style={styles.sourceHeader}>
             <Icon name="link-outline" size={16} color={colors.textSecondary} />
             <Text style={[styles.sourceLabel, { color: colors.textSecondary }]}>Source URL</Text>
-            <View style={[styles.optionalBadge, { backgroundColor: isDark ? '#374151' : '#E5E7EB' }]}>
+            <View style={[styles.optionalBadge, { backgroundColor: isDark ? '#272C34' : '#E5E7EB' }]}>
               <Text style={[styles.optionalText, { color: colors.textSecondary }]}>Optional</Text>
             </View>
           </View>
@@ -981,9 +981,9 @@ const ReviewStep: React.FC<{
       </View>
 
       {/* Info Box */}
-      <View style={[styles.infoBox, { backgroundColor: isDark ? '#1E3A5F' : '#EEF2FF' }]}>
-        <Icon name="information-circle" size={20} color={isDark ? '#93C5FD' : '#4338CA'} />
-        <Text style={[styles.infoText, { color: isDark ? '#93C5FD' : '#4338CA' }]}>
+      <View style={[styles.infoBox, { backgroundColor: isDark ? '#1E3A5F' : '#E8EFFC' }]}>
+        <Icon name="information-circle" size={20} color={isDark ? '#4573DF' : '#4573DF'} />
+        <Text style={[styles.infoText, { color: isDark ? '#4573DF' : '#4573DF' }]}>
           Your submission will be reviewed by our team. Google-verified users may receive instant auto-approval!
         </Text>
       </View>
@@ -1060,7 +1060,7 @@ const SuccessModal: React.FC<{
           ]}>
           <View style={[
             styles.successCircle,
-            { backgroundColor: autoApproved ? '#8B5CF6' : '#10B981' },
+            { backgroundColor: autoApproved ? '#4573DF' : '#10B981' },
           ]}>
             <Icon name={autoApproved ? 'flash' : 'checkmark'} size={48} color="#FFFFFF" />
           </View>
@@ -1295,7 +1295,7 @@ export const PremiumContributeScreen: React.FC<{ navigation: any; route?: any }>
 
   // Render tabs
   const renderTabs = () => (
-    <View style={[styles.tabsContainer, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+    <View style={[styles.tabsContainer, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
       {(['contribute', 'history'] as TabType[]).map(tab => (
         <TouchableOpacity
           key={tab}
@@ -2369,3 +2369,6 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumContributeScreen;
+
+
+

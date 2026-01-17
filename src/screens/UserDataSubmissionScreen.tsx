@@ -30,6 +30,7 @@ import {
   SubmissionType,
   SubmissionPriority,
 } from '../services/dataSubmissions';
+import { STATUS, PRIORITY, PROVIDERS, SEMANTIC, DARK_BG, LIGHT_BG } from '../constants/brand';
 
 type TabType = 'submit' | 'history';
 
@@ -45,18 +46,18 @@ const SUBMISSION_TYPES: { value: SubmissionType; label: string; icon: string; de
 ];
 
 const PRIORITY_OPTIONS: { value: SubmissionPriority; label: string; color: string }[] = [
-  { value: 'low', label: 'Low', color: '#6B7280' },
-  { value: 'medium', label: 'Medium', color: '#F59E0B' },
-  { value: 'high', label: 'High (Time Sensitive)', color: '#F97316' },
-  { value: 'urgent', label: 'Urgent', color: '#EF4444' },
+  { value: 'low', label: 'Low', color: PRIORITY.low.color },
+  { value: 'medium', label: 'Medium', color: PRIORITY.medium.color },
+  { value: 'high', label: 'High (Time Sensitive)', color: PRIORITY.high.color },
+  { value: 'urgent', label: 'Urgent', color: PRIORITY.urgent.color },
 ];
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  pending: { bg: '#FEF3C7', text: '#92400E' },
-  under_review: { bg: '#DBEAFE', text: '#1E40AF' },
-  approved: { bg: '#D1FAE5', text: '#065F46' },
-  rejected: { bg: '#FEE2E2', text: '#991B1B' },
-  auto_approved: { bg: '#EDE9FE', text: '#5B21B6' },
+  pending: { bg: STATUS.pending.bg, text: STATUS.pending.text },
+  under_review: { bg: STATUS.under_review.bg, text: STATUS.under_review.text },
+  approved: { bg: STATUS.approved.bg, text: STATUS.approved.text },
+  rejected: { bg: STATUS.rejected.bg, text: STATUS.rejected.text },
+  auto_approved: { bg: STATUS.auto_approved.bg, text: STATUS.auto_approved.text },
 };
 
 export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }> = ({ navigation, route }) => {
@@ -163,7 +164,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
         user_name: user.fullName || user.email || null,
         user_email: user.email || null,
         user_trust_level: 0, // Will be fetched from profile in real implementation
-        auth_provider: user.provider || null, // Include auth provider for auto-approval rules
+        user_auth_provider: user.provider || null, // Include auth provider for auto-approval rules
         entity_type: submissionType.replace('_update', '').replace('_correction', '').replace('_info', ''),
         entity_id: entityName.toLowerCase().replace(/\s+/g, '_'),
         entity_name: entityName,
@@ -196,7 +197,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
   };
 
   const renderTabs = () => (
-    <View style={[styles.tabsContainer, { backgroundColor: isDark ? colors.card : '#F3F4F6' }]}>
+    <View style={[styles.tabsContainer, { backgroundColor: isDark ? colors.card : LIGHT_BG.cardHover }]}>
       <TouchableOpacity
         style={[styles.tab, { backgroundColor: activeTab === 'submit' ? colors.primary : 'transparent' }]}
         onPress={() => setActiveTab('submit')}
@@ -204,9 +205,9 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
         <Icon 
           name="create" 
           size={18} 
-          color={activeTab === 'submit' ? '#FFFFFF' : colors.textSecondary} 
+          color={activeTab === 'submit' ? colors.textOnPrimary : colors.textSecondary} 
         />
-        <Text style={[styles.tabText, { color: activeTab === 'submit' ? '#FFFFFF' : colors.textSecondary }]}>
+        <Text style={[styles.tabText, { color: activeTab === 'submit' ? colors.textOnPrimary : colors.textSecondary }]}>
           Submit Correction
         </Text>
       </TouchableOpacity>
@@ -217,9 +218,9 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
         <Icon 
           name="time" 
           size={18} 
-          color={activeTab === 'history' ? '#FFFFFF' : colors.textSecondary} 
+          color={activeTab === 'history' ? colors.textOnPrimary : colors.textSecondary} 
         />
-        <Text style={[styles.tabText, { color: activeTab === 'history' ? '#FFFFFF' : colors.textSecondary }]}>
+        <Text style={[styles.tabText, { color: activeTab === 'history' ? colors.textOnPrimary : colors.textSecondary }]}>
           My Submissions
         </Text>
       </TouchableOpacity>
@@ -235,7 +236,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             <Icon 
               name={user.provider === 'google' ? 'logo-google' : user.provider === 'email' ? 'mail' : 'person-outline'} 
               size={20} 
-              color={user.provider === 'google' ? '#4285F4' : user.provider === 'email' ? '#10B981' : '#9CA3AF'} 
+              color={user.provider === 'google' ? PROVIDERS.google : user.provider === 'email' ? PROVIDERS.email : PROVIDERS.guest} 
             />
             <View>
               <Text style={[styles.trustBadgeTitle, { color: colors.text }]}>
@@ -251,14 +252,14 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             </View>
           </View>
           {user.provider === 'google' && (
-            <Icon name="checkmark-shield" size={24} color="#10B981" />
+            <Icon name="checkmark-shield" size={24} color={SEMANTIC.success} />
           )}
         </View>
       )}
       
-      <View style={[styles.infoBox, { backgroundColor: isDark ? '#1F2937' : '#EEF2FF' }]}>
+      <View style={[styles.infoBox, { backgroundColor: isDark ? DARK_BG.cardElevated : colors.primaryLight }]}>
         <Icon name="information-circle" size={20} color={colors.primary} />
-        <Text style={[styles.infoText, { color: isDark ? '#A5B4FC' : '#4338CA' }]}>
+        <Text style={[styles.infoText, { color: isDark ? colors.primaryLight : colors.primaryDark }]}>
           Found incorrect data? Help us improve by submitting a correction. 
           Accurate information helps all students!
         </Text>
@@ -299,7 +300,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
                 style={[
                   styles.priorityOption,
                   {
-                    backgroundColor: priority === p.value ? p.color + '20' : isDark ? '#1F2937' : '#F3F4F6',
+                    backgroundColor: priority === p.value ? p.color + '20' : isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover,
                     borderColor: priority === p.value ? p.color : 'transparent',
                   }
                 ]}
@@ -317,7 +318,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             What are you updating? *
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={entityName}
             onChangeText={setEntityName}
             placeholder="e.g., NUST, MDCAT, LUMS Scholarship..."
@@ -328,7 +329,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             Which field needs correction? *
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={fieldName}
             onChangeText={setFieldName}
             placeholder="e.g., Closing Merit, Test Date, Fee Amount..."
@@ -339,7 +340,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             Current (wrong) value
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={currentValue}
             onChangeText={setCurrentValue}
             placeholder="What the app currently shows..."
@@ -350,7 +351,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             Correct value *
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={proposedValue}
             onChangeText={setProposedValue}
             placeholder="The accurate/updated value..."
@@ -361,7 +362,7 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             Why is this change needed? *
           </Text>
           <TextInput
-            style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={changeReason}
             onChangeText={setChangeReason}
             placeholder="Explain why the current data is wrong or outdated..."
@@ -373,16 +374,16 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             Source/Proof (optional but helps!)
           </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? DARK_BG.cardElevated : LIGHT_BG.cardHover, color: colors.text }]}
             value={sourceProof}
             onChangeText={setSourceProof}
             placeholder="URL to official source or description of proof..."
             placeholderTextColor={colors.textSecondary}
           />
           
-          <View style={[styles.tipBox, { backgroundColor: isDark ? '#1F2937' : '#FEF3C7' }]}>
-            <Icon name="bulb" size={18} color="#F59E0B" />
-            <Text style={[styles.tipText, { color: isDark ? '#FCD34D' : '#92400E' }]}>
+          <View style={[styles.tipBox, { backgroundColor: isDark ? DARK_BG.cardElevated : SEMANTIC.warningBg }]}>
+            <Icon name="bulb" size={18} color={SEMANTIC.warning} />
+            <Text style={[styles.tipText, { color: isDark ? SEMANTIC.warningLight : SEMANTIC.warningText }]}>
               💡 Tip: Submissions with source links are reviewed faster and more likely to be approved!
             </Text>
           </View>
@@ -393,10 +394,10 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <ActivityIndicator size="small" color="#FFFFFF" />
+              <ActivityIndicator size="small" color={colors.textOnPrimary} />
             ) : (
               <>
-                <Icon name="send" size={20} color="#FFFFFF" />
+                <Icon name="send" size={20} color={colors.textOnPrimary} />
                 <Text style={styles.submitBtnText}>Submit Correction</Text>
               </>
             )}
@@ -433,27 +434,27 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
         </Text>
         
         <View style={styles.changeRow}>
-          <Text style={[styles.oldValue, { color: '#EF4444' }]} numberOfLines={1}>
+          <Text style={[styles.oldValue, { color: SEMANTIC.error }]} numberOfLines={1}>
             {String(submission.current_value)}
           </Text>
           <Icon name="arrow-forward" size={14} color={colors.textSecondary} />
-          <Text style={[styles.newValue, { color: '#10B981' }]} numberOfLines={1}>
+          <Text style={[styles.newValue, { color: SEMANTIC.success }]} numberOfLines={1}>
             {String(submission.proposed_value)}
           </Text>
         </View>
         
         {submission.status === 'rejected' && submission.rejection_reason && (
-          <View style={[styles.rejectionBox, { backgroundColor: '#FEE2E2' }]}>
-            <Icon name="close-circle" size={14} color="#EF4444" />
+          <View style={[styles.rejectionBox, { backgroundColor: SEMANTIC.errorBg }]}>
+            <Icon name="close-circle" size={14} color={SEMANTIC.error} />
             <Text style={styles.rejectionText}>{submission.rejection_reason}</Text>
           </View>
         )}
         
         {submission.auto_approved && (
-          <View style={[styles.autoApprovedBox, { backgroundColor: '#EDE9FE' }]}>
-            <Icon name="flash" size={14} color="#8B5CF6" />
+          <View style={[styles.autoApprovedBox, { backgroundColor: STATUS.auto_approved.bg }]}>
+            <Icon name="flash" size={14} color={STATUS.auto_approved.text} />
             <Text style={styles.autoApprovedText}>
-              Auto-approved{submission.auth_provider === 'google' ? ' (Google user)' : ''}
+              Auto-approved{submission.user_auth_provider === 'google' ? ' (Google user)' : ''}
             </Text>
           </View>
         )}
@@ -489,25 +490,25 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
             style={[styles.emptyBtn, { backgroundColor: colors.primary }]}
             onPress={() => setActiveTab('submit')}
           >
-            <Icon name="create" size={20} color="#FFFFFF" />
+            <Icon name="create" size={20} color={colors.textOnPrimary} />
             <Text style={styles.emptyBtnText}>Submit First Correction</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <>
-          <View style={[styles.statsSummary, { backgroundColor: isDark ? colors.card : '#F3F4F6' }]}>
+          <View style={[styles.statsSummary, { backgroundColor: isDark ? colors.card : LIGHT_BG.cardHover }]}>
             <View style={styles.summaryItem}>
               <Text style={[styles.summaryValue, { color: colors.text }]}>{submissions.length}</Text>
               <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Total</Text>
             </View>
             <View style={styles.summaryItem}>
-              <Text style={[styles.summaryValue, { color: '#F59E0B' }]}>
+              <Text style={[styles.summaryValue, { color: SEMANTIC.warning }]}>
                 {submissions.filter(s => s.status === 'pending').length}
               </Text>
               <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Pending</Text>
             </View>
             <View style={styles.summaryItem}>
-              <Text style={[styles.summaryValue, { color: '#10B981' }]}>
+              <Text style={[styles.summaryValue, { color: SEMANTIC.success }]}>
                 {submissions.filter(s => s.status === 'approved' || s.status === 'auto_approved').length}
               </Text>
               <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Approved</Text>
@@ -793,7 +794,7 @@ const styles = StyleSheet.create({
   autoApprovedText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#8B5CF6',
+    color: '#4573DF',
   },
   historyDate: {
     fontSize: 11,
@@ -832,3 +833,5 @@ const styles = StyleSheet.create({
 });
 
 export default UserDataSubmissionScreen;
+
+

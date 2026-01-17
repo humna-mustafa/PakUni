@@ -28,9 +28,9 @@ import { UniversalHeader } from '../../components';
 import { dataSubmissionsService, NotificationTrigger } from '../../services/dataSubmissions';
 
 const TRIGGER_TYPES = [
-  { value: 'deadline_reminder', label: 'Deadline Reminder', icon: 'calendar', color: '#3B82F6' },
+  { value: 'deadline_reminder', label: 'Deadline Reminder', icon: 'calendar', color: '#4573DF' },
   { value: 'merit_published', label: 'Merit Published', icon: 'trophy', color: '#F59E0B' },
-  { value: 'entry_test_reminder', label: 'Entry Test', icon: 'school', color: '#8B5CF6' },
+  { value: 'entry_test_reminder', label: 'Entry Test', icon: 'school', color: '#4573DF' },
   { value: 'scholarship_deadline', label: 'Scholarship', icon: 'cash', color: '#10B981' },
   { value: 'new_announcement', label: 'Announcement', icon: 'megaphone', color: '#EF4444' },
   { value: 'custom', label: 'Custom', icon: 'settings', color: '#6B7280' },
@@ -198,8 +198,8 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
         <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Enabled</Text>
       </View>
       <View style={styles.statItem}>
-        <Icon name="paper-plane" size={20} color="#8B5CF6" />
-        <Text style={[styles.statValue, { color: '#8B5CF6' }]}>{stats.totalSent}</Text>
+        <Icon name="paper-plane" size={20} color="#4573DF" />
+        <Text style={[styles.statValue, { color: '#4573DF' }]}>{stats.totalSent}</Text>
         <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Total Sent</Text>
       </View>
     </View>
@@ -244,7 +244,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
           </Text>
         )}
         
-        <View style={[styles.previewBox, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+        <View style={[styles.previewBox, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
           <Text style={[styles.previewTitle, { color: colors.text }]}>
             {trigger.title_template}
           </Text>
@@ -254,8 +254,8 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
         </View>
         
         <View style={styles.tagsRow}>
-          <View style={[styles.tag, { backgroundColor: '#DBEAFE' }]}>
-            <Icon name={targetInfo?.icon as any} size={12} color="#1E40AF" />
+          <View style={[styles.tag, { backgroundColor: '#E8EFFC' }]}>
+            <Icon name={targetInfo?.icon as any} size={12} color="#4573DF" />
             <Text style={styles.tagText}>{targetInfo?.label}</Text>
           </View>
           <View style={[styles.tag, { backgroundColor: '#FEF3C7' }]}>
@@ -284,10 +284,10 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
           
           <View style={styles.cardActions}>
             <TouchableOpacity
-              style={[styles.actionBtn, { backgroundColor: '#DBEAFE' }]}
+              style={[styles.actionBtn, { backgroundColor: '#E8EFFC' }]}
               onPress={(e) => { e.stopPropagation(); executeTrigger(trigger); }}
             >
-              <Icon name="paper-plane" size={14} color="#1E40AF" />
+              <Icon name="paper-plane" size={14} color="#4573DF" />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.actionBtn, { backgroundColor: '#FEE2E2' }]}
@@ -322,7 +322,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
           <ScrollView style={styles.modalBody}>
             <Text style={[styles.inputLabel, { color: colors.text }]}>Trigger Name *</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingTrigger.name}
               onChangeText={(text) => setEditingTrigger({ ...editingTrigger, name: text })}
               placeholder="e.g., NUST Deadline Reminder"
@@ -331,7 +331,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Description</Text>
             <TextInput
-              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingTrigger.description}
               onChangeText={(text) => setEditingTrigger({ ...editingTrigger, description: text })}
               placeholder="What this trigger does..."
@@ -349,7 +349,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
                     {
                       backgroundColor: editingTrigger.trigger_type === type.value
                         ? type.color + '20'
-                        : isDark ? '#1F2937' : '#F3F4F6',
+                        : isDark ? '#272C34' : '#F3F4F6',
                       borderColor: editingTrigger.trigger_type === type.value ? type.color : 'transparent',
                     }
                   ]}
@@ -372,7 +372,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
                       {
                         backgroundColor: editingTrigger.target_type === target.value
                           ? colors.primary
-                          : isDark ? '#1F2937' : '#F3F4F6',
+                          : isDark ? '#272C34' : '#F3F4F6',
                       }
                     ]}
                     onPress={() => setEditingTrigger({ ...editingTrigger, target_type: target.value as any })}
@@ -403,7 +403,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
                     {
                       backgroundColor: editingTrigger.schedule_type === schedule.value
                         ? colors.primary
-                        : isDark ? '#1F2937' : '#F3F4F6',
+                        : isDark ? '#272C34' : '#F3F4F6',
                     }
                   ]}
                   onPress={() => setEditingTrigger({ ...editingTrigger, schedule_type: schedule.value as any })}
@@ -427,7 +427,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
               <>
                 <Text style={[styles.inputLabel, { color: colors.text }]}>Days Before</Text>
                 <TextInput
-                  style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+                  style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
                   value={editingTrigger.days_before?.toString() || ''}
                   onChangeText={(text) => setEditingTrigger({ ...editingTrigger, days_before: parseInt(text) || null })}
                   keyboardType="numeric"
@@ -443,7 +443,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Title Template *</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingTrigger.title_template}
               onChangeText={(text) => setEditingTrigger({ ...editingTrigger, title_template: text })}
               placeholder="e.g., ⏰ Deadline Approaching!"
@@ -452,7 +452,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Message Template *</Text>
             <TextInput
-              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingTrigger.message_template}
               onChangeText={(text) => setEditingTrigger({ ...editingTrigger, message_template: text })}
               placeholder="Use {university}, {program}, {date} as placeholders..."
@@ -460,7 +460,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
               multiline
             />
             
-            <View style={[styles.helpBox, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+            <View style={[styles.helpBox, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
               <Icon name="information-circle" size={16} color={colors.primary} />
               <Text style={[styles.helpText, { color: colors.textSecondary }]}>
                 Available placeholders: {'{university}'}, {'{program}'}, {'{date}'}, {'{test_name}'}, {'{deadline}'}
@@ -480,7 +480,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
           
           <View style={styles.modalActions}>
             <TouchableOpacity
-              style={[styles.modalBtn, { backgroundColor: isDark ? '#374151' : '#E5E7EB' }]}
+              style={[styles.modalBtn, { backgroundColor: isDark ? '#272C34' : '#E5E7EB' }]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={[styles.modalBtnText, { color: colors.text }]}>Cancel</Text>
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 11,
     fontWeight: '500',
-    color: '#1E40AF',
+    color: '#4573DF',
   },
   cardFooter: {
     flexDirection: 'row',
@@ -878,3 +878,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminNotificationTriggersScreen;
+
+

@@ -59,7 +59,7 @@ const TOOLS: Tool[] = [
     title: 'Merit Calculator',
     description: 'Calculate your merit percentage for any university',
     icon: 'calculator-outline',
-    color: '#6366F1',
+    color: '#4573DF',
     component: 'meritCalculator',
   },
   {
@@ -83,7 +83,7 @@ const TOOLS: Tool[] = [
     title: 'What-If Simulator',
     description: 'Explore different scenarios and see how changes affect your merit',
     icon: 'git-branch-outline',
-    color: '#EC4899',
+    color: '#4573DF',
     component: 'whatIf',
   },
   {
@@ -91,7 +91,7 @@ const TOOLS: Tool[] = [
     title: 'Custom Formula Builder',
     description: 'Create custom merit formulas for specific universities',
     icon: 'code-slash-outline',
-    color: '#8B5CF6',
+    color: '#4573DF',
     component: 'customFormula',
   },
 ];
@@ -198,7 +198,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         <View style={[styles.inputCard, {backgroundColor: colors.card}]}>
           <View style={styles.inputRow}>
             <View style={styles.inputIconWrapper}>
-              <LinearGradient colors={['#6366F1', '#8B5CF6']} style={styles.inputIcon}>
+              <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.inputIcon}>
                 <Icon name="school-outline" family="Ionicons" size={20} color="#FFF" />
               </LinearGradient>
             </View>
@@ -265,9 +265,9 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         </View>
 
         {/* Formula Info */}
-        <View style={[styles.formulaCard, {backgroundColor: '#6366F1' + '15'}]}>
-          <Icon name="information-circle-outline" family="Ionicons" size={20} color="#6366F1" />
-          <Text style={[styles.formulaText, {color: '#6366F1'}]}>
+        <View style={[styles.formulaCard, {backgroundColor: '#4573DF' + '15'}]}>
+          <Icon name="information-circle-outline" family="Ionicons" size={20} color="#4573DF" />
+          <Text style={[styles.formulaText, {color: '#4573DF'}]}>
             Formula: 10% Matric + 50% Inter + 40% Entry Test
           </Text>
         </View>
@@ -279,7 +279,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
           accessibilityLabel="Calculate merit score"
           accessibilityHint="Calculates your merit percentage based on matric, inter, and entry test marks">
           <LinearGradient
-            colors={['#6366F1', '#8B5CF6']}
+            colors={['#4573DF', '#3660C9']}
             style={styles.calculateButton}>
             <Icon name="calculator-outline" family="Ionicons" size={24} color="#FFF" />
             <Text style={styles.calculateButtonText}>Calculate Merit</Text>
@@ -459,7 +459,7 @@ const ToolsScreen: React.FC = () => {
           {/* Hero Section */}
           <View style={styles.heroSection}>
             <LinearGradient
-              colors={['#6366F1', '#8B5CF6']}
+              colors={['#4573DF', '#3660C9']}
               style={styles.heroCard}>
               <View style={styles.heroContent}>
                 <Icon name="calculator" family="Ionicons" size={40} color="rgba(255,255,255,0.9)" />
@@ -506,10 +506,10 @@ const ToolsScreen: React.FC = () => {
             </View>
             <View style={styles.quickGrid}>
               <TouchableOpacity
-                style={[styles.quickButton, {backgroundColor: '#6366F1' + '15'}]}
+                style={[styles.quickButton, {backgroundColor: '#4573DF' + '15'}]}
                 onPress={() => setActiveTool('meritCalculator')}>
-                <Icon name="calculator-outline" family="Ionicons" size={24} color="#6366F1" />
-                <Text style={[styles.quickText, {color: '#6366F1'}]}>Calculate Merit</Text>
+                <Icon name="calculator-outline" family="Ionicons" size={24} color="#4573DF" />
+                <Text style={[styles.quickText, {color: '#4573DF'}]}>Calculate Merit</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.quickButton, {backgroundColor: '#10B981' + '15'}]}
@@ -523,7 +523,7 @@ const ToolsScreen: React.FC = () => {
           {/* Info Card */}
           <View style={[styles.infoCard, {backgroundColor: colors.card}]}>
             <View style={styles.infoHeader}>
-              <Icon name="information-circle-outline" family="Ionicons" size={24} color="#6366F1" />
+              <Icon name="information-circle-outline" family="Ionicons" size={24} color="#4573DF" />
               <Text style={[styles.infoTitle, {color: colors.text}]}>About Merit Formulas</Text>
             </View>
             <Text style={[styles.infoText, {color: colors.textSecondary}]}>
@@ -531,7 +531,7 @@ const ToolsScreen: React.FC = () => {
             </Text>
             <View style={styles.infoList}>
               <View style={styles.infoItem}>
-                <View style={[styles.infoBullet, {backgroundColor: '#6366F1'}]} />
+                <View style={[styles.infoBullet, {backgroundColor: '#4573DF'}]} />
                 <Text style={[styles.infoItemText, {color: colors.textSecondary}]}>
                   Matric/O-Level marks (10-20%)
                 </Text>
@@ -549,7 +549,7 @@ const ToolsScreen: React.FC = () => {
                 </Text>
               </View>
               <View style={styles.infoItem}>
-                <View style={[styles.infoBullet, {backgroundColor: '#EC4899'}]} />
+                <View style={[styles.infoBullet, {backgroundColor: '#4573DF'}]} />
                 <Text style={[styles.infoItemText, {color: colors.textSecondary}]}>
                   Hafiz-e-Quran bonus (2-5%)
                 </Text>
@@ -894,3 +894,5 @@ const styles = StyleSheet.create({
 });
 
 export default ToolsScreen;
+
+

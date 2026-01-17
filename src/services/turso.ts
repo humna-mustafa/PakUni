@@ -72,6 +72,7 @@ const getLibsqlClient = async () => {
     if (isNode && !(global as any).RN_METRO) {
       // Use eval('require') to completely hide this from Metro's static analysis.
       // Metro cannot follow eval, so it won't try to resolve '@libsql/client'.
+      // eslint-disable-next-line no-eval
       const libsql = eval('require')('@libsql/client');
       createClient = libsql.createClient;
       return createClient;

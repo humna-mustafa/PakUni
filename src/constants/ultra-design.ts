@@ -75,8 +75,8 @@ export const ULTRA_COLORS = {
     200: '#DCD4FF',
     300: '#C4B5FF',
     400: '#A890FF',
-    500: '#8B5CF6',  // Main
-    600: '#7C3AED',
+    500: '#4573DF',  // Main
+    600: '#3660C9',
     700: '#6D28D9',
     800: '#5B21B6',
     900: '#4C1D95',
@@ -560,17 +560,17 @@ export const ULTRA_GLASS = {
   // Dark theme glass
   dark: {
     subtle: {
-      backgroundColor: 'rgba(15, 23, 42, 0.72)',
+      backgroundColor: 'rgba(29, 33, 39, 0.72)',
       borderColor: 'rgba(255, 255, 255, 0.08)',
       borderWidth: pixelPerfect(1),
     },
     medium: {
-      backgroundColor: 'rgba(30, 41, 59, 0.85)',
+      backgroundColor: 'rgba(39, 44, 52, 0.85)',
       borderColor: 'rgba(255, 255, 255, 0.12)',
       borderWidth: pixelPerfect(1),
     },
     solid: {
-      backgroundColor: 'rgba(30, 41, 59, 0.95)',
+      backgroundColor: 'rgba(39, 44, 52, 0.95)',
       borderColor: 'rgba(255, 255, 255, 0.15)',
       borderWidth: pixelPerfect(1),
     },
@@ -601,7 +601,7 @@ export const ULTRA_GRADIENTS = {
     end: { x: 1, y: 1 },
   },
   accent: {
-    colors: ['#8B5CF6', '#6D28D9'],
+    colors: ['#4573DF', '#6D28D9'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
@@ -613,17 +613,17 @@ export const ULTRA_GRADIENTS = {
     end: { x: 1, y: 1 },
   },
   sunset: {
-    colors: ['#F97316', '#EC4899'],
+    colors: ['#F97316', '#4573DF'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   ocean: {
-    colors: ['#06B6D4', '#3B82F6'],
+    colors: ['#06B6D4', '#4573DF'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   aurora: {
-    colors: ['#22D3EE', '#A78BFA', '#EC4899'],
+    colors: ['#22D3EE', '#A78BFA', '#4573DF'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
@@ -802,3 +802,6 @@ export default {
   ULTRA_ICON_SIZE,
   ULTRA_BORDER,
 };
+
+
+

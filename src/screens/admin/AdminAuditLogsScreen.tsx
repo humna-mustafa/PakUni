@@ -30,7 +30,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -38,14 +38,14 @@ try {
 
 const ACTION_CONFIG: Record<string, {icon: string; color: string}> = {
   create: {icon: 'add-circle-outline', color: '#10B981'},
-  update: {icon: 'create-outline', color: '#3B82F6'},
+  update: {icon: 'create-outline', color: '#4573DF'},
   delete: {icon: 'trash-outline', color: '#EF4444'},
-  login: {icon: 'log-in-outline', color: '#8B5CF6'},
+  login: {icon: 'log-in-outline', color: '#4573DF'},
   logout: {icon: 'log-out-outline', color: '#6B7280'},
   ban: {icon: 'ban-outline', color: '#EF4444'},
   unban: {icon: 'checkmark-circle-outline', color: '#10B981'},
   role_change: {icon: 'shield-outline', color: '#F59E0B'},
-  settings_change: {icon: 'settings-outline', color: '#3B82F6'},
+  settings_change: {icon: 'settings-outline', color: '#4573DF'},
   default: {icon: 'ellipse-outline', color: '#6B7280'},
 };
 
@@ -202,7 +202,7 @@ const AdminAuditLogsScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#374151', '#1F2937']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -652,3 +652,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminAuditLogsScreen;
+
+

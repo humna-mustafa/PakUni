@@ -85,33 +85,52 @@ export interface ThemeColors {
   headerBackground: string;
   headerText: string;
   
+  // Added for Premium Components
+  tertiary: string;
+  tertiaryLight: string;
+  tertiaryDark: string;
+  surfaceContainer: string;
+  surfaceContainerLow: string;
+  surfaceContainerHigh: string;
+  textTertiary: string;
+  
   // Base colors
   white: string;
   black: string;
 }
 
-// Light theme colors - Sky Blue Education Palette
-// Inspired by top universities (Oxford, Cambridge), calm, professional, inviting
+// Light theme colors - Brand Color Palette
+// Brand Primary: #4573df - Professional, trustworthy blue
+// Inspired by megicode.com brand identity - tech-forward, clean
 export const lightColors: ThemeColors = {
-  // Primary - Beautiful sky blue, trust, learning, wisdom
-  primary: '#0EA5E9',  // Sky blue - warm, friendly, educational
-  primaryLight: '#E0F2FE',
-  primaryDark: '#0284C7',
-  secondary: '#10B981',  // Soft green for achievements
+  // Primary - Brand blue (#4573df) - professional, trustworthy
+  primary: '#4573DF',  // Brand primary - professional blue
+  primaryLight: '#E8EFFC',  // Light variant for backgrounds
+  primaryDark: '#3660C9',  // Darker variant for pressed states
+  secondary: '#10B981',  // Green for achievements/success
   secondaryLight: '#ECFDF5',
   
-  // Status colors - Professional, warm tones
-  success: '#059669',
-  successLight: '#ECFDF5',
-  warning: '#F59E0B',
-  warningLight: '#FFFBEB',
-  error: '#EF4444',
-  errorLight: '#FEE2E2',
-  info: '#0EA5E9',
-  infoLight: '#E0F2FE',
+  // Tertiary - Brand accent (#8B5CF6)
+  tertiary: '#8B5CF6',
+  tertiaryLight: '#F5F3FF',
+  tertiaryDark: '#7C3AED',
+  surfaceContainer: '#F1F5F9',
+  surfaceContainerLow: '#F8FAFC',
+  surfaceContainerHigh: '#E2E8F0',
+  textTertiary: '#6366F1',
   
-  // Background - Subtle warmth, clean
-  background: '#FAFBFC',
+  // Status colors - Consistent, professional
+  success: '#10B981',  // Emerald green
+  successLight: '#ECFDF5',
+  warning: '#F59E0B',  // Amber
+  warningLight: '#FFFBEB',
+  error: '#EF4444',  // Red
+  errorLight: '#FEE2E2',
+  info: '#4573DF',  // Use brand blue for info
+  infoLight: '#E8EFFC',
+  
+  // Background - Clean, minimal
+  background: '#F8FAFC',
   backgroundSecondary: '#FFFFFF',
   surface: '#FFFFFF',
   card: '#FFFFFF',
@@ -127,21 +146,21 @@ export const lightColors: ThemeColors = {
   // Borders - Subtle, elegant
   border: '#E2E8F0',
   borderLight: '#F1F5F9',
-  borderFocused: '#0EA5E9',
+  borderFocused: '#4573DF',  // Brand color for focus
   
   // Semantic
   overlay: 'rgba(0, 0, 0, 0.4)',
   shadow: 'rgba(0, 0, 0, 0.05)',
   divider: '#E2E8F0',
-  highlight: '#FEF9E7',
+  highlight: '#E8EFFC',  // Brand light for highlights
   
-  // Gradients - Sky blue focused
-  gradientStart: '#0EA5E9',
-  gradientEnd: '#06B6D4',  // Cyan for depth
+  // Gradients - Brand blue focused
+  gradientStart: '#4573DF',
+  gradientEnd: '#4573DF',  // Lighter brand blue
   
   // Tab bar - Clean, minimal
   tabBarBackground: '#FFFFFF',
-  tabBarActive: '#0EA5E9',
+  tabBarActive: '#4573DF',  // Brand color
   tabBarInactive: '#94A3B8',
   
   // Input - Refined
@@ -154,7 +173,7 @@ export const lightColors: ThemeColors = {
   skeletonBase: '#F1F5F9',
   skeletonHighlight: '#F8FAFC',
   
-  // Badge - Accent color
+  // Badge - Brand accent
   badgeBackground: '#EF4444',
   badgeText: '#FFFFFF',
   
@@ -167,77 +186,87 @@ export const lightColors: ThemeColors = {
   black: '#000000',
 };
 
-// Dark theme colors - AMOLED-optimized with softer blues, eye-comfortable
-// Softer than pure black/white, better for extended reading and learning
+// Dark theme colors - Brand palette with AMOLED-optimized backgrounds
+// Using user's dark mode colors: #1d2127 and #272c34
+// Softer than pure black, better for extended reading
 export const darkColors: ThemeColors = {
-  // Primary - Softer sky blue for dark mode, not harsh
-  primary: '#38BDF8',  // Lighter, warmer sky blue for dark
-  primaryLight: '#082F49',  // Deep but soft blue
-  primaryDark: '#7DD3FC',
+  // Primary - Same brand blue for consistency across modes
+  primary: '#4573DF',  // Same brand blue in both modes for consistency
+  primaryLight: '#1A2540',  // Deep blue tinted dark
+  primaryDark: '#3660C9',  // Same darker variant for consistency
   secondary: '#6EE7B7',  // Softer green
-  secondaryLight: '#082F49',
+  secondaryLight: '#1A2F2A',
+  
+  // Tertiary - Brand accent
+  tertiary: '#A78BFA',
+  tertiaryLight: '#2D2545',
+  tertiaryDark: '#C4B5FD',
+  surfaceContainer: '#272C34',
+  surfaceContainerLow: '#1D2127',
+  surfaceContainerHigh: '#323945',
+  textTertiary: '#C4B5FD',
   
   // Status colors - Softened pastels for dark mode, eye-friendly
   success: '#6EE7B7',
-  successLight: '#064E3B',
+  successLight: '#1A2F2A',
   warning: '#FCD34D',
-  warningLight: '#451A03',
+  warningLight: '#2D2517',
   error: '#FB7185',  // Softer red for dark
-  errorLight: '#500724',
-  info: '#38BDF8',
-  infoLight: '#0C2D3E',
+  errorLight: '#2D1A1F',
+  info: '#4573DF',  // Same brand blue
+  infoLight: '#1A2540',
   
-  // Background - Deep but soft, not pure black (better for OLED eyes)
-  background: '#0B1118',  // Soft black instead of #09090B
-  backgroundSecondary: '#161B22',  // Softer dark
-  surface: '#161B22',
-  card: '#1C2128',  // Softer than #1F1F23
-  cardElevated: '#262C34',  // Softer than #27272A
+  // Background - Using brand dark colors #1d2127 and #272c34
+  background: '#1D2127',  // Primary dark background
+  backgroundSecondary: '#232930',  // Slightly lighter
+  surface: '#232930',
+  card: '#272C34',  // Card/elevated surface color
+  cardElevated: '#2E343D',  // Higher elevation
   
-  // Text - Optimized for dark mode readability, softer
-  text: '#F5F6F8',  // Slightly softer white
-  textSecondary: '#8B949E',  // Softer gray
-  textMuted: '#6E7681',  // Softer muted
-  textInverse: '#0B1118',
+  // Text - Optimized for dark mode readability
+  text: '#F1F5F9',  // Slightly softer white
+  textSecondary: '#94A3B8',  // Muted gray
+  textMuted: '#64748B',  // More muted
+  textInverse: '#1D2127',
   textOnPrimary: '#FFFFFF',
   
-  // Borders - Subtle separation, softer
-  border: '#262C34',
-  borderLight: '#1C2128',
-  borderFocused: '#38BDF8',
+  // Borders - Subtle separation
+  border: '#2E343D',
+  borderLight: '#272C34',
+  borderFocused: '#4573DF',  // Same brand blue
   
   // Semantic - Softer overlays
   overlay: 'rgba(0, 0, 0, 0.5)',
-  shadow: 'rgba(0, 0, 0, 0.25)',
-  divider: '#262C34',
-  highlight: '#3D2817',
+  shadow: 'rgba(0, 0, 0, 0.3)',
+  divider: '#2E343D',
+  highlight: '#1A2540',
   
-  // Gradients - Softer, sky-focused
-  gradientStart: '#38BDF8',
-  gradientEnd: '#22D3EE',  // Cyan
+  // Gradients - Same brand blue
+  gradientStart: '#4573DF',
+  gradientEnd: '#3660C9',
   
-  // Tab bar - Soft dark
-  tabBarBackground: '#161B22',
-  tabBarActive: '#38BDF8',
-  tabBarInactive: '#6E7681',
+  // Tab bar - Dark themed
+  tabBarBackground: '#232930',
+  tabBarActive: '#4573DF',  // Same brand blue
+  tabBarInactive: '#64748B',
   
-  // Input - Soft dark
-  inputBackground: '#262C34',
+  // Input - Dark themed
+  inputBackground: '#272C34',
   inputBorder: '#3D444D',
-  inputText: '#F5F6F8',
-  placeholder: '#6E7681',
+  inputText: '#F1F5F9',
+  placeholder: '#64748B',
   
   // Skeleton - Subtle animation
-  skeletonBase: '#262C34',
+  skeletonBase: '#272C34',
   skeletonHighlight: '#3D444D',
   
   // Badge - Softer red
   badgeBackground: '#FB7185',
-  badgeText: '#0B1118',
+  badgeText: '#1D2127',
   
-  // Header - Soft dark
-  headerBackground: '#161B22',
-  headerText: '#F5F6F8',
+  // Header - Dark themed
+  headerBackground: '#232930',
+  headerText: '#F1F5F9',
   
   // Base colors
   white: '#FFFFFF',
@@ -387,3 +416,4 @@ export const useTheme = (): ThemeContextType => {
 
 // Export context for advanced use cases
 export {ThemeContext};
+

@@ -183,7 +183,7 @@ export const ContributionSuccessAnimation: React.FC<ContributionSuccessProps> = 
       case 'auto_approved':
         return { bg: '#E8F5E9', icon: '#2E7D32', text: '#1B5E20' };
       case 'approved':
-        return { bg: '#E3F2FD', icon: '#1565C0', text: '#0D47A1' };
+        return { bg: '#E8EFFC', icon: '#4573DF', text: '#3660C9' };
       default:
         return { bg: '#FFF3E0', icon: '#E65100', text: '#BF360C' };
     }
@@ -335,7 +335,7 @@ export const QuickSuccessNotification: React.FC<{
 
   const typeStyles = {
     success: { bg: '#10B981', icon: 'checkmark-circle' },
-    info: { bg: '#3B82F6', icon: 'information-circle' },
+    info: { bg: '#4573DF', icon: 'information-circle' },
     warning: { bg: '#F59E0B', icon: 'warning' },
   };
 

@@ -118,7 +118,7 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
     switch (priority) {
       case 'urgent': return '#EF4444';
       case 'high': return '#F59E0B';
-      case 'medium': return '#3B82F6';
+      case 'medium': return '#4573DF';
       default: return colors.textSecondary;
     }
   };
@@ -129,7 +129,7 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
       case 'approved': return '#10B981';
       case 'rejected': return '#EF4444';
       case 'needs_review': return '#F59E0B';
-      default: return '#3B82F6';
+      default: return '#4573DF';
     }
   };
 
@@ -257,7 +257,7 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.statsContent}
           >
-            {renderStatBadge('Pending', stats.pending, '#3B82F6', statusFilter === 'pending')}
+            {renderStatBadge('Pending', stats.pending, '#4573DF', statusFilter === 'pending')}
             {renderStatBadge('Needs Review', stats.needs_review, '#F59E0B', statusFilter === 'needs_review')}
             {renderStatBadge('Approved', stats.approved, '#10B981', statusFilter === 'approved')}
             {renderStatBadge('Rejected', stats.rejected, '#EF4444', statusFilter === 'rejected')}

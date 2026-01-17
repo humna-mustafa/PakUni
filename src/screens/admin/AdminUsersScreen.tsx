@@ -31,7 +31,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -40,7 +40,7 @@ try {
 const ROLES: {value: UserRole; label: string; color: string}[] = [
   {value: 'user', label: 'User', color: '#6B7280'},
   {value: 'moderator', label: 'Moderator', color: '#059669'},
-  {value: 'content_editor', label: 'Content Editor', color: '#2563EB'},
+  {value: 'content_editor', label: 'Content Editor', color: '#4573DF'},
   {value: 'admin', label: 'Admin', color: '#DC2626'},
   {value: 'super_admin', label: 'Super Admin', color: '#9333EA'},
 ];
@@ -330,7 +330,7 @@ const AdminUsersScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#1A7AEB', '#0D5BC4']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -438,7 +438,7 @@ const AdminUsersScreen: React.FC = () => {
 
                   <View style={styles.actionButtons}>
                     <TouchableOpacity
-                      style={[styles.actionBtn, {backgroundColor: '#3B82F6'}]}
+                      style={[styles.actionBtn, {backgroundColor: '#4573DF'}]}
                       onPress={() => setShowRoleModal(true)}>
                       <Icon name="shield-outline" family="Ionicons" size={18} color="#FFFFFF" />
                       <Text style={styles.actionBtnText}>Change Role</Text>

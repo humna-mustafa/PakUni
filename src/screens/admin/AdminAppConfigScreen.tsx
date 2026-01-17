@@ -380,8 +380,8 @@ const AdminAppConfigScreen: React.FC<{ navigation: any }> = ({ navigation }) => 
   const getBackupTypeColor = (type: string) => {
     switch (type) {
       case 'full': return '#10B981';
-      case 'partial': return '#3B82F6';
-      case 'config_only': return '#8B5CF6';
+      case 'partial': return '#4573DF';
+      case 'config_only': return '#4573DF';
       default: return colors.border;
     }
   };
@@ -733,8 +733,8 @@ const AdminAppConfigScreen: React.FC<{ navigation: any }> = ({ navigation }) => 
               style={styles.backupTypeOption}
               onPress={() => handleCreateBackup('partial')}
             >
-              <View style={[styles.backupTypeIcon, { backgroundColor: '#3B82F6' + '20' }]}>
-                <Icon name="copy-outline" size={24} color="#3B82F6" />
+              <View style={[styles.backupTypeIcon, { backgroundColor: '#4573DF' + '20' }]}>
+                <Icon name="copy-outline" size={24} color="#4573DF" />
               </View>
               <View style={styles.backupTypeInfo}>
                 <Text style={styles.backupTypeName}>Partial Backup</Text>
@@ -747,8 +747,8 @@ const AdminAppConfigScreen: React.FC<{ navigation: any }> = ({ navigation }) => 
               style={styles.backupTypeOption}
               onPress={() => handleCreateBackup('config_only')}
             >
-              <View style={[styles.backupTypeIcon, { backgroundColor: '#8B5CF6' + '20' }]}>
-                <Icon name="settings-outline" size={24} color="#8B5CF6" />
+              <View style={[styles.backupTypeIcon, { backgroundColor: '#4573DF' + '20' }]}>
+                <Icon name="settings-outline" size={24} color="#4573DF" />
               </View>
               <View style={styles.backupTypeInfo}>
                 <Text style={styles.backupTypeName}>Config Only</Text>
@@ -1279,3 +1279,5 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
 });
 
 export default AdminAppConfigScreen;
+
+

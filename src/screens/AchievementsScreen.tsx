@@ -61,12 +61,12 @@ const {width} = Dimensions.get('window');
 
 // Type colors for visual distinction
 const TYPE_COLORS: Record<string, {primary: string; secondary: string}> = {
-  entry_test: {primary: '#3B82F6', secondary: '#1D4ED8'},
+  entry_test: {primary: '#4573DF', secondary: '#3660C9'},
   merit_list: {primary: '#FFD700', secondary: '#FFA500'},
   admission: {primary: '#10B981', secondary: '#047857'},
   scholarship: {primary: '#F59E0B', secondary: '#D97706'},
-  result: {primary: '#8B5CF6', secondary: '#7C3AED'},
-  custom: {primary: '#EC4899', secondary: '#DB2777'},
+  result: {primary: '#4573DF', secondary: '#3660C9'},
+  custom: {primary: '#4573DF', secondary: '#3660C9'},
 };
 
 // ============================================================================
@@ -971,3 +971,5 @@ const styles = StyleSheet.create({
 });
 
 export default AchievementsScreen;
+
+

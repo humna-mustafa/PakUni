@@ -42,7 +42,7 @@ export const ENTRY_TEST_BRAND_COLORS: Record<string, { primary: string; secondar
   'etea': { primary: '#006400', secondary: '#008000', gradient: ['#004D00', '#006400', '#008000'] }, // KPK Green
   'uat': { primary: '#004B87', secondary: '#0066B3', gradient: ['#003366', '#004B87', '#0066B3'] },  // Agriculture Blue
   'sat': { primary: '#003399', secondary: '#0055CC', gradient: ['#001144', '#003399', '#0055CC'] }, // Global Blue
-  'default': { primary: '#0EA5E9', secondary: '#38BDF8', gradient: ['#0369A1', '#0EA5E9', '#38BDF8'] },
+  'default': { primary: '#4573DF', secondary: '#4573DF', gradient: ['#3660C9', '#4573DF', '#4573DF'] },
 };
 
 export const getEntryTestBrandColors = (nameOrId: string): { primary: string; secondary: string; gradient: string[] } => {
@@ -805,3 +805,5 @@ export const getRegistrationOpenTests = (): EntryTestData[] => {
 };
 
 export default ENTRY_TESTS_DATA;
+
+

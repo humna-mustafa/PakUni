@@ -184,7 +184,7 @@ const AdminSystemHealthScreen: React.FC = () => {
 
   const renderHeader = () => (
     <LinearGradient
-      colors={isDark ? ['#1a1a2e', '#16213e'] : ['#00D4AA', '#00A388']}
+      colors={isDark ? ['#1D2127', '#272C34'] : ['#00D4AA', '#00A388']}
       style={styles.header}
     >
       <TouchableOpacity

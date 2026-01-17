@@ -288,7 +288,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       </View>
       
       {record.total_seats && (
-        <View style={[styles.seatsRow, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+        <View style={[styles.seatsRow, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
           <Icon name="people" size={14} color={colors.textSecondary} />
           <Text style={[styles.seatsText, { color: colors.textSecondary }]}>
             {record.filled_seats || 0} / {record.total_seats} seats filled
@@ -322,7 +322,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       >
         <View style={styles.cardHeader}>
           <View style={styles.cardTitleRow}>
-            <Icon name={deadlineInfo?.icon as any || 'calendar'} size={18} color={isPast ? '#6B7280' : '#3B82F6'} />
+            <Icon name={deadlineInfo?.icon as any || 'calendar'} size={18} color={isPast ? '#6B7280' : '#4573DF'} />
             <Text style={[styles.cardTitle, { color: colors.text }]} numberOfLines={1}>
               {deadlineInfo?.label || deadline.deadline_type}
             </Text>
@@ -338,7 +338,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
           {deadline.university_name}
         </Text>
         
-        <View style={[styles.dateRow, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+        <View style={[styles.dateRow, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
           <Icon name="calendar" size={16} color={isPast ? '#EF4444' : '#10B981'} />
           <Text style={[styles.dateText, { color: isPast ? '#EF4444' : colors.text }]}>
             {new Date(deadline.deadline_date).toLocaleDateString('en-US', {
@@ -397,7 +397,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       >
         <View style={styles.cardHeader}>
           <View style={styles.cardTitleRow}>
-            <Icon name="school" size={18} color={isPast ? '#6B7280' : '#8B5CF6'} />
+            <Icon name="school" size={18} color={isPast ? '#6B7280' : '#4573DF'} />
             <Text style={[styles.cardTitle, { color: colors.text }]} numberOfLines={1}>
               {test.test_name}
             </Text>
@@ -415,8 +415,8 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         </Text>
         
         <View style={styles.testDates}>
-          <View style={[styles.testDateItem, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
-            <Icon name="calendar" size={14} color={isPast ? '#EF4444' : '#3B82F6'} />
+          <View style={[styles.testDateItem, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
+            <Icon name="calendar" size={14} color={isPast ? '#EF4444' : '#4573DF'} />
             <View>
               <Text style={[styles.testDateLabel, { color: colors.textSecondary }]}>Test Date</Text>
               <Text style={[styles.testDateValue, { color: isPast ? '#EF4444' : colors.text }]}>
@@ -424,7 +424,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
               </Text>
             </View>
           </View>
-          <View style={[styles.testDateItem, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+          <View style={[styles.testDateItem, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="time" size={14} color={regClosed ? '#EF4444' : '#F59E0B'} />
             <View>
               <Text style={[styles.testDateLabel, { color: colors.textSecondary }]}>Registration</Text>
@@ -436,7 +436,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         </View>
         
         <View style={styles.testInfo}>
-          <View style={[styles.testInfoItem, { backgroundColor: '#DBEAFE' }]}>
+          <View style={[styles.testInfoItem, { backgroundColor: '#E8EFFC' }]}>
             <Text style={styles.testInfoText}>Fee: Rs. {test.fee.toLocaleString()}</Text>
           </View>
           {test.test_centers && test.test_centers.length > 0 && (
@@ -465,7 +465,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
     <>
       <Text style={[styles.inputLabel, { color: colors.text }]}>University Name *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.university_name}
         onChangeText={(text) => setEditingItem({ ...editingItem, university_name: text })}
         placeholder="e.g., NUST"
@@ -474,7 +474,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Program Name *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.program_name}
         onChangeText={(text) => setEditingItem({ ...editingItem, program_name: text })}
         placeholder="e.g., BS Computer Science"
@@ -485,7 +485,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Year</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.year?.toString()}
             onChangeText={(text) => setEditingItem({ ...editingItem, year: parseInt(text) || new Date().getFullYear() })}
             keyboardType="numeric"
@@ -494,7 +494,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Round</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.round?.toString()}
             onChangeText={(text) => setEditingItem({ ...editingItem, round: parseInt(text) || 1 })}
             keyboardType="numeric"
@@ -504,7 +504,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Closing Merit %</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.closing_merit?.toString()}
         onChangeText={(text) => setEditingItem({ ...editingItem, closing_merit: parseFloat(text) || 0 })}
         keyboardType="decimal-pad"
@@ -520,7 +520,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
               key={type.value}
               style={[
                 styles.typeChip,
-                { backgroundColor: editingItem?.merit_type === type.value ? colors.primary : isDark ? '#1F2937' : '#F3F4F6' }
+                { backgroundColor: editingItem?.merit_type === type.value ? colors.primary : isDark ? '#272C34' : '#F3F4F6' }
               ]}
               onPress={() => setEditingItem({ ...editingItem, merit_type: type.value })}
             >
@@ -539,7 +539,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Total Seats</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.total_seats?.toString()}
             onChangeText={(text) => setEditingItem({ ...editingItem, total_seats: parseInt(text) || 0 })}
             keyboardType="numeric"
@@ -548,7 +548,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Filled Seats</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.filled_seats?.toString()}
             onChangeText={(text) => setEditingItem({ ...editingItem, filled_seats: parseInt(text) || 0 })}
             keyboardType="numeric"
@@ -558,7 +558,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Source URL</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.source}
         onChangeText={(text) => setEditingItem({ ...editingItem, source: text })}
         placeholder="https://..."
@@ -571,7 +571,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
     <>
       <Text style={[styles.inputLabel, { color: colors.text }]}>University Name *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.university_name}
         onChangeText={(text) => setEditingItem({ ...editingItem, university_name: text })}
         placeholder="e.g., LUMS"
@@ -586,7 +586,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
               key={type.value}
               style={[
                 styles.typeChip,
-                { backgroundColor: editingItem?.deadline_type === type.value ? colors.primary : isDark ? '#1F2937' : '#F3F4F6' }
+                { backgroundColor: editingItem?.deadline_type === type.value ? colors.primary : isDark ? '#272C34' : '#F3F4F6' }
               ]}
               onPress={() => setEditingItem({ ...editingItem, deadline_type: type.value })}
             >
@@ -608,7 +608,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Deadline Date *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.deadline_date?.split('T')[0]}
         onChangeText={(text) => setEditingItem({ ...editingItem, deadline_date: text })}
         placeholder="YYYY-MM-DD"
@@ -617,7 +617,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Description</Text>
       <TextInput
-        style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.description}
         onChangeText={(text) => setEditingItem({ ...editingItem, description: text })}
         placeholder="Additional details..."
@@ -627,7 +627,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Source URL</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.source_url}
         onChangeText={(text) => setEditingItem({ ...editingItem, source_url: text })}
         placeholder="https://..."
@@ -640,7 +640,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
     <>
       <Text style={[styles.inputLabel, { color: colors.text }]}>Test Name *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.test_name}
         onChangeText={(text) => setEditingItem({ ...editingItem, test_name: text })}
         placeholder="e.g., ECAT, MDCAT, NET"
@@ -649,7 +649,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Conducting Body *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.conducting_body}
         onChangeText={(text) => setEditingItem({ ...editingItem, conducting_body: text })}
         placeholder="e.g., NUST, HEC, PMC"
@@ -660,7 +660,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Test Date *</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.test_date?.split('T')[0]}
             onChangeText={(text) => setEditingItem({ ...editingItem, test_date: text })}
             placeholder="YYYY-MM-DD"
@@ -670,7 +670,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.halfInput}>
           <Text style={[styles.inputLabel, { color: colors.text }]}>Reg. Deadline</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+            style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
             value={editingItem?.registration_deadline?.split('T')[0]}
             onChangeText={(text) => setEditingItem({ ...editingItem, registration_deadline: text })}
             placeholder="YYYY-MM-DD"
@@ -681,7 +681,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Fee (PKR)</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.fee?.toString()}
         onChangeText={(text) => setEditingItem({ ...editingItem, fee: parseInt(text) || 0 })}
         keyboardType="numeric"
@@ -691,7 +691,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Test Centers (comma separated)</Text>
       <TextInput
-        style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={Array.isArray(editingItem?.test_centers) ? editingItem.test_centers.join(', ') : editingItem?.test_centers}
         onChangeText={(text) => setEditingItem({ ...editingItem, test_centers: text })}
         placeholder="Islamabad, Lahore, Karachi..."
@@ -701,7 +701,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Eligibility</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.eligibility}
         onChangeText={(text) => setEditingItem({ ...editingItem, eligibility: text })}
         placeholder="FSc Pre-Engineering, etc."
@@ -710,7 +710,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       
       <Text style={[styles.inputLabel, { color: colors.text }]}>Website</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+        style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
         value={editingItem?.website}
         onChangeText={(text) => setEditingItem({ ...editingItem, website: text })}
         placeholder="https://..."
@@ -745,7 +745,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
           
           <View style={styles.modalActions}>
             <TouchableOpacity
-              style={[styles.modalBtn, { backgroundColor: isDark ? '#374151' : '#E5E7EB' }]}
+              style={[styles.modalBtn, { backgroundColor: isDark ? '#272C34' : '#E5E7EB' }]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={[styles.modalBtnText, { color: colors.text }]}>Cancel</Text>
@@ -1032,7 +1032,7 @@ const styles = StyleSheet.create({
   testInfoText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#1E40AF',
+    color: '#4573DF',
   },
   cardFooter: {
     flexDirection: 'row',
@@ -1178,3 +1178,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminMeritDeadlinesScreen;
+
+

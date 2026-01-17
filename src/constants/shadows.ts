@@ -153,7 +153,7 @@ export const ANIMATION = {
 /**
  * Opacity values for consistent transparency
  */
-export const OPACITY = {
+export const SHADOW_OPACITY = {
   disabled: 0.5,
   muted: 0.6,
   subtle: 0.8,

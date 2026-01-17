@@ -52,7 +52,7 @@ const GradeButton: React.FC<GradeButtonProps> = ({
   grade,
   selected,
   onPress,
-  color = '#6366F1',
+  color = '#4573DF',
 }) => (
   <TouchableOpacity
     onPress={onPress}
@@ -125,7 +125,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     'cgpa-to-percent': {
       title: 'CGPA → Percentage',
       icon: 'calculator-outline',
-      colors: ['#6366F1', '#8B5CF6'],
+      colors: ['#4573DF', '#3660C9'],
     },
     'percent-to-cgpa': {
       title: 'Percentage → CGPA',
@@ -140,7 +140,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     'a-level': {
       title: 'A-Level → Inter',
       icon: 'ribbon-outline',
-      colors: ['#EC4899', '#DB2777'],
+      colors: ['#4573DF', '#3660C9'],
     },
   };
 
@@ -288,7 +288,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
           <Icon
             name={modeConfig[m].icon}
             size={18}
-            color={mode === m ? '#6366F1' : '#94A3B8'}
+            color={mode === m ? '#4573DF' : '#94A3B8'}
           />
           <Text style={[styles.tabText, mode === m && styles.tabTextActive]}>
             {modeConfig[m].title}
@@ -472,7 +472,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
             grade={grade}
             selected={selectedAGrades.includes(grade)}
             onPress={() => toggleGrade(grade, false)}
-            color="#EC4899"
+            color="#4573DF"
           />
         ))}
       </View>
@@ -628,7 +628,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
         <Icon
           name={showReference ? 'chevron-up' : 'chevron-down'}
           size={20}
-          color="#6366F1"
+          color="#4573DF"
         />
         <Text style={styles.referenceToggleText}>
           {showReference ? 'Hide' : 'Show'} Reference Table
@@ -675,7 +675,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Icon name="swap-horizontal-outline" size={24} color="#6366F1" />
+        <Icon name="swap-horizontal-outline" size={24} color="#4573DF" />
         <Text style={styles.headerTitle}>Grade Converter</Text>
       </View>
 
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   tabTextActive: {
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
   },
   inputSection: {
@@ -863,7 +863,7 @@ const styles = StyleSheet.create({
     marginRight: SPACING.sm,
   },
   scaleButtonActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#4573DF',
   },
   scaleButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1046,7 +1046,7 @@ const styles = StyleSheet.create({
   },
   referenceToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -1059,7 +1059,7 @@ const styles = StyleSheet.create({
   },
   referenceHeader: {
     flexDirection: 'row',
-    backgroundColor: '#6366F1',
+    backgroundColor: '#4573DF',
     paddingVertical: SPACING.sm,
   },
   referenceHeaderText: {
@@ -1083,7 +1083,7 @@ const styles = StyleSheet.create({
   },
   referenceCellGrade: {
     fontWeight: '600',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   // Compact styles
   compactContainer: {
@@ -1106,7 +1106,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#4573DF',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: SPACING.sm,
@@ -1121,3 +1121,5 @@ const styles = StyleSheet.create({
 });
 
 export default GradeConverterCard;
+
+

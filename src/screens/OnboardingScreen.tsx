@@ -53,7 +53,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Discover Universities',
     subtitle: '200+ Universities',
     description: 'Explore all HEC-recognized universities across Pakistan. Filter by location, ranking, and programs to find your perfect match.',
-    gradient: ['#6366F1', '#8B5CF6'],
+    gradient: ['#4573DF', '#4573DF'],
     bgPattern: 'academic',
   },
   {
@@ -93,7 +93,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Powerful Tools',
     subtitle: 'Calculators & Simulators',
     description: 'Grade converters, target calculators, what-if simulators - all the tools you need to plan your academic journey.',
-    gradient: ['#8B5CF6', '#7C3AED'],
+    gradient: ['#4573DF', '#3660C9'],
     bgPattern: 'tools',
   },
   {
@@ -123,7 +123,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'AI Recommendations',
     subtitle: 'Personalized Matches',
     description: 'Get smart university recommendations based on your marks, interests, and career goals. Your future starts here!',
-    gradient: ['#EC4899', '#DB2777'],
+    gradient: ['#4573DF', '#3660C9'],
     bgPattern: 'ai',
   },
 ];
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 12},
         shadowOpacity: 0.4,
         shadowRadius: 20,
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
     gap: 12,
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 8},
         shadowOpacity: 0.4,
         shadowRadius: 16,
@@ -619,3 +619,5 @@ const styles = StyleSheet.create({
 });
 
 export default OnboardingScreen;
+
+

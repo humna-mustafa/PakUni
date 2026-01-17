@@ -47,7 +47,7 @@ export const Shimmer: React.FC<ShimmerProps> = ({
     outputRange: [-SCREEN_WIDTH, SCREEN_WIDTH],
   });
 
-  const baseColor = isDark ? '#1E293B' : '#E2E8F0';
+  const baseColor = isDark ? '#272C34' : '#E2E8F0';
   const highlightColor = isDark ? '#334155' : '#F1F5F9';
 
   return (
@@ -287,3 +287,4 @@ export default {
   ShimmerGridItem,
   ShimmerFullPage,
 };
+

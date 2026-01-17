@@ -67,7 +67,7 @@ const UNIVERSITY_FORMULAS: UniversityFormula[] = [
     testName: 'NET',
     minAggregate: 60,
     icon: 'school-outline',
-    color: '#1E40AF',
+    color: '#4573DF',
   },
   {
     id: 'fast',
@@ -103,7 +103,7 @@ const UNIVERSITY_FORMULAS: UniversityFormula[] = [
     testName: 'SAT/LCAT',
     minAggregate: 70,
     icon: 'star-outline',
-    color: '#7C3AED',
+    color: '#3660C9',
   },
   {
     id: 'comsats',
@@ -463,7 +463,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
           <Icon
             name={showDetails ? 'chevron-up' : 'chevron-down'}
             size={20}
-            color="#6366F1"
+            color="#4573DF"
           />
           <Text style={styles.detailsToggleText}>
             {showDetails ? 'Hide' : 'Show'} Calculation Breakdown
@@ -503,14 +503,14 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
 
             <View style={styles.breakdownItem}>
               <View style={styles.breakdownLabelRow}>
-                <Icon name="create-outline" size={16} color="#6366F1" />
-                <Text style={[styles.breakdownLabel, {color: '#6366F1'}]}>
+                <Icon name="create-outline" size={16} color="#4573DF" />
+                <Text style={[styles.breakdownLabel, {color: '#4573DF'}]}>
                   Required Test Contribution
                 </Text>
               </View>
               <Text style={styles.breakdownValue}>
                 {Math.ceil(result.requiredTestScore)}% × {selectedUniversity?.testWeight}% ={' '}
-                <Text style={[styles.breakdownValueBold, {color: '#6366F1'}]}>
+                <Text style={[styles.breakdownValueBold, {color: '#4573DF'}]}>
                   {result.breakdown.testContribution.toFixed(2)}
                 </Text>
               </Text>
@@ -542,7 +542,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#6366F1', '#8B5CF6']}
+          colors={['#4573DF', '#3660C9']}
           style={styles.headerIcon}>
           <Icon name="trophy-outline" size={24} color="#FFF" />
         </LinearGradient>
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
   },
   detailsToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -816,7 +816,7 @@ const styles = StyleSheet.create({
   totalValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: '800',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   formulaBox: {
     backgroundColor: '#EEF2FF',
@@ -827,7 +827,7 @@ const styles = StyleSheet.create({
   formulaTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '600',
-    color: '#6366F1',
+    color: '#4573DF',
     marginBottom: 4,
   },
   formulaText: {
@@ -838,3 +838,5 @@ const styles = StyleSheet.create({
 });
 
 export default TargetCalculator;
+
+

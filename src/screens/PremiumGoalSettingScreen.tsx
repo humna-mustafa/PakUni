@@ -31,7 +31,7 @@ const GOAL_TEMPLATES = [
     id: 'university',
     title: 'Get into Dream University',
     iconName: 'school-outline',
-    color: '#3498db',
+    color: '#4573DF',
     milestones: [
       'Research university requirements',
       'Achieve required marks in FSc',

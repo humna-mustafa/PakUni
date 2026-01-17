@@ -106,8 +106,10 @@ function AppContent(): React.JSX.Element {
           logger.error('Error processing OAuth callback', error as Error, 'DeepLink');
           await errorReportingService.reportError(
             error instanceof Error ? error : new Error(String(error)),
-            'OAuthCallback',
-            'high'
+            {
+              userAction: 'OAuthCallback',
+              additionalContext: { severity: 'high' }
+            }
           );
         }
       }
@@ -128,7 +130,6 @@ function AppContent(): React.JSX.Element {
       analytics.endSession();
       analytics.cleanup();
       offlineSyncService.cleanup();
-      errorReportingService.stopBatchUpload();
     };
   }, []);
 

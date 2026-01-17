@@ -249,7 +249,7 @@ export const RefreshIndicator: React.FC<{
         },
       ]}>
       <LinearGradient
-        colors={isDark ? ['#3B97FF', '#1A7AEB'] : ['#1A7AEB', '#0F62CC']}
+        colors={isDark ? ['#4573DF', '#4573DF'] : ['#4573DF', '#3660C9']}
         style={styles.indicator}>
         <Animated.View
           style={[
@@ -460,3 +460,4 @@ export default {
   PremiumRefreshControl,
   LoadingFooter,
 };
+

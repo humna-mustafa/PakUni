@@ -41,9 +41,9 @@ const NotificationItem = memo<NotificationItemProps>(({
     switch (type) {
       case 'scholarship': return {name: 'ribbon-outline', color: '#F59E0B'};
       case 'admission': return {name: 'school-outline', color: '#10B981'};
-      case 'test': return {name: 'document-text-outline', color: '#3B82F6'};
-      case 'tip': return {name: 'bulb-outline', color: '#8B5CF6'};
-      case 'update': return {name: 'sparkles-outline', color: '#EC4899'};
+      case 'test': return {name: 'document-text-outline', color: '#4573DF'};
+      case 'tip': return {name: 'bulb-outline', color: '#4573DF'};
+      case 'update': return {name: 'sparkles-outline', color: '#4573DF'};
       default: return {name: 'notifications-outline', color: colors.primary};
     }
   };
@@ -391,3 +391,5 @@ const styles = StyleSheet.create({
 });
 
 export default NotificationsScreen;
+
+

@@ -81,9 +81,9 @@ const TOAST_PRESETS: Record<ToastType, {
   },
   info: {
     iconName: 'information-circle',
-    bgColor: '#3B82F6',
+    bgColor: '#4573DF',
     textColor: '#FFFFFF',
-    accentColor: '#60A5FA',
+    accentColor: '#4573DF',
   },
   default: {
     iconName: 'bulb',
@@ -583,3 +583,4 @@ export default {
   useToast,
   NotificationBanner,
 };
+

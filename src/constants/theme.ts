@@ -1,40 +1,48 @@
 import { Platform } from 'react-native';
 
 // Theme constants for consistent styling
+// Brand Color: #4573DF - Professional blue
 export const COLORS = {
-  primary: '#1E88E5',
-  primaryLight: '#E3F2FD',
-  primaryDark: '#1565C0',
-  secondary: '#00897B',
-  success: '#43A047',
-  warning: '#FB8C00',
-  error: '#E53935',
-  info: '#0288D1',
+  primary: '#4573DF',  // Brand blue
+  primaryLight: '#E8EFFC',
+  primaryDark: '#3660C9',
+  secondary: '#10B981',
+  success: '#10B981',
+  warning: '#F59E0B',
+  error: '#EF4444',
+  info: '#4573DF',  // Use brand blue for info
   
   // Neutral colors
   white: '#FFFFFF',
   black: '#000000',
-  gray100: '#F8F9FA',
-  gray200: '#E9ECEF',
-  gray300: '#DEE2E6',
-  gray400: '#CED4DA',
-  gray500: '#ADB5BD',
-  gray600: '#6C757D',
-  gray700: '#495057',
-  gray800: '#343A40',
-  gray900: '#212529',
+  gray100: '#F8FAFC',
+  gray200: '#E2E8F0',
+  gray300: '#CBD5E1',
+  gray400: '#94A3B8',
+  gray500: '#64748B',
+  gray600: '#475569',
+  gray700: '#334155',
+  gray800: '#1E293B',
+  gray900: '#0F172A',
   
   // Background colors
-  background: '#F5F7FA',
+  background: '#F8FAFC',
   backgroundSecondary: '#FFFFFF',
   
   // Text colors
-  text: '#212529',
-  textSecondary: '#6C757D',
+  text: '#0F172A',
+  textSecondary: '#475569',
   textLight: '#FFFFFF',
   
   // Border
-  border: '#E9ECEF',
+  border: '#E2E8F0',
+  
+  // Dark mode specific
+  darkBackground: '#1D2127',
+  darkBackgroundSecondary: '#232930',
+  darkCard: '#272C34',
+  darkCardElevated: '#2E343D',
+  darkBorder: '#2E343D',
 };
 
 /**

@@ -65,11 +65,11 @@ const LOGO_SIZES: Record<LogoSize, {
 
 // Brand Colors - Matching App Theme
 const BRAND_COLORS = {
-  primary: '#0EA5E9',       // Premium Sky Blue (app primary)
-  primaryDark: '#0284C7',   // Darker sky blue
-  primaryLight: '#38BDF8',  // Lighter sky blue
+  primary: '#4573DF',       // PakUni Brand Blue
+  primaryDark: '#3660C9',   // Darker brand blue
+  primaryLight: '#4573DF',  // Lighter brand blue
   secondary: '#10B981',     // Emerald Green (app secondary)
-  accent: '#06B6D4',        // Cyan accent
+  accent: '#4573DF',        // Brand accent
   gold: '#F59E0B',          // Warm academic gold
   goldLight: '#FBBF24',     // Light gold
   goldDark: '#B45309',      // Dark gold
@@ -79,12 +79,12 @@ const BRAND_COLORS = {
 
 // Premium gradients - Matching App Theme
 const GRADIENT_PRESETS = {
-  primary: ['#38BDF8', '#0EA5E9'],
+  primary: ['#4573DF', '#4573DF'],
   emerald: ['#10B981', '#059669'],
   golden: ['#FBBF24', '#F59E0B'],
-  royal: ['#0EA5E9', '#0284C7', '#0369A1'],
+  royal: ['#4573DF', '#3660C9', '#2A4FA8'],
   pakistan: ['#10B981', '#059669'],
-  premium: ['#38BDF8', '#0EA5E9', '#06B6D4'],
+  premium: ['#4573DF', '#4573DF', '#3660C9'],
 };
 
 // ============================================================================
@@ -786,8 +786,8 @@ export const LogoBadge: React.FC<LogoBadgeProps> = memo(({size = 'md', showGlow 
               height: badgeSize + 16,
               borderRadius: (badgeSize + 16) / 2,
               backgroundColor: isDark 
-                ? 'rgba(30, 136, 229, 0.2)' 
-                : 'rgba(30, 136, 229, 0.15)',
+                ? 'rgba(69, 115, 223, 0.2)' 
+                : 'rgba(69, 115, 223, 0.15)',
             },
           ]}
         />
@@ -894,3 +894,4 @@ export {
   GRADIENT_PRESETS,
   LOGO_SIZES,
 };
+

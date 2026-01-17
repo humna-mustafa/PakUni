@@ -152,7 +152,7 @@ const CareerCard = ({
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'Technology':
-        return '#3498db';
+        return '#4573DF';
       case 'Healthcare':
         return '#e74c3c';
       case 'Business':
@@ -341,7 +341,7 @@ const PremiumCareerGuidanceScreen = () => {
           },
         ]}>
         <LinearGradient
-          colors={isDark ? ['#0F172A', '#134E4A', '#10B981'] : ['#10B981', '#059669', '#047857']}
+          colors={isDark ? ['#1D2127', '#134E4A', '#10B981'] : ['#10B981', '#059669', '#047857']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.header}>
@@ -459,7 +459,7 @@ const PremiumCareerGuidanceScreen = () => {
                 <LinearGradient
                   colors={
                     getCareerCategory(selectedCareer) === 'Technology'
-                      ? ['#3498db', '#2980b9']
+                      ? ['#4573DF', '#3660C9']
                       : getCareerCategory(selectedCareer) === 'Healthcare'
                       ? ['#e74c3c', '#c0392b']
                       : getCareerCategory(selectedCareer) === 'Business'

@@ -32,18 +32,18 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
 }
 
 const ANNOUNCEMENT_TYPES: {value: AnnouncementType; label: string; color: string; icon: string}[] = [
-  {value: 'info', label: 'Info', color: '#3B82F6', icon: 'information-circle'},
+  {value: 'info', label: 'Info', color: '#4573DF', icon: 'information-circle'},
   {value: 'warning', label: 'Warning', color: '#F59E0B', icon: 'warning'},
   {value: 'alert', label: 'Alert', color: '#EF4444', icon: 'alert-circle'},
   {value: 'update', label: 'Update', color: '#10B981', icon: 'refresh-circle'},
-  {value: 'promotion', label: 'Promo', color: '#8B5CF6', icon: 'gift'},
+  {value: 'promotion', label: 'Promo', color: '#4573DF', icon: 'gift'},
 ];
 
 const AdminAnnouncementsScreen: React.FC = () => {
@@ -257,7 +257,7 @@ const AdminAnnouncementsScreen: React.FC = () => {
           <TouchableOpacity
             style={[styles.actionBtn, {backgroundColor: colors.background}]}
             onPress={() => handleEdit(item)}>
-            <Icon name="create-outline" family="Ionicons" size={16} color="#3B82F6" />
+            <Icon name="create-outline" family="Ionicons" size={16} color="#4573DF" />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionBtn, {backgroundColor: colors.background}]}
@@ -276,7 +276,7 @@ const AdminAnnouncementsScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#8B5CF6', '#7C3AED']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#4573DF']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -618,7 +618,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   createBtn: {
-    backgroundColor: '#8B5CF6',
+    backgroundColor: '#4573DF',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
@@ -716,7 +716,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: '#4573DF',
     alignItems: 'center',
   },
   saveBtnText: {
@@ -727,3 +727,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminAnnouncementsScreen;
+
+

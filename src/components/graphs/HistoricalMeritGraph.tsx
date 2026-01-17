@@ -58,12 +58,12 @@ const MERIT_HISTORY_DATA: UniversityMeritHistory[] = [
     id: 'nust',
     name: 'NUST',
     shortName: 'NUST',
-    color: '#1E40AF',
+    color: '#4573DF',
     programs: [
       {
         program: 'Computer Science',
         shortName: 'CS',
-        color: '#6366F1',
+        color: '#4573DF',
         data: [
           {year: 2019, merit: 82.5, seats: 200},
           {year: 2020, merit: 84.2, seats: 200},
@@ -99,7 +99,7 @@ const MERIT_HISTORY_DATA: UniversityMeritHistory[] = [
       {
         program: 'Civil Engineering',
         shortName: 'Civil',
-        color: '#EC4899',
+        color: '#4573DF',
         data: [
           {year: 2019, merit: 68.5, seats: 120},
           {year: 2020, merit: 69.8, seats: 120},
@@ -143,7 +143,7 @@ const MERIT_HISTORY_DATA: UniversityMeritHistory[] = [
       {
         program: 'Data Science',
         shortName: 'DS',
-        color: '#8B5CF6',
+        color: '#4573DF',
         data: [
           {year: 2020, merit: 68.0, seats: 100},
           {year: 2021, merit: 70.5, seats: 120},
@@ -206,7 +206,7 @@ const MERIT_HISTORY_DATA: UniversityMeritHistory[] = [
       {
         program: 'Software Engineering',
         shortName: 'SE',
-        color: '#0EA5E9',
+        color: '#4573DF',
         data: [
           {year: 2019, merit: 62.0, seats: 200},
           {year: 2020, merit: 64.0, seats: 200},
@@ -508,7 +508,7 @@ export const HistoricalMeritGraph: React.FC<HistoricalMeritGraphProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#EC4899', '#F472B6']}
+          colors={['#4573DF', '#F472B6']}
           style={styles.headerIcon}>
           <Icon name="stats-chart-outline" size={24} color="#FFF" />
         </LinearGradient>
@@ -836,7 +836,7 @@ const styles = StyleSheet.create({
   detailValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '800',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   legend: {
     flexDirection: 'row',
@@ -889,3 +889,5 @@ const styles = StyleSheet.create({
 });
 
 export default HistoricalMeritGraph;
+
+

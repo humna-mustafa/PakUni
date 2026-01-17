@@ -65,6 +65,7 @@ export const TYPOGRAPHY = {
     xs: 11,
     sm: 13,
     md: 15,
+    base: 15,
     lg: 17,
     xl: 20,
     '2xl': 24,
@@ -425,7 +426,7 @@ export const GLASS = {
     borderColor: 'rgba(255, 255, 255, 0.18)',
   },
   dark: {
-    backgroundColor: 'rgba(30, 41, 59, 0.78)',
+    backgroundColor: 'rgba(39, 44, 52, 0.78)',
     backdropBlur: 20,
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
@@ -442,7 +443,7 @@ export const GLASS = {
       borderWidth: 1.5,
     },
     dark: {
-      backgroundColor: 'rgba(15, 23, 42, 0.65)',
+      backgroundColor: 'rgba(29, 33, 39, 0.65)',
       borderColor: 'rgba(255, 255, 255, 0.1)',
       borderWidth: 1,
     },
@@ -455,7 +456,7 @@ export const GLASS = {
       borderWidth: 1,
     },
     dark: {
-      backgroundColor: 'rgba(30, 41, 59, 0.88)',
+      backgroundColor: 'rgba(39, 44, 52, 0.88)',
       borderColor: 'rgba(26, 122, 235, 0.2)',
       borderWidth: 1,
     },
@@ -562,13 +563,13 @@ export const GRADIENTS = {
     end: {x: 1, y: 1},
   },
   auroraDark: {
-    colors: ['#1a1a2e', '#16213e', '#0f3460'],
+    colors: ['#1D2127', '#272C34', '#272C34'],
     start: {x: 0, y: 0},
     end: {x: 1, y: 1},
   },
   // Glassmorphism backgrounds
   glassDark: {
-    colors: ['rgba(30, 41, 59, 0.9)', 'rgba(15, 23, 42, 0.85)'],
+    colors: ['rgba(39, 44, 52, 0.9)', 'rgba(29, 33, 39, 0.85)'],
     start: {x: 0, y: 0},
     end: {x: 0, y: 1},
   },
@@ -793,3 +794,5 @@ export default {
   A11Y,
   PREMIUM_DESIGN,
 };
+
+

@@ -31,7 +31,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -39,16 +39,16 @@ try {
 
 const CATEGORY_CONFIG: Record<FeedbackCategory, {label: string; icon: string; color: string}> = {
   bug: {label: 'Bug Report', icon: 'bug-outline', color: '#EF4444'},
-  feature: {label: 'Feature Request', icon: 'bulb-outline', color: '#8B5CF6'},
-  improvement: {label: 'Improvement', icon: 'trending-up-outline', color: '#3B82F6'},
+  feature: {label: 'Feature Request', icon: 'bulb-outline', color: '#4573DF'},
+  improvement: {label: 'Improvement', icon: 'trending-up-outline', color: '#4573DF'},
   content: {label: 'Content/Resource', icon: 'document-attach-outline', color: '#10B981'},
   other: {label: 'Other', icon: 'chatbubble-outline', color: '#6B7280'},
 };
 
 const STATUS_CONFIG: Record<FeedbackStatus, {label: string; color: string}> = {
-  new: {label: 'New', color: '#3B82F6'},
+  new: {label: 'New', color: '#4573DF'},
   in_review: {label: 'In Review', color: '#F59E0B'},
-  planned: {label: 'Planned', color: '#8B5CF6'},
+  planned: {label: 'Planned', color: '#4573DF'},
   in_progress: {label: 'In Progress', color: '#10B981'},
   completed: {label: 'Completed', color: '#059669'},
   declined: {label: 'Declined', color: '#6B7280'},
@@ -997,3 +997,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminFeedbackScreen;
+
+

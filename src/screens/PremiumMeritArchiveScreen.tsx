@@ -245,8 +245,8 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
                         backgroundColor: isLatest
                           ? colors.primary
                           : isDark
-                          ? 'rgba(99, 102, 241, 0.5)'
-                          : 'rgba(99, 102, 241, 0.3)',
+                          ? 'rgba(69, 115, 223, 0.5)'
+                          : 'rgba(69, 115, 223, 0.3)',
                       },
                     ]}>
                     {isLatest && (
@@ -1156,3 +1156,4 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumMeritArchiveScreen;
+

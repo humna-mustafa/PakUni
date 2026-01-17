@@ -700,10 +700,10 @@ export const FAB: React.FC<FABProps> = memo(({
         style={[
           styles.fab,
           {
-            width: isExtended ? undefined : fabConfig.size,
-            height: isExtended ? fabConfig.height : fabConfig.size,
-            minWidth: isExtended ? fabConfig.size : undefined,
-            paddingHorizontal: isExtended ? fabConfig.paddingHorizontal : 0,
+            width: isExtended ? undefined : (fabConfig as any).size,
+            height: isExtended ? (fabConfig as any).height : (fabConfig as any).size,
+            minWidth: isExtended ? (fabConfig as any).size : undefined,
+            paddingHorizontal: isExtended ? (fabConfig as any).paddingHorizontal : 0,
             borderRadius: fabConfig.borderRadius,
             backgroundColor,
             ...(lowered ? SHADOWS.soft.sm : SHADOWS.soft.lg),

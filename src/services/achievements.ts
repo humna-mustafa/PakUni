@@ -69,7 +69,7 @@ export const ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
     title: 'Entry Test Completed',
     icon: '📝',
     placeholder: 'I completed my entry test!',
-    gradientColors: ['#3B82F6', '#1D4ED8'],
+    gradientColors: ['#4573DF', '#1D4ED8'],
     shareTemplate: "I completed {testName}! 📝 Score: {score} 🎯\n\n#PakUni",
     fields: [
       {key: 'testName', label: 'Test Name', placeholder: 'e.g., ECAT, MDCAT, NET, NTS', required: true},
@@ -122,7 +122,7 @@ export const ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
     title: 'Got My Result!',
     icon: '📊',
     placeholder: 'I got my result!',
-    gradientColors: ['#8B5CF6', '#7C3AED'],
+    gradientColors: ['#4573DF', '#4573DF'],
     shareTemplate: "Got my {testName} result! 📊\nScore: {score} | {percentage}\n\n#PakUni #Result",
     fields: [
       {key: 'testName', label: 'Exam Name', placeholder: 'e.g., Matric, Inter, ECAT', required: true},
@@ -136,7 +136,7 @@ export const ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
     title: 'Custom Achievement',
     icon: '⭐',
     placeholder: 'Add your own achievement!',
-    gradientColors: ['#EC4899', '#DB2777'],
+    gradientColors: ['#4573DF', '#3660C9'],
     shareTemplate: "{title} ⭐\n{description}\n\n#PakUni #Achievement",
     fields: [
       {key: 'title', label: 'Achievement Title', placeholder: 'What did you achieve?', required: true},
@@ -470,3 +470,5 @@ export default {
   getBadgesByRarity,
   getProgress,
 };
+
+

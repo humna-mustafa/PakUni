@@ -92,24 +92,25 @@ export const WCAG_CONFIG = {
  * - Outline: Dividers, decorative elements
  * - Error/Success/Warning: Status communication
  * 
- * Tonal Palette: Generated from primary seed color (#0EA5E9)
+ * Brand Primary: #4573DF - Professional blue from megicode.com
+ * Tonal Palette: Generated from primary seed color (#4573DF)
  */
 export const CLEAN_COLORS = {
-  // Brand Primary - Tonal palette from Sky Blue seed
-  // Generated following Material 3 HCT color space
+  // Brand Primary - Tonal palette from Brand Blue seed (#4573DF)
+  // Professional, trustworthy, tech-forward
   primary: {
     0: '#000000',      // Black
-    10: '#001D32',     // Darkest
-    20: '#003351',     // Dark
-    30: '#004B73',     // Medium dark
-    40: '#006496',     // Primary dark variant
-    50: '#0EA5E9',     // Primary action color (Sky Blue)
-    60: '#4FBCF4',     // Primary hover
-    70: '#82D0F9',     // Primary light
-    80: '#B5E3FC',     // Surface variant
-    90: '#D9F2FF',     // Container background
-    95: '#ECF8FF',     // Container light
-    99: '#FAFCFF',     // Nearly white
+    10: '#001A40',     // Darkest
+    20: '#00306E',     // Dark
+    30: '#1A4A8F',     // Medium dark
+    40: '#3660C9',     // Primary dark variant
+    50: '#4573DF',     // Primary action color (Brand Blue)
+    60: '#4573DF',     // Primary hover
+    70: '#5A8AE6',     // Primary light
+    80: '#B5C9FA',     // Surface variant
+    90: '#DCE6FD',     // Container background
+    95: '#EBF1FE',     // Container light
+    99: '#F8FAFF',     // Nearly white
     100: '#FFFFFF',    // Pure white
   },
 
@@ -216,49 +217,50 @@ export const CLEAN_COLORS = {
       text: '#7F1D1D',
       onContainer: '#450A0A',
     },
-    // Info - Verified WCAG AAA contrast
+    // Info - Verified WCAG AAA contrast - using brand blue
     info: {
-      light: '#DBEAFE',
-      main: '#2563EB',        // 7.5:1 contrast
-      dark: '#1D4ED8',
-      text: '#1E3A8A',
-      onContainer: '#172554',
+      light: '#E8EFFC',
+      main: '#4573DF',        // Brand blue
+      dark: '#3660C9',
+      text: '#1A4A8F',
+      onContainer: '#001A40',
     },
   },
 
-  // Surface tints - Material 3 elevation overlays
+  // Surface tints - Material 3 elevation overlays (Brand blue based)
   surfaceTint: {
     level0: 'transparent',
-    level1: 'rgba(14, 165, 233, 0.05)', // Primary @ 5%
-    level2: 'rgba(14, 165, 233, 0.08)',
-    level3: 'rgba(14, 165, 233, 0.11)',
-    level4: 'rgba(14, 165, 233, 0.12)',
-    level5: 'rgba(14, 165, 233, 0.14)',
+    level1: 'rgba(69, 115, 223, 0.05)', // Brand Primary @ 5%
+    level2: 'rgba(69, 115, 223, 0.08)',
+    level3: 'rgba(69, 115, 223, 0.11)',
+    level4: 'rgba(69, 115, 223, 0.12)',
+    level5: 'rgba(69, 115, 223, 0.14)',
   },
 
   // Scrim/overlay colors
   scrim: 'rgba(0, 0, 0, 0.32)',
-  inverseSurface: '#1E293B',
+  inverseSurface: '#1D2127',  // Brand dark background
   inverseOnSurface: '#F1F5F9',
-  inversePrimary: '#82D0F9',
+  inversePrimary: '#5A8AE6',  // Light brand blue
 };
 
-// Dark mode - Material 3 dark theme with proper tonal system
+// Dark mode - Material 3 dark theme with brand colors
+// Using #1D2127 and #272C34 as dark mode backgrounds
 export const CLEAN_COLORS_DARK = {
   primary: {
     0: '#FFFFFF',
-    10: '#D9F2FF',
-    20: '#B5E3FC',
-    30: '#82D0F9',
-    40: '#4FBCF4',
-    50: '#38BDF8',     // Primary for dark mode
-    60: '#0EA5E9',
-    70: '#0284C7',
-    80: '#0369A1',
-    90: '#075985',
-    95: '#0C4A6E',
-    99: '#082F49',
-    100: '#001D32',
+    10: '#DCE6FD',
+    20: '#B5C9FA',
+    30: '#5A8AE6',
+    40: '#4573DF',
+    50: '#4573DF',     // Primary for dark mode (lighter brand blue)
+    60: '#4573DF',
+    70: '#3660C9',
+    80: '#2A4FA8',
+    90: '#1A3A82',
+    95: '#0F2960',
+    99: '#001A40',
+    100: '#000D20',
   },
 
   secondary: {
@@ -289,14 +291,15 @@ export const CLEAN_COLORS_DARK = {
     99: '#0A0612',
   },
 
+  // Dark mode neutral - using brand dark backgrounds #1D2127 and #272C34
   neutral: {
-    0: '#0F172A',      // Dark surface
-    4: '#131B2C',      // Surface dim
-    6: '#162032',      // Surface container lowest
-    10: '#1A2538',     // Surface container low
-    12: '#1E293B',     // Surface container
-    17: '#263244',     // Surface container high
-    22: '#334155',     // Surface container highest
+    0: '#1D2127',      // Dark surface (brand dark bg)
+    4: '#212730',      // Surface dim
+    6: '#232930',      // Surface container lowest
+    10: '#272C34',     // Surface container low (brand secondary dark)
+    12: '#2B3139',     // Surface container
+    17: '#2E343D',     // Surface container high
+    22: '#363D47',     // Surface container highest
     24: '#475569',     // Outline variant
     50: '#64748B',     // Secondary text
     60: '#94A3B8',     // Primary text
@@ -309,16 +312,16 @@ export const CLEAN_COLORS_DARK = {
     // Legacy compatibility
     95: '#F4F4F5',
     96: '#FAFAFA',
-    100: '#1C1C1F',
-    200: '#27272A',
-    300: '#3F3F46',
+    100: '#272C34',    // Updated to brand dark
+    200: '#2E343D',    // Updated
+    300: '#3D444D',
     400: '#52525B',
-    500: '#71717A',
-    600: '#A1A1AA',
-    700: '#D4D4D8',
-    800: '#E4E4E7',
-    900: '#F4F4F5',
-    950: '#FAFAFA',
+    500: '#64748B',
+    600: '#94A3B8',
+    700: '#CBD5E1',
+    800: '#E2E8F0',
+    900: '#F1F5F9',
+    950: '#F8FAFC',
   },
 
   neutralVariant: {
@@ -358,28 +361,28 @@ export const CLEAN_COLORS_DARK = {
       onContainer: '#FEE2E2',
     },
     info: {
-      light: '#172554',
-      main: '#60A5FA',       // Softer blue for dark
-      dark: '#3B82F6',
-      text: '#BFDBFE',
-      onContainer: '#DBEAFE',
+      light: '#1A2540',       // Brand blue dark variant
+      main: '#4573DF',        // Brand blue for dark mode
+      dark: '#4573DF',
+      text: '#B5C9FA',
+      onContainer: '#DCE6FD',
     },
   },
 
-  // Surface tints for dark mode
+  // Surface tints for dark mode (brand blue based)
   surfaceTint: {
     level0: 'transparent',
-    level1: 'rgba(56, 189, 248, 0.05)',
-    level2: 'rgba(56, 189, 248, 0.08)',
-    level3: 'rgba(56, 189, 248, 0.11)',
-    level4: 'rgba(56, 189, 248, 0.12)',
-    level5: 'rgba(56, 189, 248, 0.14)',
+    level1: 'rgba(107, 147, 240, 0.05)',  // Brand light blue @ 5%
+    level2: 'rgba(107, 147, 240, 0.08)',
+    level3: 'rgba(107, 147, 240, 0.11)',
+    level4: 'rgba(107, 147, 240, 0.12)',
+    level5: 'rgba(107, 147, 240, 0.14)',
   },
 
   scrim: 'rgba(0, 0, 0, 0.6)',
-  inverseSurface: '#E2E8F0',
-  inverseOnSurface: '#1E293B',
-  inversePrimary: '#006496',
+  inverseSurface: '#F1F5F9',
+  inverseOnSurface: '#1D2127',  // Brand dark
+  inversePrimary: '#3660C9',    // Brand dark blue
 };
 
 // ============================================================================
@@ -843,7 +846,7 @@ export const CLEAN_SHADOWS = {
 
   // Focus ring shadow (WCAG 2.2 compliant - 3:1 contrast)
   focus: {
-    shadowColor: '#0EA5E9',
+    shadowColor: '#4573DF',  // Brand blue
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 4,
@@ -861,7 +864,7 @@ export const CLEAN_SHADOWS = {
 
   // Colored shadows for accent elements
   primaryGlow: {
-    shadowColor: '#0EA5E9',
+    shadowColor: '#4573DF',  // Brand blue
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
@@ -869,7 +872,7 @@ export const CLEAN_SHADOWS = {
   },
 
   successGlow: {
-    shadowColor: '#16A34A',
+    shadowColor: '#10B981',  // Consistent success green
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
@@ -877,7 +880,7 @@ export const CLEAN_SHADOWS = {
   },
 
   errorGlow: {
-    shadowColor: '#DC2626',
+    shadowColor: '#EF4444',  // Consistent error red
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
@@ -917,14 +920,14 @@ export const CLEAN_SHADOWS_DARK = {
   
   focus: {
     ...CLEAN_SHADOWS.focus,
-    shadowColor: '#38BDF8', // Lighter primary for dark mode
+    shadowColor: '#4573DF', // Brand blue light for dark mode
     shadowOpacity: 0.6,
   },
   
   pressed: CLEAN_SHADOWS.pressed,
-  primaryGlow: { ...CLEAN_SHADOWS.primaryGlow, shadowColor: '#38BDF8' },
-  successGlow: { ...CLEAN_SHADOWS.successGlow, shadowColor: '#4ADE80' },
-  errorGlow: { ...CLEAN_SHADOWS.errorGlow, shadowColor: '#F87171' },
+  primaryGlow: { ...CLEAN_SHADOWS.primaryGlow, shadowColor: '#4573DF' },  // Brand blue light
+  successGlow: { ...CLEAN_SHADOWS.successGlow, shadowColor: '#6EE7B7' },  // Consistent
+  errorGlow: { ...CLEAN_SHADOWS.errorGlow, shadowColor: '#FB7185' },      // Consistent
 };
 
 // ============================================================================
@@ -1954,3 +1957,4 @@ export default {
   getSpringConfig,
   needsLightText,
 };
+

@@ -386,7 +386,7 @@ const PremiumStudyTipsScreen = () => {
             },
           ]}>
           <LinearGradient
-            colors={['#3498db', '#2980b9', '#1565C0']}
+            colors={['#4573DF', '#3660C9', '#2A4FA8']}
             style={styles.header}>
             <View style={styles.headerDecoration1} />
             <View style={styles.headerDecoration2} />

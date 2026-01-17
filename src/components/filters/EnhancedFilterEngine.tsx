@@ -118,7 +118,7 @@ const FilterChip: React.FC<FilterChipProps> = ({
   label,
   selected,
   onToggle,
-  color = '#6366F1',
+  color = '#4573DF',
 }) => (
   <TouchableOpacity onPress={onToggle} activeOpacity={0.7}>
     <View
@@ -182,7 +182,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   onChange,
   formatValue,
   label,
-  color = '#6366F1',
+  color = '#4573DF',
 }) => {
   const [inputMin, setInputMin] = useState(currentMin.toString());
   const [inputMax, setInputMax] = useState(currentMax.toString());
@@ -380,7 +380,7 @@ const ToggleFilter: React.FC<ToggleFilterProps> = ({
   value,
   onChange,
   icon,
-  color = '#6366F1',
+  color = '#4573DF',
 }) => {
   const options: {label: string; value: boolean | null}[] = [
     {label: 'Any', value: null},
@@ -556,7 +556,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
                       cities: toggleArrayItem(filters.cities, city),
                     })
                   }
-                  color="#6366F1"
+                  color="#4573DF"
                 />
               ))}
             </View>
@@ -621,7 +621,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
                       sectors: toggleArrayItem(filters.sectors, sector.id),
                     })
                   }
-                  color="#8B5CF6"
+                  color="#4573DF"
                 />
               ))}
             </View>
@@ -640,7 +640,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
               onChange={(min, max) => updateFilters({rankingRange: {min, max}})}
               formatValue={v => `#${v}`}
               label="Ranking Position"
-              color="#EC4899"
+              color="#4573DF"
             />
           </View>
         );
@@ -680,11 +680,11 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
 
   // Filter sections
   const filterSections = [
-    {id: 'cities', icon: 'location-outline', label: 'Cities', color: '#6366F1'},
+    {id: 'cities', icon: 'location-outline', label: 'Cities', color: '#4573DF'},
     {id: 'programs', icon: 'school-outline', label: 'Programs', color: '#10B981'},
     {id: 'fees', icon: 'cash-outline', label: 'Fees', color: '#F59E0B'},
-    {id: 'sector', icon: 'business-outline', label: 'Sector', color: '#8B5CF6'},
-    {id: 'ranking', icon: 'trophy-outline', label: 'Ranking', color: '#EC4899'},
+    {id: 'sector', icon: 'business-outline', label: 'Sector', color: '#4573DF'},
+    {id: 'ranking', icon: 'trophy-outline', label: 'Ranking', color: '#3660C9'},
     {id: 'facilities', icon: 'options-outline', label: 'More', color: '#0891B2'},
   ];
 
@@ -696,7 +696,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
         onPress={() => setModalVisible(true)}
         activeOpacity={0.8}>
         <LinearGradient
-          colors={['#6366F1', '#8B5CF6']}
+          colors={['#4573DF', '#3660C9']}
           style={styles.filterButtonGradient}>
           <Icon name="options-outline" size={20} color="#FFF" />
           <Text style={styles.filterButtonText}>Filters</Text>
@@ -716,7 +716,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
           style={styles.activeFiltersScroll}>
           {filters.cities.length > 0 && (
             <View style={styles.activeTag}>
-              <Icon name="location" size={14} color="#6366F1" />
+              <Icon name="location" size={14} color="#4573DF" />
               <Text style={styles.activeTagText}>
                 {filters.cities.length} {filters.cities.length === 1 ? 'City' : 'Cities'}
               </Text>
@@ -732,7 +732,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
           )}
           {filters.sectors.length > 0 && (
             <View style={styles.activeTag}>
-              <Icon name="business" size={14} color="#8B5CF6" />
+              <Icon name="business" size={14} color="#4573DF" />
               <Text style={styles.activeTagText}>
                 {filters.sectors.join(', ')}
               </Text>
@@ -826,7 +826,7 @@ export const EnhancedFilterEngine: React.FC<EnhancedFilterEngineProps> = ({
               onPress={() => setModalVisible(false)}
               activeOpacity={0.9}>
               <LinearGradient
-                colors={['#6366F1', '#8B5CF6']}
+                colors={['#4573DF', '#3660C9']}
                 style={styles.applyButton}>
                 <Text style={styles.applyButtonText}>
                   Apply Filters {currentActiveCount > 0 && `(${currentActiveCount})`}
@@ -871,7 +871,7 @@ export const CompactFilterBar: React.FC<CompactFilterBarProps> = ({
         <TouchableOpacity
           style={compactStyles.filterItem}
           onPress={() => onFilterPress('cities')}>
-          <Icon name="location-outline" size={16} color="#6366F1" />
+          <Icon name="location-outline" size={16} color="#4573DF" />
           <Text style={compactStyles.filterLabel}>City</Text>
           {filters.cities.length > 0 && (
             <View style={compactStyles.dot} />
@@ -898,10 +898,10 @@ export const CompactFilterBar: React.FC<CompactFilterBarProps> = ({
         <TouchableOpacity
           style={compactStyles.filterItem}
           onPress={() => onFilterPress('sector')}>
-          <Icon name="business-outline" size={16} color="#8B5CF6" />
+          <Icon name="business-outline" size={16} color="#4573DF" />
           <Text style={compactStyles.filterLabel}>Sector</Text>
           {filters.sectors.length > 0 && (
-            <View style={[compactStyles.dot, {backgroundColor: '#8B5CF6'}]} />
+            <View style={[compactStyles.dot, {backgroundColor: '#4573DF'}]} />
           )}
         </TouchableOpacity>
 
@@ -947,7 +947,7 @@ const compactStyles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#4573DF',
     marginLeft: 6,
   },
   clearButton: {
@@ -997,7 +997,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '700',
-    color: '#6366F1',
+    color: '#4573DF',
   },
   activeFiltersScroll: {
     marginVertical: SPACING.sm,
@@ -1129,3 +1129,4 @@ const styles = StyleSheet.create({
 });
 
 export default EnhancedFilterEngine;
+

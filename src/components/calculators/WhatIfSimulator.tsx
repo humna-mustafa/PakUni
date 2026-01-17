@@ -66,7 +66,7 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     testWeight: 75,
     testName: 'NET',
     minAggregate: 60,
-    color: '#1E40AF',
+    color: '#4573DF',
     programs: [
       {name: 'CS', lastMerit: 87},
       {name: 'EE', lastMerit: 82},
@@ -563,7 +563,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
           <Icon
             name={showComparison ? 'chevron-up' : 'git-compare-outline'}
             size={20}
-            color="#6366F1"
+            color="#4573DF"
           />
           <Text style={styles.comparisonToggleText}>
             {showComparison ? 'Hide Comparison' : 'Compare Scenarios'}
@@ -580,7 +580,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
               onValueChange={setComparisonScore}
               minimumValue={0}
               maximumValue={100}
-              color="#6366F1"
+              color="#4573DF"
             />
             <View style={styles.comparisonResult}>
               <View style={styles.comparisonCard}>
@@ -599,7 +599,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
               <Icon name="arrow-forward" size={24} color="#94A3B8" />
               <View style={styles.comparisonCard}>
                 <Text style={styles.comparisonCardLabel}>If Scored</Text>
-                <Text style={[styles.comparisonCardValue, {color: '#6366F1'}]}>
+                <Text style={[styles.comparisonCardValue, {color: '#4573DF'}]}>
                   {comparisonAggregate.toFixed(2)}%
                 </Text>
                 <Text style={styles.comparisonCardScore}>
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
   },
   comparisonToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
     marginLeft: 6,
   },

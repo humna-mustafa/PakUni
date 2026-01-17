@@ -242,7 +242,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'download-outline',
       iconSet: 'ion',
       screen: 'AdminDataManagement',
-      color: '#6366F1',
+      color: '#4573DF',
       description: 'Export, Merit Lists, Entry Tests',
     },
     // === USER MANAGEMENT ===
@@ -272,7 +272,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'send',
       iconSet: 'ion',
       screen: 'AdminNotifications',
-      color: '#EC4899',
+      color: '#4573DF',
       description: 'Push notifications',
     },
     // === CONTENT & REPORTS ===
@@ -282,7 +282,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'document-text',
       iconSet: 'ion',
       screen: 'AdminContent',
-      color: '#8B5CF6',
+      color: '#4573DF',
       description: 'Manage app content',
     },
     {
@@ -330,7 +330,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'chatbubbles',
       iconSet: 'ion',
       screen: 'AdminFeedback',
-      color: '#3498DB',
+      color: '#4573DF',
       description: 'User feedback',
     },
     {
@@ -368,7 +368,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'layers',
       iconSet: 'ion',
       screen: 'AdminBulkOperations',
-      color: '#7C3AED',
+      color: '#4573DF',
       description: 'Bulk user & content ops',
     },
     {
@@ -386,7 +386,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'pulse',
       iconSet: 'ion',
       screen: 'AdminActivityDashboard',
-      color: '#0EA5E9',
+      color: '#4573DF',
       description: 'Real-time activity logs',
     },
     {
@@ -405,7 +405,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
       icon: 'document-attach',
       iconSet: 'ion',
       screen: 'AdminDataSubmissions',
-      color: '#7C3AED',
+      color: '#4573DF',
       description: 'User data corrections',
     },
     {
@@ -562,7 +562,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
     const userStats = [
       { label: 'Total Users', value: supabaseStats.totalUsers || 0, icon: 'people', color: '#4ECDC4' },
       { label: 'New Today', value: supabaseStats.newUsersToday || 0, icon: 'person-add', color: '#00D4AA' },
-      { label: 'Verified', value: supabaseStats.verifiedUsers || 0, icon: 'checkmark-shield', color: '#3498DB' },
+      { label: 'Verified', value: supabaseStats.verifiedUsers || 0, icon: 'checkmark-shield', color: '#4573DF' },
       { label: 'Active', value: supabaseStats.activeUsers || 0, icon: 'pulse', color: '#9B59B6' },
     ];
 
@@ -695,7 +695,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
       <LinearGradient
-        colors={isDark ? ['#1a1a2e', '#16213e'] : ['#00D4AA', '#00A388']}
+        colors={isDark ? ['#1D2127', '#272C34'] : ['#00D4AA', '#00A388']}
         style={styles.header}
       >
         <View style={styles.headerContent}>
@@ -1042,3 +1042,5 @@ const styles = StyleSheet.create({
 });
 
 export default EnterpriseAdminDashboardScreen;
+
+

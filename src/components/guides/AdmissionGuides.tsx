@@ -75,7 +75,7 @@ const UNIVERSITY_GUIDES: UniversityGuide[] = [
     id: 'nust',
     name: 'National University of Sciences & Technology',
     shortName: 'NUST',
-    color: '#1E40AF',
+    color: '#4573DF',
     icon: 'school-outline',
     steps: [
       {
@@ -400,7 +400,7 @@ const UNIVERSITY_GUIDES: UniversityGuide[] = [
     id: 'lums',
     name: 'Lahore University of Management Sciences',
     shortName: 'LUMS',
-    color: '#7C3AED',
+    color: '#3660C9',
     icon: 'business-outline',
     steps: [
       {
@@ -580,7 +580,7 @@ const StepCard: React.FC<StepCardProps> = ({
                 <Text style={stepCardStyles.sectionTitle}>📄 Documents Needed</Text>
                 {step.documents.map((doc, index) => (
                   <View key={index} style={stepCardStyles.docItem}>
-                    <Icon name="document-outline" size={14} color="#6366F1" />
+                    <Icon name="document-outline" size={14} color="#4573DF" />
                     <Text style={stepCardStyles.docText}>{doc}</Text>
                   </View>
                 ))}
@@ -812,7 +812,7 @@ export const AdmissionGuides: React.FC<AdmissionGuidesProps> = ({
               {/* Quick Info Cards */}
               <View style={styles.quickInfoContainer}>
                 <View style={styles.quickInfoCard}>
-                  <Icon name="calendar-outline" size={20} color="#6366F1" />
+                  <Icon name="calendar-outline" size={20} color="#4573DF" />
                   <Text style={styles.quickInfoLabel}>Applications</Text>
                   <Text style={styles.quickInfoValue}>
                     {selectedUniversity.timeline.applicationsOpen} - {selectedUniversity.timeline.applicationsClose}
@@ -1208,3 +1208,4 @@ const styles = StyleSheet.create({
 });
 
 export default AdmissionGuides;
+

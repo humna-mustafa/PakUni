@@ -347,7 +347,7 @@ const PremiumTabBar = ({
           styles.backgroundLayer,
           {
             backgroundColor: isDark 
-              ? 'rgba(15, 23, 42, 0.98)' 
+              ? 'rgba(29, 33, 39, 0.98)' 
               : 'rgba(255, 255, 255, 0.98)',
           }
         ]} 

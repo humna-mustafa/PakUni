@@ -33,13 +33,14 @@ import {
   getSpringConfig,
 } from '../constants/clean-design-2025';
 import {Icon} from './icons';
+import {IconFamily} from './icons/iconMappings';
 import {PremiumButton} from './PremiumButton';
 
 type EmptyStateVariant = 'default' | 'search' | 'error' | 'offline' | 'permission' | 'success';
 
 interface EmptyStateProps {
   iconName?: string;
-  iconFamily?: string;
+  iconFamily?: IconFamily;
   title: string;
   subtitle?: string;
   actionLabel?: string;
@@ -55,7 +56,7 @@ interface EmptyStateProps {
 }
 
 // Preset icons and colors for common variants
-const VARIANT_CONFIG: Record<EmptyStateVariant, {icon: string; iconFamily?: string}> = {
+const VARIANT_CONFIG: Record<EmptyStateVariant, {icon: string; iconFamily?: IconFamily}> = {
   default: {icon: 'mail-open-outline'},
   search: {icon: 'search-outline'},
   error: {icon: 'alert-circle-outline'},

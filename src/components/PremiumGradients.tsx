@@ -14,7 +14,7 @@ try {
 } catch (e) {
   // Fallback to View with solid color
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -26,8 +26,8 @@ try {
 
 export const GRADIENT_PRESETS = {
   // Brand gradients
-  primary: ['#1A7AEB', '#0D5BC4'],
-  primarySoft: ['#3B97FF', '#1A7AEB'],
+  primary: ['#4573DF', '#3660C9'],
+  primarySoft: ['#4573DF', '#4573DF'],
   secondary: ['#14B8AA', '#0E9688'],
   
   // Nature-inspired
@@ -55,15 +55,15 @@ export const GRADIENT_PRESETS = {
   cream: ['#FFF5EB', '#FFE4D1'],
   
   // Dark mode optimized
-  darkPrimary: ['#1E3A5F', '#0D1B2A'],
-  darkAccent: ['#311B92', '#120A3B'],
-  darkSurface: ['#1A1A2E', '#16213E'],
+  darkPrimary: ['#1E3A5F', '#1D2127'],
+  darkAccent: ['#2A4FA8', '#1D2127'],
+  darkSurface: ['#1D2127', '#272C34'],
   
   // Status gradients
   success: ['#10B981', '#059669'],
   warning: ['#F59E0B', '#D97706'],
   error: ['#EF4444', '#DC2626'],
-  info: ['#3B82F6', '#2563EB'],
+  info: ['#4573DF', '#3660C9'],
   
   // Special effects
   glass: ['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.05)'],
@@ -72,11 +72,11 @@ export const GRADIENT_PRESETS = {
   
   // Card backgrounds
   cardLight: ['#FFFFFF', '#F8FAFC'],
-  cardDark: ['#1E293B', '#0F172A'],
+  cardDark: ['#272C34', '#1D2127'],
   
   // Mesh gradient simulations
-  meshPurple: ['#667eea', '#764ba2', '#f093fb'],
-  meshBlue: ['#00d4ff', '#0099ff', '#0066ff'],
+  meshPurple: ['#4573DF', '#4573DF', '#3660C9'],
+  meshBlue: ['#4573DF', '#4573DF', '#3660C9'],
   meshGreen: ['#56ab2f', '#a8e063', '#d4fc79'],
 };
 
@@ -225,7 +225,7 @@ interface GlowingBorderProps {
 }
 
 export const GlowingBorder: React.FC<GlowingBorderProps> = ({
-  color = '#1A7AEB',
+  color = '#4573DF',
   glowIntensity = 0.4,
   borderRadius = 16,
   style,
@@ -394,3 +394,4 @@ export default {
   GradientOverlay,
   GradientIconBg,
 };
+

@@ -87,8 +87,8 @@ const HeroCard = memo<HeroCardProps>(({
   }, []);
 
   // Clean, refined styling
-  const accentLight = isDark ? 'rgba(129, 140, 248, 0.12)' : 'rgba(79, 70, 229, 0.06)';
-  const cardBg = isDark ? '#1F1F23' : '#FFFFFF';
+  const accentLight = isDark ? 'rgba(107, 147, 240, 0.15)' : 'rgba(69, 115, 223, 0.08)';
+  const cardBg = isDark ? '#272C34' : '#FFFFFF';
 
   return (
     <Animated.View 
@@ -203,10 +203,7 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
         onPressOut={handlePressOut}
       >
         <LinearGradient
-          colors={isDark 
-            ? [colors.primary, colors.primaryDark || '#0284C7']
-            : [colors.primary, colors.primaryDark || '#0284C7']
-          }
+          colors={[colors.primary, colors.primaryDark]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0.5}}
           style={journeyStyles.ctaCard}
@@ -282,7 +279,7 @@ const DeadlineWidget = memo<DeadlineWidgetProps>(({colors, isDark, onNavigate}) 
 
   if (upcomingDeadlines.length === 0) return null;
 
-  const widgetBg = isDark ? 'rgba(30, 41, 59, 0.9)' : '#FFFFFF';
+  const widgetBg = isDark ? 'rgba(39, 44, 52, 0.95)' : '#FFFFFF';
 
   return (
     <Animated.View
@@ -507,7 +504,7 @@ const QuickActionCard = memo<QuickActionCardProps>(({
     }).start();
   };
 
-  const cardBg = isDark ? 'rgba(30, 41, 59, 0.9)' : '#FFFFFF';
+  const cardBg = isDark ? 'rgba(39, 44, 52, 0.95)' : '#FFFFFF';
   const iconBg = isDark ? `${action.color}25` : `${action.color}12`;
 
   return (
@@ -689,10 +686,10 @@ const PremiumHomeScreen = () => {
   // Using outline icons for consistency with navbar and profile page
   const quickActions = [
     {id: '1', iconName: 'calculator-outline', title: 'Calculate Merit', color: colors.primary, screen: 'Calculator'},
-    {id: '2', iconName: 'clipboard-outline', title: 'Entry Tests', color: '#10B981', screen: 'EntryTests'},
-    {id: '3', iconName: 'sparkles-outline', title: 'AI Match', color: '#0EA5E9', screen: 'Recommendations'},
-    {id: '4', iconName: 'compass-outline', title: 'Career Guide', color: '#0284C7', screen: 'CareerGuidance'},
-    {id: '5', iconName: 'library-outline', title: 'Study Guides', color: '#0EA5E9', screen: 'Guides'},
+    {id: '2', iconName: 'clipboard-outline', title: 'Entry Tests', color: '#DC2626', screen: 'EntryTests'},
+    {id: '3', iconName: 'sparkles-outline', title: 'AI Match', color: colors.primary, screen: 'Recommendations'},
+    {id: '4', iconName: 'compass-outline', title: 'Career Guide', color: '#059669', screen: 'CareerGuidance'},
+    {id: '5', iconName: 'library-outline', title: 'Study Guides', color: colors.primary, screen: 'Guides'},
     {id: '6', iconName: 'game-controller-outline', title: 'Score Game', color: '#F59E0B', screen: 'ResultGame'},
   ];
 

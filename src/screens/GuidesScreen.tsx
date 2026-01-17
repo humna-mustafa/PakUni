@@ -73,7 +73,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
     id: 'admission',
     title: 'Admission',
     icon: 'school-outline',
-    color: '#6366F1',
+    color: '#4573DF',
     description: 'University application process & requirements',
     guideCount: 12,
   },
@@ -97,7 +97,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
     id: 'study-tips',
     title: 'Study Tips',
     icon: 'bulb-outline',
-    color: '#EC4899',
+    color: '#4573DF',
     description: 'Effective study techniques & habits',
     guideCount: 15,
   },
@@ -105,7 +105,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
     id: 'scholarships',
     title: 'Scholarships',
     icon: 'ribbon-outline',
-    color: '#8B5CF6',
+    color: '#4573DF',
     description: 'Finding & applying for scholarships',
     guideCount: 7,
   },
@@ -137,7 +137,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
     id: 'parents',
     title: 'For Parents',
     icon: 'people-circle-outline',
-    color: '#7C3AED',
+    color: '#3660C9',
     description: 'Guidance for supporting your child',
     guideCount: 5,
   },
@@ -145,7 +145,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
     id: 'international',
     title: 'Study Abroad',
     icon: 'globe-outline',
-    color: '#0284C7',
+    color: '#4573DF',
     description: 'Foreign university admission guide',
     guideCount: 7,
   },
@@ -802,8 +802,8 @@ const GuideListItem: React.FC<GuideListItemProps> = ({guide, onPress, colors}) =
       activeOpacity={0.7}>
       <View style={guideItemStyles.content}>
         <View style={guideItemStyles.header}>
-          <View style={[guideItemStyles.categoryBadge, {backgroundColor: (category?.color || '#6366F1') + '15'}]}>
-            <Text style={[guideItemStyles.categoryText, {color: category?.color || '#6366F1'}]}>
+          <View style={[guideItemStyles.categoryBadge, {backgroundColor: (category?.color || '#4573DF') + '15'}]}>
+            <Text style={[guideItemStyles.categoryText, {color: category?.color || '#4573DF'}]}>
               {category?.title}
             </Text>
           </View>
@@ -925,7 +925,7 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
     <View style={[detailStyles.container, {backgroundColor: colors.background}]}>
       {/* Header */}
       <LinearGradient
-        colors={[category?.color || '#6366F1', (category?.color || '#6366F1') + 'CC']}
+        colors={[category?.color || '#4573DF', (category?.color || '#4573DF') + 'CC']}
         style={detailStyles.header}>
         <TouchableOpacity style={detailStyles.backButton} onPress={onClose}>
           <Icon name="arrow-back" size={24} color="#FFF" />
@@ -964,15 +964,15 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
                 onPress={() => toggleStep(step.id)}
                 activeOpacity={0.7}>
                 <View style={detailStyles.stepHeader}>
-                  <View style={[detailStyles.stepNumber, {backgroundColor: category?.color || '#6366F1'}]}>
+                  <View style={[detailStyles.stepNumber, {backgroundColor: category?.color || '#4573DF'}]}>
                     <Text style={detailStyles.stepNumberText}>{index + 1}</Text>
                   </View>
                   <View style={detailStyles.stepHeaderContent}>
                     <Text style={[detailStyles.stepTitle, {color: colors.text}]}>{step.title}</Text>
                     {step.important && (
-                      <View style={[detailStyles.importantBadge, {backgroundColor: (category?.color || '#6366F1') + '15'}]}>
-                        <Icon name="star" size={10} color={category?.color || '#6366F1'} />
-                        <Text style={[detailStyles.importantText, {color: category?.color || '#6366F1'}]}>Important</Text>
+                      <View style={[detailStyles.importantBadge, {backgroundColor: (category?.color || '#4573DF') + '15'}]}>
+                        <Icon name="star" size={10} color={category?.color || '#4573DF'} />
+                        <Text style={[detailStyles.importantText, {color: category?.color || '#4573DF'}]}>Important</Text>
                       </View>
                     )}
                   </View>
@@ -1004,12 +1004,12 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
                     {step.documents && step.documents.length > 0 && (
                       <View style={detailStyles.stepSection}>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-                          <Icon name="document-text-outline" size={16} color={category?.color || '#6366F1'} />
+                          <Icon name="document-text-outline" size={16} color={category?.color || '#4573DF'} />
                           <Text style={[detailStyles.stepSectionTitle, {color: colors.text, marginLeft: 6}]}>Documents</Text>
                         </View>
                         {step.documents.map((doc, i) => (
                           <View key={i} style={detailStyles.docItem}>
-                            <Icon name="document-outline" size={14} color={category?.color || '#6366F1'} />
+                            <Icon name="document-outline" size={14} color={category?.color || '#4573DF'} />
                             <Text style={[detailStyles.docText, {color: colors.textSecondary}]}>{doc}</Text>
                           </View>
                         ))}
@@ -1032,7 +1032,7 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
             <View style={[detailStyles.tipsCard, {backgroundColor: colors.card}]}>
               {guide.tips.map((tip, index) => (
                 <View key={index} style={detailStyles.tipRow}>
-                  <View style={[detailStyles.tipBullet, {backgroundColor: category?.color || '#6366F1'}]}>
+                  <View style={[detailStyles.tipBullet, {backgroundColor: category?.color || '#4573DF'}]}>
                     <Text style={detailStyles.tipBulletText}>{index + 1}</Text>
                   </View>
                   <Text style={[detailStyles.tipContent, {color: colors.text}]}>{tip}</Text>
@@ -1046,12 +1046,12 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
         {guide.resources && guide.resources.length > 0 && (
           <View style={detailStyles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
-              <Icon name="library-outline" size={20} color={category?.color || '#6366F1'} />
+              <Icon name="library-outline" size={20} color={category?.color || '#4573DF'} />
               <Text style={[detailStyles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Resources</Text>
             </View>
             {guide.resources.map((resource, index) => (
               <View key={index} style={[detailStyles.resourceCard, {backgroundColor: colors.card}]}>
-                <Icon name="link-outline" size={18} color={category?.color || '#6366F1'} />
+                <Icon name="link-outline" size={18} color={category?.color || '#4573DF'} />
                 <Text style={[detailStyles.resourceText, {color: colors.text}]}>{resource.title}</Text>
               </View>
             ))}
@@ -1061,13 +1061,13 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
         {/* Tags */}
         <View style={detailStyles.section}>
           <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
-            <Icon name="pricetags-outline" size={20} color={category?.color || '#6366F1'} />
+            <Icon name="pricetags-outline" size={20} color={category?.color || '#4573DF'} />
             <Text style={[detailStyles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Tags</Text>
           </View>
           <View style={detailStyles.tagsGrid}>
             {guide.tags.map((tag, index) => (
-              <View key={index} style={[detailStyles.tagChip, {backgroundColor: (category?.color || '#6366F1') + '15'}]}>
-                <Text style={[detailStyles.tagChipText, {color: category?.color || '#6366F1'}]}>{tag}</Text>
+              <View key={index} style={[detailStyles.tagChip, {backgroundColor: (category?.color || '#4573DF') + '15'}]}>
+                <Text style={[detailStyles.tagChipText, {color: category?.color || '#4573DF'}]}>{tag}</Text>
               </View>
             ))}
           </View>
@@ -1075,7 +1075,7 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
 
         {/* Suggest Guide CTA */}
         <View style={[detailStyles.suggestCard, {backgroundColor: colors.card}]}>
-          <Icon name="mail-outline" size={24} color={category?.color || '#6366F1'} />
+          <Icon name="mail-outline" size={24} color={category?.color || '#4573DF'} />
           <View style={detailStyles.suggestContent}>
             <Text style={[detailStyles.suggestTitle, {color: colors.text}]}>Have suggestions?</Text>
             <Text style={[detailStyles.suggestText, {color: colors.textSecondary}]}>
@@ -1468,7 +1468,7 @@ const GuidesScreen: React.FC = () => {
           {/* Suggest Guide Card */}
           <View style={[styles.suggestSection, {backgroundColor: colors.card}]}>
             <LinearGradient
-              colors={['#6366F1', '#8B5CF6']}
+              colors={['#4573DF', '#4573DF']}
               style={styles.suggestIcon}>
               <Icon name="bulb-outline" size={24} color="#FFF" />
             </LinearGradient>
@@ -1603,3 +1603,5 @@ const styles = StyleSheet.create({
 });
 
 export default GuidesScreen;
+
+

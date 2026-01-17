@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '700',
-    color: '#1F2937',
+    color: '#1D2127',
   },
   branding: {
     flexDirection: 'row',
@@ -500,3 +500,4 @@ const styles = StyleSheet.create({
 });
 
 export default SpecialOccasionCard;
+

@@ -96,8 +96,8 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
       require_source: true,
       notify_admin: true,
       allowed_auth_providers: [],
-      auto_approve_google_users: false,
-      require_email_verified: false,
+      auto_trust_google: false,
+      auto_trust_email_verified: false,
     });
     setModalVisible(true);
   };
@@ -192,7 +192,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
       </Text>
       
       <View style={styles.conditionsContainer}>
-        <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+        <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
           <Icon name="shield" size={12} color={colors.primary} />
           <Text style={[styles.conditionText, { color: colors.text }]}>
             Trust ≥ {rule.min_trust_level}
@@ -200,14 +200,14 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
         </View>
         
         {rule.require_source && (
-          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="document" size={12} color={colors.primary} />
             <Text style={[styles.conditionText, { color: colors.text }]}>Source required</Text>
           </View>
         )}
         
         {rule.max_value_change_percent !== null && (
-          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="trending-up" size={12} color={colors.primary} />
             <Text style={[styles.conditionText, { color: colors.text }]}>
               ≤ {rule.max_value_change_percent}% change
@@ -216,28 +216,28 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
         )}
         
         {rule.notify_admin && (
-          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="notifications" size={12} color={colors.primary} />
             <Text style={[styles.conditionText, { color: colors.text }]}>Notify admin</Text>
           </View>
         )}
         
-        {rule.auto_approve_google_users && (
+        {rule.auto_trust_google && (
           <View style={[styles.conditionChip, { backgroundColor: '#E8F5E9' }]}>
             <Icon name="logo-google" size={12} color="#4285F4" />
             <Text style={[styles.conditionText, { color: '#2E7D32' }]}>Google auto-approve</Text>
           </View>
         )}
         
-        {rule.require_email_verified && (
-          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+        {rule.auto_trust_email_verified && (
+          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="checkmark-circle" size={12} color="#10B981" />
             <Text style={[styles.conditionText, { color: colors.text }]}>Verified email only</Text>
           </View>
         )}
         
         {rule.allowed_auth_providers && rule.allowed_auth_providers.length > 0 && (
-          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}>
+          <View style={[styles.conditionChip, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}>
             <Icon name="people" size={12} color={colors.primary} />
             <Text style={[styles.conditionText, { color: colors.text }]}>
               {rule.allowed_auth_providers.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ')}
@@ -267,7 +267,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
         
         <View style={styles.cardActions}>
           <TouchableOpacity
-            style={[styles.iconBtn, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6' }]}
+            style={[styles.iconBtn, { backgroundColor: isDark ? '#272C34' : '#F3F4F6' }]}
             onPress={() => openEditModal(rule)}
           >
             <Icon name="pencil" size={16} color={colors.primary} />
@@ -304,7 +304,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
           <ScrollView style={styles.modalBody}>
             <Text style={[styles.inputLabel, { color: colors.text }]}>Rule Name *</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingRule.name}
               onChangeText={(text) => setEditingRule({ ...editingRule, name: text })}
               placeholder="e.g., Trusted Users - Date Updates"
@@ -313,7 +313,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Description</Text>
             <TextInput
-              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, styles.multilineInput, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingRule.description}
               onChangeText={(text) => setEditingRule({ ...editingRule, description: text })}
               placeholder="Describe when this rule applies..."
@@ -331,7 +331,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
                     { 
                       backgroundColor: editingRule.min_trust_level === level 
                         ? colors.primary 
-                        : isDark ? '#1F2937' : '#F3F4F6'
+                        : isDark ? '#272C34' : '#F3F4F6'
                     }
                   ]}
                   onPress={() => setEditingRule({ ...editingRule, min_trust_level: level })}
@@ -356,7 +356,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
                     {
                       backgroundColor: editingRule.submission_types?.includes(type.value)
                         ? colors.primary
-                        : isDark ? '#1F2937' : '#F3F4F6'
+                        : isDark ? '#272C34' : '#F3F4F6'
                     }
                   ]}
                   onPress={() => toggleSubmissionType(type.value)}
@@ -373,7 +373,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Max Value Change % (for numeric values)</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+              style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
               value={editingRule.max_value_change_percent?.toString() || ''}
               onChangeText={(text) => setEditingRule({ 
                 ...editingRule, 
@@ -405,7 +405,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
             </View>
             
             {/* Auth Provider Section */}
-            <View style={[styles.sectionDivider, { borderTopColor: isDark ? '#374151' : '#E5E7EB' }]}>
+            <View style={[styles.sectionDivider, { borderTopColor: isDark ? '#272C34' : '#E5E7EB' }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
                 🔐 Authentication Provider Settings
               </Text>
@@ -427,7 +427,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
                     {
                       backgroundColor: editingRule.allowed_auth_providers?.includes(provider.value)
                         ? provider.color + '20'
-                        : isDark ? '#1F2937' : '#F3F4F6',
+                        : isDark ? '#272C34' : '#F3F4F6',
                       borderColor: editingRule.allowed_auth_providers?.includes(provider.value)
                         ? provider.color
                         : 'transparent',
@@ -471,8 +471,8 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
                 </View>
               </View>
               <Switch
-                value={editingRule.auto_approve_google_users ?? false}
-                onValueChange={(value) => setEditingRule({ ...editingRule, auto_approve_google_users: value })}
+                value={editingRule.auto_trust_google ?? false}
+                onValueChange={(value) => setEditingRule({ ...editingRule, auto_trust_google: value })}
                 trackColor={{ false: '#767577', true: '#4285F4' }}
                 thumbColor="#FFFFFF"
               />
@@ -489,8 +489,8 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
                 </View>
               </View>
               <Switch
-                value={editingRule.require_email_verified ?? false}
-                onValueChange={(value) => setEditingRule({ ...editingRule, require_email_verified: value })}
+                value={editingRule.auto_trust_email_verified ?? false}
+                onValueChange={(value) => setEditingRule({ ...editingRule, auto_trust_email_verified: value })}
                 trackColor={{ false: '#767577', true: '#10B981' }}
                 thumbColor="#FFFFFF"
               />
@@ -509,7 +509,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
           
           <View style={styles.modalActions}>
             <TouchableOpacity
-              style={[styles.modalBtn, { backgroundColor: isDark ? '#374151' : '#E5E7EB' }]}
+              style={[styles.modalBtn, { backgroundColor: isDark ? '#272C34' : '#E5E7EB' }]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={[styles.modalBtnText, { color: colors.text }]}>Cancel</Text>
@@ -562,7 +562,7 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
         }
       />
       
-      <View style={[styles.infoBox, { backgroundColor: isDark ? '#1F2937' : '#FEF3C7' }]}>
+      <View style={[styles.infoBox, { backgroundColor: isDark ? '#272C34' : '#FEF3C7' }]}>
         <Icon name="information-circle" size={20} color="#F59E0B" />
         <Text style={[styles.infoText, { color: isDark ? '#FCD34D' : '#92400E' }]}>
           Auto-approval rules automatically approve user submissions when conditions are met.

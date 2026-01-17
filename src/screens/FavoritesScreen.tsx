@@ -13,6 +13,7 @@ import {
   Platform,
   Animated,
   Modal,
+  TouchableOpacity,
 } from 'react-native';
 import {ANIMATION_SCALES, SPRING_CONFIGS, ACCESSIBILITY} from '../constants/ui';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -196,7 +197,7 @@ const FavoritesScreen: React.FC = () => {
             subtitle: uni ? `${uni.city} • ${uni.type}` : '',
             type: 'universities' as TabType,
             icon: 'school-outline',
-            color: '#6366F1',
+            color: '#4573DF',
           };
         });
       case 'scholarships':

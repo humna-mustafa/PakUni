@@ -30,7 +30,7 @@ export interface LocalNotification {
   scheduledAt?: Date;
   read: boolean;
   createdAt: string;
-  type: 'scholarship' | 'admission' | 'test' | 'tip' | 'update' | 'general';
+  type: 'scholarship' | 'admission' | 'test' | 'tip' | 'update' | 'general' | 'contribution_approved';
 }
 
 // ============================================================================
@@ -187,6 +187,18 @@ class NotificationService {
     await this.saveNotifications();
 
     return newNotification;
+  }
+
+  /**
+   * Send notification (alias for addNotification with userId support)
+   */
+  async sendNotification(
+    notification: Omit<LocalNotification, 'id' | 'read' | 'createdAt'> & { userId?: string }
+  ): Promise<LocalNotification> {
+    // For local-first app, we just add it to local notifications
+    // If we had a backend push service, we'd use notification.userId to target the user
+    const { userId: _, ...rest } = notification;
+    return this.addNotification(rest);
   }
 
   /**
@@ -487,16 +499,11 @@ class NotificationService {
    * Request notification permissions (placeholder for actual implementation)
    */
   async requestPermissions(): Promise<boolean> {
-    try {
-      // In a real implementation, you would request push notification permissions here
-      // using libraries like react-native-push-notification or expo-notifications
-      
-      // For now, we'll just simulate permission granted
-      return true;
-    } catch (error) {
-      log.error('Request permissions error', error);
-      return false;
-    }
+    // In a real implementation, you would request push notification permissions here
+    // using libraries like react-native-push-notification or expo-notifications
+    
+    // For now, we'll just simulate permission granted
+    return true;
   }
 
   /**

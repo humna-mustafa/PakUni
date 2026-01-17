@@ -185,7 +185,7 @@ export const AdminApprovalAnalyticsScreen: React.FC<{ navigation: any }> = ({ na
             metrics.totalSubmissions,
             `${metrics.pendingCount} pending`,
             'documents',
-            '#3B82F6'
+            '#4573DF'
           )}
           
           {renderMetricCard(
@@ -209,7 +209,7 @@ export const AdminApprovalAnalyticsScreen: React.FC<{ navigation: any }> = ({ na
             `${metrics.avgProcessingTime} min`,
             'Per submission',
             'timer',
-            '#8B5CF6'
+            '#4573DF'
           )}
         </View>
 
@@ -309,7 +309,7 @@ export const AdminApprovalAnalyticsScreen: React.FC<{ navigation: any }> = ({ na
           </TouchableOpacity>
           
           <TouchableOpacity
-            style={[styles.actionBtn, { backgroundColor: '#8B5CF6' }]}
+            style={[styles.actionBtn, { backgroundColor: '#4573DF' }]}
             onPress={() => navigation.navigate('AdminAutoApprovalRules')}
           >
             <Icon name="flash" size={20} color="#FFFFFF" />
@@ -474,3 +474,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminApprovalAnalyticsScreen;
+
+

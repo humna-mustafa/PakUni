@@ -29,7 +29,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const MODERN_COLORS = {
   // Brand Primary - Beautiful Sky Blue
   primary: {
-    main: '#0EA5E9',      // Primary brand color (Sky Blue)
+    main: '#4573DF',      // Primary brand color (Sky Blue)
     light: '#E0F2FE',     // Subtle backgrounds
     lighter: '#F0F9FF',   // Very subtle tints
     dark: '#0284C7',      // Pressed states

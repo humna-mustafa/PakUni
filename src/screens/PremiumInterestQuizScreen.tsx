@@ -126,7 +126,7 @@ const OptionButton = ({
         activeOpacity={0.8}>
         {isSelected ? (
           <LinearGradient
-            colors={['#3498db', '#2980b9']}
+            colors={['#4573DF', '#3660C9']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={styles.optionSelected}>
@@ -181,7 +181,7 @@ const ProgressBar = ({current, total, colors}: any) => {
             },
           ]}>
           <LinearGradient
-            colors={['#3498db', '#2980b9']}
+            colors={['#4573DF', '#3660C9']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={styles.progressGradient}
@@ -224,7 +224,7 @@ const CareerResultCard = ({
       case 0:
         return '#27ae60';
       case 1:
-        return '#3498db';
+        return '#4573DF';
       case 2:
         return '#9b59b6';
       default:

@@ -35,7 +35,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -357,7 +357,7 @@ const PremiumProfileScreen = () => {
         </View>
         <View style={[styles.completionBar, {backgroundColor: colors.border}]}>
           <LinearGradient
-            colors={[colors.primary, colors.primaryDark || '#0284C7']}
+            colors={[colors.primary, colors.primaryDark || '#3660C9']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={[styles.completionFill, {width: `${getProfileCompletion()}%`}]}
@@ -605,7 +605,7 @@ const PremiumProfileScreen = () => {
         accessibilityRole="button"
         accessibilityLabel="Calculate my merit"
         accessibilityHint="Opens the merit calculator to estimate your admission chances">
-        <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
+        <LinearGradient colors={[colors.primary, colors.primaryDark || '#3660C9']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
           <Icon name="analytics-outline" family="Ionicons" size={22} color="#FFFFFF" />
           <Text style={styles.actionBtnText}>Calculate My Merit</Text>
         </LinearGradient>
@@ -693,7 +693,7 @@ const PremiumProfileScreen = () => {
           accessibilityRole="button"
           accessibilityLabel="App Settings"
           accessibilityHint="Opens settings for theme, notifications, and privacy options">
-          <View style={[styles.settingIconBg, {backgroundColor: '#DBEAFE'}]}>
+          <View style={[styles.settingIconBg, {backgroundColor: '#E8EFFC'}]}>
             <Icon name="settings-outline" family="Ionicons" size={20} color={colors.primary} />
           </View>
           <View style={styles.settingInfo}>
@@ -731,7 +731,7 @@ const PremiumProfileScreen = () => {
           accessibilityRole="button"
           accessibilityLabel="Sign in or create account"
           accessibilityHint="Opens authentication to sign in or register a new account">
-          <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
+          <LinearGradient colors={[colors.primary, colors.primaryDark || '#3660C9']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-in-outline" family="Ionicons" size={22} color="#FFFFFF" />
             <Text style={styles.logoutText}>Sign In / Create Account</Text>
           </LinearGradient>
@@ -773,7 +773,7 @@ const PremiumProfileScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Header */}
           <Animated.View style={{opacity: headerAnim, transform: [{translateY: headerAnim.interpolate({inputRange: [0, 1], outputRange: [-20, 0]})}]}}>
-            <LinearGradient colors={isDark ? [colors.backgroundSecondary, colors.background, colors.primaryDark] : [colors.primary, colors.primaryDark, '#0369A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.headerGradient}>
+            <LinearGradient colors={isDark ? [colors.backgroundSecondary, colors.background, colors.primaryDark] : [colors.primary, colors.primaryDark, '#3660C9']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.headerGradient}>
               <View style={styles.headerDecoCircle1} />
               <View style={styles.headerDecoCircle2} />
               <View style={styles.headerDecoCircle3} />
@@ -816,7 +816,7 @@ const PremiumProfileScreen = () => {
                     // Sign out guest to trigger navigation to Auth
                     signOut();
                   }}>
-                  <Icon name="log-in-outline" family="Ionicons" size={14} color="#1A7AEB" />
+                  <Icon name="log-in-outline" family="Ionicons" size={14} color="#4573DF" />
                   <Text style={styles.signInBadgeText}>Sign In</Text>
                 </TouchableOpacity>
               )}
@@ -924,7 +924,7 @@ const PremiumProfileScreen = () => {
                       onPress={() => setShowEditModal(false)}
                       accessibilityRole="button"
                       accessibilityLabel="Save changes">
-                      <LinearGradient colors={[colors.primary, '#0D47A1']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.saveBtn}>
+                      <LinearGradient colors={[colors.primary, '#3660C9']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.saveBtn}>
                         <Text style={styles.saveBtnText}>Save</Text>
                       </LinearGradient>
                     </TouchableOpacity>
@@ -960,7 +960,8 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   safeArea: { flex: 1 },
   headerGradient: {
-    paddingVertical: SPACING.lg,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.xxl + SPACING.lg,
     paddingHorizontal: SPACING.lg,
     alignItems: 'center',
     borderBottomLeftRadius: RADIUS.xxl,
@@ -1027,7 +1028,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   signInBadgeText: {
-    color: '#1A7AEB',
+    color: '#4573DF',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -1062,7 +1063,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xl,
     padding: SPACING.xs,
     elevation: 12,
-    shadowColor: '#1A7AEB',
+    shadowColor: '#4573DF',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 16,

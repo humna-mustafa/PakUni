@@ -137,7 +137,7 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
     <View style={containerStyles.wrapper}>
       <View ref={cardRef} collapsable={false} style={containerStyles.cardShadow}>
         <LinearGradient
-          colors={['#1a1a2e', '#16213e', '#0f3460']}
+          colors={['#1D2127', '#272C34', '#1E3A5F']}
           style={meritStyles.container}
         >
           {/* Optional Campus Background Image */}
@@ -294,11 +294,11 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
             disabled={isSharing}
           >
             {isSharing ? (
-              <ActivityIndicator color="#1a1a2e" />
+              <ActivityIndicator color="#1D2127" />
             ) : (
               <>
-                <Icon name="share-social" family="Ionicons" size={20} color="#1a1a2e" />
-                <Text style={[containerStyles.shareBtnText, {color: '#1a1a2e'}]}>Share Merit Card</Text>
+                <Icon name="share-social" family="Ionicons" size={20} color="#1D2127" />
+                <Text style={[containerStyles.shareBtnText, {color: '#1D2127'}]}>Share Merit Card</Text>
               </>
             )}
           </TouchableOpacity>
@@ -1217,7 +1217,7 @@ const meritStyles = StyleSheet.create({
     borderRadius: RADIUS.full,
   },
   badgeText: {
-    color: '#1a1a2e',
+    color: '#1D2127',
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '800',
     letterSpacing: 1.5,
@@ -1306,7 +1306,7 @@ const meritStyles = StyleSheet.create({
   scoreValue: {
     fontSize: 36,
     fontWeight: '900',
-    color: '#1a1a2e',
+    color: '#1D2127',
   },
   hashtags: {
     fontSize: TYPOGRAPHY.sizes.sm,

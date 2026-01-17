@@ -20,6 +20,7 @@ import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
 import {useTheme} from '../../contexts/ThemeContext';
 import {ENTRY_TESTS_DATA} from '../../data';
+import {ENTRY_TESTS, SEMANTIC, DARK_BG, LIGHT_BG} from '../../constants/brand';
 
 // ============================================================================
 // TYPES
@@ -52,13 +53,13 @@ interface EntryTestCountdownProps {
 const STORAGE_KEY = '@pakuni_custom_test_dates';
 
 const TEST_COLORS: Record<string, string[]> = {
-  ECAT: ['#3B82F6', '#1D4ED8', '#1E40AF'],
-  MDCAT: ['#EF4444', '#DC2626', '#B91C1C'],
-  NET: ['#10B981', '#059669', '#047857'],
-  GAT: ['#8B5CF6', '#7C3AED', '#6D28D9'],
-  HAT: ['#F59E0B', '#D97706', '#B45309'],
-  NTS: ['#EC4899', '#DB2777', '#BE185D'],
-  DEFAULT: ['#0EA5E9', '#0369A1', '#075985'],
+  ECAT: ENTRY_TESTS.ECAT,
+  MDCAT: ENTRY_TESTS.MDCAT,
+  NET: ENTRY_TESTS.NET,
+  GAT: ENTRY_TESTS.GAT,
+  HAT: ENTRY_TESTS.HAT,
+  NTS: ENTRY_TESTS.NTS,
+  DEFAULT: ENTRY_TESTS.DEFAULT,
 };
 
 // ============================================================================
@@ -452,7 +453,7 @@ const EntryTestCountdown: React.FC<EntryTestCountdownProps> = ({
         </View>
 
         {countdown.isExpired ? (
-          <View style={[styles.compactBadge, {backgroundColor: '#10B981'}]}>
+          <View style={[styles.compactBadge, {backgroundColor: SEMANTIC.success}]}>
             <Text style={styles.compactBadgeText}>Done</Text>
           </View>
         ) : (
@@ -505,7 +506,7 @@ const EntryTestCountdown: React.FC<EntryTestCountdownProps> = ({
         <View style={styles.countdownSection}>
           {countdown.isExpired ? (
             <View style={styles.expiredContainer}>
-              <Icon name="checkmark-circle" family="Ionicons" size={48} color="#10B981" />
+              <Icon name="checkmark-circle" family="Ionicons" size={48} color={SEMANTIC.success} />
               <Text style={[styles.expiredText, {color: colors.text}]}>
                 Test Completed!
               </Text>
@@ -529,8 +530,8 @@ const EntryTestCountdown: React.FC<EntryTestCountdownProps> = ({
               </View>
               
               {countdown.days <= 7 && (
-                <View style={[styles.urgentBadge, {backgroundColor: '#FEE2E2'}]}>
-                  <Icon name="warning-outline" family="Ionicons" size={14} color="#DC2626" />
+                <View style={[styles.urgentBadge, {backgroundColor: SEMANTIC.errorBg}]}>
+                  <Icon name="warning-outline" family="Ionicons" size={14} color={SEMANTIC.errorDark} />
                   <Text style={styles.urgentText}>Less than a week left!</Text>
                 </View>
               )}
@@ -762,18 +763,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   digitContainer: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: LIGHT_BG.cardHover,
     borderRadius: RADIUS.lg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   digitValue: {
     fontWeight: '800',
-    color: '#1F2937',
+    color: DARK_BG.background,
   },
   digitLabel: {
     fontWeight: '600',
-    color: '#6B7280',
+    color: DARK_BG.cardHover,
     marginTop: 2,
     letterSpacing: 0.5,
   },
@@ -794,7 +795,7 @@ const styles = StyleSheet.create({
   urgentText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '700',
-    color: '#DC2626',
+    color: SEMANTIC.errorDark,
   },
 
   // Expired State
@@ -857,7 +858,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: LIGHT_BG.cardHover,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -888,7 +889,7 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     flexDirection: 'row',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: SEMANTIC.infoBg,
     padding: SPACING.md,
     borderRadius: RADIUS.lg,
     gap: SPACING.sm,

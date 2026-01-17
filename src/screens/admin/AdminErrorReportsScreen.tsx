@@ -40,7 +40,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -53,7 +53,7 @@ try {
 const STATUS_CONFIG: Record<ErrorStatus, {label: string; color: string; icon: string}> = {
   new: {label: 'New', color: '#EF4444', icon: 'alert-circle'},
   acknowledged: {label: 'Acknowledged', color: '#F59E0B', icon: 'eye'},
-  investigating: {label: 'Investigating', color: '#3B82F6', icon: 'search'},
+  investigating: {label: 'Investigating', color: '#4573DF', icon: 'search'},
   resolved: {label: 'Resolved', color: '#10B981', icon: 'checkmark-circle'},
   wont_fix: {label: "Won't Fix", color: '#6B7280', icon: 'close-circle'},
 };
@@ -633,7 +633,7 @@ const AdminErrorReportsScreen: React.FC = () => {
                       )}
                       {(selectedReport.status === 'new' || selectedReport.status === 'acknowledged') && (
                         <TouchableOpacity
-                          style={[styles.actionBtn, {backgroundColor: '#3B82F6'}]}
+                          style={[styles.actionBtn, {backgroundColor: '#4573DF'}]}
                           onPress={() => handleChangeStatus(selectedReport, 'investigating')}>
                           <Icon name="search-outline" family="Ionicons" size={18} color="#FFFFFF" />
                           <Text style={styles.actionBtnText}>Investigate</Text>

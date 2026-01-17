@@ -375,7 +375,7 @@ class DataSubmissionsService {
   private async applySubmissionChange(submission: DataSubmission): Promise<void> {
     // This would update the actual data based on entity_type
     // For now, log the change
-    logger.info(`Applied change: ${submission.entity_type}/${submission.entity_id} - ${submission.field_name}: ${submission.current_value} -> ${submission.proposed_value}`, 'DataSubmissions');
+    logger.info(`Applied change: ${submission.entity_type}/${submission.entity_id} - ${submission.field_name}: ${submission.current_value} -> ${submission.proposed_value}`, null, 'DataSubmissions');
     
     // In a real implementation, this would update the relevant data store
     // For example, if entity_type is 'merit', update merit records
@@ -491,7 +491,7 @@ class DataSubmissionsService {
       }
 
       // Log the successful application
-      logger.info(`Successfully applied submission ${submission.id} to ${affectedCount} related record(s)`, 'DataSubmissions');
+      logger.info(`Successfully applied submission ${submission.id} to ${affectedCount} related record(s)`, null, 'DataSubmissions');
 
       return { success: true, affectedCount };
     } catch (error) {
@@ -501,9 +501,9 @@ class DataSubmissionsService {
   }
 
   /**
-   * Get statistics including approval metrics
+   * Get submission-specific statistics including approval metrics
    */
-  async getStatistics(): Promise<{
+  async getSubmissionStatistics(): Promise<{
     submissions: {
       total: number;
       pending: number;
@@ -575,6 +575,11 @@ class DataSubmissionsService {
     for (const rule of rules) {
       if (!rule.enabled) continue;
       
+      // Block guest submissions if rule specifies
+      if (rule.block_guest_submissions && submission.user_auth_provider === 'guest') {
+        continue;
+      }
+      
       // Check submission type
       if (rule.submission_types.length > 0 && !rule.submission_types.includes(submission.type)) {
         continue;
@@ -597,13 +602,13 @@ class DataSubmissionsService {
       
       // Check auth provider restrictions
       if (rule.allowed_auth_providers && rule.allowed_auth_providers.length > 0) {
-        if (!submission.auth_provider || !rule.allowed_auth_providers.includes(submission.auth_provider)) {
+        if (!submission.user_auth_provider || !rule.allowed_auth_providers.includes(submission.user_auth_provider)) {
           continue;
         }
       }
       
       // Fast-track Google users if enabled
-      if (rule.auto_approve_google_users && submission.auth_provider === 'google') {
+      if (rule.auto_trust_google && submission.user_auth_provider === 'google') {
         // Google users get auto-approved (skip other checks)
         rule.total_auto_approved++;
         await this.saveAutoApprovalRules(rules);
@@ -611,7 +616,7 @@ class DataSubmissionsService {
       }
       
       // Check email verification requirement
-      if (rule.require_email_verified && submission.auth_provider === 'email') {
+      if (rule.auto_trust_email_verified && submission.user_auth_provider === 'email') {
         // For email users, we'd check if email is verified
         // This would come from user profile - for now, allow if trust level is high enough
         if (submission.user_trust_level < 3) {
@@ -619,8 +624,8 @@ class DataSubmissionsService {
         }
       }
       
-      // Reject guest users if require_email_verified is true
-      if (rule.require_email_verified && submission.auth_provider === 'guest') {
+      // Reject guest users if auto_trust_email_verified is true
+      if (rule.auto_trust_email_verified && submission.user_auth_provider === 'guest') {
         continue;
       }
       
@@ -689,8 +694,9 @@ class DataSubmissionsService {
       require_source: rule.require_source ?? false,
       notify_admin: rule.notify_admin ?? true,
       allowed_auth_providers: rule.allowed_auth_providers || [],
-      auto_approve_google_users: rule.auto_approve_google_users ?? false,
-      require_email_verified: rule.require_email_verified ?? false,
+      auto_trust_google: rule.auto_trust_google ?? false,
+      auto_trust_email_verified: rule.auto_trust_email_verified ?? false,
+      block_guest_submissions: rule.block_guest_submissions ?? false,
       total_auto_approved: rule.total_auto_approved ?? 0,
       created_at: rule.created_at || new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -729,8 +735,9 @@ class DataSubmissionsService {
         require_source: true,
         notify_admin: true,
         allowed_auth_providers: ['google', 'email'],
-        auto_approve_google_users: false,
-        require_email_verified: true,
+        auto_trust_google: false,
+        auto_trust_email_verified: true,
+        block_guest_submissions: true,
         total_auto_approved: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -747,8 +754,9 @@ class DataSubmissionsService {
         require_source: true,
         notify_admin: true,
         allowed_auth_providers: ['google', 'email'],
-        auto_approve_google_users: false,
-        require_email_verified: true,
+        auto_trust_google: false,
+        auto_trust_email_verified: true,
+        block_guest_submissions: true,
         total_auto_approved: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -765,8 +773,9 @@ class DataSubmissionsService {
         require_source: false,
         notify_admin: true,
         allowed_auth_providers: ['google'],
-        auto_approve_google_users: true,
-        require_email_verified: false,
+        auto_trust_google: true,
+        auto_trust_email_verified: false,
+        block_guest_submissions: true,
         total_auto_approved: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -1197,10 +1206,17 @@ class DataSubmissionsService {
   // =========================================================================
 
   /**
-   * Get comprehensive statistics
+   * Get comprehensive system statistics
    */
   async getStatistics(): Promise<{
-    submissions: { total: number; pending: number; approved: number; rejected: number; autoApproved: number };
+    submissions: { 
+      total: number; 
+      pending: number; 
+      approved: number; 
+      rejected: number; 
+      autoApproved: number;
+      avgApprovalTime?: number;
+    };
     merit: { total: number; verified: number; thisYear: number };
     deadlines: { total: number; upcoming: number; expired: number };
     entryTests: { total: number; upcoming: number };
@@ -1214,6 +1230,17 @@ class DataSubmissionsService {
     const triggers = await this.getNotificationTriggers();
     const autoRules = await this.getAutoApprovalRules();
     
+    const approvedSubs = submissions.filter(s => s.status === 'approved');
+    let avgApprovalTime = 0;
+    if (approvedSubs.length > 0) {
+      const times = approvedSubs
+        .map(s => new Date(s.reviewed_at!).getTime() - new Date(s.created_at).getTime())
+        .filter(t => t > 0);
+      if (times.length > 0) {
+        avgApprovalTime = Math.floor(times.reduce((a, b) => a + b, 0) / times.length / 1000 / 60); // in minutes
+      }
+    }
+
     const now = new Date();
     const thisYear = now.getFullYear();
 
@@ -1224,6 +1251,7 @@ class DataSubmissionsService {
         approved: submissions.filter(s => s.status === 'approved').length,
         rejected: submissions.filter(s => s.status === 'rejected').length,
         autoApproved: submissions.filter(s => s.status === 'auto_approved').length,
+        avgApprovalTime,
       },
       merit: {
         total: merit.length,

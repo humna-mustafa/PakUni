@@ -193,6 +193,13 @@ class ErrorReportingService {
     }
   }
 
+  /**
+   * Initialize service (alias for initialize with settings support)
+   */
+  async init(settings: any = {}): Promise<void> {
+    return this.initialize();
+  }
+
   private async collectDeviceInfo(): Promise<DeviceInfoData> {
     try {
       const [

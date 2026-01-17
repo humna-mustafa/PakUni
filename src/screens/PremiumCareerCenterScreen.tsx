@@ -83,8 +83,8 @@ const CAREER_FEATURES: FeatureCard[] = [
     title: 'AI Recommendations',
     subtitle: 'Personalized suggestions',
     iconName: 'sparkles',
-    color: '#EC4899',
-    gradient: ['#EC4899', '#DB2777'],
+    color: '#4573DF',
+    gradient: ['#4573DF', '#3660C9'],
     screen: 'Recommendations',
     highlight: 'AI',
   },
@@ -278,7 +278,7 @@ const PremiumCareerCenterScreen: React.FC = () => {
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={isDark ? '#0F172A' : '#10B981'}
+        backgroundColor={isDark ? '#1D2127' : '#10B981'}
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -299,7 +299,7 @@ const PremiumCareerCenterScreen: React.FC = () => {
             },
           ]}>
           <LinearGradient
-            colors={isDark ? ['#0F172A', '#134E4A', '#10B981'] : ['#10B981', '#059669', '#047857']}
+            colors={isDark ? ['#1D2127', '#134E4A', '#10B981'] : ['#10B981', '#059669', '#047857']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.header}>
@@ -710,3 +710,5 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumCareerCenterScreen;
+
+

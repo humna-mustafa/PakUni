@@ -215,8 +215,8 @@ const ResultCard = ({
 
   const getAggregateGradient = (aggregate: number) => {
     if (aggregate >= 90) return ['#10B981', '#059669'];
-    if (aggregate >= 80) return ['#3B82F6', '#2563EB'];
-    if (aggregate >= 70) return ['#8B5CF6', '#7C3AED'];
+    if (aggregate >= 80) return ['#4573DF', '#3660C9'];
+    if (aggregate >= 70) return ['#4573DF', '#3660C9'];
     if (aggregate >= 60) return ['#F59E0B', '#D97706'];
     return ['#EF4444', '#DC2626'];
   };
@@ -622,7 +622,7 @@ const PremiumCalculatorScreen = () => {
             
             {/* Header */}
             <LinearGradient
-              colors={isDark ? ['#0F172A', '#1E3A5F', '#3B82F6'] : ['#3B82F6', '#2563EB', '#1D4ED8']}
+              colors={isDark ? ['#1D2127', '#1A2540', '#4573DF'] : ['#4573DF', '#3660C9', '#2A4FA8']}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 1}}
               style={styles.headerGradient}>
@@ -841,7 +841,7 @@ const PremiumCalculatorScreen = () => {
                 onPress={calculateMerit}
                 activeOpacity={0.9}>
                 <LinearGradient
-                  colors={[colors.primary, '#1565C0']}
+                  colors={[colors.primary, '#3660C9']}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.calculateGradient}>
@@ -1065,7 +1065,7 @@ const PremiumCalculatorScreen = () => {
                     setSelectedFormula(formula);
                     setShowFormulaModal(false);
                   }}>
-                  <Icon name="code-slash-outline" family="Ionicons" size={28} color="#3B82F6" />
+                  <Icon name="code-slash-outline" family="Ionicons" size={28} color="#4573DF" />
                   <View style={styles.formulaOptionInfo}>
                     <Text style={[styles.formulaName, {color: colors.text}]}>
                       {formula.name}
@@ -1154,7 +1154,7 @@ const PremiumCalculatorScreen = () => {
 
               {/* General Universities Section */}
               <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, marginBottom: 8}}>
-                <Icon name="school-outline" family="Ionicons" size={18} color="#8B5CF6" />
+                <Icon name="school-outline" family="Ionicons" size={18} color="#4573DF" />
                 <Text style={[styles.formulaCategoryTitle, {color: colors.text, marginTop: 0, marginBottom: 0}]}>General Universities</Text>
               </View>
               {MERIT_FORMULAS.filter(f => f.applicable_fields.some(field => 
@@ -1177,7 +1177,7 @@ const PremiumCalculatorScreen = () => {
                     setSelectedFormula(formula);
                     setShowFormulaModal(false);
                   }}>
-                  <Icon name="school-outline" family="Ionicons" size={28} color="#8B5CF6" />
+                  <Icon name="school-outline" family="Ionicons" size={28} color="#4573DF" />
                   <View style={styles.formulaOptionInfo}>
                     <Text style={[styles.formulaName, {color: colors.text}]}>
                       {formula.name}
@@ -1315,7 +1315,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xxl,
     overflow: 'hidden',
     elevation: 8,
-    shadowColor: '#3B82F6',
+    shadowColor: '#4573DF',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.25,
     shadowRadius: 12,
@@ -1542,7 +1542,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xl,
     overflow: 'hidden',
     elevation: 4,
-    shadowColor: '#0EA5E9',
+    shadowColor: '#4573DF',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -1863,3 +1863,5 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumCalculatorScreen;
+
+

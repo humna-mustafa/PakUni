@@ -41,10 +41,10 @@ import {
 
 const STATUS_COLORS: Record<SubmissionStatus, string> = {
   pending: '#F59E0B',
-  under_review: '#3B82F6',
+  under_review: '#4573DF',
   approved: '#10B981',
   rejected: '#EF4444',
-  auto_approved: '#8B5CF6',
+  auto_approved: '#4573DF',
 };
 
 const PRIORITY_COLORS: Record<SubmissionPriority, string> = {
@@ -141,7 +141,11 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
       });
       
       setSubmissions(enhanced);
-      setStats(await dataSubmissionsService.getStatistics());
+      const dataStats = await dataSubmissionsService.getStatistics();
+      setStats({
+        ...dataStats.submissions,
+        avgApprovalTime: dataStats.submissions.avgApprovalTime || 0
+      });
     } catch (error) {
       console.error('Failed to load submissions:', error);
     } finally {
@@ -701,7 +705,7 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
               {/* Notes */}
               <Text style={[styles.inputLabel, { color: colors.text }]}>Review Notes (optional)</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+                style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
                 value={reviewNotes}
                 onChangeText={setReviewNotes}
                 placeholder="Add internal notes about this review..."
@@ -711,7 +715,7 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
               
               <Text style={[styles.inputLabel, { color: colors.text }]}>Rejection Reason (if rejecting)</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: isDark ? '#1F2937' : '#F3F4F6', color: colors.text }]}
+                style={[styles.input, { backgroundColor: isDark ? '#272C34' : '#F3F4F6', color: colors.text }]}
                 value={rejectionReason}
                 onChangeText={setRejectionReason}
                 placeholder="Explain why this submission is being rejected..."
@@ -1267,3 +1271,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminDataSubmissionsScreen;
+
+

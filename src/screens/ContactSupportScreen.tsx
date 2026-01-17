@@ -43,7 +43,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#0EA5E9'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -117,8 +117,8 @@ const FEEDBACK_OPTIONS: FeedbackOption[] = [
     title: 'Request Content Update',
     subtitle: 'University, scholarship, or deadline info incorrect?',
     icon: 'refresh-outline',
-    color: '#3B82F6',
-    gradient: ['#3B82F6', '#2563EB'],
+    color: '#4573DF',
+    gradient: ['#4573DF', '#3660C9'],
   },
   {
     id: 'material_submission',
@@ -133,8 +133,8 @@ const FEEDBACK_OPTIONS: FeedbackOption[] = [
     title: 'General Feedback',
     subtitle: 'Tell us what you think about the app',
     icon: 'chatbubble-outline',
-    color: '#8B5CF6',
-    gradient: ['#8B5CF6', '#7C3AED'],
+    color: '#4573DF',
+    gradient: ['#4573DF', '#3660C9'],
   },
   {
     id: 'complaint',
@@ -766,7 +766,7 @@ const ContactSupportScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#0EA5E9', '#0284C7']}
+          colors={isDark ? ['#1A2540', '#1D2127'] : ['#4573DF', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -794,8 +794,8 @@ const ContactSupportScreen: React.FC = () => {
             ]}>
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <View style={[styles.statIcon, {backgroundColor: '#3B82F620'}]}>
-                  <Icon name="school" family="Ionicons" size={20} color="#3B82F6" />
+                <View style={[styles.statIcon, {backgroundColor: '#4573DF20'}]}>
+                  <Icon name="school" family="Ionicons" size={20} color="#4573DF" />
                 </View>
                 <Text style={[styles.statValue, {color: colors.text}]}>200+</Text>
                 <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Universities</Text>
@@ -1483,3 +1483,5 @@ const styles = StyleSheet.create({
 });
 
 export default ContactSupportScreen;
+
+

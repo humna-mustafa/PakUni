@@ -67,7 +67,7 @@ export const SCHOLARSHIP_BRAND_COLORS: Record<string, { primary: string; seconda
   'csc': { primary: '#DE2910', secondary: '#FFDE00', gradient: ['#B01E0E', '#DE2910', '#FF4433'] },
   
   // Default
-  'default': { primary: '#0EA5E9', secondary: '#38BDF8', gradient: ['#0369A1', '#0EA5E9', '#38BDF8'] },
+  'default': { primary: '#4573DF', secondary: '#4573DF', gradient: ['#3660C9', '#4573DF', '#4573DF'] },
 };
 
 // Get brand colors for a scholarship
@@ -1934,3 +1934,5 @@ export const searchScholarships = (query: string): ScholarshipData[] => {
 };
 
 export default SCHOLARSHIPS;
+
+

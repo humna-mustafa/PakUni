@@ -38,7 +38,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -471,14 +471,14 @@ const AdminDataManagementScreen: React.FC = () => {
 
   const renderExportTab = () => {
     const exportOptions = [
-      {key: 'universities', label: 'Universities', icon: 'school-outline', color: '#3B82F6'},
+      {key: 'universities', label: 'Universities', icon: 'school-outline', color: '#4573DF'},
       {key: 'scholarships', label: 'Scholarships', icon: 'wallet-outline', color: '#10B981'},
-      {key: 'programs', label: 'Programs', icon: 'library-outline', color: '#8B5CF6'},
+      {key: 'programs', label: 'Programs', icon: 'library-outline', color: '#4573DF'},
       {key: 'users', label: 'Users', icon: 'people-outline', color: '#F59E0B'},
-      {key: 'feedback', label: 'Feedback', icon: 'chatbubbles-outline', color: '#EC4899'},
+      {key: 'feedback', label: 'Feedback', icon: 'chatbubbles-outline', color: '#4573DF'},
       {key: 'analytics', label: 'Analytics', icon: 'analytics-outline', color: '#06B6D4'},
       {key: 'merit_lists', label: 'Merit Lists', icon: 'ribbon-outline', color: '#EF4444'},
-      {key: 'all', label: 'Export All Data', icon: 'download-outline', color: '#6366F1'},
+      {key: 'all', label: 'Export All Data', icon: 'download-outline', color: '#4573DF'},
     ];
 
     return (
@@ -701,8 +701,8 @@ const AdminDataManagementScreen: React.FC = () => {
                   {item.program_type.charAt(0).toUpperCase() + item.program_type.slice(1)} Programs
                 </Text>
               </View>
-              <View style={[styles.yearBadge, {backgroundColor: '#3B82F620'}]}>
-                <Text style={[styles.yearText, {color: '#3B82F6'}]}>{item.year}</Text>
+              <View style={[styles.yearBadge, {backgroundColor: '#4573DF20'}]}>
+                <Text style={[styles.yearText, {color: '#4573DF'}]}>{item.year}</Text>
               </View>
             </View>
             <View style={styles.listMeta}>
@@ -754,7 +754,7 @@ const AdminDataManagementScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#6366F1', '#4F46E5']}
+          colors={isDark ? ['#1E3A5F', '#1E1E2E'] : ['#4573DF', '#3660C9']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
@@ -1417,7 +1417,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#4573DF',
     alignItems: 'center',
   },
   saveBtnText: {
@@ -1428,3 +1428,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminDataManagementScreen;
+
+

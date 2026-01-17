@@ -42,7 +42,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -54,13 +54,13 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 // Notification types
 const NOTIFICATION_TYPES = [
-  {id: 'general', label: 'General', icon: 'notifications-outline', color: '#3B82F6'},
-  {id: 'announcement', label: 'Announcement', icon: 'megaphone-outline', color: '#8B5CF6'},
+  {id: 'general', label: 'General', icon: 'notifications-outline', color: '#4573DF'},
+  {id: 'announcement', label: 'Announcement', icon: 'megaphone-outline', color: '#4573DF'},
   {id: 'update', label: 'App Update', icon: 'refresh-outline', color: '#10B981'},
   {id: 'alert', label: 'Alert', icon: 'alert-circle-outline', color: '#EF4444'},
   {id: 'scholarship', label: 'Scholarship', icon: 'wallet-outline', color: '#F59E0B'},
   {id: 'admission', label: 'Admission', icon: 'school-outline', color: '#06B6D4'},
-  {id: 'deadline', label: 'Deadline', icon: 'time-outline', color: '#EC4899'},
+  {id: 'deadline', label: 'Deadline', icon: 'time-outline', color: '#4573DF'},
 ];
 
 // Target audience options
@@ -76,7 +76,7 @@ const TARGET_AUDIENCES = [
 // Priority levels
 const PRIORITY_LEVELS = [
   {id: 'low', label: 'Low', color: '#6B7280'},
-  {id: 'normal', label: 'Normal', color: '#3B82F6'},
+  {id: 'normal', label: 'Normal', color: '#4573DF'},
   {id: 'high', label: 'High', color: '#F59E0B'},
   {id: 'urgent', label: 'Urgent', color: '#EF4444'},
 ];
@@ -176,7 +176,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
               <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Delivered</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={[styles.statValue, {color: '#3B82F6'}]}>
+              <Text style={[styles.statValue, {color: '#4573DF'}]}>
                 {notification.stats.opened || 0}
               </Text>
               <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Opened</Text>
@@ -651,7 +651,7 @@ const AdminNotificationsScreen: React.FC = () => {
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}
         <LinearGradient
-          colors={isDark ? ['#1E1E2E', '#2D1F3D'] : ['#1A7AEB', '#7C3AED']}
+          colors={isDark ? ['#1E1E2E', '#2D1F3D'] : ['#4573DF', '#4573DF']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.header}>
@@ -691,7 +691,7 @@ const AdminNotificationsScreen: React.FC = () => {
               title="Total Sent"
               value={stats?.totalSent || 0}
               icon="paper-plane-outline"
-              color="#3B82F6"
+              color="#4573DF"
               colors={colors}
             />
             <StatsCard
@@ -706,7 +706,7 @@ const AdminNotificationsScreen: React.FC = () => {
               title="Opened"
               value={stats?.totalOpened || 0}
               icon="eye-outline"
-              color="#8B5CF6"
+              color="#4573DF"
               subtitle={stats?.openRate ? `${stats.openRate}%` : undefined}
               colors={colors}
             />
@@ -795,12 +795,12 @@ const AdminNotificationsScreen: React.FC = () => {
             
             <View style={styles.templatesGrid}>
               {[
-                {icon: 'megaphone', label: 'Announcement', color: '#8B5CF6'},
-                {icon: 'school', label: 'Admission Open', color: '#3B82F6'},
+                {icon: 'megaphone', label: 'Announcement', color: '#4573DF'},
+                {icon: 'school', label: 'Admission Open', color: '#4573DF'},
                 {icon: 'wallet', label: 'Scholarship', color: '#F59E0B'},
                 {icon: 'time', label: 'Deadline', color: '#EF4444'},
                 {icon: 'refresh', label: 'App Update', color: '#10B981'},
-                {icon: 'sparkles', label: 'New Feature', color: '#EC4899'},
+                {icon: 'sparkles', label: 'New Feature', color: '#4573DF'},
               ].map((template, index) => (
                 <TouchableOpacity
                   key={index}
@@ -1274,7 +1274,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.1)',
   },
   sendBtn: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#4573DF',
   },
   modalBtnText: {
     fontSize: 15,
@@ -1283,3 +1283,5 @@ const styles = StyleSheet.create({
 });
 
 export default AdminNotificationsScreen;
+
+

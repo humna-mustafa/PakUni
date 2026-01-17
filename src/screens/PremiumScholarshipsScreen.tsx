@@ -53,7 +53,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#0EA5E9'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -64,12 +64,12 @@ const {width} = Dimensions.get('window');
 type FilterType = 'all' | 'need_based' | 'merit_based' | 'hafiz_e_quran' | 'government' | 'private';
 
 const typeFilters: {value: FilterType; label: string; iconName: string; gradient: string[]}[] = [
-  {value: 'all', label: 'All', iconName: 'list-outline', gradient: ['#6366F1', '#8B5CF6']},
+  {value: 'all', label: 'All', iconName: 'list-outline', gradient: ['#4573DF', '#4573DF']},
   {value: 'need_based', label: 'Need Based', iconName: 'wallet-outline', gradient: ['#10B981', '#059669']},
   {value: 'merit_based', label: 'Merit', iconName: 'trophy-outline', gradient: ['#F59E0B', '#D97706']},
-  {value: 'hafiz_e_quran', label: 'Hafiz', iconName: 'book-outline', gradient: ['#8B5CF6', '#7C3AED']},
-  {value: 'government', label: 'Govt', iconName: 'business-outline', gradient: ['#3B82F6', '#2563EB']},
-  {value: 'private', label: 'Private', iconName: 'briefcase-outline', gradient: ['#EC4899', '#DB2777']},
+  {value: 'hafiz_e_quran', label: 'Hafiz', iconName: 'book-outline', gradient: ['#4573DF', '#3660C9']},
+  {value: 'government', label: 'Govt', iconName: 'business-outline', gradient: ['#4573DF', '#3660C9']},
+  {value: 'private', label: 'Private', iconName: 'briefcase-outline', gradient: ['#4573DF', '#4573DF']},
 ];
 
 // Animated Filter Chip
@@ -175,7 +175,7 @@ const ScholarshipCard = ({
   const getCoverageColor = (percentage: number) => {
     if (percentage >= 100) return '#10B981';
     if (percentage >= 50) return '#F59E0B';
-    return '#3B82F6';
+    return '#4573DF';
   };
 
   const getTypeIconName = (type: string) => {
@@ -893,7 +893,7 @@ const PremiumScholarshipsScreen = () => {
                   accessibilityLabel="Apply now - opens in browser"
                   accessibilityHint={`Opens ${selectedScholarship.name} application website`}>
                   <LinearGradient
-                    colors={[colors.primary, '#0D47A1']}
+                    colors={[colors.primary, '#3660C9']}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 1}}
                     style={styles.applyBtn}>
@@ -1140,7 +1140,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.xxl,
     overflow: 'hidden',
     elevation: 8,
-    shadowColor: '#8B5CF6',
+    shadowColor: '#4573DF',
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.25,
     shadowRadius: 12,
@@ -1820,3 +1820,5 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumScholarshipsScreen;
+
+

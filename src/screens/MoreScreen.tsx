@@ -57,8 +57,8 @@ const MENU_SECTIONS: MenuSection[] = [
     title: 'Tools',
     icon: 'calculator-outline',
     items: [
-      {id: 'tools', title: 'All Tools', icon: 'calculator', color: '#6366F1', screen: 'Tools'},
-      {id: 'calculator', title: 'Merit Calc', icon: 'calculator-outline', color: '#8B5CF6', screen: 'Calculator'},
+      {id: 'tools', title: 'All Tools', icon: 'calculator', color: '#4573DF', screen: 'Tools'},
+      {id: 'calculator', title: 'Merit Calc', icon: 'calculator-outline', color: '#4573DF', screen: 'Calculator'},
       {id: 'compare', title: 'Compare', icon: 'git-compare-outline', color: '#0891B2', screen: 'Compare'},
       {id: 'meritarchive', title: 'Merit Data', icon: 'archive-outline', color: '#64748B', screen: 'MeritArchive'},
     ],
@@ -68,7 +68,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: 'compass-outline',
     items: [
       {id: 'careercenter', title: 'Career Hub', icon: 'compass-outline', color: '#059669', screen: 'CareerCenter'},
-      {id: 'recommendations', title: 'AI Match', icon: 'sparkles-outline', color: '#EC4899', screen: 'Recommendations'},
+      {id: 'recommendations', title: 'AI Match', icon: 'sparkles-outline', color: '#4573DF', screen: 'Recommendations'},
       {id: 'roadmaps', title: 'Roadmaps', icon: 'map-outline', color: '#F59E0B', screen: 'CareerRoadmaps'},
       {id: 'interestquiz', title: 'Quiz', icon: 'help-circle-outline', color: '#06B6D4', screen: 'InterestQuiz'},
     ],
@@ -78,7 +78,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: 'library-outline',
     items: [
       {id: 'entrytests', title: 'Entry Tests', icon: 'clipboard-outline', color: '#DC2626', screen: 'EntryTests'},
-      {id: 'guides', title: 'Guides', icon: 'library-outline', color: '#7C3AED', screen: 'Guides'},
+      {id: 'guides', title: 'Guides', icon: 'library-outline', color: '#3660C9', screen: 'Guides'},
       {id: 'studytips', title: 'Study Tips', icon: 'bulb-outline', color: '#FBBF24', screen: 'StudyTips'},
       {id: 'goals', title: 'My Goals', icon: 'flag-outline', color: '#10B981', screen: 'GoalSetting'},
     ],
@@ -88,7 +88,7 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: 'game-controller-outline',
     items: [
       {id: 'deadlines', title: 'Deadlines', icon: 'calendar-outline', color: '#EF4444', screen: 'Deadlines', badge: 'NEW'},
-      {id: 'polls', title: 'Polls', icon: 'stats-chart-outline', color: '#8B5CF6', screen: 'Polls'},
+      {id: 'polls', title: 'Polls', icon: 'stats-chart-outline', color: '#3660C9', screen: 'Polls'},
       {id: 'resultgame', title: 'Predict', icon: 'game-controller-outline', color: '#10B981', screen: 'ResultGame'},
       {id: 'achievements', title: 'Badges', icon: 'trophy-outline', color: '#F59E0B', screen: 'Achievements'},
     ],
@@ -244,7 +244,7 @@ const MoreScreen = () => {
               onPress={() => handleNavigate('Calculator')}
               activeOpacity={0.8}>
               <LinearGradient
-                colors={['#6366F1', '#8B5CF6']}
+                colors={['#4573DF', '#3660C9']}
                 style={styles.quickCardGradient}>
                 <Icon name="calculator-outline" family="Ionicons" size={24} color="#FFFFFF" />
               </LinearGradient>
@@ -295,7 +295,7 @@ const MoreScreen = () => {
               onPress={() => navigation.navigate('AdminDashboard')}
               activeOpacity={0.8}>
               <LinearGradient
-                colors={['#7C3AED', '#A855F7']}
+                colors={['#3660C9', '#4573DF']}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 style={styles.adminCardGradient}>
@@ -377,7 +377,7 @@ const MoreScreen = () => {
               style={[styles.bottomLinkItem, {backgroundColor: colors.card}]}
               onPress={() => handleNavigate('Notifications')}
               activeOpacity={0.8}>
-              <Icon name="notifications-outline" family="Ionicons" size={20} color="#3B82F6" />
+              <Icon name="notifications-outline" family="Ionicons" size={20} color="#4573DF" />
               <Text style={[styles.bottomLinkText, {color: colors.text}]}>Alerts</Text>
             </TouchableOpacity>
             
@@ -396,7 +396,7 @@ const MoreScreen = () => {
             onPress={() => handleNavigate('KidsHub')}
             activeOpacity={0.8}>
             <LinearGradient
-              colors={['#EC4899', '#F472B6']}
+              colors={['#4573DF', '#F472B6']}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               style={styles.kidsHubGradient}>
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
     ...Platform.select({
       ios: {
-        shadowColor: '#EC4899',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.3,
         shadowRadius: 8,
@@ -752,3 +752,4 @@ const styles = StyleSheet.create({
 });
 
 export default MoreScreen;
+

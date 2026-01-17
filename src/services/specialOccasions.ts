@@ -206,7 +206,7 @@ export const checkForBirthday = async (): Promise<SpecialOccasion | null> => {
       title: template.title,
       message: template.message.replace('{name}', name),
       emoji: template.emoji,
-      gradientColors: ['#EC4899', '#F472B6', '#FBCFE8'],
+      gradientColors: ['#4573DF', '#F472B6', '#FBCFE8'],
     };
   }
   
@@ -242,7 +242,7 @@ export const checkForExamDay = async (): Promise<SpecialOccasion | null> => {
           .replace('{testName}', test.name)
           .replace('{name}', name),
         emoji: template.emoji,
-        gradientColors: ['#3B82F6', '#60A5FA', '#93C5FD'],
+        gradientColors: ['#4573DF', '#60A5FA', '#93C5FD'],
         actionLabel: 'View Test Details',
         actionRoute: 'EntryTests',
       };
@@ -424,3 +424,4 @@ export default {
   checkForSpecialOccasion,
   getUpcomingOccasions,
 };
+

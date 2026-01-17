@@ -59,7 +59,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     id: 'pre-engineering',
     name: 'Pre-Engineering',
     iconName: 'construct',
-    color: '#1565C0',
+    color: '#4573DF',
     description: 'For students interested in engineering, technology, and applied sciences',
     compulsory: ['Mathematics', 'Physics', 'Chemistry', 'English', 'Urdu/Islamiat/Pak Studies'],
     electives: ['Computer Science', 'Statistics'],
@@ -72,7 +72,7 @@ const SUBJECT_GROUPS: SubjectGroup[] = [
     id: 'ics',
     name: 'ICS (Computer Science)',
     iconName: 'code-slash',
-    color: '#00897B',
+    color: '#4573DF',
     description: 'For students passionate about computers, programming, and IT',
     compulsory: ['Computer Science', 'Mathematics', 'Physics', 'English', 'Urdu/Islamiat/Pak Studies'],
     electives: ['Statistics', 'Economics'],
@@ -436,7 +436,7 @@ const SubjectGuideScreen = () => {
           </View>
           
           <View style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
-            <Icon name="laptop-outline" family="Ionicons" size={24} color="#00897B" />
+            <Icon name="laptop-outline" family="Ionicons" size={24} color="#4573DF" />
             <View style={styles.careerPathInfo}>
               <Text style={[styles.careerPathTitle, {color: colors.text}]}>Want to be a Software Engineer?</Text>
               <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>

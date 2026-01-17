@@ -59,7 +59,7 @@ const UNIVERSITIES: University[] = [
     id: 'nust',
     name: 'NUST',
     shortName: 'NUST',
-    color: '#1E40AF',
+    color: '#4573DF',
     programs: [
       {name: 'Computer Science', lastYearMerit: 87.1},
       {name: 'Electrical Engineering', lastYearMerit: 82.0},
@@ -125,7 +125,7 @@ const Confetti: React.FC<{show: boolean}> = ({show}) => {
 
   useEffect(() => {
     if (show) {
-      const colors = ['#F59E0B', '#10B981', '#6366F1', '#EC4899', '#EF4444', '#8B5CF6'];
+      const colors = ['#F59E0B', '#10B981', '#4573DF', '#4573DF', '#EF4444', '#4573DF'];
       const newPieces: ConfettiPiece[] = [];
 
       for (let i = 0; i < 50; i++) {
@@ -543,7 +543,7 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
           activeOpacity={0.9}
           style={styles.predictButtonContainer}>
           <LinearGradient
-            colors={selectedUniversity ? [selectedUniversity.color, selectedUniversity.color + 'CC'] : ['#6366F1', '#8B5CF6']}
+            colors={selectedUniversity ? [selectedUniversity.color, selectedUniversity.color + 'CC'] : ['#4573DF', '#4573DF']}
             style={styles.predictButton}>
             <Icon name="sparkles-outline" size={24} color="#FFF" />
             <Text style={styles.predictButtonText}>Will I Get In? 🎲</Text>
@@ -568,7 +568,7 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
           <SpinningWheel
             spinning={step === 'spinning'}
             result={result?.result || null}
-            color={selectedUniversity?.color || '#6366F1'}
+            color={selectedUniversity?.color || '#4573DF'}
           />
 
           {/* Suspense Text */}
@@ -656,7 +656,7 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
                   style={styles.tryAgainButton}
                   onPress={resetGame}
                   activeOpacity={0.8}>
-                  <Icon name="refresh-outline" size={20} color="#6366F1" />
+                  <Icon name="refresh-outline" size={20} color="#4573DF" />
                   <Text style={styles.tryAgainText}>Try Another</Text>
                 </TouchableOpacity>
                 
@@ -682,7 +682,7 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#EC4899', '#F472B6']}
+          colors={['#4573DF', '#F472B6']}
           style={styles.headerIcon}>
           <Icon name="game-controller-outline" size={24} color="#FFF" />
         </LinearGradient>
@@ -955,7 +955,7 @@ const styles = StyleSheet.create({
   tryAgainText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: '#6366F1',
+    color: '#4573DF',
     marginLeft: 6,
   },
   shareButton: {
@@ -975,3 +975,5 @@ const styles = StyleSheet.create({
 });
 
 export default ResultPredictionGame;
+
+

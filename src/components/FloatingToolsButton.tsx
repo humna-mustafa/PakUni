@@ -111,7 +111,7 @@ const FloatingToolsButton = memo<FloatingToolsButtonProps>(({
         accessibilityLabel="Open calculator and tools">
         <View style={styles.buttonWrapper}>
           <LinearGradient
-            colors={['#6366F1', '#8B5CF6']}
+            colors={['#4573DF', '#3660C9']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={[
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#6366F1',
+        shadowColor: '#4573DF',
         shadowOffset: {width: 0, height: 4},
         shadowOpacity: 0.35,
         shadowRadius: 8,

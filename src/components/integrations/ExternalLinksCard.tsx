@@ -140,7 +140,7 @@ const PortalCard: React.FC<PortalCardProps> = ({university}) => {
                 style={portalCardStyles.linkButton}
                 onPress={() => openUniversityPortal(university.id, link.type)}
                 activeOpacity={0.7}>
-                <Icon name={link.icon} size={18} color="#6366F1" />
+                <Icon name={link.icon} size={18} color="#4573DF" />
                 <Text style={portalCardStyles.linkLabel}>{link.label}</Text>
               </TouchableOpacity>
             ))}
@@ -221,7 +221,7 @@ const portalCardStyles = StyleSheet.create({
   },
   linkLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -282,7 +282,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
           <QuickLinkButton
             icon="globe-outline"
             label="Website"
-            color="#6366F1"
+            color="#4573DF"
             onPress={() => openUniversityPortal(selectedUniversity.id, 'website')}
           />
           <QuickLinkButton
@@ -304,7 +304,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
               <QuickLinkButton
                 icon="map-outline"
                 label="View Map"
-                color="#EC4899"
+                color="#4573DF"
                 onPress={() => openInGoogleMaps(universityLocation)}
               />
               <QuickLinkButton
@@ -319,7 +319,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
             <QuickLinkButton
               icon="mail-outline"
               label="Email"
-              color="#8B5CF6"
+              color="#4573DF"
               onPress={() => contactUniversity(selectedUniversity.id, 'email')}
             />
           )}
@@ -346,7 +346,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
               style={styles.compactButton}
               onPress={() => openUniversityPortal(selectedUniversity.id, 'website')}
               activeOpacity={0.7}>
-              <Icon name="globe-outline" size={18} color="#6366F1" />
+              <Icon name="globe-outline" size={18} color="#4573DF" />
               <Text style={styles.compactButtonText}>Website</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -361,7 +361,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
                 style={styles.compactButton}
                 onPress={() => openInGoogleMaps(universityLocation)}
                 activeOpacity={0.7}>
-                <Icon name="map-outline" size={18} color="#EC4899" />
+                <Icon name="map-outline" size={18} color="#4573DF" />
                 <Text style={styles.compactButtonText}>Map</Text>
               </TouchableOpacity>
             )}
@@ -376,7 +376,7 @@ export const ExternalLinksCard: React.FC<ExternalLinksCardProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#6366F1', '#8B5CF6']}
+          colors={['#4573DF', '#4573DF']}
           style={styles.headerIcon}>
           <Icon name="link-outline" size={24} color="#FFF" />
         </LinearGradient>
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#6366F1',
+    color: '#4573DF',
     fontWeight: '600',
   },
   quickLinksSection: {
@@ -713,3 +713,5 @@ const styles = StyleSheet.create({
 });
 
 export default ExternalLinksCard;
+
+

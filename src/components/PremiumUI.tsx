@@ -198,7 +198,7 @@ export const PremiumStatCard: React.FC<PremiumStatCardProps> = ({
       case 'glass':
         return {
           backgroundColor: isDark 
-            ? 'rgba(30, 41, 59, 0.7)' 
+            ? 'rgba(39, 44, 52, 0.85)' 
             : 'rgba(255, 255, 255, 0.85)',
         };
       default:
@@ -289,7 +289,7 @@ export const PremiumStatRow: React.FC<PremiumStatRowProps> = ({
       case 'glass':
         return {
           backgroundColor: isDark 
-            ? 'rgba(30, 41, 59, 0.7)' 
+            ? 'rgba(39, 44, 52, 0.85)' 
             : 'rgba(255, 255, 255, 0.85)',
         };
       default:

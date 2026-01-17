@@ -31,7 +31,7 @@ try {
   LinearGradient = require('react-native-linear-gradient').default;
 } catch (e) {
   LinearGradient = ({children, colors, style, ...props}: any) => (
-    <View style={[style, {backgroundColor: colors?.[0] || '#1A7AEB'}]} {...props}>
+    <View style={[style, {backgroundColor: colors?.[0] || '#4573DF'}]} {...props}>
       {children}
     </View>
   );
@@ -39,7 +39,7 @@ try {
 
 const STATUS_CONFIG: Record<ReportStatus, {label: string; color: string; icon: string}> = {
   pending: {label: 'Pending', color: '#F59E0B', icon: 'time-outline'},
-  reviewing: {label: 'Reviewing', color: '#3B82F6', icon: 'eye-outline'},
+  reviewing: {label: 'Reviewing', color: '#4573DF', icon: 'eye-outline'},
   resolved: {label: 'Resolved', color: '#10B981', icon: 'checkmark-circle'},
   dismissed: {label: 'Dismissed', color: '#6B7280', icon: 'close-circle'},
 };
@@ -184,10 +184,10 @@ const AdminReportsScreen: React.FC = () => {
         {item.status === 'pending' && (
           <View style={styles.quickActions}>
             <TouchableOpacity
-              style={[styles.quickBtn, {backgroundColor: '#3B82F620'}]}
+              style={[styles.quickBtn, {backgroundColor: '#4573DF20'}]}
               onPress={() => handleStartReview(item)}>
-              <Icon name="eye-outline" family="Ionicons" size={14} color="#3B82F6" />
-              <Text style={[styles.quickBtnText, {color: '#3B82F6'}]}>Review</Text>
+              <Icon name="eye-outline" family="Ionicons" size={14} color="#4573DF" />
+              <Text style={[styles.quickBtnText, {color: '#4573DF'}]}>Review</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.quickBtn, {backgroundColor: '#10B98120'}]}

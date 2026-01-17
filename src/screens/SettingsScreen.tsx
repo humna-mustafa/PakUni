@@ -360,7 +360,7 @@ const SettingsScreen: React.FC = () => {
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
               icon="notifications-outline"
-              iconColor="#3B82F6"
+              iconColor="#4573DF"
               title="Notifications"
               subtitle="View all your alerts & updates"
               colors={colors}
@@ -413,7 +413,7 @@ const SettingsScreen: React.FC = () => {
           <Section title="APPEARANCE" colors={colors}>
             <SettingItem
               icon="moon-outline"
-              iconColor="#6366F1"
+              iconColor="#4573DF"
               title="Dark Mode"
               subtitle={isDark ? 'On' : 'Off'}
               colors={colors}
@@ -487,7 +487,7 @@ const SettingsScreen: React.FC = () => {
             
             <SettingItem
               icon="document-text-outline"
-              iconColor="#8B5CF6"
+              iconColor="#4573DF"
               title="Test Date Reminders"
               colors={colors}
               showArrow={false}
@@ -545,7 +545,7 @@ const SettingsScreen: React.FC = () => {
           <Section title="HELP & SUPPORT" colors={colors}>
             <SettingItem
               icon="chatbubbles-outline"
-              iconColor="#0EA5E9"
+              iconColor="#4573DF"
               title="Contact & Support Center"
               subtitle="Report issues, suggest features, share resources"
               colors={colors}
@@ -602,7 +602,7 @@ const SettingsScreen: React.FC = () => {
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
               icon="help-circle-outline"
-              iconColor="#6366F1"
+              iconColor="#4573DF"
               title="Help & FAQ"
               colors={colors}
               onPress={() => navigation.navigate('Guides' as never)}
@@ -610,7 +610,7 @@ const SettingsScreen: React.FC = () => {
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
               icon="document-outline"
-              iconColor="#8B5CF6"
+              iconColor="#4573DF"
               title="Privacy Policy"
               colors={colors}
               onPress={() => navigation.navigate('PrivacyPolicy' as never)}
@@ -793,3 +793,5 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
+
+

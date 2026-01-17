@@ -77,13 +77,13 @@ const NOTIFICATION_CONFIG: Record<NotificationType, {
   },
   news: {
     icon: 'newspaper-outline',
-    color: '#3B82F6',
-    bgColor: 'rgba(59, 130, 246, 0.12)',
+    color: '#4573DF',
+    bgColor: 'rgba(69, 115, 223, 0.12)',
   },
   update: {
     icon: 'refresh-outline',
-    color: '#8B5CF6',
-    bgColor: 'rgba(139, 92, 246, 0.12)',
+    color: '#4573DF',
+    bgColor: 'rgba(107, 147, 240, 0.12)',
   },
   alert: {
     icon: 'warning-outline',
@@ -161,7 +161,7 @@ const NotificationItem = memo<NotificationItemProps>(({
           {
             backgroundColor: notification.read 
               ? 'transparent' 
-              : isDark ? 'rgba(99, 102, 241, 0.08)' : 'rgba(99, 102, 241, 0.04)',
+              : isDark ? 'rgba(69, 115, 223, 0.08)' : 'rgba(69, 115, 223, 0.04)',
           },
         ]}
         accessibilityRole="button"
@@ -688,3 +688,6 @@ const styles = StyleSheet.create({
 });
 
 export default NotificationBell;
+
+
+

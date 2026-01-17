@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './supabase';
 import { hybridDataService } from './hybridData';
 import { dataSubmissionsService, DataSubmission } from './dataSubmissions';
-import { notificationsService } from './notifications';
+import { notificationService } from './notifications';
 import { adminService } from './admin';
 import { logger } from '../utils/logger';
 
@@ -75,9 +75,9 @@ class ContributionAutomationService {
     try {
       const enabled = await this.isGlobalAutoApprovalEnabled();
       this.autoApprovalEnabled = enabled;
-      logger.log('ContributionAutomation', 'Initialized with auto-approval:', enabled);
+      logger.info('Initialized with auto-approval:', enabled, 'ContributionAutomation');
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to initialize:', error);
+      logger.error('Failed to initialize:', error, 'ContributionAutomation');
     }
   }
 
@@ -90,11 +90,11 @@ class ContributionAutomationService {
       await AsyncStorage.setItem(this.GLOBAL_AUTO_APPROVAL_KEY, JSON.stringify(enabled));
 
       // Also save to Supabase for persistence across devices
-      await adminService.setSetting('auto_approval_enabled', enabled.toString());
+      await adminService.updateSetting('auto_approval_enabled', enabled.toString());
 
-      logger.log('ContributionAutomation', 'Global auto-approval set to:', enabled);
+      logger.info('Global auto-approval set to:', enabled, 'ContributionAutomation');
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to set global auto-approval:', error);
+      logger.error('Failed to set global auto-approval:', error, 'ContributionAutomation');
       throw error;
     }
   }
@@ -113,7 +113,7 @@ class ContributionAutomationService {
       await AsyncStorage.setItem(this.GLOBAL_AUTO_APPROVAL_KEY, JSON.stringify(enabled));
       return enabled;
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to check auto-approval enabled:', error);
+      logger.error('Failed to check auto-approval enabled:', error, 'ContributionAutomation');
       return false; // Default to false for safety
     }
   }
@@ -161,7 +161,7 @@ class ContributionAutomationService {
         reason: 'Does not match any auto-approval rules',
       };
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to process contribution:', error);
+      logger.error('Failed to process contribution:', error, 'ContributionAutomation');
       return {
         autoApproved: false,
         reason: 'Error evaluating auto-approval rules',
@@ -230,7 +230,7 @@ class ContributionAutomationService {
 
       return true;
     } catch (error) {
-      logger.error('ContributionAutomation', 'Error matching rule:', error);
+      logger.error('Error matching rule:', error, 'ContributionAutomation');
       return false;
     }
   }
@@ -241,7 +241,7 @@ class ContributionAutomationService {
   async applyAutoApprovedContribution(submission: DataSubmission): Promise<void> {
     try {
       // Apply to database through data submissions service
-      await dataSubmissionsService.applySubmissionToAllRelatedData(submission.id);
+      await dataSubmissionsService.applySubmissionToAllRelatedData(submission);
 
       // Send thank you notification
       await this.sendContributorThankYou(submission);
@@ -252,9 +252,9 @@ class ContributionAutomationService {
       // Record auto-approval event for analytics
       await this.recordAutoApprovalEvent(submission);
 
-      logger.log('ContributionAutomation', 'Auto-approved contribution applied:', submission.id);
+      logger.info('Auto-approved contribution applied:', submission.id, 'ContributionAutomation');
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to apply auto-approved contribution:', error);
+      logger.error('Failed to apply auto-approved contribution:', error, 'ContributionAutomation');
       throw error;
     }
   }
@@ -267,7 +267,7 @@ class ContributionAutomationService {
       const message = this.generateThankYouMessage(submission);
 
       // Send in-app notification
-      await notificationsService.sendNotification({
+      await notificationService.sendNotification({
         userId: submission.user_id,
         title: '🎉 Thanks for Contributing!',
         body: message,
@@ -290,10 +290,10 @@ class ContributionAutomationService {
       });
 
       if (error) {
-        logger.error('ContributionAutomation', 'Failed to save notification:', error);
+        logger.error('Failed to save notification:', error, 'ContributionAutomation');
       }
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to send thank you:', error);
+      logger.error('Failed to send thank you:', error, 'ContributionAutomation');
       // Don't throw - notification failure shouldn't block the process
     }
   }
@@ -366,10 +366,10 @@ class ContributionAutomationService {
         );
 
       if (error) {
-        logger.error('ContributionAutomation', 'Failed to save contributor stats:', error);
+        logger.error('Failed to save contributor stats:', error, 'ContributionAutomation');
       }
     } catch (error) {
-      logger.error('ContributionAutomation', 'Failed to update contributor stats:', error);
+      logger.error('Failed to update contributor stats:', error, 'ContributionAutomation');
     }
   }
 
@@ -395,7 +395,7 @@ class ContributionAutomationService {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        logger.error('ContributionAutomation', 'Failed to fetch stats:', error);
+        logger.error('Failed to fetch stats:', error, 'ContributionAutomation');
       }
 
       if (data) {
@@ -434,7 +434,7 @@ class ContributionAutomationService {
         totalRecordsImproved: 0,
       };
     } catch (error) {
-      logger.error('ContributionAutomation', 'Error getting contributor stats:', error);
+      logger.error('Error getting contributor stats:', error, 'ContributionAutomation');
       // Return empty stats on error
       return {
         userId,
@@ -466,7 +466,9 @@ class ContributionAutomationService {
         const uni = await hybridDataService.getUniversity(submission.entity_id);
         if (uni) {
           // Count programs, test centers, deadlines, etc.
-          count = (uni.programs?.length || 0) + (uni.test_centers?.length || 0) + 1;
+          // Note: programs and test_centers are dynamic properties that might be 
+          // hydrated from other services in the future
+          count = ((uni as any).programs?.length || 0) + ((uni as any).test_centers?.length || 0) + 1;
         }
       } else if (submission.entity_type === 'program') {
         // Program impacts merit cutoffs, deadlines
@@ -478,7 +480,7 @@ class ContributionAutomationService {
 
       return Math.max(1, count);
     } catch (error) {
-      logger.error('ContributionAutomation', 'Error estimating impact:', error);
+      logger.error('Error estimating impact:', error, 'ContributionAutomation');
       return 1;
     }
   }
@@ -582,10 +584,10 @@ class ContributionAutomationService {
       });
 
       if (error) {
-        logger.error('ContributionAutomation', 'Failed to record event:', error);
+        logger.error('Failed to record event:', error, 'ContributionAutomation');
       }
     } catch (error) {
-      logger.error('ContributionAutomation', 'Error recording event:', error);
+      logger.error('Error recording event:', error, 'ContributionAutomation');
     }
   }
 
@@ -601,7 +603,7 @@ class ContributionAutomationService {
         .limit(limit);
 
       if (error) {
-        logger.error('ContributionAutomation', 'Failed to fetch leaderboard:', error);
+        logger.error('Failed to fetch leaderboard:', error, 'ContributionAutomation');
         return [];
       }
 
@@ -621,7 +623,7 @@ class ContributionAutomationService {
         totalRecordsImproved: d.total_records_improved || 0,
       }));
     } catch (error) {
-      logger.error('ContributionAutomation', 'Error getting leaderboard:', error);
+      logger.error('Error getting leaderboard:', error, 'ContributionAutomation');
       return [];
     }
   }

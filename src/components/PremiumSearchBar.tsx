@@ -121,7 +121,7 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = memo(({
     switch (variant) {
       case 'filled':
         return {
-          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.8)' : colors.background,
+          backgroundColor: isDark ? 'rgba(39, 44, 52, 0.9)' : colors.background,
           borderWidth: 1.5,
           borderColor: isFocused ? colors.primary : 'transparent',
         };
@@ -134,7 +134,7 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = memo(({
       case 'glass':
         return {
           backgroundColor: isDark 
-            ? 'rgba(30, 41, 59, 0.6)' 
+            ? 'rgba(39, 44, 52, 0.75)' 
             : 'rgba(255, 255, 255, 0.8)',
           borderWidth: 1,
           borderColor: isDark 
@@ -143,7 +143,7 @@ export const PremiumSearchBar: React.FC<PremiumSearchBarProps> = memo(({
         };
       case 'minimal':
         return {
-          backgroundColor: isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(0, 0, 0, 0.04)',
+          backgroundColor: isDark ? 'rgba(39, 44, 52, 0.6)' : 'rgba(0, 0, 0, 0.04)',
           borderWidth: 0,
         };
       default:

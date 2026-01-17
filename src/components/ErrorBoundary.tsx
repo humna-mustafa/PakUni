@@ -29,12 +29,12 @@ const ThemedErrorView: React.FC<{
   const isDark = colorScheme === 'dark';
   
   const colors = {
-    background: isDark ? '#0F172A' : '#F5F7FA',
+    background: isDark ? '#1D2127' : '#F5F7FA',
     text: isDark ? '#F1F5F9' : '#212529',
     textSecondary: isDark ? '#94A3B8' : '#6C757D',
-    primary: isDark ? '#3B97FF' : '#1E88E5',
+    primary: isDark ? '#4573DF' : '#4573DF',
     white: '#FFFFFF',
-    gray100: isDark ? '#1E293B' : '#F8F9FA',
+    gray100: isDark ? '#272C34' : '#F8F9FA',
     error: isDark ? '#F87171' : '#E53935',
   };
 
@@ -139,3 +139,5 @@ const styles = StyleSheet.create({
 });
 
 export default ErrorBoundary;
+
+

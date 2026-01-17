@@ -367,6 +367,12 @@ const PremiumUniversityDetailScreen = () => {
     }
   };
 
+  // Get university merit summary for the Merits tab
+  const meritSummary = useMemo(() => {
+    if (!university) return { programs: [], years: [], totalRecords: 0, trend: null };
+    return getUniversityMeritSummaryByShortName(MERIT_RECORDS, university.short_name);
+  }, [university?.short_name]);
+
   if (!university) {
     return (
       <View style={[styles.errorContainer, {backgroundColor: colors.background}]}>
@@ -501,8 +507,8 @@ const PremiumUniversityDetailScreen = () => {
               style={[styles.contactItem, {borderBottomColor: colors.border}]}
               onPress={() => openLink(university.website)}
               activeOpacity={0.7}>
-              <View style={[styles.contactIconContainer, {backgroundColor: '#3B82F615'}]}>
-                <Icon name="globe-outline" family="Ionicons" size={20} color="#3B82F6" />
+              <View style={[styles.contactIconContainer, {backgroundColor: '#4573DF15'}]}>
+                <Icon name="globe-outline" family="Ionicons" size={20} color="#4573DF" />
               </View>
               <View style={styles.contactInfo}>
                 <Text style={[styles.contactLabel, {color: colors.textSecondary}]}>Website</Text>
@@ -575,7 +581,7 @@ const PremiumUniversityDetailScreen = () => {
               colors={
                 program.field === 'Medical' ? ['#EF4444', '#DC2626'] :
                 program.field === 'Engineering' ? ['#F59E0B', '#D97706'] :
-                program.field === 'Computer Science' ? ['#3B82F6', '#2563EB'] :
+                program.field === 'Computer Science' ? ['#4573DF', '#3660C9'] :
                 program.field === 'Business' ? ['#10B981', '#059669'] :
                 GRADIENTS.primary
               }
@@ -707,13 +713,13 @@ const PremiumUniversityDetailScreen = () => {
 
             <View style={styles.formulaWeights}>
               <View style={styles.weightItem}>
-                <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.weightCircle}>
+                <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
                   <Text style={styles.weightValue}>{formula.matric_weightage}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Matric</Text>
               </View>
               <View style={styles.weightItem}>
-                <LinearGradient colors={['#8B5CF6', '#7C3AED']} style={styles.weightCircle}>
+                <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
                   <Text style={styles.weightValue}>{formula.inter_weightage}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Inter</Text>
@@ -759,11 +765,6 @@ const PremiumUniversityDetailScreen = () => {
       </View>
     </View>
   );
-
-  // Get university merit summary for the Merits tab
-  const meritSummary = useMemo(() => {
-    return getUniversityMeritSummaryByShortName(MERIT_RECORDS, university.short_name);
-  }, [university.short_name]);
 
   const renderMeritsTab = () => (
     <View style={styles.tabContent}>
@@ -1929,3 +1930,5 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumUniversityDetailScreen;
+
+

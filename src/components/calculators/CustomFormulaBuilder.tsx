@@ -47,12 +47,12 @@ const STORAGE_KEY = '@pakuni_custom_formulas';
 
 // Preset colors for custom formulas
 const FORMULA_COLORS = [
-  '#6366F1',
-  '#EC4899',
+  '#4573DF',
+  '#3660C9',
   '#10B981',
   '#F59E0B',
   '#EF4444',
-  '#8B5CF6',
+  '#4573DF',
   '#0891B2',
   '#84CC16',
 ];
@@ -535,7 +535,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
               label="Matric Weight"
               value={matricWeight}
               onChange={setMatricWeight}
-              color="#6366F1"
+              color="#4573DF"
               icon="school-outline"
             />
 
@@ -755,7 +755,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#8B5CF6', '#A78BFA']}
+          colors={['#4573DF', '#4573DF']}
           style={styles.headerIcon}>
           <Icon name="construct-outline" size={24} color="#FFF" />
         </LinearGradient>
@@ -805,7 +805,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
         }}
         activeOpacity={0.8}>
         <LinearGradient
-          colors={['#8B5CF6', '#A78BFA']}
+          colors={['#4573DF', '#4573DF']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.addButtonGradient}>
@@ -906,3 +906,6 @@ const styles = StyleSheet.create({
 });
 
 export default CustomFormulaBuilder;
+
+
+

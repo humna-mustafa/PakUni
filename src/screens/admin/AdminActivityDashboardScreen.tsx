@@ -63,7 +63,7 @@ const AdminActivityDashboardScreen: React.FC<{ navigation: any }> = ({ navigatio
 
   const severities: { value: SeverityType; label: string; color: string }[] = [
     { value: 'all', label: 'All', color: colors.textSecondary },
-    { value: 'info', label: 'Info', color: '#3B82F6' },
+    { value: 'info', label: 'Info', color: '#4573DF' },
     { value: 'warning', label: 'Warning', color: '#F59E0B' },
     { value: 'critical', label: 'Critical', color: '#EF4444' },
   ];
@@ -169,7 +169,7 @@ const AdminActivityDashboardScreen: React.FC<{ navigation: any }> = ({ navigatio
     switch (severity) {
       case 'critical': return '#EF4444';
       case 'warning': return '#F59E0B';
-      default: return '#3B82F6';
+      default: return '#4573DF';
     }
   };
 

@@ -254,13 +254,13 @@ const PollCard: React.FC<PollCardProps> = ({
   const getCategoryColor = () => {
     switch (poll.category) {
       case 'campus':
-        return '#3B82F6';
+        return '#4573DF';
       case 'academics':
         return '#10B981';
       case 'facilities':
         return '#F59E0B';
       case 'career':
-        return '#8B5CF6';
+        return '#4573DF';
       case 'overall':
         return '#EF4444';
       default:
@@ -580,7 +580,7 @@ const PremiumPollsScreen = () => {
             },
           ]}>
           <LinearGradient
-            colors={isDark ? ['#5B21B6', '#4C1D95', '#3B0764'] : ['#7C3AED', '#6D28D9', '#5B21B6']}
+            colors={isDark ? ['#3660C9', '#4C1D95', '#3B0764'] : ['#3660C9', '#6D28D9', '#3660C9']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.header}>
@@ -1010,3 +1010,6 @@ const styles = StyleSheet.create({
 });
 
 export default PremiumPollsScreen;
+
+
+
