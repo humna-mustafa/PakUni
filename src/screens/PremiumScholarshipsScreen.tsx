@@ -19,7 +19,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
-import {LIST_ITEM_HEIGHTS} from '../constants/ui';
+import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {SCHOLARSHIPS} from '../data';
@@ -88,7 +88,7 @@ const FilterChip = ({
   const handlePress = () => {
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 0.92,
+        toValue: ANIMATION_SCALES.CHIP_PRESS,
         duration: 80,
         useNativeDriver: true,
       }),
@@ -157,7 +157,7 @@ const ScholarshipCard = ({
 
   const handlePressIn = () => {
     Animated.spring(pressAnim, {
-      toValue: 0.97,
+      toValue: ANIMATION_SCALES.BUTTON_PRESS,
       ...ANIMATION.spring.snappy,
       useNativeDriver: true,
     }).start();

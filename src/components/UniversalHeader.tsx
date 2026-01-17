@@ -1,16 +1,23 @@
 /**
  * UniversalHeader - Consistent header with profile access across all screens
  * Features: Back button (optional), title, subtitle, profile avatar, notifications
+ * 
+ * UI/UX Standards Applied:
+ * - Pressable with proper press states (scale + opacity)
+ * - 44pt minimum touch targets (WCAG 2.2)
+ * - Consistent haptic feedback
+ * - Proper accessibility labels
  */
 
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   Platform,
   Image,
+  Animated,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -18,7 +25,12 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from './icons';
 import {SPACING, RADIUS, TYPOGRAPHY} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
+import {Haptics} from '../utils/haptics';
 import type {RootStackParamList} from '../navigation/AppNavigator';
+
+// Minimum touch target per WCAG 2.2
+const MIN_TOUCH_TARGET = 44;
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -44,6 +56,55 @@ interface UniversalHeaderProps {
   /** Large title style */
   largeTitle?: boolean;
 }
+
+// Animated button component with proper press states
+const HeaderButton = memo<{
+  onPress: () => void;
+  style?: any;
+  accessibilityLabel: string;
+  accessibilityHint?: string;
+  children: React.ReactNode;
+}>(({onPress, style, accessibilityLabel, accessibilityHint, children}) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = useCallback(() => {
+    Haptics.light();
+    Animated.spring(scaleAnim, {
+      toValue: ANIMATION_SCALES.ICON_PRESS,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
+    }).start();
+  }, [scaleAnim]);
+
+  const handlePressOut = useCallback(() => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
+    }).start();
+  }, [scaleAnim]);
+
+  return (
+    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={({pressed}) => [
+          style,
+          {opacity: pressed ? 0.8 : 1},
+        ]}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+});
+
+HeaderButton.displayName = 'HeaderButton';
 
 const UniversalHeader = memo<UniversalHeaderProps>(({
   title,
@@ -105,14 +166,13 @@ const UniversalHeader = memo<UniversalHeaderProps>(({
         {/* Left Side: Back button or spacer */}
         <View style={styles.leftSection}>
           {showBack ? (
-            <TouchableOpacity
+            <HeaderButton
               style={[styles.iconButton, {backgroundColor: buttonBg}]}
               onPress={handleBack}
-              accessibilityRole="button"
               accessibilityLabel="Go back"
-              hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
+              accessibilityHint="Returns to previous screen">
               <Icon name="arrow-back" family="Ionicons" size={22} color={iconColor} />
-            </TouchableOpacity>
+            </HeaderButton>
           ) : (
             <View style={styles.spacer} />
           )}
@@ -140,31 +200,31 @@ const UniversalHeader = memo<UniversalHeaderProps>(({
           {rightContent}
           
           {showNotifications && (
-            <TouchableOpacity
+            <HeaderButton
               style={[styles.iconButton, {backgroundColor: buttonBg}]}
               onPress={handleNotificationsPress}
-              accessibilityRole="button"
-              accessibilityLabel="View notifications">
+              accessibilityLabel="View notifications"
+              accessibilityHint="Opens your notification center">
               <Icon name="notifications-outline" family="Ionicons" size={22} color={iconColor} />
-              {/* Notification dot - can be made dynamic */}
-            </TouchableOpacity>
+            </HeaderButton>
           )}
 
           {showProfile && (
-            <TouchableOpacity
+            <HeaderButton
               style={[styles.profileButton, {backgroundColor: colors.primary}]}
               onPress={handleProfilePress}
-              accessibilityRole="button"
-              accessibilityLabel="View your profile">
+              accessibilityLabel={`View profile${user?.fullName ? ` for ${user.fullName}` : ''}`}
+              accessibilityHint="Opens your profile and settings">
               {user?.avatarUrl ? (
                 <Image
                   source={{uri: user.avatarUrl}}
                   style={styles.profileImage}
+                  accessibilityIgnoresInvertColors
                 />
               ) : (
                 <Text style={styles.profileInitials}>{getUserInitials()}</Text>
               )}
-            </TouchableOpacity>
+            </HeaderButton>
           )}
         </View>
       </View>
@@ -193,10 +253,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 44,
+    minHeight: MIN_TOUCH_TARGET,
   },
   leftSection: {
-    width: 44,
+    width: MIN_TOUCH_TARGET,
     alignItems: 'flex-start',
   },
   centerSection: {
@@ -210,19 +270,19 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
   spacer: {
-    width: 44,
+    width: MIN_TOUCH_TARGET,
   },
   iconButton: {
-    width: 40,
-    height: 40,
+    width: MIN_TOUCH_TARGET,
+    height: MIN_TOUCH_TARGET,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: MIN_TOUCH_TARGET,
+    height: MIN_TOUCH_TARGET,
+    borderRadius: MIN_TOUCH_TARGET / 2,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -239,9 +299,9 @@ const styles = StyleSheet.create({
     }),
   },
   profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: MIN_TOUCH_TARGET,
+    height: MIN_TOUCH_TARGET,
+    borderRadius: MIN_TOUCH_TARGET / 2,
   },
   profileInitials: {
     color: '#FFFFFF',

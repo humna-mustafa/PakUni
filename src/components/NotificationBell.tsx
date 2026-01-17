@@ -27,6 +27,7 @@ import {
   MODERN_TYPOGRAPHY,
   MODERN_SHADOWS,
 } from '../constants/modern-design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -134,10 +135,9 @@ const NotificationItem = memo<NotificationItemProps>(({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.99,
+      toValue: ANIMATION_SCALES.PRESS,
       useNativeDriver: true,
-      tension: 400,
-      friction: 20,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -145,8 +145,7 @@ const NotificationItem = memo<NotificationItemProps>(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 300,
-      friction: 15,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
@@ -456,14 +455,13 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
     // Scale animation
     Animated.sequence([
       Animated.timing(bellScaleAnim, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 50,
         useNativeDriver: true,
       }),
       Animated.spring(bellScaleAnim, {
         toValue: 1,
-        tension: 200,
-        friction: 8,
+        ...SPRING_CONFIGS.snappy,
         useNativeDriver: true,
       }),
     ]).start();

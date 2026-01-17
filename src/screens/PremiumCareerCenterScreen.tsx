@@ -22,6 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {Icon} from '../components/icons';
 import {CAREER_FIELDS} from '../data';
 import type {RootStackParamList} from '../navigation/AppNavigator';
@@ -124,10 +125,9 @@ const AnimatedFeatureCard: React.FC<FeatureCardProps> = ({feature, index, onPres
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.97,
+      toValue: ANIMATION_SCALES.BUTTON_PRESS,
       useNativeDriver: true,
-      tension: 400,
-      friction: 15,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -135,8 +135,7 @@ const AnimatedFeatureCard: React.FC<FeatureCardProps> = ({feature, index, onPres
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 300,
-      friction: 12,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

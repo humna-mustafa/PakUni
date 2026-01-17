@@ -35,3 +35,4 @@ export {default as AdminDataSubmissionsScreen} from './AdminDataSubmissionsScree
 export {default as AdminAutoApprovalRulesScreen} from './AdminAutoApprovalRulesScreen';
 export {default as AdminMeritDeadlinesScreen} from './AdminMeritDeadlinesScreen';
 export {default as AdminNotificationTriggersScreen} from './AdminNotificationTriggersScreen';
+export {default as AdminApprovalAnalyticsScreen} from './AdminApprovalAnalyticsScreen';

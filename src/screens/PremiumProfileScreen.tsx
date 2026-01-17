@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Pressable,
   TextInput,
   Modal,
   Alert,
@@ -17,6 +18,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
+import {ANIMATION_SCALES} from '../constants/ui';
 import {useTheme, ThemeMode} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -118,7 +120,7 @@ const AnimatedTab = ({
 
   const handlePress = () => {
     Animated.sequence([
-      Animated.timing(scaleAnim, {toValue: 0.9, duration: 80, useNativeDriver: true}),
+      Animated.timing(scaleAnim, {toValue: ANIMATION_SCALES.ICON_PRESS, duration: 80, useNativeDriver: true}),
       Animated.spring(scaleAnim, {toValue: 1, ...ANIMATION.spring.snappy, useNativeDriver: true}),
     ]).start();
     onPress();

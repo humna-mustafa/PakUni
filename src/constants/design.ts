@@ -737,6 +737,51 @@ export default {
   TYPOGRAPHY,
   PALETTE,
   SHADOWS,
+// ============================================================================
+// SEMANTIC STATUS COLORS - For urgency, countdown, and status indicators
+// ============================================================================
+export const STATUS_COLORS = {
+  // Urgency levels for countdowns and deadlines
+  urgency: {
+    critical: PALETTE.error[500],    // <= 7 days
+    warning: PALETTE.warning[500],   // <= 30 days  
+    safe: PALETTE.success[500],      // > 30 days
+    neutral: PALETTE.neutral[400],   // No deadline
+  },
+  
+  // Category colors for entry tests
+  category: {
+    engineering: PALETTE.primary[500],
+    medical: PALETTE.error[500],
+    business: PALETTE.secondary[500],
+    general: PALETTE.neutral[500],
+  },
+  
+  // Badge/chip backgrounds (with alpha)
+  backgrounds: {
+    error: `${PALETTE.error[500]}15`,
+    warning: `${PALETTE.warning[500]}15`,
+    success: `${PALETTE.success[500]}15`,
+    info: `${PALETTE.primary[500]}15`,
+    neutral: `${PALETTE.neutral[500]}15`,
+  },
+};
+
+// Helper function to get urgency color based on days remaining
+export const getUrgencyColor = (days: number | null): string => {
+  if (days === null) return STATUS_COLORS.urgency.neutral;
+  if (days <= 7) return STATUS_COLORS.urgency.critical;
+  if (days <= 30) return STATUS_COLORS.urgency.warning;
+  return STATUS_COLORS.urgency.safe;
+};
+
+// Default export includes all tokens
+export default {
+  TYPOGRAPHY,
+  PALETTE,
+  STATUS_COLORS,
+  getUrgencyColor,
+  SHADOWS,
   SPACING,
   RADIUS,
   ANIMATION,

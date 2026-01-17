@@ -20,6 +20,18 @@ export { default as AppText } from './AppText';
 export { default as AnimatedLoader } from './AnimatedLoader';
 export { LoadingSpinner } from './LoadingSpinner';
 export { default as SkeletonLoader } from './SkeletonLoader';
+export {
+  UniversityCardSkeleton,
+  ScholarshipCardSkeleton,
+  EntryTestCardSkeleton,
+  ListItemSkeleton,
+  UniversitiesListSkeleton,
+  ScholarshipsListSkeleton,
+  EntryTestsListSkeleton,
+  FilterChipsSkeleton,
+  SearchBarSkeleton,
+  StatsBarSkeleton,
+} from './ListSkeletons';
 
 // Images
 export { default as OptimizedImage } from './OptimizedImage';
@@ -30,8 +42,12 @@ export { default as SearchableDropdown } from './SearchableDropdown';
 export { default as SectionHeader } from './SectionHeader';
 
 // State Components
-export { default as EmptyState } from './EmptyState';
+export { default as EmptyState, SkeletonEmptyState } from './EmptyState';
 export { default as OfflineNotice, ConnectionRestoredToast } from './OfflineNotice';
+
+// Modal Components
+export { AccessibleModal, BottomSheet, Dialog, ConfirmDialog } from './AccessibleModal';
+export { default as AccessibleModalDefault } from './AccessibleModal';
 
 // Notifications
 export { default as NotificationBell, type Notification, type NotificationType } from './NotificationBell';
@@ -46,11 +62,11 @@ export { default as EnhancedErrorToast } from './EnhancedErrorToast';
 // =============================================================================
 
 // Premium Cards
-export { PremiumCard, GlassCard, ElevatedCard, OutlinedCard } from './PremiumCard';
+export { PremiumCard, GlassCard, ElevatedCard, OutlinedCard, FilledCard, SkeletonCard } from './PremiumCard';
 export { default as PremiumCardDefault } from './PremiumCard';
 
 // Premium Buttons
-export { PremiumButton, IconButton } from './PremiumButton';
+export { PremiumButton, IconButton, FAB } from './PremiumButton';
 export { default as PremiumButtonDefault } from './PremiumButton';
 
 // Premium Chips & Tags
@@ -141,6 +157,14 @@ export {
 
 // Floating Actions
 export { default as FloatingToolsButton } from './FloatingToolsButton';
+
+// Contribution System
+export { ContributionSuccessAnimation, QuickSuccessNotification } from './ContributionSuccessAnimation';
+export type { ContributionSuccessProps } from './ContributionSuccessAnimation';
+
+// Admin Settings
+export { AutoApprovalSettings } from './AutoApprovalSettings';
+export type { AutoApprovalSettingsProps } from './AutoApprovalSettings';
 
 // =============================================================================
 // ICONS SYSTEM

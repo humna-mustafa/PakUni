@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {TYPOGRAPHY, SPACING, RADIUS, SHADOWS} from '../constants/design';
+import {ANIMATION_SCALES} from '../constants/ui';
 import {Haptics} from '../utils/haptics';
 import {Icon} from './icons';
 
@@ -191,7 +192,7 @@ const Toast: React.FC<ToastProps> = ({
         useNativeDriver: true,
       }),
       Animated.timing(scale, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 200,
         useNativeDriver: true,
       }),

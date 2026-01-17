@@ -15,7 +15,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SPACING, FONTS} from '../constants/theme';
-import {TYPOGRAPHY, RADIUS, ANIMATION} from '../constants/design';
+import {TYPOGRAPHY, RADIUS, ANIMATION, STATUS_COLORS, getUrgencyColor} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {ENTRY_TESTS_DATA, EntryTestData} from '../data';
 import {Icon} from '../components/icons';
@@ -86,7 +87,7 @@ const TestCountdownWidget = ({
   if (daysUntil === null || daysUntil < 0) {
     return (
       <TouchableOpacity onPress={onEditDate}>
-        <View style={[styles.countdownWidget, {backgroundColor: isDark ? 'rgba(52, 152, 219, 0.2)' : '#E3F2FD'}]}>
+        <View style={[styles.countdownWidget, {backgroundColor: STATUS_COLORS.backgrounds.info}]}>
           <Icon name="calendar-outline" family="Ionicons" size={24} color={colors.primary} />
           <View style={styles.countdownContent}>
             <Text style={[styles.countdownLabel, {color: colors.textSecondary}]}>Test Date</Text>
@@ -100,7 +101,7 @@ const TestCountdownWidget = ({
     );
   }
   
-  const urgencyColor = daysUntil <= 7 ? '#e74c3c' : daysUntil <= 30 ? '#f39c12' : '#27ae60';
+  const urgencyColor = getUrgencyColor(daysUntil);
   
   return (
     <TouchableOpacity onPress={onEditDate}>
@@ -159,16 +160,17 @@ const TestCard = ({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
+      toValue: ANIMATION_SCALES.PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
-      friction: 4,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
@@ -266,13 +268,13 @@ const FilterChip = ({
   const handlePress = () => {
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 100,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 4,
+        ...SPRING_CONFIGS.snappy,
         useNativeDriver: true,
       }),
     ]).start();
@@ -284,7 +286,7 @@ const FilterChip = ({
       <TouchableOpacity onPress={handlePress}>
         {isActive ? (
           <LinearGradient
-            colors={['#3498db', '#2980b9']}
+            colors={[colors.primary, colors.primaryDark || colors.primary]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={styles.filterChip}>
@@ -514,7 +516,7 @@ const PremiumEntryTestsScreen = () => {
         </View>
         <View style={[styles.statDivider, {backgroundColor: colors.border}]} />
         <View style={styles.statItem}>
-          <Icon name="construct-outline" family="Ionicons" size={20} color="#3498db" />
+          <Icon name="construct-outline" family="Ionicons" size={20} color={STATUS_COLORS.category.engineering} />
           <Text style={[styles.statValue, {color: colors.text}]}>
             {ENTRY_TESTS_DATA.filter(t => getTestCategory(t) === 'Engineering').length}
           </Text>
@@ -522,7 +524,7 @@ const PremiumEntryTestsScreen = () => {
         </View>
         <View style={[styles.statDivider, {backgroundColor: colors.border}]} />
         <View style={styles.statItem}>
-          <Icon name="medkit-outline" family="Ionicons" size={20} color="#e74c3c" />
+          <Icon name="medkit-outline" family="Ionicons" size={20} color={STATUS_COLORS.category.medical} />
           <Text style={[styles.statValue, {color: colors.text}]}>
             {ENTRY_TESTS_DATA.filter(t => getTestCategory(t) === 'Medical').length}
           </Text>
@@ -701,7 +703,7 @@ const PremiumEntryTestsScreen = () => {
                     </View>
                     {selectedTest.application_steps.map((step: string, i: number) => (
                       <View key={i} style={styles.formatItem}>
-                        <View style={[styles.formatDot, {backgroundColor: colors.success || '#27ae60'}]} />
+                        <View style={[styles.formatDot, {backgroundColor: colors.success}]} />
                         <Text style={[styles.formatText, {color: colors.textSecondary}]}>
                           {step}
                         </Text>
@@ -711,19 +713,19 @@ const PremiumEntryTestsScreen = () => {
                 )}
 
                 {/* Tips */}
-                <View style={[styles.tipsCard, {backgroundColor: isDark ? '#B8860B30' : '#FFF8E1'}]}>
+                <View style={[styles.tipsCard, {backgroundColor: STATUS_COLORS.backgrounds.warning}]}>
                   <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.xs}}>
-                    <Icon name="bulb-outline" family="Ionicons" size={20} color={isDark ? '#FFD54F' : '#F57F17'} />
-                    <Text style={[styles.tipsTitle, {marginBottom: 0}]}>Preparation Tips</Text>
+                    <Icon name="bulb-outline" family="Ionicons" size={20} color={colors.warning} />
+                    <Text style={[styles.tipsTitle, {marginBottom: 0, color: colors.warning}]}>Preparation Tips</Text>
                   </View>
-                  <Text style={[styles.tipsText, {color: isDark ? '#FFD54F' : '#F57F17'}]}>
+                  <Text style={[styles.tipsText, {color: colors.warning}]}>
                     {selectedTest.tips || 'Start preparing at least 3-6 months before the test. Practice previous papers and focus on weak areas.'}
                   </Text>
                 </View>
 
                 <TouchableOpacity style={styles.registerButton}>
                   <LinearGradient
-                    colors={['#27ae60', '#219a52']}
+                    colors={[STATUS_COLORS.urgency.safe, '#059669']}
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 0}}
                     style={styles.registerGradient}>
@@ -794,7 +796,7 @@ const PremiumEntryTestsScreen = () => {
                 style={[styles.dateModalButton, styles.saveButton]}
                 onPress={handleSaveDate}>
                 <LinearGradient
-                  colors={['#27ae60', '#219a52']}
+                  colors={[STATUS_COLORS.urgency.safe, '#059669']}
                   style={styles.saveButtonGradient}>
                   <Text style={styles.saveButtonText}>Save Date</Text>
                 </LinearGradient>
@@ -1232,7 +1234,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   clearButton: {
-    backgroundColor: '#e74c3c20',
+    backgroundColor: STATUS_COLORS.backgrounds.error,
     paddingVertical: SPACING.sm,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1240,7 +1242,7 @@ const styles = StyleSheet.create({
   clearButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: '#e74c3c',
+    color: STATUS_COLORS.urgency.critical,
   },
   saveButton: {},
   saveButtonGradient: {

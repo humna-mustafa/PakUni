@@ -139,3 +139,9 @@ export {
   useAsyncHandler,
   useFormErrorHandler,
 } from './useErrorHandler';
+
+// ============================================================================
+// AUTH WITH TOAST FEEDBACK
+// ============================================================================
+
+export {useAuthToast} from './useAuthToast';

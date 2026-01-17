@@ -22,6 +22,7 @@ import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
 import {MeritSuccessCard} from '../components/ShareableCard';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
+import {ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {MERIT_FORMULAS, EDUCATION_SYSTEMS} from '../data';
 import type {MeritFormulaData} from '../data';
@@ -558,7 +559,7 @@ const PremiumCalculatorScreen = () => {
   const toggleHafiz = () => {
     Animated.sequence([
       Animated.spring(hafizScaleAnim, {
-        toValue: 0.95,
+        toValue: ANIMATION_SCALES.CHIP_PRESS,
         ...ANIMATION.spring.snappy,
         useNativeDriver: true,
       }),

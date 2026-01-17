@@ -494,12 +494,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       
       let errorMessage = 'Failed to sign in with Google';
       
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED || error.code === '12501') {
         errorMessage = 'Sign in was cancelled';
-      } else if (error.code === statusCodes.IN_PROGRESS) {
+      } else if (error.code === statusCodes.IN_PROGRESS || error.code === '12502') {
         errorMessage = 'Sign in is already in progress';
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         errorMessage = 'Google Play Services not available';
+      } else if (error.code === '10' || error.code === 10 || 
+                 (error.message && error.message.toLowerCase().includes('developer_error'))) {
+        // DEVELOPER_ERROR - usually SHA-1 fingerprint mismatch
+        errorMessage = 'Google Sign-In configuration issue. Please use email login or guest mode.';
+        logger.warn('DEVELOPER_ERROR: Check SHA-1 fingerprint in Google Cloud Console', {
+          debugSHA1: '5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25',
+          releaseSHA1: '2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66',
+        }, 'Auth');
+      } else if (error.code === '7') {
+        errorMessage = 'Network error. Please check your connection.';
       } else if (error.message) {
         errorMessage = error.message;
       }

@@ -28,6 +28,7 @@ import {
   PP_MOTION,
   roundToPixel,
 } from '../constants/pixel-perfect';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {getUpcomingDeadlines} from '../data';
@@ -178,10 +179,9 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
+      toValue: ANIMATION_SCALES.PRESS,
       useNativeDriver: true,
-      tension: 400,
-      friction: 15,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -189,8 +189,7 @@ const JourneyCTACard = memo<JourneyCTACardProps>(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 300,
-      friction: 12,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
@@ -493,10 +492,9 @@ const QuickActionCard = memo<QuickActionCardProps>(({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.92,
+      toValue: ANIMATION_SCALES.ICON_PRESS,
       useNativeDriver: true,
-      tension: 400,
-      friction: 15,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -504,8 +502,7 @@ const QuickActionCard = memo<QuickActionCardProps>(({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 300,
-      friction: 12,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

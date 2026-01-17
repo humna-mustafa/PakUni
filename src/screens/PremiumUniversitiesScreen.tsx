@@ -16,7 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
-import {LIST_ITEM_HEIGHTS} from '../constants/ui';
+import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {RootStackParamList} from '../navigation/AppNavigator';
@@ -29,6 +29,7 @@ import {Haptics} from '../utils/haptics';
 import {Icon} from '../components/icons';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import FloatingToolsButton from '../components/FloatingToolsButton';
+import {UniversitiesListSkeleton} from '../components/ListSkeletons';
 import {analytics} from '../services/analytics';
 import SearchableDropdown, {
   PROVINCE_OPTIONS,
@@ -68,7 +69,7 @@ const FilterChip = ({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
       ...ANIMATION.spring.snappy,
       useNativeDriver: true,
     }).start();
@@ -183,7 +184,7 @@ const UniversityCard = ({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
+      toValue: ANIMATION_SCALES.PRESS,
       ...ANIMATION.spring.snappy,
       useNativeDriver: true,
     }).start();
@@ -609,6 +610,9 @@ const PremiumUniversitiesScreen = () => {
       />
       
       <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {loading ? (
+          <UniversitiesListSkeleton />
+        ) : (
         <FlatList
           data={filteredUniversities}
           keyExtractor={item => item.short_name}
@@ -657,6 +661,7 @@ const PremiumUniversitiesScreen = () => {
             </View>
           }
         />
+        )}
       </SafeAreaView>
       
       {/* Floating Tools Button - Quick access to calculators */}

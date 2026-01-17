@@ -23,6 +23,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -700,8 +701,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors}) 
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -709,6 +711,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors}) 
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

@@ -28,6 +28,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES} from '../constants/ui';
 import {Haptics} from '../utils/haptics';
 import {Icon} from './icons';
 import {
@@ -199,7 +200,7 @@ export const EnhancedErrorToast: React.FC<EnhancedErrorToastProps> = ({
         useNativeDriver: true,
       }),
       Animated.timing(scale, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 200,
         useNativeDriver: true,
       }),

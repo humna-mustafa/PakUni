@@ -15,6 +15,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
+import {ANIMATION_SCALES} from '../../constants/ui';
 import type {SpecialOccasion} from '../../services/specialOccasions';
 
 // ============================================================================
@@ -140,7 +141,7 @@ const SpecialOccasionCard: React.FC<SpecialOccasionCardProps> = ({
   const handleDismiss = () => {
     Animated.parallel([
       Animated.timing(scaleAnim, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 200,
         useNativeDriver: true,
       }),

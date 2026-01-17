@@ -46,6 +46,9 @@ export interface IconProps extends AccessibilityProps {
   backgroundColor?: string;
   backgroundOpacity?: number;
   borderRadius?: number;
+
+  // Accessibility - when true, icon is hidden from screen readers (default: true for decorative icons)
+  decorative?: boolean;
 }
 
 const Icon: React.FC<IconProps> = memo(({
@@ -63,6 +66,7 @@ const Icon: React.FC<IconProps> = memo(({
   backgroundOpacity = 0.12,
   borderRadius,
   accessibilityLabel,
+  decorative = true, // Most icons are decorative (paired with text)
   ...accessibilityProps
 }) => {
   const { colors } = useTheme();
@@ -93,12 +97,25 @@ const Icon: React.FC<IconProps> = memo(({
   // Get the correct icon component based on family
   const IconComponent = getIconComponent(resolvedFamily);
 
+  // For decorative icons without explicit label, hide from screen reader
+  const a11yProps = decorative && !accessibilityLabel
+    ? {
+        accessible: false,
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants' as const,
+      }
+    : {
+        accessible: true,
+        accessibilityLabel: accessibilityLabel || resolvedName.replace(/-/g, ' '),
+        accessibilityRole: 'image' as const,
+      };
+
   const icon = (
     <IconComponent
       name={resolvedName}
       size={resolvedSize}
       color={resolvedColor}
-      accessibilityLabel={accessibilityLabel}
+      {...a11yProps}
       {...accessibilityProps}
     />
   );

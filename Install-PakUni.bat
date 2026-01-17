@@ -1,32 +1,34 @@
 @echo off
 REM ======================================
-REM PakUni v1.2.0 Installer Batch Script
+REM PakUni v1.2.1 Installer Batch Script
+REM Google Play Store Ready Release
 REM ======================================
 
 setlocal enabledelayedexpansion
 
 color 0F
-title PakUni v1.2.0 Installer
+title PakUni v1.2.1 Installer
 
 echo.
 echo ========================================
-echo   PakUni v1.2.0 Installer
+echo   PakUni v1.2.1 Installer
+echo   Pakistan Universities Guide
 echo ========================================
 echo.
 
 REM Check if APK exists
-if not exist "PakUni-v1.2.0.apk" (
+if not exist "PakUni-v1.2.1.apk" (
     color 0C
     echo.
-    echo [ERROR] APK file not found: PakUni-v1.2.0.apk
+    echo [ERROR] APK file not found: PakUni-v1.2.1.apk
     echo.
-    echo Please ensure this script is in the same directory as PakUni-v1.2.0.apk
+    echo Please ensure this script is in the same directory as PakUni-v1.2.1.apk
     echo.
     pause
     exit /b 1
 )
 
-echo [OK] APK Found: PakUni-v1.2.0.apk ^(24.4 MB^)
+echo [OK] APK Found: PakUni-v1.2.1.apk ^(35 MB^)
 echo.
 
 REM Check ADB
@@ -36,6 +38,7 @@ if errorlevel 1 (
     echo [ERROR] ADB not found in system PATH
     echo.
     echo Please install Android SDK Platform Tools and ensure ADB is in PATH
+    echo Download: https://developer.android.com/studio/releases/platform-tools
     echo.
     pause
     exit /b 1
@@ -66,6 +69,7 @@ color 0A
 echo [OK] Device connected
 echo.
 
+:start
 echo ========================================
 echo Installation Options
 echo ========================================
@@ -93,7 +97,7 @@ echo.
 echo Uninstalling PakUni...
 adb uninstall com.pakuni
 if errorlevel 1 (
-    echo [ERROR] Uninstall failed
+    echo [WARNING] App may not have been installed
 ) else (
     color 0A
     echo [OK] PakUni uninstalled successfully
@@ -104,13 +108,17 @@ goto :end
 
 :install
 echo.
-echo Installing PakUni v1.2.0...
+echo Installing PakUni v1.2.1...
+echo This is a signed release build.
 echo.
-adb install -r "PakUni-v1.2.0.apk"
+adb install -r "PakUni-v1.2.1.apk"
 if errorlevel 1 (
     color 0C
     echo.
     echo [ERROR] Installation failed
+    echo.
+    echo Try: adb uninstall com.pakuni
+    echo Then run this installer again.
     echo.
     pause
     exit /b 1
@@ -122,20 +130,25 @@ echo ========================================
 echo   Installation Complete!
 echo ========================================
 echo.
-echo App is ready to use. Tap the PakUni icon to launch.
+echo PakUni v1.2.1 is ready to use.
+echo Tap the PakUni icon on your device to launch.
 echo.
 pause
 goto :end
 
 :install_launch
 echo.
-echo Installing PakUni v1.2.0...
+echo Installing PakUni v1.2.1...
+echo This is a signed release build.
 echo.
-adb install -r "PakUni-v1.2.0.apk"
+adb install -r "PakUni-v1.2.1.apk"
 if errorlevel 1 (
     color 0C
     echo.
     echo [ERROR] Installation failed
+    echo.
+    echo Try: adb uninstall com.pakuni
+    echo Then run this installer again.
     echo.
     pause
     exit /b 1
@@ -143,7 +156,7 @@ if errorlevel 1 (
 
 echo.
 echo Launching PakUni...
-timeout /t 2 /nobreak
+timeout /t 2 /nobreak >nul
 adb shell am start -n com.pakuni/.MainActivity
 
 color 0A
@@ -152,7 +165,7 @@ echo ========================================
 echo   Installation Complete!
 echo ========================================
 echo.
-echo PakUni is now launching on your device...
+echo PakUni v1.2.1 is now launching on your device...
 echo.
 pause
 goto :end

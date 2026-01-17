@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {SPACING, FONTS} from '../constants/theme';
 import {Icon} from '../components/icons';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {CAREER_FIELDS, CareerField} from '../data';
 
@@ -134,16 +135,17 @@ const CareerCard = ({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.97,
+      toValue: ANIMATION_SCALES.BUTTON_PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
-      friction: 4,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

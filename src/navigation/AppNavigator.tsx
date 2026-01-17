@@ -81,6 +81,7 @@ import {
   AdminAutoApprovalRulesScreen,
   AdminMeritDeadlinesScreen,
   AdminNotificationTriggersScreen,
+  AdminApprovalAnalyticsScreen,
 } from '../screens/admin';
 
 // User Feature Screens - Data Submission
@@ -170,6 +171,7 @@ export type RootStackParamList = {
   AdminAutoApprovalRules: undefined;
   AdminMeritDeadlines: undefined;
   AdminNotificationTriggers: undefined;
+  AdminApprovalAnalytics: undefined;
   // User Screens
   SubmitDataCorrection: {type?: string; entityName?: string; fieldName?: string; currentValue?: string; showHistory?: boolean} | undefined;
 };
@@ -578,6 +580,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="AdminNotificationTriggers"
             component={AdminNotificationTriggersScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminApprovalAnalytics"
+            component={AdminApprovalAnalyticsScreen}
             options={{headerShown: false}}
           />
           {/* User Data Submission */}

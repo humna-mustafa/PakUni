@@ -191,3 +191,22 @@ export type {
   LogEntry,
   LoggerConfig,
 } from './logger';
+
+// ============================================================================
+// FEE RANGE UTILITY
+// ============================================================================
+
+export {
+  getFeeRange,
+  formatCurrency,
+  displayFeeRange,
+  analyzeFeeRange,
+  compareFees,
+  getFeeInsights,
+  getFeeDisplaySettings,
+} from './feeRange';
+export type {
+  FeeRange,
+  FeeRangeOptions,
+  FeeDisplaySettings,
+} from './feeRange';

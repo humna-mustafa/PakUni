@@ -23,6 +23,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -115,10 +116,9 @@ const GridItemCard = memo<GridItemCardProps>(({item, colors, isDark, onPress}) =
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
       useNativeDriver: true,
-      tension: 400,
-      friction: 15,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -126,8 +126,7 @@ const GridItemCard = memo<GridItemCardProps>(({item, colors, isDark, onPress}) =
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      tension: 300,
-      friction: 12,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

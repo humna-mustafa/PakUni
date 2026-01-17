@@ -335,3 +335,74 @@ export type {
   ErrorReportStatus,
   UserFeedbackOnError,
 } from './errorReporting';
+
+// ============================================================================
+// HTTP CLIENT SERVICE - Unified HTTP requests with retry logic
+// ============================================================================
+
+export {
+  httpClient,
+  http,
+} from './httpClient';
+export type {
+  HttpRequestConfig,
+  HttpResponse,
+} from './httpClient';
+
+// ============================================================================
+// OFFLINE SYNC SERVICE - Queue and intelligent retry for offline operations
+// ============================================================================
+
+export {
+  offlineSyncService,
+} from './offlineSync';
+export type {
+  SyncOperation,
+  QueuedOperation,
+  SyncConflict,
+  SyncResult,
+} from './offlineSync';
+
+// ============================================================================
+// DATA SUBMISSIONS & APPROVAL WORKFLOW SERVICE
+// ============================================================================
+
+export {
+  dataSubmissionsService,
+} from './dataSubmissions';
+export type {
+  DataSubmission,
+  SubmissionStatus,
+  SubmissionType,
+  SubmissionPriority,
+  AutoApprovalRule,
+  NotificationTrigger,
+  MeritRecord,
+  AdmissionDeadline,
+  EntryTestInfo,
+} from './dataSubmissions';
+
+// ============================================================================
+// BATCH UPDATE SERVICE - Scheduled & timer-based updates
+// ============================================================================
+
+export {
+  batchUpdateService,
+} from './batchUpdateService';
+export type {
+  BatchUpdateJob,
+  BatchUpdateConfig,
+} from './batchUpdateService';
+
+// ============================================================================
+// CONTRIBUTION AUTOMATION SERVICE - Auto-approval & contributor rewards
+// ============================================================================
+
+export {
+  contributionAutomationService,
+} from './contributionAutomation';
+export type {
+  ContributionStats,
+  ContributorBadge,
+  AutoApprovalEvent,
+} from './contributionAutomation';

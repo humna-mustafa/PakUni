@@ -106,16 +106,88 @@ export const SESSION = {
 } as const;
 
 // ============================================================================
-// ACCESSIBILITY
+// ACCESSIBILITY & TOUCH TARGETS (WCAG 2.2 Compliance)
 // ============================================================================
 
 export const ACCESSIBILITY = {
-  /** Minimum touch target size (iOS HIG & Material Design) */
+  /** Minimum touch target size (iOS HIG & Material Design) - WCAG 2.2 */
   MIN_TOUCH_TARGET: 44,
+  /** Comfortable touch target for important actions */
+  COMFORTABLE_TOUCH_TARGET: 48,
+  /** Large touch target for primary CTAs */
+  LARGE_TOUCH_TARGET: 56,
   /** Minimum contrast ratio for text (WCAG AA) */
   MIN_CONTRAST_RATIO: 4.5,
+  /** Enhanced contrast ratio (WCAG AAA) */
+  ENHANCED_CONTRAST_RATIO: 7,
   /** Reduced motion duration */
   REDUCED_MOTION_DURATION: 0,
+  /** Minimum spacing between interactive elements */
+  MIN_TARGET_SPACING: 8,
+  /** Hit slop configurations */
+  HIT_SLOP: {
+    small: { top: 4, bottom: 4, left: 4, right: 4 },
+    medium: { top: 8, bottom: 8, left: 8, right: 8 },
+    large: { top: 12, bottom: 12, left: 12, right: 12 },
+  },
+} as const;
+
+// ============================================================================
+// ANIMATION CONSTANTS - Standardized Values
+// ============================================================================
+
+export const ANIMATION_SCALES = {
+  /** Standard press scale (98% = subtle, professional) */
+  PRESS: 0.98,
+  /** Button press scale (97% = slightly more feedback) */
+  BUTTON_PRESS: 0.97,
+  /** Icon button scale (92% = visible feedback) */
+  ICON_PRESS: 0.92,
+  /** Card press scale */
+  CARD_PRESS: 0.985,
+  /** Chip/tag press scale */
+  CHIP_PRESS: 0.95,
+} as const;
+
+export const SPRING_CONFIGS = {
+  /** Snappy - for buttons and quick interactions */
+  snappy: { tension: 300, friction: 10 },
+  /** Responsive - for cards and medium elements */
+  responsive: { tension: 200, friction: 12 },
+  /** Gentle - for modals and large elements */
+  gentle: { tension: 100, friction: 14 },
+  /** Bouncy - for celebratory animations */
+  bouncy: { tension: 150, friction: 6 },
+  /** Default - balanced for most use cases */
+  default: { tension: 170, friction: 10 },
+} as const;
+
+export const STAGGER_DELAYS = {
+  /** Fast stagger for short lists */
+  FAST: 50,
+  /** Normal stagger for standard lists */
+  NORMAL: 80,
+  /** Slow stagger for emphasis */
+  SLOW: 120,
+} as const;
+
+// ============================================================================
+// OPACITY VALUES - Consistent Interaction Feedback
+// ============================================================================
+
+export const OPACITY = {
+  /** Pressed state opacity */
+  PRESSED: 0.8,
+  /** Disabled state opacity */
+  DISABLED: 0.5,
+  /** Hover/focus state */
+  HOVER: 0.9,
+  /** Inactive/muted elements */
+  MUTED: 0.6,
+  /** Overlay backgrounds */
+  OVERLAY_LIGHT: 0.5,
+  OVERLAY_MEDIUM: 0.7,
+  OVERLAY_HEAVY: 0.85,
 } as const;
 
 // ============================================================================

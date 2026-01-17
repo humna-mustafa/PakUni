@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 
 // Import Calculator Components
 import {
@@ -110,8 +111,9 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.96,
+      toValue: ANIMATION_SCALES.CARD_PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -119,6 +121,7 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

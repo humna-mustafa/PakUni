@@ -8,12 +8,13 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
+  Pressable,
   StatusBar,
   Platform,
   Animated,
   Modal,
 } from 'react-native';
+import {ANIMATION_SCALES, SPRING_CONFIGS, ACCESSIBILITY} from '../constants/ui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -55,13 +56,18 @@ interface TabButtonProps {
 }
 
 const TabButton = memo<TabButtonProps>(({label, count, isActive, onPress, colors}) => (
-  <TouchableOpacity
-    style={[
+  <Pressable
+    style={({pressed}) => [
       styles.tabButton,
-      {backgroundColor: isActive ? colors.primaryLight : 'transparent'},
+      {
+        backgroundColor: isActive ? colors.primaryLight : 'transparent',
+        opacity: pressed ? 0.8 : 1,
+      },
     ]}
     onPress={onPress}
-    activeOpacity={0.8}>
+    accessibilityRole="tab"
+    accessibilityState={{selected: isActive}}
+    accessibilityLabel={`${label} tab, ${count} items`}>
     <Text
       style={[
         styles.tabLabel,
@@ -83,7 +89,7 @@ const TabButton = memo<TabButtonProps>(({label, count, isActive, onPress, colors
         {count}
       </Text>
     </View>
-  </TouchableOpacity>
+  </Pressable>
 ));
 
 // ============================================================================
@@ -102,8 +108,9 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
+      toValue: ANIMATION_SCALES.PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
@@ -111,17 +118,19 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
   return (
     <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-      <TouchableOpacity
+      <Pressable
         style={[styles.itemCard, {backgroundColor: colors.card}]}
         onPress={() => onPress(item)}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        activeOpacity={1}>
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name}, ${item.subtitle}`}>
         {/* Icon */}
         <View style={[styles.itemIcon, {backgroundColor: `${item.color}15`}]}>
           <Icon name={item.icon} family="Ionicons" size={24} color={item.color} />
@@ -138,13 +147,21 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
         </View>
 
         {/* Remove Button */}
-        <TouchableOpacity
-          style={[styles.removeButton, {backgroundColor: `${colors.error}15`}]}
+        <Pressable
+          style={({pressed}) => [
+            styles.removeButton,
+            {
+              backgroundColor: `${colors.error}15`,
+              opacity: pressed ? 0.7 : 1,
+            },
+          ]}
           onPress={() => onRemove(item.id, item.type)}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          hitSlop={ACCESSIBILITY.HIT_SLOP.medium}
+          accessibilityRole="button"
+          accessibilityLabel={`Remove ${item.name} from favorites`}>
           <Icon name="heart-dislike-outline" family="Ionicons" size={20} color={colors.error} />
-        </TouchableOpacity>
-      </TouchableOpacity>
+        </Pressable>
+      </Pressable>
     </Animated.View>
   );
 });

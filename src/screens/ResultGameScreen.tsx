@@ -22,6 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {shareResultPrediction} from '../services/share';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -193,7 +194,7 @@ const ResultGameScreen: React.FC = () => {
     // Animate button press
     Animated.sequence([
       Animated.timing(buttonScales[index], {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 100,
         useNativeDriver: true,
       }),

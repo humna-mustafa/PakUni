@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
 import {RADIUS, SPACING, TYPOGRAPHY, ANIMATION} from '../constants/design';
+import {ANIMATION_SCALES} from '../constants/ui';
 
 type ChipVariant = 'solid' | 'outlined' | 'soft';
 type ChipSize = 'sm' | 'md' | 'lg';
@@ -61,7 +62,7 @@ export const PremiumChip: React.FC<PremiumChipProps> = ({
   const handlePressIn = useCallback(() => {
     if (!animated) return;
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
       useNativeDriver: true,
       ...ANIMATION.spring.snappy,
     }).start();

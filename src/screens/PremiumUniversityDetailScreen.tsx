@@ -16,6 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import type {RouteProp} from '@react-navigation/native';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION, GRADIENTS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {UNIVERSITIES, PROGRAMS, MERIT_FORMULAS, getScholarshipsForUniversity, MERIT_RECORDS} from '../data';
@@ -79,15 +80,14 @@ const AnimatedTab = ({
   const handlePress = () => {
     Animated.sequence([
       Animated.timing(scale, {
-        toValue: 0.95,
+        toValue: ANIMATION_SCALES.CHIP_PRESS,
         duration: 50,
         useNativeDriver: true,
       }),
       Animated.spring(scale, {
         toValue: 1,
         useNativeDriver: true,
-        tension: 100,
-        friction: 5,
+        ...SPRING_CONFIGS.snappy,
       }),
     ]).start();
     onPress();

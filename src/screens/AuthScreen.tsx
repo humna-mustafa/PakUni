@@ -1,6 +1,7 @@
 /**
  * AuthScreen - Beautiful Authentication Screen
  * Supports: Google Sign-in, Email/Password, Guest Mode
+ * Uses Premium Toast notifications for beautiful UX feedback
  */
 
 import React, {useState, useRef, useCallback, useEffect} from 'react';
@@ -15,7 +16,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
@@ -26,7 +26,8 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Icon} from '../components/icons';
 import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {useTheme} from '../contexts/ThemeContext';
-import {useAuth} from '../contexts/AuthContext';
+import {useAuthToast} from '../hooks/useAuthToast';
+import {useToast} from '../components/PremiumToast';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -95,6 +96,9 @@ const SocialButton: React.FC<SocialButtonProps> = ({
 const AuthScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark} = useTheme();
+  const toast = useToast();
+  
+  // Use the Toast-based auth hook for beautiful feedback
   const {
     signInWithGoogle,
     signInWithEmail,
@@ -102,11 +106,9 @@ const AuthScreen: React.FC = () => {
     continueAsGuest,
     resetPassword,
     isLoading,
-    authError,
-    clearError,
     hasCompletedOnboarding,
     isAuthenticated,
-  } = useAuth();
+  } = useAuthToast();
 
   const [mode, setMode] = useState<AuthMode>('welcome');
   const [email, setEmail] = useState('');
@@ -138,12 +140,6 @@ const AuthScreen: React.FC = () => {
       }),
     ]).start();
   }, []);
-
-  useEffect(() => {
-    if (authError) {
-      Alert.alert('Error', authError, [{text: 'OK', onPress: clearError}]);
-    }
-  }, [authError, clearError]);
 
   const animateTransition = useCallback((newMode: AuthMode) => {
     Animated.parallel([
@@ -181,7 +177,7 @@ const AuthScreen: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     setLocalLoading('google');
-    const success = await signInWithGoogle();
+    await signInWithGoogle();
     setLocalLoading(null);
     // Navigation will be handled by useEffect watching auth state
   };
@@ -199,53 +195,38 @@ const AuthScreen: React.FC = () => {
 
   const handleGuestMode = async () => {
     setLocalLoading('guest');
-    const success = await continueAsGuest();
+    await continueAsGuest();
     setLocalLoading(null);
     // Navigation is handled by useEffect watching isAuthenticated
     // Guests always go to Onboarding (hasCompletedOnboarding is false for new guests)
   };
 
   const handleEmailLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please enter email and password');
-      return;
-    }
+    // Validation is handled by useAuthToast with beautiful toasts
     setLocalLoading('email');
-    const success = await signInWithEmail(email.trim(), password);
+    await signInWithEmail(email.trim(), password);
     setLocalLoading(null);
     // Navigation is handled by useEffect watching isAuthenticated
   };
 
   const handleEmailSignUp = async () => {
-    if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please fill all fields');
-      return;
-    }
+    // Basic validation with toast feedback
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+      toast.warning('Please make sure your passwords match', 'Passwords Don\'t Match');
       return;
     }
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters');
-      return;
-    }
+    
     setLocalLoading('signup');
     const success = await signUpWithEmail(email.trim(), password, name.trim());
     setLocalLoading(null);
+    
     if (success) {
-      Alert.alert(
-        'Account Created',
-        'Please check your email to verify your account.',
-        [{text: 'OK', onPress: () => animateTransition('login')}]
-      );
+      // Success toast is shown by useAuthToast, transition to login
+      setTimeout(() => animateTransition('login'), 2000);
     }
   };
 
   const handleForgotPassword = async () => {
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
-      return;
-    }
     setLocalLoading('forgot');
     await resetPassword(email.trim());
     setLocalLoading(null);

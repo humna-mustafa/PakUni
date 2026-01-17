@@ -14,6 +14,7 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon} from '../components/icons';
@@ -120,19 +121,17 @@ const FeatureCard = ({
 
   const handlePressIn = () => {
     Animated.spring(bounceAnim, {
-      toValue: 0.95,
-      tension: 100,
-      friction: 5,
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(bounceAnim, {
       toValue: 1,
-      tension: 100,
-      friction: 5,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 

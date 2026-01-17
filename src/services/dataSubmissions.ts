@@ -383,6 +383,162 @@ class DataSubmissionsService {
   }
 
   /**
+   * Apply approved submission change to all related data without admin setup
+   * Auto-updates cutoff lists, recommendations, notifications, etc.
+   */
+  async applySubmissionToAllRelatedData(submission: DataSubmission): Promise<{ success: boolean; affectedCount: number }> {
+    try {
+      let affectedCount = 0;
+
+      // Apply based on entity type and field being updated
+      if (submission.entity_type === 'merit') {
+        // Update merit lists and recalculate cutoffs
+        const merits = await this.getMeritRecords();
+        const updated = merits.map(m => {
+          if (m.university_id === submission.entity_id && 
+              m.year === new Date().getFullYear()) {
+            if (submission.field_name === 'closing_merit') {
+              m.closing_merit = submission.proposed_value as number;
+              affectedCount++;
+            }
+          }
+          return m;
+        });
+        await AsyncStorage.setItem(this.MERIT_KEY, JSON.stringify(updated));
+
+        // Trigger recommendation recalculation
+        try {
+          await supabase.from('merit_updates').insert({
+            submission_id: submission.id,
+            university_id: submission.entity_id,
+            closing_merit: submission.proposed_value,
+            updated_at: new Date().toISOString(),
+          });
+        } catch (e) {
+          logger.warn('Failed to sync merit update to Supabase', e, 'DataSubmissions');
+        }
+      }
+
+      if (submission.entity_type === 'deadline' || submission.type === 'date_correction') {
+        // Update deadline and schedule notifications
+        const deadlines = await this.getAdmissionDeadlines();
+        const updated = deadlines.map(d => {
+          if (d.university_id === submission.entity_id) {
+            if (submission.field_name === 'deadline_date') {
+              d.deadline_date = submission.proposed_value as string;
+              affectedCount++;
+            }
+          }
+          return d;
+        });
+        await AsyncStorage.setItem(this.DEADLINES_KEY, JSON.stringify(updated));
+
+        // Schedule deadline reminders (auto triggers)
+        if (affectedCount > 0) {
+          const reminderTrigger: NotificationTrigger = {
+            id: `trigger_${submission.id}`,
+            name: `Auto-reminder for updated deadline`,
+            description: `Auto-generated reminder for updated deadline`,
+            enabled: true,
+            trigger_type: 'deadline_reminder',
+            target_type: 'by_university',
+            target_criteria: { university_id: submission.entity_id },
+            schedule_type: 'scheduled',
+            schedule_time: null,
+            recurring_pattern: null,
+            days_before: 7,
+            title_template: 'Deadline Updated',
+            message_template: `Deadline has been updated to ${submission.proposed_value}`,
+            last_triggered: null,
+            total_sent: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          await this.upsertNotificationTrigger(reminderTrigger);
+        }
+      }
+
+      if (submission.entity_type === 'entry_test' || submission.type === 'entry_test_update') {
+        // Update entry test info
+        const tests = await this.getEntryTestInfo();
+        const updated = tests.map(t => {
+          if (t.id === submission.entity_id) {
+            if (submission.field_name === 'test_date') {
+              t.test_date = submission.proposed_value as string;
+              affectedCount++;
+            }
+            if (submission.field_name === 'registration_deadline') {
+              t.registration_deadline = submission.proposed_value as string;
+              affectedCount++;
+            }
+          }
+          return t;
+        });
+        await AsyncStorage.setItem(this.ENTRY_TESTS_KEY, JSON.stringify(updated));
+      }
+
+      if (submission.type === 'fee_update') {
+        // Invalidate calculator cache to force refresh
+        try {
+          await supabase.from('cache_invalidations').insert({
+            key: `calculator_fees_${submission.entity_id}`,
+            invalidated_at: new Date().toISOString(),
+          });
+        } catch (e) {
+          logger.warn('Failed to invalidate calculator cache', e, 'DataSubmissions');
+        }
+        affectedCount = 1;
+      }
+
+      // Log the successful application
+      logger.info(`Successfully applied submission ${submission.id} to ${affectedCount} related record(s)`, 'DataSubmissions');
+
+      return { success: true, affectedCount };
+    } catch (error) {
+      logger.error('Failed to apply submission to related data', error, 'DataSubmissions');
+      return { success: false, affectedCount: 0 };
+    }
+  }
+
+  /**
+   * Get statistics including approval metrics
+   */
+  async getStatistics(): Promise<{
+    submissions: {
+      total: number;
+      pending: number;
+      approved: number;
+      rejected: number;
+      autoApproved: number;
+      avgApprovalTime?: number;
+    };
+  }> {
+    const submissions = await this.getSubmissions();
+    const approvedSubs = submissions.filter(s => s.status === 'approved');
+    
+    let avgApprovalTime = 0;
+    if (approvedSubs.length > 0) {
+      const times = approvedSubs
+        .map(s => new Date(s.reviewed_at!).getTime() - new Date(s.created_at).getTime())
+        .filter(t => t > 0);
+      if (times.length > 0) {
+        avgApprovalTime = Math.floor(times.reduce((a, b) => a + b, 0) / times.length / 1000 / 60); // in minutes
+      }
+    }
+
+    return {
+      submissions: {
+        total: submissions.length,
+        pending: submissions.filter(s => s.status === 'pending').length,
+        approved: submissions.filter(s => s.status === 'approved').length,
+        rejected: submissions.filter(s => s.status === 'rejected').length,
+        autoApproved: submissions.filter(s => s.status === 'auto_approved').length,
+        avgApprovalTime,
+      },
+    };
+  }
+
+  /**
    * Update user trust level
    */
   private async updateUserTrustLevel(userId: string, change: number): Promise<void> {

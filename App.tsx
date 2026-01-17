@@ -14,6 +14,9 @@ import {ThemeProvider, useTheme, AuthProvider} from './src/contexts';
 import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast} from './src/components';
 import {analytics} from './src/services/analytics';
 import {supabase} from './src/services/supabase';
+import {errorReportingService} from './src/services/errorReporting';
+import {offlineSyncService} from './src/services/offlineSync';
+import {contributionAutomationService} from './src/services/contributionAutomation';
 import {logger} from './src/utils/logger';
 
 // Deep linking configuration for OAuth callbacks and shared content
@@ -55,9 +58,29 @@ function AppContent(): React.JSX.Element {
   const {isDark, colors} = useTheme();
 
   useEffect(() => {
-    // Initialize analytics
-    analytics.initialize();
-    analytics.trackEvent('app_opened');
+    // Initialize all services
+    const initializeServices = async () => {
+      try {
+        // Initialize analytics
+        analytics.initialize();
+        analytics.trackEvent('app_opened');
+        
+        // Initialize error reporting
+        await errorReportingService.initialize();
+        
+        // Initialize offline sync
+        await offlineSyncService.initialize();
+        
+        // Initialize contribution automation service
+        await contributionAutomationService.initialize();
+        
+        logger.info('All services initialized successfully', undefined, 'App');
+      } catch (error) {
+        logger.error('Service initialization failed', error as Error, 'App');
+      }
+    };
+    
+    initializeServices();
     
     // Handle deep links for OAuth
     const handleDeepLink = async (event: {url: string}) => {
@@ -81,6 +104,11 @@ function AppContent(): React.JSX.Element {
           }
         } catch (error) {
           logger.error('Error processing OAuth callback', error as Error, 'DeepLink');
+          await errorReportingService.reportError(
+            error instanceof Error ? error : new Error(String(error)),
+            'OAuthCallback',
+            'high'
+          );
         }
       }
     };
@@ -99,6 +127,8 @@ function AppContent(): React.JSX.Element {
       subscription.remove();
       analytics.endSession();
       analytics.cleanup();
+      offlineSyncService.cleanup();
+      errorReportingService.stopBatchUpload();
     };
   }, []);
 

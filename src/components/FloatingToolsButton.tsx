@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from './icons';
 import {Haptics} from '../utils/haptics';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 
 interface FloatingToolsButtonProps {
   /** Position from bottom */
@@ -51,10 +52,9 @@ const FloatingToolsButton = memo<FloatingToolsButtonProps>(({
   const handlePressIn = () => {
     Animated.parallel([
       Animated.spring(scaleAnim, {
-        toValue: 0.9,
+        toValue: ANIMATION_SCALES.ICON_PRESS,
         useNativeDriver: true,
-        tension: 400,
-        friction: 15,
+        ...SPRING_CONFIGS.snappy,
       }),
       Animated.timing(rotateAnim, {
         toValue: 1,
@@ -69,8 +69,7 @@ const FloatingToolsButton = memo<FloatingToolsButtonProps>(({
       Animated.spring(scaleAnim, {
         toValue: 1,
         useNativeDriver: true,
-        tension: 300,
-        friction: 12,
+        ...SPRING_CONFIGS.responsive,
       }),
       Animated.timing(rotateAnim, {
         toValue: 0,

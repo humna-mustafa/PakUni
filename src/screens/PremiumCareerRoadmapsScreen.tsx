@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {Icon} from '../components/icons';
 
 const {width} = Dimensions.get('window');
@@ -267,19 +268,17 @@ const RoadmapCard = ({
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.98,
-      tension: 100,
-      friction: 10,
+      toValue: ANIMATION_SCALES.PRESS,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
-      tension: 100,
-      friction: 10,
       useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
