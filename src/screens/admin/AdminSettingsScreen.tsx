@@ -261,7 +261,9 @@ const AdminSettingsScreen: React.FC = () => {
           ) : (
             <TouchableOpacity
               style={[styles.editBtn, {backgroundColor: colors.background}]}
-              onPress={() => handleEdit(setting)}>
+              onPress={() => handleEdit(setting)}
+              accessibilityRole="button"
+              accessibilityLabel={`Edit ${setting.key} setting`}>
               <Icon name="create-outline" family="Ionicons" size={18} color={colors.primary} />
             </TouchableOpacity>
           )}
@@ -288,7 +290,10 @@ const AdminSettingsScreen: React.FC = () => {
               </View>
             )}
           </View>
-          <TouchableOpacity onPress={() => handleDelete(setting)}>
+          <TouchableOpacity
+            onPress={() => handleDelete(setting)}
+            accessibilityRole="button"
+            accessibilityLabel={`Delete ${setting.key} setting`}>
             <Icon name="trash-outline" family="Ionicons" size={16} color="#EF4444" />
           </TouchableOpacity>
         </View>
@@ -307,14 +312,22 @@ const AdminSettingsScreen: React.FC = () => {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back">
             <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
           </TouchableOpacity>
           <View style={styles.headerTitleContainer}>
             <Text style={styles.headerTitle}>App Settings</Text>
             <Text style={styles.headerSubtitle}>{settings.length} settings configured</Text>
           </View>
-          <TouchableOpacity style={styles.addBtn} onPress={() => setShowCreateModal(true)}>
+          <TouchableOpacity
+            style={styles.addBtn}
+            onPress={() => setShowCreateModal(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Add new setting">
             <Icon name="add" family="Ionicons" size={24} color="#FFFFFF" />
           </TouchableOpacity>
         </LinearGradient>

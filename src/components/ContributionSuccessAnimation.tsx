@@ -88,6 +88,34 @@ const Confetti: React.FC<{ color: string; delay: number }> = ({ color, delay }) 
   );
 };
 
+// Badge item with proper spring animation
+const BadgeItem: React.FC<{ badge: string; delay: number }> = ({ badge, delay }) => {
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.delay(delay),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 5,
+        tension: 40,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View
+      style={[
+        styles.badgeItem,
+        { transform: [{ scale: scaleAnim }] },
+      ]}
+    >
+      <Text style={styles.badge}>{badge}</Text>
+    </Animated.View>
+  );
+};
+
 export const ContributionSuccessAnimation: React.FC<ContributionSuccessProps> = ({
   visible,
   type,

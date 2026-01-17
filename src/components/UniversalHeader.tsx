@@ -211,7 +211,10 @@ const UniversalHeader = memo<UniversalHeaderProps>(({
 
           {showProfile && (
             <HeaderButton
-              style={[styles.profileButton, {backgroundColor: colors.primary}]}
+              style={[
+                styles.profileButton,
+                !user?.avatarUrl && {backgroundColor: colors.primary}
+              ]}
               onPress={handleProfilePress}
               accessibilityLabel={`View profile${user?.fullName ? ` for ${user.fullName}` : ''}`}
               accessibilityHint="Opens your profile and settings">

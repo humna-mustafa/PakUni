@@ -273,7 +273,11 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         </View>
 
         {/* Calculate Button */}
-        <TouchableOpacity onPress={calculateMerit}>
+        <TouchableOpacity 
+          onPress={calculateMerit}
+          accessibilityRole="button"
+          accessibilityLabel="Calculate merit score"
+          accessibilityHint="Calculates your merit percentage based on matric, inter, and entry test marks">
           <LinearGradient
             colors={['#6366F1', '#8B5CF6']}
             style={styles.calculateButton}>

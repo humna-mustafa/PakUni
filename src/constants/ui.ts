@@ -10,8 +10,8 @@
 export const LIST_ITEM_HEIGHTS = {
   /** University card height in PremiumUniversitiesScreen */
   UNIVERSITY_CARD: 180,
-  /** Scholarship card height in PremiumScholarshipsScreen */
-  SCHOLARSHIP_CARD: 280,
+  /** Scholarship card height in PremiumScholarshipsScreen - optimized for better space usage */
+  SCHOLARSHIP_CARD: 240,
   /** Entry test item height */
   ENTRY_TEST_ITEM: 120,
   /** Career item height */

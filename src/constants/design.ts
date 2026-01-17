@@ -733,10 +733,6 @@ export const PREMIUM_DESIGN = {
   },
 } as const;
 
-export default {
-  TYPOGRAPHY,
-  PALETTE,
-  SHADOWS,
 // ============================================================================
 // SEMANTIC STATUS COLORS - For urgency, countdown, and status indicators
 // ============================================================================

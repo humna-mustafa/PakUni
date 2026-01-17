@@ -10,6 +10,7 @@ import {
   StatusBar,
   Platform,
   RefreshControl,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -457,14 +458,19 @@ const PremiumUniversitiesScreen = () => {
             <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.profileBtn, {backgroundColor: colors.primary}]}
+            style={[
+              styles.profileBtn,
+              !user?.avatarUrl && {backgroundColor: colors.primary}
+            ]}
             onPress={() => navigation.navigate('Profile')}
             accessibilityRole="button"
             accessibilityLabel="View your profile">
             {user?.avatarUrl ? (
-              <View style={styles.profileImage}>
-                <Icon name="person" family="Ionicons" size={18} color="#FFFFFF" />
-              </View>
+              <Image
+                source={{uri: user.avatarUrl}}
+                style={styles.profileImage}
+                accessibilityIgnoresInvertColors
+              />
             ) : (
               <Text style={styles.profileInitials}>{getUserInitials()}</Text>
             )}
@@ -699,7 +705,7 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
   },
   compactHeader: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
     paddingBottom: SPACING.sm,
   },
@@ -751,9 +757,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 38,
     height: 38,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 19,
   },
   headerCard: {
     margin: SPACING.lg,
@@ -842,7 +846,7 @@ const styles = StyleSheet.create({
   },
   universityCard: {
     borderRadius: RADIUS.lg,
-    padding: SPACING.sm + 4,
+    padding: SPACING.sm,
     marginBottom: SPACING.sm,
     elevation: 2,
     shadowColor: '#000',

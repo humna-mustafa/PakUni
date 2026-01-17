@@ -416,7 +416,10 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
                   <TouchableOpacity 
                     style={[styles.actionBtn, {backgroundColor: colors.background}]}
                     onPress={handleExportCSV}
-                    disabled={exporting}>
+                    disabled={exporting}
+                    accessibilityRole="button"
+                    accessibilityLabel="Export analytics as CSV"
+                    accessibilityState={{disabled: exporting}}>
                     {exporting ? (
                       <ActivityIndicator size="small" color={colors.primary} />
                     ) : (
@@ -426,13 +429,17 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
                   </TouchableOpacity>
                   <TouchableOpacity 
                     style={[styles.actionBtn, {backgroundColor: colors.background}]}
-                    onPress={handleEmailReport}>
+                    onPress={handleEmailReport}
+                    accessibilityRole="button"
+                    accessibilityLabel="Generate text report">
                     <Icon name="document-text-outline" family="Ionicons" size={20} color={colors.primary} />
                     <Text style={[styles.actionBtnText, {color: colors.text}]}>Report</Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
                     style={[styles.actionBtn, {backgroundColor: colors.background}]}
-                    onPress={handleEmailReport}>
+                    onPress={handleEmailReport}
+                    accessibilityRole="button"
+                    accessibilityLabel="Share analytics report">
                     <Icon name="share-outline" family="Ionicons" size={20} color={colors.primary} />
                     <Text style={[styles.actionBtnText, {color: colors.text}]}>Share</Text>
                   </TouchableOpacity>

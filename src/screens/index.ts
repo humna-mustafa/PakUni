@@ -65,3 +65,7 @@ export {default as PremiumPollsScreen} from './PremiumPollsScreen';
 export {default as PremiumDeadlinesScreen} from './PremiumDeadlinesScreen';
 export {default as PremiumMeritArchiveScreen} from './PremiumMeritArchiveScreen';
 export {default as PremiumCareerCenterScreen} from './PremiumCareerCenterScreen';
+
+// Data Contribution screens
+export {default as UltraContributeScreen} from './UltraContributeScreen';
+export {default as UserDataSubmissionScreen} from './UserDataSubmissionScreen';

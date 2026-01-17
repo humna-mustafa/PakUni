@@ -14,6 +14,7 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -598,14 +599,24 @@ const PremiumProfileScreen = () => {
       </View>
 
       {/* Action Buttons */}
-      <TouchableOpacity style={styles.actionBtnWrapper} onPress={() => navigation.navigate('Calculator')}>
+      <TouchableOpacity 
+        style={styles.actionBtnWrapper} 
+        onPress={() => navigation.navigate('Calculator')}
+        accessibilityRole="button"
+        accessibilityLabel="Calculate my merit"
+        accessibilityHint="Opens the merit calculator to estimate your admission chances">
         <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
           <Icon name="analytics-outline" family="Ionicons" size={22} color="#FFFFFF" />
           <Text style={styles.actionBtnText}>Calculate My Merit</Text>
         </LinearGradient>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.secondaryBtn, {backgroundColor: colors.card, borderColor: colors.primary}]} onPress={() => navigation.navigate('Recommendations')}>
+      <TouchableOpacity 
+        style={[styles.secondaryBtn, {backgroundColor: colors.card, borderColor: colors.primary}]} 
+        onPress={() => navigation.navigate('Recommendations')}
+        accessibilityRole="button"
+        accessibilityLabel="Find matching universities"
+        accessibilityHint="Opens personalized university recommendations based on your profile">
         <Icon name="school-outline" family="Ionicons" size={22} color={colors.primary} />
         <Text style={[styles.secondaryBtnText, {color: colors.primary}]}>Find Matching Universities</Text>
       </TouchableOpacity>
@@ -640,7 +651,11 @@ const PremiumProfileScreen = () => {
                   {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
                 </Text>
               </View>
-              <TouchableOpacity style={[styles.removeBtn, {backgroundColor: colors.error + '15'}]} onPress={() => removeSavedItem(item)}>
+              <TouchableOpacity 
+                style={[styles.removeBtn, {backgroundColor: colors.error + '15'}]} 
+                onPress={() => removeSavedItem(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`Remove ${item.name} from saved items`}>
                 <Icon name="close" family="Ionicons" size={16} color={colors.error} />
               </TouchableOpacity>
             </Animated.View>
@@ -672,7 +687,12 @@ const PremiumProfileScreen = () => {
 
       {/* Main Settings Link - All other settings moved to Settings screen */}
       <View style={styles.section}>
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity 
+          style={[styles.settingRow, {backgroundColor: colors.card}]} 
+          onPress={() => navigation.navigate('Settings')}
+          accessibilityRole="button"
+          accessibilityLabel="App Settings"
+          accessibilityHint="Opens settings for theme, notifications, and privacy options">
           <View style={[styles.settingIconBg, {backgroundColor: '#DBEAFE'}]}>
             <Icon name="settings-outline" family="Ionicons" size={20} color={colors.primary} />
           </View>
@@ -683,7 +703,12 @@ const PremiumProfileScreen = () => {
           <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.primary} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.settingRow, {backgroundColor: colors.card}]} onPress={() => navigation.navigate('ContactSupport')}>
+        <TouchableOpacity 
+          style={[styles.settingRow, {backgroundColor: colors.card}]} 
+          onPress={() => navigation.navigate('ContactSupport')}
+          accessibilityRole="button"
+          accessibilityLabel="Help and Support"
+          accessibilityHint="Opens contact support page to report issues or get help">
           <View style={[styles.settingIconBg, {backgroundColor: '#D1FAE5'}]}>
             <Icon name="chatbubbles-outline" family="Ionicons" size={20} color="#10B981" />
           </View>
@@ -697,22 +722,31 @@ const PremiumProfileScreen = () => {
 
       {/* Auth Button */}
       {isGuest ? (
-        <TouchableOpacity style={styles.logoutBtn} onPress={() => {
-          // Sign out guest to trigger navigation to Auth
-          signOut();
-        }}>
+        <TouchableOpacity 
+          style={styles.logoutBtn} 
+          onPress={() => {
+            // Sign out guest to trigger navigation to Auth
+            signOut();
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Sign in or create account"
+          accessibilityHint="Opens authentication to sign in or register a new account">
           <LinearGradient colors={[colors.primary, colors.primaryDark || '#0284C7']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-in-outline" family="Ionicons" size={22} color="#FFFFFF" />
             <Text style={styles.logoutText}>Sign In / Create Account</Text>
           </LinearGradient>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.logoutBtn} onPress={() => {
-          Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-            {text: 'Cancel', style: 'cancel'},
-            {text: 'Sign Out', style: 'destructive', onPress: () => signOut()},
-          ]);
-        }}>
+        <TouchableOpacity 
+          style={styles.logoutBtn} 
+          onPress={() => {
+            Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+              {text: 'Cancel', style: 'cancel'},
+              {text: 'Sign Out', style: 'destructive', onPress: () => signOut()},
+            ]);
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Sign out of your account">
           <LinearGradient colors={['#EF4444', '#DC2626']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.logoutGradient}>
             <Icon name="log-out-outline" family="Ionicons" size={22} color="#FFFFFF" />
             <Text style={styles.logoutText}>Sign Out</Text>
@@ -752,8 +786,14 @@ const PremiumProfileScreen = () => {
                 <View style={styles.notificationDot} />
               </TouchableOpacity>
               
-              <View style={[styles.avatarContainer, {backgroundColor: colors.card}]}>
-                {(user?.fullName || profile.name) ? (
+              <View style={[styles.avatarContainer, !user?.avatarUrl && {backgroundColor: colors.card}]}>
+                {user?.avatarUrl ? (
+                  <Image
+                    source={{uri: user.avatarUrl}}
+                    style={styles.avatarImage}
+                    accessibilityIgnoresInvertColors
+                  />
+                ) : (user?.fullName || profile.name) ? (
                   <Text style={[styles.avatarText, {color: colors.primary}]}>
                     {(user?.fullName || profile.name).charAt(0).toUpperCase()}
                   </Text>
@@ -804,7 +844,7 @@ const PremiumProfileScreen = () => {
             {activeTab === 'settings' && renderSettingsTab()}
           </View>
 
-          <View style={{height: 80}} />
+          <View style={{height: 120}} />
         </ScrollView>
 
         {/* Theme Modal */}
@@ -1005,6 +1045,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
   },
   avatarText: { fontSize: 30, fontWeight: '800', letterSpacing: -0.5 },
   profileName: { fontSize: TYPOGRAPHY.sizes.lg, fontWeight: '700', color: '#FFFFFF', marginBottom: 2, letterSpacing: -0.3, textShadowColor: 'rgba(0,0,0,0.2)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },

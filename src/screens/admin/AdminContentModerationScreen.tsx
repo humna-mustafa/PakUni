@@ -155,6 +155,9 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
         selected && { backgroundColor: color + '20' },
       ]}
       onPress={() => setStatusFilter(label.toLowerCase().replace(' ', '_') as StatusFilter)}
+      accessibilityRole="button"
+      accessibilityLabel={`Filter by ${label}, ${count} items`}
+      accessibilityState={{ selected }}
     >
       <Text style={[styles.statBadgeCount, { color }]}>{count}</Text>
       <Text style={[styles.statBadgeLabel, selected && { color }]}>{label}</Text>
@@ -169,6 +172,9 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
         setSelectedItem(item);
         setReviewModalVisible(true);
       }}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.title}, ${item.content_type}, status ${item.status.replace('_', ' ')}, priority ${item.priority}${item.auto_flags.length > 0 ? `, ${item.auto_flags.length} flags` : ''}`}
+      accessibilityHint="Double tap to review this content"
     >
       <View style={styles.itemHeader}>
         <View style={[styles.itemIcon, { backgroundColor: colors.primary + '15' }]}>
@@ -433,6 +439,9 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
                     style={[styles.actionButton, styles.rejectButton]}
                     onPress={() => handleReviewAction('rejected')}
                     disabled={loading}
+                    accessibilityRole="button"
+                    accessibilityLabel="Reject content"
+                    accessibilityState={{ disabled: loading }}
                   >
                     <Icon name="close-circle" size={20} color="#fff" />
                     <Text style={styles.actionButtonText}>Reject</Text>
@@ -442,6 +451,9 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
                     style={[styles.actionButton, styles.approveButton]}
                     onPress={() => handleReviewAction('approved')}
                     disabled={loading}
+                    accessibilityRole="button"
+                    accessibilityLabel="Approve content"
+                    accessibilityState={{ disabled: loading }}
                   >
                     <Icon name="checkmark-circle" size={20} color="#fff" />
                     <Text style={styles.actionButtonText}>Approve</Text>
@@ -456,6 +468,8 @@ const AdminContentModerationScreen: React.FC<{ navigation: any }> = ({ navigatio
                     setSelectedItem(null);
                     setReviewNotes('');
                   }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Skip this item for now"
                 >
                   <Text style={styles.skipButtonText}>Skip for Now</Text>
                 </TouchableOpacity>

@@ -60,7 +60,10 @@ const UserCard: React.FC<UserCardProps> = ({user, onPress, colors}) => {
     <TouchableOpacity
       style={[styles.userCard, {backgroundColor: colors.card}]}
       onPress={onPress}
-      activeOpacity={0.7}>
+      activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={`${user.full_name || 'Unknown user'}, ${user.email || 'no email'}, role: ${user.role.replace('_', ' ')}${user.is_banned ? ', banned' : ''}${user.is_verified ? ', verified' : ''}`}
+      accessibilityHint="Double tap to manage this user">
       <View style={[styles.avatar, {backgroundColor: colors.primaryLight}]}>
         {user.avatar_url ? (
           <Text style={[styles.avatarText, {color: colors.primary}]}>

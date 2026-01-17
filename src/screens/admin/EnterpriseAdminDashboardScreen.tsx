@@ -592,7 +592,12 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
     <View style={styles.quickActionsSection}>
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Quick Actions</Text>
-        <TouchableOpacity onPress={handleClearCache}>
+        <TouchableOpacity
+          onPress={handleClearCache}
+          accessibilityRole="button"
+          accessibilityLabel="Clear cache"
+          accessibilityHint="Clears all cached data"
+        >
           <Text style={[styles.clearCacheText, { color: colors.error }]}>Clear Cache</Text>
         </TouchableOpacity>
       </View>
@@ -603,6 +608,8 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
             style={[styles.quickActionCard, { backgroundColor: colors.card }]}
             onPress={() => navigation.navigate(action.screen)}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={`${action.title}, ${action.description}${action.badge ? `, ${action.badge} pending items` : ''}`}
           >
             <View style={[styles.quickActionIconContainer, { backgroundColor: action.color + '20' }]}>
               {action.iconSet === 'ion' ? (

@@ -10,6 +10,7 @@ import {
   StatusBar,
   Platform,
   Easing,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation, CompositeNavigationProp} from '@react-navigation/native';
@@ -798,11 +799,24 @@ const PremiumHomeScreen = () => {
             />
             {/* Profile Button */}
             <TouchableOpacity
-              style={[styles.profileBtn, {backgroundColor: colors.primary}]}
+              style={[
+                styles.profileBtn,
+                !user?.avatarUrl && {backgroundColor: colors.primary}
+              ]}
               onPress={() => navigation.navigate('Profile')}
               accessibilityRole="button"
               accessibilityLabel="View your profile">
-              <Icon name="person" family="Ionicons" size={18} color="#FFFFFF" />
+              {user?.avatarUrl ? (
+                <Image
+                  source={{uri: user.avatarUrl}}
+                  style={styles.profileImage}
+                  accessibilityIgnoresInvertColors
+                />
+              ) : (
+                <Text style={styles.profileInitials}>
+                  {user?.fullName ? user.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) : 'U'}
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -915,9 +929,20 @@ const styles = StyleSheet.create({
   profileBtn: {
     width: 38,
     height: 38,
-    borderRadius: 12,
+    borderRadius: 19,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  profileImage: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+  },
+  profileInitials: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
   },
   searchContainer: {
     paddingHorizontal: 20,

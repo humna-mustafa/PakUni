@@ -14,6 +14,7 @@ import {
   RefreshControl,
   Platform,
   Alert,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -271,17 +272,17 @@ const ScholarshipCard = ({
               <Icon name={getTypeIconName(item.type)} family="Ionicons" size={24} color={accentColor} />
             </View>
             <View style={styles.titleContainer}>
-              <Text style={[styles.cardTitle, {color: colors.text}]} numberOfLines={2}>
+              <Text style={[styles.cardTitle, {color: colors.text}]} numberOfLines={1}>
                 {item.name}
               </Text>
-              <Text style={[styles.cardProvider, {color: colors.textSecondary}]}>
+              <Text style={[styles.cardProvider, {color: colors.textSecondary}]} numberOfLines={1}>
                 {item.provider}
               </Text>
             </View>
           </View>
 
           {/* Description */}
-          <Text style={[styles.cardDescription, {color: colors.textSecondary}]} numberOfLines={2}>
+          <Text style={[styles.cardDescription, {color: colors.textSecondary}]} numberOfLines={1} ellipsizeMode="tail">
             {item.description}
           </Text>
 
@@ -363,7 +364,7 @@ const ScholarshipCard = ({
 };
 
 // Use constant from centralized UI config
-const ITEM_HEIGHT = LIST_ITEM_HEIGHTS.SCHOLARSHIP_CARD;
+const ITEM_HEIGHT = 240; // Optimized from 280px - better space usage
 
 const PremiumScholarshipsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -938,14 +939,19 @@ const PremiumScholarshipsScreen = () => {
                 <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.profileBtn, {backgroundColor: colors.primary}]}
+                style={[
+                  styles.profileBtn,
+                  !user?.avatarUrl && {backgroundColor: colors.primary}
+                ]}
                 onPress={() => navigation.navigate('Profile')}
                 accessibilityRole="button"
                 accessibilityLabel="View your profile">
                 {user?.avatarUrl ? (
-                  <View style={styles.profileImage}>
-                    <Icon name="person" family="Ionicons" size={18} color="#FFFFFF" />
-                  </View>
+                  <Image
+                    source={{uri: user.avatarUrl}}
+                    style={styles.profileImage}
+                    accessibilityIgnoresInvertColors
+                  />
                 ) : (
                   <Text style={styles.profileInitials}>{getUserInitials()}</Text>
                 )}
@@ -1063,7 +1069,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   compactHeader: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
     paddingBottom: SPACING.sm,
   },
@@ -1121,9 +1127,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 38,
     height: 38,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 19,
   },
   headerSubtitleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1199,18 +1203,18 @@ const styles = StyleSheet.create({
   },
   // Unified search container
   searchContainer: {
-    paddingHorizontal: SPACING.lg,
-    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   filterContainer: {
     marginBottom: SPACING.md,
   },
   universityDropdownWrapper: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     marginBottom: SPACING.sm,
   },
   filterList: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     gap: SPACING.sm,
   },
   filterChip: {
@@ -1244,7 +1248,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   listContent: {
-    padding: SPACING.lg,
+    padding: SPACING.md,
     paddingTop: 0,
     paddingBottom: 120,
   },
@@ -1253,7 +1257,7 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: RADIUS.lg,
-    padding: SPACING.md,
+    padding: SPACING.sm,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -1274,12 +1278,12 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.xs + 2,
     paddingRight: 80,
   },
   iconContainer: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: RADIUS.md,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1293,23 +1297,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
+    fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: '700',
-    lineHeight: 22,
+    lineHeight: 20,
   },
   cardProvider: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: TYPOGRAPHY.sizes.xs,
     marginTop: 2,
   },
   cardDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 20,
-    marginBottom: SPACING.md,
+    lineHeight: 18,
+    marginBottom: SPACING.xs + 2,
   },
   statsRow: {
     flexDirection: 'row',
     gap: SPACING.xs,
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   statBox: {
     flex: 1,
@@ -1324,17 +1328,17 @@ const styles = StyleSheet.create({
     marginRight: SPACING.sm,
   },
   statLabel: {
-    fontSize: 10,
+    fontSize: 9,
   },
   statValue: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: SPACING.sm,
+    paddingTop: SPACING.xs,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.05)',
   },
@@ -1355,8 +1359,8 @@ const styles = StyleSheet.create({
   viewBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs + 2,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
     borderRadius: RADIUS.md,
     gap: 4,
   },
@@ -1619,7 +1623,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: SPACING.sm,
+    marginBottom: SPACING.xs,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -1639,8 +1643,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   availabilitySection: {
-    marginBottom: SPACING.sm,
-    padding: SPACING.xs + 2,
+    marginBottom: SPACING.xs,
+    padding: SPACING.xs,
     borderRadius: RADIUS.md,
   },
   availabilityHeader: {
@@ -1665,9 +1669,9 @@ const styles = StyleSheet.create({
     gap: SPACING.xs,
   },
   miniLogoContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,0.05)',
     borderWidth: 1,
@@ -1676,9 +1680,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   miniLogo: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
   },
   applicationMethodBadge: {
     flexDirection: 'row',

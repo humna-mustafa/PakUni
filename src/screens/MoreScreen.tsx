@@ -14,6 +14,7 @@ import {
   StatusBar,
   Platform,
   Dimensions,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -41,6 +42,7 @@ interface GridItem {
   color: string;
   screen: keyof RootStackParamList | 'Universities' | 'Scholarships';
   badge?: string;
+  params?: any;
 }
 
 interface MenuSection {
@@ -91,13 +93,7 @@ const MENU_SECTIONS: MenuSection[] = [
       {id: 'achievements', title: 'Badges', icon: 'trophy-outline', color: '#F59E0B', screen: 'Achievements'},
     ],
   },
-  {
-    title: 'Contribute',
-    icon: 'hand-left-outline',
-    items: [
-      {id: 'submitcorrection', title: 'Fix Data', icon: 'create-outline', color: '#7C3AED', screen: 'SubmitDataCorrection', badge: 'HELP'},
-    ],
-  },
+  // Removed Contribute section - now using dedicated motivational card
 ];
 
 // ============================================================================
@@ -172,13 +168,13 @@ const MoreScreen = () => {
   // Check if user is admin based on role
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
 
-  const handleNavigate = useCallback((screen: string) => {
+  const handleNavigate = useCallback((screen: string, params?: any) => {
     // Handle tab navigation vs stack navigation
     if (screen === 'Universities' || screen === 'Scholarships') {
       navigation.navigate('MainTabs', {screen} as any);
     } else {
-      // Cast to any to handle dynamic navigation
-      (navigation as any).navigate(screen);
+      // Cast to any to handle dynamic navigation with params
+      (navigation as any).navigate(screen, params);
     }
   }, [navigation]);
 
@@ -218,12 +214,19 @@ const MoreScreen = () => {
           </View>
           {/* Profile Button with User Initials */}
           <TouchableOpacity
-            style={[styles.profileButton, {backgroundColor: colors.primary}]}
+            style={[
+              styles.profileButton,
+              !user?.avatarUrl && {backgroundColor: colors.primary}
+            ]}
             onPress={handleProfilePress}
             accessibilityRole="button"
             accessibilityLabel="View profile">
             {user?.avatarUrl ? (
-              <Icon name="person-outline" family="Ionicons" size={20} color="#FFFFFF" />
+              <Image
+                source={{uri: user.avatarUrl}}
+                style={styles.profileImage}
+                accessibilityIgnoresInvertColors
+              />
             ) : (
               <Text style={styles.profileInitials}>{getUserInitials()}</Text>
             )}
@@ -306,6 +309,31 @@ const MoreScreen = () => {
             </TouchableOpacity>
           )}
 
+          {/* 🌟 Data Correction Card - Ultra Clear Banner */}
+          <TouchableOpacity
+            style={[styles.contributeCard, {backgroundColor: colors.card}]}
+            onPress={() => navigation.navigate('SubmitDataCorrection')}
+            activeOpacity={0.8}>
+            <LinearGradient
+              colors={['#10B981', '#059669', '#047857']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.contributeCardGradient}>
+              <View style={styles.contributeIconBg}>
+                <Icon name="create" family="Ionicons" size={24} color="#FFFFFF" />
+              </View>
+              <View style={styles.contributeCardContent}>
+                <Text style={styles.contributeCardTitle}>🔧 Report Wrong Data</Text>
+                <Text style={styles.contributeCardSubtitle}>
+                  Found incorrect fee, merit or date? Fix it now!
+                </Text>
+              </View>
+              <View style={styles.contributeArrow}>
+                <Icon name="arrow-forward-circle" family="Ionicons" size={28} color="rgba(255,255,255,0.9)" />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+
           {/* Compact Grid Sections */}
           {MENU_SECTIONS.map((section) => (
             <View key={section.title} style={styles.section}>
@@ -320,7 +348,7 @@ const MoreScreen = () => {
                     item={item}
                     colors={colors}
                     isDark={isDark}
-                    onPress={() => handleNavigate(item.screen)}
+                    onPress={() => handleNavigate(item.screen, item.params)}
                   />
                 ))}
               </View>
@@ -458,6 +486,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+  profileImage: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+  },
   scrollContent: {
     paddingHorizontal: SPACING.md,
     paddingTop: SPACING.xs,
@@ -524,6 +557,58 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.75)',
     fontSize: 11,
     marginTop: 1,
+  },
+  // Contribute Card - Motivational Banner
+  contributeCard: {
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+    marginBottom: SPACING.md,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#EC4899',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  contributeCardGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    gap: SPACING.sm,
+  },
+  contributeIconBg: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contributeCardContent: {
+    flex: 1,
+  },
+  contributeCardTitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+  contributeCardSubtitle: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: 12,
+    marginTop: 3,
+    fontWeight: '500',
+  },
+  contributeArrow: {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   // Section
   section: {

@@ -86,6 +86,7 @@ import {
 
 // User Feature Screens - Data Submission
 import UserDataSubmissionScreen from '../screens/UserDataSubmissionScreen';
+import UltraContributeScreen from '../screens/UltraContributeScreen';
 
 // Components
 import {ErrorBoundary, PremiumTabBar} from '../components';
@@ -587,10 +588,10 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={AdminApprovalAnalyticsScreen}
             options={{headerShown: false}}
           />
-          {/* User Data Submission */}
+          {/* User Data Submission - Ultra Contribute Screen */}
           <Stack.Screen
             name="SubmitDataCorrection"
-            component={UserDataSubmissionScreen}
+            component={UltraContributeScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

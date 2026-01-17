@@ -186,7 +186,10 @@ const AdminFeedbackScreen: React.FC = () => {
     return (
       <TouchableOpacity
         style={[styles.feedbackCard, {backgroundColor: colors.card}]}
-        onPress={() => handleViewFeedback(item)}>
+        onPress={() => handleViewFeedback(item)}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.category} feedback: ${item.title || 'No title'}, status: ${item.status}, rating: ${item.rating} stars`}
+        accessibilityHint="Double tap to view feedback details">
         <View style={styles.feedbackHeader}>
           <View style={[styles.categoryIcon, {backgroundColor: categoryConfig.color + '20'}]}>
             <Icon name={categoryConfig.icon} family="Ionicons" size={18} color={categoryConfig.color} />

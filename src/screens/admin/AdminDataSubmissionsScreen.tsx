@@ -306,15 +306,30 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
 
   const renderStatsBar = () => (
     <View style={[styles.statsBar, { backgroundColor: isDark ? colors.card : '#F3F4F6' }]}>
-      <TouchableOpacity style={styles.statItem} onPress={() => setSortBy('priority')}>
+      <TouchableOpacity
+        style={styles.statItem}
+        onPress={() => setSortBy('priority')}
+        accessibilityRole="button"
+        accessibilityLabel={`Total submissions: ${stats.total}. Tap to sort by priority`}
+      >
         <Text style={[styles.statValue, { color: colors.text }]}>{stats.total}</Text>
         <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Total</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.statItem} onPress={() => setSortBy('date')}>
+      <TouchableOpacity
+        style={styles.statItem}
+        onPress={() => setSortBy('date')}
+        accessibilityRole="button"
+        accessibilityLabel={`Pending submissions: ${stats.pending}. Tap to sort by date`}
+      >
         <Text style={[styles.statValue, { color: STATUS_COLORS.pending }]}>{stats.pending}</Text>
         <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Pending</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.statItem} onPress={() => setSortBy('trust')}>
+      <TouchableOpacity
+        style={styles.statItem}
+        onPress={() => setSortBy('trust')}
+        accessibilityRole="button"
+        accessibilityLabel={`Approved submissions: ${stats.approved}. Tap to sort by trust level`}
+      >
         <Text style={[styles.statValue, { color: STATUS_COLORS.approved }]}>{stats.approved}</Text>
         <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Approved</Text>
       </TouchableOpacity>
@@ -396,6 +411,8 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
             <TouchableOpacity
               style={[styles.bulkBtn, { backgroundColor: '#10B981' }]}
               onPress={selectAll}
+              accessibilityRole="button"
+              accessibilityLabel="Select all submissions"
             >
               <Icon name="checkmark-all" size={14} color="#FFFFFF" />
               <Text style={styles.bulkBtnText}>Select All</Text>
@@ -403,6 +420,8 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
             <TouchableOpacity
               style={[styles.bulkBtn, { backgroundColor: '#6B7280' }]}
               onPress={clearSelection}
+              accessibilityRole="button"
+              accessibilityLabel="Clear selection"
             >
               <Text style={styles.bulkBtnText}>Clear</Text>
             </TouchableOpacity>
@@ -428,6 +447,10 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
         setBulkActionMode(true);
         toggleSubmissionSelection(submission.id);
       }}
+      accessibilityRole="button"
+      accessibilityLabel={`${TYPE_LABELS[submission.type]}: ${submission.entity_name}, ${submission.status.replace('_', ' ')}, ${submission.priority} priority`}
+      accessibilityHint={bulkActionMode ? 'Tap to select, long press to enter bulk mode' : 'Double tap to review'}
+      accessibilityState={{ selected: selectedIds.has(submission.id) }}
     >
       <View style={styles.cardHeader}>
         {bulkActionMode && (
