@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup Rules for Android 6.0+ (API 23+)
+    Google Play Store Compliance
+    
+    This file defines what data should be included in Google Cloud backup.
+    Note: Only include user preferences, exclude all else.
+-->
+<full-backup-content>
+    <!-- Only include user preferences - nothing else -->
+    <include domain="sharedpref" path="."/>
+</full-backup-content>

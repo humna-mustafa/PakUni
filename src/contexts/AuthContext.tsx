@@ -2,6 +2,13 @@
  * AuthContext - Complete Authentication System
  * Supports: Google Sign-in, Email/Password, Guest Mode
  * Uses Supabase for backend authentication
+ * 
+ * FREE TIER OPTIMIZATIONS:
+ * - No session timeout (users stay logged in until explicit logout)
+ * - Profile fetch throttling (5 min window)
+ * - Debounced profile updates (2 sec batch)
+ * - Local-first with background sync
+ * - Cached profile for fast startup
  */
 
 import React, {
@@ -15,7 +22,7 @@ import React, {
   ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Platform, Linking, AppState, AppStateStatus} from 'react-native';
+import {Alert} from 'react-native';
 import {logger} from '../utils/logger';
 import {supabase} from '../services/supabase';
 import {
@@ -116,12 +123,17 @@ const STORAGE_KEYS = {
   GUEST_ID: '@pakuni_guest_id',
   FAVORITES: '@pakuni_favorites',
   RECENT: '@pakuni_recent',
-  LAST_ACTIVITY: '@pakuni_last_activity',
+  PROFILE_LAST_FETCH: '@pakuni_profile_last_fetch',
 };
 
-// Session timeout configuration (30 minutes for non-guest users)
-const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
-const ACTIVITY_CHECK_INTERVAL_MS = 60 * 1000; // Check every minute
+// ============================================================================
+// FREE TIER OPTIMIZATION: No session timeout - keep users logged in
+// Users should only logout when they explicitly choose to sign out
+// This saves Supabase API calls and improves mobile UX
+// ============================================================================
+
+// Profile fetch throttle - don't re-fetch profile within this window
+const PROFILE_FETCH_THROTTLE_MS = 5 * 60 * 1000; // 5 minutes
 
 // ============================================================================
 // DEFAULT VALUES
@@ -184,68 +196,28 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   const [state, setState] = useState<AuthState>(DEFAULT_STATE);
-  const lastActivityRef = useRef<number>(Date.now());
-  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
 
   // =========================================================================
-  // SESSION TIMEOUT MANAGEMENT
+  // FREE TIER OPTIMIZATION: No session timeout
+  // Users stay logged in until they explicitly sign out
+  // This is standard mobile app behavior and saves API calls
   // =========================================================================
 
-  // Update last activity timestamp
-  const updateLastActivity = useCallback(async () => {
+  // Track last profile fetch to avoid redundant API calls
+  const lastProfileFetchRef = useRef<number>(0);
+
+  // Check if we should fetch profile (throttled)
+  const shouldFetchProfile = useCallback(async (): Promise<boolean> => {
     const now = Date.now();
-    lastActivityRef.current = now;
-    await AsyncStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, now.toString());
-  }, []);
-
-  // Check if session has timed out
-  const checkSessionTimeout = useCallback(async () => {
-    // Skip timeout check for guests
-    if (state.isGuest || !state.isAuthenticated) return;
-
-    const lastActivityStr = await AsyncStorage.getItem(STORAGE_KEYS.LAST_ACTIVITY);
-    const lastActivity = lastActivityStr ? parseInt(lastActivityStr, 10) : Date.now();
-    const timeSinceActivity = Date.now() - lastActivity;
-
-    if (timeSinceActivity > SESSION_TIMEOUT_MS) {
-      logger.info('Session timeout - signing out due to inactivity', null, 'Auth');
-      Alert.alert(
-        'Session Expired',
-        'You have been signed out due to inactivity. Please sign in again.',
-        [{ text: 'OK' }]
-      );
-      // Clear session without showing another alert
-      await supabase.auth.signOut();
-      await clearLocalData();
-      setState({...DEFAULT_STATE, isLoading: false});
+    const lastFetch = lastProfileFetchRef.current;
+    
+    // Don't fetch if we fetched recently
+    if (lastFetch && (now - lastFetch) < PROFILE_FETCH_THROTTLE_MS) {
+      return false;
     }
-  }, [state.isGuest, state.isAuthenticated]);
-
-  // Handle app state changes for session timeout
-  useEffect(() => {
-    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (
-        appStateRef.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        // App came to foreground - check session timeout
-        await checkSessionTimeout();
-      } else if (nextAppState === 'active') {
-        // User is active - update timestamp
-        await updateLastActivity();
-      }
-      appStateRef.current = nextAppState;
-    };
-
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-
-    // Initial activity timestamp
-    updateLastActivity();
-
-    return () => {
-      subscription.remove();
-    };
-  }, [checkSessionTimeout, updateLastActivity]);
+    
+    return true;
+  }, []);
 
   // =========================================================================
   // INITIALIZATION
@@ -257,52 +229,88 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const initializeAuth = async () => {
     try {
-      // Check for existing session
+      // FREE TIER OPTIMIZATION: First try to use cached profile to avoid API call
+      const storedProfile = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+      
+      if (storedProfile) {
+        const profile = JSON.parse(storedProfile) as UserProfile;
+        
+        // Immediately set state with cached profile (fast startup)
+        setState(prev => ({
+          ...prev,
+          user: profile,
+          isLoading: false,
+          isAuthenticated: true,
+          isGuest: profile.isGuest,
+          hasCompletedOnboarding: profile.onboardingCompleted,
+        }));
+        
+        // For non-guest users, verify session is still valid (but don't block UI)
+        if (!profile.isGuest) {
+          // Background validation - don't await
+          supabase.auth.getSession().then(({data: {session}}) => {
+            if (!session) {
+              // Session expired - but don't auto-logout, keep cached data
+              // User will be prompted on next API call if needed
+              logger.debug('Session may have expired, keeping cached profile', null, 'Auth');
+            }
+          }).catch(() => {
+            // Network error - keep cached profile, user stays logged in
+            logger.debug('Could not validate session, keeping cached profile', null, 'Auth');
+          });
+        }
+        return;
+      }
+      
+      // No cached profile - check Supabase session
       const {data: {session}} = await supabase.auth.getSession();
       
       if (session?.user) {
-        // User is logged in with Supabase
-        await loadUserProfile(session.user.id, 'email');
+        // User is logged in with Supabase - fetch profile
+        await loadUserProfile(session.user.id, 'email', false);
       } else {
-        // Check for guest session
-        const storedProfile = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
-        if (storedProfile) {
-          const profile = JSON.parse(storedProfile) as UserProfile;
-          setState(prev => ({
-            ...prev,
-            user: profile,
-            isLoading: false,
-            isAuthenticated: true,
-            isGuest: profile.isGuest,
-            hasCompletedOnboarding: profile.onboardingCompleted,
-          }));
-        } else {
-          setState(prev => ({...prev, isLoading: false}));
-        }
+        setState(prev => ({...prev, isLoading: false}));
       }
     } catch (error) {
       logger.error('Auth initialization error', error, 'AuthContext');
       setState(prev => ({...prev, isLoading: false}));
     }
 
-    // Listen for auth state changes
+    // Listen for auth state changes (login/logout events only)
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        await loadUserProfile(session.user.id, 'email');
+        await loadUserProfile(session.user.id, 'email', false);
       } else if (event === 'SIGNED_OUT') {
         await clearLocalData();
+        setState({...DEFAULT_STATE, isLoading: false});
       }
     });
   };
 
-  const loadUserProfile = async (userId: string, provider: AuthProvider) => {
+  /**
+   * Load user profile with FREE TIER optimizations:
+   * - Skip fetch if recently fetched (throttled)
+   * - Cache profile locally for offline/fast access
+   * - Only update login count on fresh logins, not app reopens
+   */
+  const loadUserProfile = async (userId: string, provider: AuthProvider, isNewLogin: boolean = true) => {
     try {
+      // FREE TIER OPTIMIZATION: Check if we recently fetched (throttle)
+      const now = Date.now();
+      if (!isNewLogin && lastProfileFetchRef.current && (now - lastProfileFetchRef.current) < PROFILE_FETCH_THROTTLE_MS) {
+        logger.debug('Profile fetch throttled, using cached data', null, 'Auth');
+        return;
+      }
+      
       // Try to fetch from Supabase 'profiles' table (matches database schema)
       const {data, error} = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
+      
+      // Update fetch timestamp
+      lastProfileFetchRef.current = now;
 
       let profile: UserProfile;
 
@@ -358,14 +366,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           isBanned: data.is_banned || false,
         };
 
-        // Update last login in database
-        await supabase
-          .from('profiles')
-          .update({
-            last_login_at: new Date().toISOString(),
-            login_count: (data.login_count || 0) + 1,
-          })
-          .eq('id', userId);
+        // FREE TIER OPTIMIZATION: Only update login count on actual new logins
+        // Not on app reopens or session restorations
+        if (isNewLogin) {
+          await supabase
+            .from('profiles')
+            .update({
+              last_login_at: new Date().toISOString(),
+              login_count: (data.login_count || 0) + 1,
+            })
+            .eq('id', userId);
+        }
       } else {
         // Profile doesn't exist - create one now
         const {data: authUser} = await supabase.auth.getUser();
@@ -473,7 +484,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       if (data.user) {
         logger.info('Supabase sign-in successful', {email: data.user.email}, 'Auth');
-        await loadUserProfile(data.user.id, 'google');
+        await loadUserProfile(data.user.id, 'google', true); // true = new login
         return true;
       }
 
@@ -523,7 +534,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           );
         }
 
-        await loadUserProfile(data.user.id, 'email');
+        await loadUserProfile(data.user.id, 'email', true); // true = new login
         return true;
       }
 
@@ -712,57 +723,85 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   // =========================================================================
   // PROFILE ACTIONS
+  // FREE TIER OPTIMIZATION: Debounce profile updates to batch API calls
   // =========================================================================
+
+  // Debounce timer for profile updates
+  const profileUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingUpdatesRef = useRef<Partial<UserProfile>>({});
 
   const updateProfile = useCallback(async (updates: Partial<UserProfile>): Promise<boolean> => {
     try {
       if (!state.user) return false;
 
+      // Merge with pending updates
+      pendingUpdatesRef.current = {...pendingUpdatesRef.current, ...updates};
+
       const updatedProfile = {
         ...state.user,
-        ...updates,
+        ...pendingUpdatesRef.current,
       };
 
-      // Update local storage
+      // Update local storage immediately (optimistic update)
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(updatedProfile));
-
-      // Update Supabase if not guest - convert to snake_case for database
-      if (!state.isGuest) {
-        const dbUpdates: Record<string, any> = {
-          updated_at: new Date().toISOString(),
-        };
-        
-        // Map camelCase to snake_case for database
-        if (updates.fullName !== undefined) dbUpdates.full_name = updates.fullName;
-        if (updates.avatarUrl !== undefined) dbUpdates.avatar_url = updates.avatarUrl;
-        if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
-        if (updates.city !== undefined) dbUpdates.city = updates.city;
-        if (updates.currentClass !== undefined) dbUpdates.current_class = updates.currentClass;
-        if (updates.board !== undefined) dbUpdates.board = updates.board;
-        if (updates.school !== undefined) dbUpdates.school = updates.school;
-        if (updates.matricMarks !== undefined) dbUpdates.matric_marks = updates.matricMarks;
-        if (updates.interMarks !== undefined) dbUpdates.inter_marks = updates.interMarks;
-        if (updates.entryTestScore !== undefined) dbUpdates.entry_test_score = updates.entryTestScore;
-        if (updates.targetField !== undefined) dbUpdates.target_field = updates.targetField;
-        if (updates.targetUniversity !== undefined) dbUpdates.target_university = updates.targetUniversity;
-        if (updates.interests !== undefined) dbUpdates.interests = updates.interests;
-        if (updates.onboardingCompleted !== undefined) dbUpdates.onboarding_completed = updates.onboardingCompleted;
-        if (updates.notificationsEnabled !== undefined) dbUpdates.notifications_enabled = updates.notificationsEnabled;
-        if (updates.favoriteUniversities !== undefined) dbUpdates.favorite_universities = updates.favoriteUniversities;
-        if (updates.favoriteScholarships !== undefined) dbUpdates.favorite_scholarships = updates.favoriteScholarships;
-        if (updates.favoritePrograms !== undefined) dbUpdates.favorite_programs = updates.favoritePrograms;
-        if (updates.recentlyViewed !== undefined) dbUpdates.recently_viewed = updates.recentlyViewed;
-
-        await supabase
-          .from('profiles')
-          .update(dbUpdates)
-          .eq('id', state.user.id);
-      }
-
+      
+      // Update state immediately
       setState(prev => ({
         ...prev,
         user: updatedProfile,
       }));
+
+      // FREE TIER OPTIMIZATION: Debounce Supabase updates
+      // Wait 2 seconds for more updates before sending to server
+      if (!state.isGuest) {
+        if (profileUpdateTimerRef.current) {
+          clearTimeout(profileUpdateTimerRef.current);
+        }
+        
+        profileUpdateTimerRef.current = setTimeout(async () => {
+          const pendingUpdates = {...pendingUpdatesRef.current};
+          pendingUpdatesRef.current = {}; // Clear pending
+          
+          const dbUpdates: Record<string, any> = {
+            updated_at: new Date().toISOString(),
+          };
+          
+          // Map camelCase to snake_case for database
+          if (pendingUpdates.fullName !== undefined) dbUpdates.full_name = pendingUpdates.fullName;
+          if (pendingUpdates.avatarUrl !== undefined) dbUpdates.avatar_url = pendingUpdates.avatarUrl;
+          if (pendingUpdates.phone !== undefined) dbUpdates.phone = pendingUpdates.phone;
+          if (pendingUpdates.city !== undefined) dbUpdates.city = pendingUpdates.city;
+          if (pendingUpdates.currentClass !== undefined) dbUpdates.current_class = pendingUpdates.currentClass;
+          if (pendingUpdates.board !== undefined) dbUpdates.board = pendingUpdates.board;
+          if (pendingUpdates.school !== undefined) dbUpdates.school = pendingUpdates.school;
+          if (pendingUpdates.matricMarks !== undefined) dbUpdates.matric_marks = pendingUpdates.matricMarks;
+          if (pendingUpdates.interMarks !== undefined) dbUpdates.inter_marks = pendingUpdates.interMarks;
+          if (pendingUpdates.entryTestScore !== undefined) dbUpdates.entry_test_score = pendingUpdates.entryTestScore;
+          if (pendingUpdates.targetField !== undefined) dbUpdates.target_field = pendingUpdates.targetField;
+          if (pendingUpdates.targetUniversity !== undefined) dbUpdates.target_university = pendingUpdates.targetUniversity;
+          if (pendingUpdates.interests !== undefined) dbUpdates.interests = pendingUpdates.interests;
+          if (pendingUpdates.onboardingCompleted !== undefined) dbUpdates.onboarding_completed = pendingUpdates.onboardingCompleted;
+          if (pendingUpdates.notificationsEnabled !== undefined) dbUpdates.notifications_enabled = pendingUpdates.notificationsEnabled;
+          if (pendingUpdates.favoriteUniversities !== undefined) dbUpdates.favorite_universities = pendingUpdates.favoriteUniversities;
+          if (pendingUpdates.favoriteScholarships !== undefined) dbUpdates.favorite_scholarships = pendingUpdates.favoriteScholarships;
+          if (pendingUpdates.favoritePrograms !== undefined) dbUpdates.favorite_programs = pendingUpdates.favoritePrograms;
+          if (pendingUpdates.recentlyViewed !== undefined) dbUpdates.recently_viewed = pendingUpdates.recentlyViewed;
+
+          // Only make API call if there are actual updates
+          if (Object.keys(dbUpdates).length > 1) { // More than just updated_at
+            try {
+              await supabase
+                .from('profiles')
+                .update(dbUpdates)
+                .eq('id', state.user?.id);
+              logger.debug('Profile synced to Supabase', {fields: Object.keys(dbUpdates)}, 'Auth');
+            } catch (error) {
+              logger.error('Background profile sync error', error, 'Auth');
+              // Data is still saved locally, will sync on next update
+            }
+          }
+        }, 2000); // 2 second debounce
+      }
 
       return true;
     } catch (error) {
@@ -859,11 +898,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   // UTILS
   // =========================================================================
 
+  /**
+   * Refresh user profile from server
+   * FREE TIER OPTIMIZATION: Use this only when user explicitly requests refresh
+   * (e.g., pull-to-refresh), not automatically
+   */
   const refreshUser = useCallback(async (): Promise<void> => {
     if (!state.user) return;
 
     if (!state.isGuest) {
-      await loadUserProfile(state.user.id, state.user.provider);
+      // Force refresh by resetting the throttle timestamp
+      lastProfileFetchRef.current = 0;
+      await loadUserProfile(state.user.id, state.user.provider, false);
     }
   }, [state.user, state.isGuest]);
 

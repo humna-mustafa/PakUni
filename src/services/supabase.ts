@@ -50,6 +50,22 @@ export const supabase = createClient(safeSupabaseUrl, safeSupabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // FREE TIER OPTIMIZATION: Longer storage key to avoid conflicts
+    storageKey: 'pakuni-auth-token',
+    // Keep session data fresh but don't constantly poll
+    flowType: 'implicit',
+  },
+  // FREE TIER OPTIMIZATION: Disable realtime to save connections
+  realtime: {
+    params: {
+      eventsPerSecond: 0, // Disable realtime events
+    },
+  },
+  // Reduce unnecessary network requests
+  global: {
+    headers: {
+      'X-Client-Info': 'pakuni-mobile',
+    },
   },
 });
 

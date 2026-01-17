@@ -1,9 +1,0 @@
-{
-    "port":  8081,
-    "error":  "This command cannot be run due to the error: %1 is not a valid Win32 application.",
-    "pid":  0,
-    "lastUpdate":  "2026-01-17 01:02:46",
-    "localIP":  "172.21.16.1",
-    "restartCount":  5,
-    "state":  "Error"
-}

@@ -349,12 +349,13 @@ const PremiumUniversitiesScreen = () => {
   }, [debouncedSearchQuery]);
 
   // Pull to refresh handler - refreshes from Turso if available
+  // CRITICAL: Uses forceRefresh=true to bypass cache and get fresh data
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     Haptics.refreshThreshold();
     try {
-      // Refresh data from Turso/bundled sources
-      const data = await hybridDataService.getUniversities();
+      // Force refresh from server, bypassing cache
+      const data = await hybridDataService.getUniversities(true);
       setUniversities(data);
       Haptics.success();
     } catch (error) {

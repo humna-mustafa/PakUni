@@ -94,6 +94,7 @@ const DEFAULT_CONFIG: CacheConfig = {
 };
 
 // Different TTLs for different data types
+// FREE TIER OPTIMIZATION: Longer TTLs to minimize Supabase API calls
 export const CACHE_TTL = {
   // Static data - rarely changes (7 days)
   UNIVERSITIES: 7 * 24 * 60 * 60 * 1000,
@@ -107,15 +108,19 @@ export const CACHE_TTL = {
   // Semi-static data (24 hours)
   APP_SETTINGS: 24 * 60 * 60 * 1000,
   
-  // Dynamic data (1 hour) - refresh more often
-  ANNOUNCEMENTS: 60 * 60 * 1000,
-  USER_PROFILE: 60 * 60 * 1000,
+  // Dynamic data - EXTENDED for free tier (4 hours instead of 1)
+  // Users can manually refresh via pull-to-refresh
+  ANNOUNCEMENTS: 4 * 60 * 60 * 1000,
+  USER_PROFILE: 24 * 60 * 60 * 1000, // Profile is cached locally anyway
+  USER_FAVORITES: 24 * 60 * 60 * 1000, // Favorites sync on change, cache for reads
+  USER_CALCULATIONS: 24 * 60 * 60 * 1000, // Local-first, sync when saved
+  USER_GOALS: 24 * 60 * 60 * 1000, // Local-first
   
-  // Admin data (15 minutes) - needs fresher data
-  ADMIN_STATS: 15 * 60 * 1000,
-  ADMIN_USERS: 15 * 60 * 1000,
-  ADMIN_REPORTS: 15 * 60 * 1000,
-  ADMIN_FEEDBACK: 15 * 60 * 1000,
+  // Admin data (30 minutes) - admins can manually refresh
+  ADMIN_STATS: 30 * 60 * 1000,
+  ADMIN_USERS: 30 * 60 * 1000,
+  ADMIN_REPORTS: 30 * 60 * 1000,
+  ADMIN_FEEDBACK: 30 * 60 * 1000,
 };
 
 // Current cache version - increment to invalidate all caches

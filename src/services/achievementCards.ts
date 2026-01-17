@@ -389,7 +389,6 @@ export const generateScholarshipCardSVG = (
     </svg>
   `;
 };
-};
 
 /**
  * Helper function to truncate text

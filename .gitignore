@@ -106,5 +106,42 @@ supabase/.env.*.local
 
 # Temp files
 *.tmp
+temp.txt
+temp*.txt
+issue.txt
+*.log
+
+# Screenshots and images (not for source control)
+log_check.png
+screen.png
+verify.png
+success.png
+app_screenshot.png
+pakuni_view.png
+
+# Old APK builds (keep only latest in releases)
+PakUni-v*.apk
+!PakUni-v1.2.1.apk
+
+# Build artifacts
+build/
+*.jsbundle
+apk-build.log
+
+# Logs folder
+logs/
+
+# Temp folder
+temp/
+
+# Secret scan results
+secret-scan-results.txt
+
+# Status files (internal use)
+*_COMPLETE.md
+*_READY.md
+*_VERIFICATION.md
+FINAL_SYSTEM_STATUS.txt
+
 # Kaggle datasets (downloaded separately)
 kaggle-data/

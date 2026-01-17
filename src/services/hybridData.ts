@@ -157,11 +157,12 @@ class HybridDataService {
 
   /**
    * Get all universities
+   * @param forceRefresh - Bypass cache for pull-to-refresh (ensures fresh data)
    */
-  async getUniversities(): Promise<(TursoUniversity | UniversityData)[]> {
+  async getUniversities(forceRefresh: boolean = false): Promise<(TursoUniversity | UniversityData)[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchUniversities();
+        const data = await turso.fetchUniversities(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso universities fetch failed', error, 'HybridData');
@@ -235,11 +236,12 @@ class HybridDataService {
 
   /**
    * Get all entry tests
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getEntryTests(): Promise<(TursoEntryTest | typeof ENTRY_TESTS_DATA[0])[]> {
+  async getEntryTests(forceRefresh: boolean = false): Promise<(TursoEntryTest | typeof ENTRY_TESTS_DATA[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchEntryTests();
+        const data = await turso.fetchEntryTests(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso entry tests fetch failed', error, 'HybridData');
@@ -273,11 +275,12 @@ class HybridDataService {
 
   /**
    * Get all scholarships
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getScholarships(): Promise<(TursoScholarship | ScholarshipData)[]> {
+  async getScholarships(forceRefresh: boolean = false): Promise<(TursoScholarship | ScholarshipData)[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchScholarships();
+        const data = await turso.fetchScholarships(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso scholarships fetch failed', error, 'HybridData');
@@ -336,11 +339,12 @@ class HybridDataService {
 
   /**
    * Get all deadlines
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getDeadlines(): Promise<(TursoDeadline | typeof ADMISSION_DEADLINES[0])[]> {
+  async getDeadlines(forceRefresh: boolean = false): Promise<(TursoDeadline | typeof ADMISSION_DEADLINES[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchDeadlines();
+        const data = await turso.fetchDeadlines(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso deadlines fetch failed', error, 'HybridData');
@@ -362,11 +366,12 @@ class HybridDataService {
 
   /**
    * Get all programs
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getPrograms(): Promise<(TursoProgram | typeof PROGRAMS[0])[]> {
+  async getPrograms(forceRefresh: boolean = false): Promise<(TursoProgram | typeof PROGRAMS[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchPrograms();
+        const data = await turso.fetchPrograms(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso programs fetch failed', error, 'HybridData');
@@ -388,11 +393,12 @@ class HybridDataService {
 
   /**
    * Get all careers
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getCareers(): Promise<(TursoCareer | typeof CAREER_PATHS[0])[]> {
+  async getCareers(forceRefresh: boolean = false): Promise<(TursoCareer | typeof CAREER_PATHS[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchCareers();
+        const data = await turso.fetchCareers(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso careers fetch failed', error, 'HybridData');
@@ -421,11 +427,12 @@ class HybridDataService {
 
   /**
    * Get merit formulas
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getMeritFormulas(): Promise<(TursoMeritFormula | typeof MERIT_FORMULAS[0])[]> {
+  async getMeritFormulas(forceRefresh: boolean = false): Promise<(TursoMeritFormula | typeof MERIT_FORMULAS[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchMeritFormulas();
+        const data = await turso.fetchMeritFormulas(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso merit formulas fetch failed', error, 'HybridData');
@@ -443,11 +450,12 @@ class HybridDataService {
 
   /**
    * Get merit archive
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getMeritArchive(): Promise<(TursoMeritArchive | typeof MERIT_RECORDS[0])[]> {
+  async getMeritArchive(forceRefresh: boolean = false): Promise<(TursoMeritArchive | typeof MERIT_RECORDS[0])[]> {
     if (this.dataSource === 'turso') {
       try {
-        const data = await turso.fetchMeritArchive();
+        const data = await turso.fetchMeritArchive(forceRefresh);
         if (data.length > 0) return data;
       } catch (error) {
         logger.warn('Turso merit archive fetch failed', error, 'HybridData');
@@ -463,11 +471,12 @@ class HybridDataService {
   /**
    * Get job market statistics (Kaggle data)
    * Enhances career guidance with real job market demand data
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getJobMarketStats(): Promise<TursoJobMarketStats[]> {
+  async getJobMarketStats(forceRefresh: boolean = false): Promise<TursoJobMarketStats[]> {
     if (this.dataSource === 'turso') {
       try {
-        return await turso.fetchJobMarketStats();
+        return await turso.fetchJobMarketStats(forceRefresh);
       } catch (error) {
         logger.warn('Turso job market stats fetch failed', error, 'HybridData');
       }
@@ -516,13 +525,16 @@ class HybridDataService {
 
   /**
    * Get announcements from Supabase
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getAnnouncements(): Promise<AnnouncementData[]> {
+  async getAnnouncements(forceRefresh: boolean = false): Promise<AnnouncementData[]> {
     try {
-      const cached = await cache.get<AnnouncementData[]>(CACHE_KEYS.ANNOUNCEMENTS);
-      if (cached && cached.length > 0) {
-        this.refreshAnnouncementsInBackground();
-        return cached;
+      if (!forceRefresh) {
+        const cached = await cache.get<AnnouncementData[]>(CACHE_KEYS.ANNOUNCEMENTS);
+        if (cached && cached.length > 0) {
+          this.refreshAnnouncementsInBackground();
+          return cached;
+        }
       }
       return await this.fetchAnnouncements();
     } catch (error) {
@@ -564,14 +576,17 @@ class HybridDataService {
 
   /**
    * Get user favorites
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getUserFavorites(): Promise<UserFavorite[]> {
+  async getUserFavorites(forceRefresh: boolean = false): Promise<UserFavorite[]> {
     try {
       const {data: {user}} = await supabase.auth.getUser();
       if (!user) return [];
 
-      const cached = await cache.get<UserFavorite[]>(CACHE_KEYS.USER_FAVORITES);
-      if (cached) return cached;
+      if (!forceRefresh) {
+        const cached = await cache.get<UserFavorite[]>(CACHE_KEYS.USER_FAVORITES);
+        if (cached) return cached;
+      }
 
       const {data, error} = await supabase
         .from('user_favorites')
@@ -582,7 +597,7 @@ class HybridDataService {
       if (error) throw error;
 
       const favorites = data || [];
-      await cache.set(CACHE_KEYS.USER_FAVORITES, favorites, CACHE_TTL.USER_PROFILE);
+      await cache.set(CACHE_KEYS.USER_FAVORITES, favorites, CACHE_TTL.USER_FAVORITES);
       return favorites;
     } catch (error) {
       logger.error('Get favorites error', error, 'HybridData');
@@ -674,14 +689,17 @@ class HybridDataService {
 
   /**
    * Get user calculations
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getCalculations(): Promise<UserCalculation[]> {
+  async getCalculations(forceRefresh: boolean = false): Promise<UserCalculation[]> {
     try {
       const {data: {user}} = await supabase.auth.getUser();
       if (!user) return this.getLocalCalculations();
 
-      const cached = await cache.get<UserCalculation[]>(CACHE_KEYS.USER_CALCULATIONS);
-      if (cached) return cached;
+      if (!forceRefresh) {
+        const cached = await cache.get<UserCalculation[]>(CACHE_KEYS.USER_CALCULATIONS);
+        if (cached) return cached;
+      }
 
       const {data, error} = await supabase
         .from('user_calculations')
@@ -693,7 +711,7 @@ class HybridDataService {
       if (error) throw error;
 
       const calculations = data || [];
-      await cache.set(CACHE_KEYS.USER_CALCULATIONS, calculations, CACHE_TTL.USER_PROFILE);
+      await cache.set(CACHE_KEYS.USER_CALCULATIONS, calculations, CACHE_TTL.USER_CALCULATIONS);
       return calculations;
     } catch (error) {
       logger.error('Get calculations error', error, 'HybridData');
@@ -703,14 +721,17 @@ class HybridDataService {
 
   /**
    * Get user goals
+   * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getUserGoals(): Promise<UserGoal[]> {
+  async getUserGoals(forceRefresh: boolean = false): Promise<UserGoal[]> {
     try {
       const {data: {user}} = await supabase.auth.getUser();
       if (!user) return this.getLocalGoals();
 
-      const cached = await cache.get<UserGoal[]>(CACHE_KEYS.USER_GOALS);
-      if (cached) return cached;
+      if (!forceRefresh) {
+        const cached = await cache.get<UserGoal[]>(CACHE_KEYS.USER_GOALS);
+        if (cached) return cached;
+      }
 
       const {data, error} = await supabase
         .from('user_goals')
@@ -721,7 +742,7 @@ class HybridDataService {
       if (error) throw error;
 
       const goals = data || [];
-      await cache.set(CACHE_KEYS.USER_GOALS, goals, CACHE_TTL.USER_PROFILE);
+      await cache.set(CACHE_KEYS.USER_GOALS, goals, CACHE_TTL.USER_GOALS);
       return goals;
     } catch (error) {
       logger.error('Get goals error', error, 'HybridData');

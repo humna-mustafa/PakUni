@@ -347,26 +347,33 @@ export interface TursoJobMarketStats {
 
 /**
  * Generic cached fetch from Turso
+ * @param forceRefresh - If true, bypasses cache and fetches fresh data from server
+ *                       Use this for pull-to-refresh to ensure users see latest data
  */
 async function fetchWithCache<T>(
   cacheKey: string,
   query: string,
-  transformer: (rows: any[]) => T[]
+  transformer: (rows: any[]) => T[],
+  forceRefresh: boolean = false
 ): Promise<T[]> {
-  // Try cache first
-  try {
-    const cached = await AsyncStorage.getItem(cacheKey);
-    const lastSync = await AsyncStorage.getItem(CACHE_KEYS.LAST_SYNC);
-    
-    if (cached && lastSync) {
-      const lastSyncTime = parseInt(lastSync, 10);
-      if (Date.now() - lastSyncTime < CACHE_EXPIRY_MS) {
-        logger.debug(`Using cached data for ${cacheKey}`, undefined, 'Turso');
-        return JSON.parse(cached);
+  // Try cache first (unless force refresh requested)
+  if (!forceRefresh) {
+    try {
+      const cached = await AsyncStorage.getItem(cacheKey);
+      const lastSync = await AsyncStorage.getItem(CACHE_KEYS.LAST_SYNC);
+      
+      if (cached && lastSync) {
+        const lastSyncTime = parseInt(lastSync, 10);
+        if (Date.now() - lastSyncTime < CACHE_EXPIRY_MS) {
+          logger.debug(`Using cached data for ${cacheKey}`, undefined, 'Turso');
+          return JSON.parse(cached);
+        }
       }
+    } catch (error) {
+      logger.warn(`Cache read error for ${cacheKey}`, error, 'Turso');
     }
-  } catch (error) {
-    logger.warn(`Cache read error for ${cacheKey}`, error, 'Turso');
+  } else {
+    logger.debug(`Force refresh requested for ${cacheKey}`, undefined, 'Turso');
   }
 
   // Fetch from Turso
@@ -405,8 +412,9 @@ async function fetchWithCache<T>(
 
 /**
  * Fetch universities from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchUniversities(): Promise<TursoUniversity[]> {
+export async function fetchUniversities(forceRefresh: boolean = false): Promise<TursoUniversity[]> {
   return fetchWithCache<TursoUniversity>(
     CACHE_KEYS.UNIVERSITIES,
     'SELECT * FROM universities ORDER BY ranking_national ASC NULLS LAST, name ASC',
@@ -440,14 +448,16 @@ export async function fetchUniversities(): Promise<TursoUniversity[]> {
       total_campuses: row.total_campuses || undefined,
       campus_locations: row.campus_locations ? JSON.parse(row.campus_locations) : undefined,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch entry tests from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchEntryTests(): Promise<TursoEntryTest[]> {
+export async function fetchEntryTests(forceRefresh: boolean = false): Promise<TursoEntryTest[]> {
   return fetchWithCache<TursoEntryTest>(
     CACHE_KEYS.ENTRY_TESTS,
     'SELECT * FROM entry_tests ORDER BY test_date ASC',
@@ -471,14 +481,16 @@ export async function fetchEntryTests(): Promise<TursoEntryTest[]> {
       status_notes: row.status_notes,
       brand_colors: row.brand_colors ? JSON.parse(row.brand_colors) : undefined,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch scholarships from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchScholarships(): Promise<TursoScholarship[]> {
+export async function fetchScholarships(forceRefresh: boolean = false): Promise<TursoScholarship[]> {
   return fetchWithCache<TursoScholarship>(
     CACHE_KEYS.SCHOLARSHIPS,
     'SELECT * FROM scholarships ORDER BY coverage_percentage DESC, name ASC',
@@ -496,14 +508,16 @@ export async function fetchScholarships(): Promise<TursoScholarship[]> {
       how_to_apply: row.how_to_apply ? JSON.parse(row.how_to_apply) : [],
       applicable_universities: row.applicable_universities ? JSON.parse(row.applicable_universities) : [],
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch deadlines from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchDeadlines(): Promise<TursoDeadline[]> {
+export async function fetchDeadlines(forceRefresh: boolean = false): Promise<TursoDeadline[]> {
   return fetchWithCache<TursoDeadline>(
     CACHE_KEYS.DEADLINES,
     'SELECT * FROM deadlines WHERE application_deadline >= date("now") ORDER BY application_deadline ASC',
@@ -525,14 +539,16 @@ export async function fetchDeadlines(): Promise<TursoDeadline[]> {
       link: row.link,
       status: row.status,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch programs from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchPrograms(): Promise<TursoProgram[]> {
+export async function fetchPrograms(forceRefresh: boolean = false): Promise<TursoProgram[]> {
   return fetchWithCache<TursoProgram>(
     CACHE_KEYS.PROGRAMS,
     'SELECT * FROM programs ORDER BY field ASC, name ASC',
@@ -548,14 +564,16 @@ export async function fetchPrograms(): Promise<TursoProgram[]> {
       career_paths: row.career_paths ? JSON.parse(row.career_paths) : [],
       entry_tests: row.entry_tests ? JSON.parse(row.entry_tests) : [],
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch careers from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchCareers(): Promise<TursoCareer[]> {
+export async function fetchCareers(forceRefresh: boolean = false): Promise<TursoCareer[]> {
   return fetchWithCache<TursoCareer>(
     CACHE_KEYS.CAREERS,
     'SELECT * FROM careers ORDER BY job_count DESC NULLS LAST, demand_level DESC, name ASC',
@@ -577,14 +595,16 @@ export async function fetchCareers(): Promise<TursoCareer[]> {
       common_titles: row.common_titles ? JSON.parse(row.common_titles) : undefined,
       market_trend: row.market_trend || undefined,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch merit formulas from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchMeritFormulas(): Promise<TursoMeritFormula[]> {
+export async function fetchMeritFormulas(forceRefresh: boolean = false): Promise<TursoMeritFormula[]> {
   return fetchWithCache<TursoMeritFormula>(
     CACHE_KEYS.MERIT_FORMULAS,
     'SELECT * FROM merit_formulas ORDER BY university_name ASC',
@@ -599,14 +619,16 @@ export async function fetchMeritFormulas(): Promise<TursoMeritFormula[]> {
       hafiz_bonus: row.hafiz_bonus,
       notes: row.notes,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
 /**
  * Fetch merit archive from Turso
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchMeritArchive(): Promise<TursoMeritArchive[]> {
+export async function fetchMeritArchive(forceRefresh: boolean = false): Promise<TursoMeritArchive[]> {
   return fetchWithCache<TursoMeritArchive>(
     CACHE_KEYS.MERIT_ARCHIVE,
     'SELECT * FROM merit_archive ORDER BY year DESC, university_name ASC',
@@ -622,7 +644,8 @@ export async function fetchMeritArchive(): Promise<TursoMeritArchive[]> {
       seats_available: row.seats_available,
       notes: row.notes,
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 
@@ -633,8 +656,9 @@ export async function fetchMeritArchive(): Promise<TursoMeritArchive[]> {
 /**
  * Fetch job market statistics from Turso (Kaggle data)
  * Enhances career guidance with real job market data
+ * @param forceRefresh - Bypass cache for pull-to-refresh
  */
-export async function fetchJobMarketStats(): Promise<TursoJobMarketStats[]> {
+export async function fetchJobMarketStats(forceRefresh: boolean = false): Promise<TursoJobMarketStats[]> {
   return fetchWithCache<TursoJobMarketStats>(
     CACHE_KEYS.JOB_MARKET_STATS,
     'SELECT * FROM job_market_stats ORDER BY total_jobs DESC',
@@ -647,7 +671,8 @@ export async function fetchJobMarketStats(): Promise<TursoJobMarketStats[]> {
       demand_level: row.demand_level,
       common_titles: row.common_titles ? JSON.parse(row.common_titles) : [],
       updated_at: row.updated_at,
-    }))
+    })),
+    forceRefresh
   );
 }
 

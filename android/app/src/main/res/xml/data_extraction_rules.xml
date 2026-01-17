@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Data Extraction Rules for Android 12+ (API 31+)
+    Google Play Store Compliance
+    
+    This file defines what data should be backed up and transferred
+    during device-to-device transfers.
+    
+    Only shared preferences are backed up.
+    Databases, cache, and external storage are NOT included.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Only backup app preferences -->
+        <include domain="sharedpref" path="."/>
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Only transfer user preferences during device migration -->
+        <include domain="sharedpref" path="."/>
+    </device-transfer>
+</data-extraction-rules>

@@ -1,4 +1,56 @@
 {
   "name": "PakUni",
-  "displayName": "PakUni"
+  "displayName": "PakUni - Pakistan Universities Guide",
+  "version": "1.2.1",
+  "description": "Your complete guide to Pakistani universities, merit calculation, scholarships, and career guidance. Designed for students from Matric to PhD.",
+  "author": {
+    "name": "PakUni Team",
+    "email": "support@pakuni.app"
+  },
+  "keywords": [
+    "pakistan",
+    "universities",
+    "education",
+    "merit calculator",
+    "scholarships",
+    "HEC",
+    "ECAT",
+    "MDCAT",
+    "admissions",
+    "career guidance"
+  ],
+  "license": "Proprietary",
+  "homepage": "https://pakuni.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pakuni/pakuni-app"
+  },
+  "android": {
+    "package": "com.pakuni",
+    "versionCode": 4,
+    "permissions": [
+      "INTERNET",
+      "ACCESS_NETWORK_STATE"
+    ],
+    "googleServicesFile": "./android/app/google-services.json"
+  },
+  "ios": {
+    "bundleIdentifier": "com.pakuni.app",
+    "buildNumber": "4"
+  },
+  "privacy": {
+    "policyUrl": "https://pakuni.app/privacy-policy",
+    "termsUrl": "https://pakuni.app/terms-of-service"
+  },
+  "contentRating": {
+    "rating": "Everyone",
+    "interactiveElements": [
+      "Users Interact"
+    ]
+  },
+  "category": "Education",
+  "targetAudience": {
+    "ageRange": "13+",
+    "countries": ["Pakistan"]
+  }
 }

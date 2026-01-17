@@ -31,18 +31,21 @@ import { fetchUniversities } from './services/turso';
 - Batch reads when possible
 - Admin features use on-demand refresh, not polling
 
-### Supabase (Free Tier Limits)
+### Supabase (Free Tier Limits) - PRODUCTION OPTIMIZED
 - **NO real-time subscriptions** - Wastes connection limits
-- Use manual refresh patterns
-- Cache user data locally with AsyncStorage
+- **NO session timeout** - Users stay logged in until explicit logout
+- **Debounced profile updates** - 2 second batch window
+- **Throttled profile fetches** - 5 minute minimum between fetches
+- Cache user data locally with AsyncStorage (local-first approach)
+- Manual refresh patterns (pull-to-refresh)
 
 ```typescript
-// ✅ Correct - manual refresh only
-useEffect(() => {
-  fetchData(); // Fetch once on mount
-}, []);
+// ✅ Correct - local-first, cached data
+const {user} = useAuth(); // Uses cached profile, no API call
+const onRefresh = () => refreshUser(); // Manual refresh only
 
-const onRefresh = () => fetchData(); // Pull-to-refresh
+// ✅ Correct - debounced updates (AuthContext handles this)
+updateProfile({name: 'New Name'}); // Batches with other changes
 
 // ❌ Avoid - wastes free tier limits
 useEffect(() => {
@@ -52,6 +55,9 @@ useEffect(() => {
 
 // ❌ Avoid - wastes Supabase connections
 supabase.channel('changes').on('postgres_changes', ...); // NO realtime!
+
+// ❌ Avoid - causes logout on mobile
+SESSION_TIMEOUT = 30 * 60 * 1000; // NO session timeout for mobile!
 ```
 
 ## Key Directory Structure

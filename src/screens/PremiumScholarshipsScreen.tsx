@@ -41,6 +41,7 @@ import SearchableDropdown, { createUniversityOptions } from '../components/Searc
 import FloatingToolsButton from '../components/FloatingToolsButton';
 import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
+import {hybridDataService} from '../services/hybridData';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -368,6 +369,7 @@ const PremiumScholarshipsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const {colors, isDark} = useTheme();
   const {user, addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
+  const [scholarships, setScholarships] = useState<ScholarshipData[]>(SCHOLARSHIPS);
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<FilterType>('all');
@@ -378,6 +380,21 @@ const PremiumScholarshipsScreen = () => {
   const [isFav, setIsFav] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
   const searchFocusAnim = useRef(new Animated.Value(0)).current;
+
+  // Load scholarships on mount (uses cached data by default)
+  useEffect(() => {
+    const loadScholarships = async () => {
+      try {
+        const data = await hybridDataService.getScholarships();
+        if (data.length > 0) {
+          setScholarships(data as ScholarshipData[]);
+        }
+      } catch (error) {
+        logger.warn('Failed to load scholarships, using bundled data', error, 'Scholarships');
+      }
+    };
+    loadScholarships();
+  }, []);
 
   // Check favorite status when scholarship is selected
   useEffect(() => {
@@ -421,14 +438,23 @@ const PremiumScholarshipsScreen = () => {
     }
   }, [debouncedSearchQuery]);
 
-  // Pull-to-refresh handler
+  // Pull-to-refresh handler - FORCE REFRESH to bypass cache
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     Haptics.refreshThreshold();
-    // Simulate refresh delay
-    await new Promise<void>(resolve => setTimeout(() => resolve(), 800));
-    setRefreshing(false);
-    Haptics.success();
+    try {
+      // Force refresh from server, bypassing cache
+      const data = await hybridDataService.getScholarships(true);
+      if (data.length > 0) {
+        setScholarships(data as ScholarshipData[]);
+      }
+      Haptics.success();
+    } catch (error) {
+      logger.warn('Refresh failed, keeping existing data', error, 'Scholarships');
+      Haptics.error();
+    } finally {
+      setRefreshing(false);
+    }
   }, []);
 
   // FlatList optimization - getItemLayout for better scroll performance
@@ -456,7 +482,7 @@ const PremiumScholarshipsScreen = () => {
   };
 
   const filteredScholarships = useMemo(() => {
-    return SCHOLARSHIPS.filter((scholarship: ScholarshipData) => {
+    return scholarships.filter((scholarship: ScholarshipData) => {
       // Basic search
       const matchesSearch =
         scholarship.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
@@ -477,7 +503,7 @@ const PremiumScholarshipsScreen = () => {
 
       return matchesSearch && matchesType && matchesUni;
     });
-  }, [debouncedSearchQuery, selectedType, selectedUniversity]);
+  }, [scholarships, debouncedSearchQuery, selectedType, selectedUniversity]);
 
   const openLink = useCallback((url?: string) => {
     if (url) {
