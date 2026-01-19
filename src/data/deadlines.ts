@@ -238,7 +238,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationDeadline: '2026-08-15',
     classStartDate: '2026-09-15',
     fee: 2000,
-    link: 'https://www.comsats.edu.pk/Admissions.aspx',
+    link: 'https://admissions.comsats.edu.pk/',
     status: 'upcoming',
   },
   {
@@ -254,7 +254,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationDeadline: '2026-01-31',
     classStartDate: '2026-02-15',
     fee: 2000,
-    link: 'https://www.comsats.edu.pk/Admissions.aspx',
+    link: 'https://admissions.comsats.edu.pk/',
     status: 'open',
   },
   // ========== PIEAS ==========
@@ -326,7 +326,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     entryTestDate: '2026-07-25',
     resultDate: '2026-08-10',
     fee: 3000,
-    link: 'https://uet.edu.pk/home/admissions',
+    link: 'https://admission.uet.edu.pk/',
     status: 'upcoming',
     isHighlighted: true,
   },
@@ -398,7 +398,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-07-01',
     applicationDeadline: '2026-09-15',
     fee: 2000,
-    link: 'https://pu.edu.pk/page/show/Admissions.html',
+    link: 'https://admissions.pu.edu.pk/',
     status: 'upcoming',
   },
   // ========== QAU ==========
@@ -414,7 +414,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-06-15',
     applicationDeadline: '2026-08-31',
     fee: 2500,
-    link: 'https://qau.edu.pk/admissions/',
+    link: 'https://qau.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== NED University ==========
@@ -431,7 +431,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationDeadline: '2026-09-15',
     entryTestDate: '2026-09-25',
     fee: 3000,
-    link: 'https://www.neduet.edu.pk/admissions',
+    link: 'https://admissions.neduet.edu.pk/',
     status: 'upcoming',
   },
   // ========== GCU Lahore ==========
@@ -448,7 +448,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationDeadline: '2026-08-15',
     entryTestDate: '2026-08-25',
     fee: 2000,
-    link: 'https://gcu.edu.pk/admissions/',
+    link: 'https://www.gcu.edu.pk/page.php?link=admissions',
     status: 'upcoming',
   },
   // ========== NCA ==========
@@ -499,7 +499,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationDeadline: '2026-08-15',
     entryTestDate: '2026-08-25',
     fee: 3000,
-    link: 'https://www.au.edu.pk/admissions/',
+    link: 'https://www.au.edu.pk/pages/Admissions/admission.aspx',
     status: 'upcoming',
   },
   // ========== Bahria University ==========
@@ -548,7 +548,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-06-01',
     applicationDeadline: '2026-08-31',
     fee: 2000,
-    link: 'https://www.iiu.edu.pk/admissions/',
+    link: 'https://www.iiu.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== BZU ==========
@@ -564,7 +564,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-07-01',
     applicationDeadline: '2026-09-30',
     fee: 1500,
-    link: 'https://www.bzu.edu.pk/admissions/',
+    link: 'https://www.bzu.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== SZABIST ==========
@@ -580,7 +580,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-05-01',
     applicationDeadline: '2026-08-15',
     fee: 3000,
-    link: 'https://szabist.edu.pk/admissions/',
+    link: 'https://szabist.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== UMT ==========
@@ -596,7 +596,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-04-15',
     applicationDeadline: '2026-08-31',
     fee: 2500,
-    link: 'https://www.umt.edu.pk/Admissions.aspx',
+    link: 'https://www.umt.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== UCP ==========
@@ -612,7 +612,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-04-01',
     applicationDeadline: '2026-08-31',
     fee: 2500,
-    link: 'https://www.ucp.edu.pk/admissions/',
+    link: 'https://admissions.ucp.edu.pk/',
     status: 'upcoming',
   },
   // ========== Sukkur IBA ==========
@@ -628,7 +628,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-05-01',
     applicationDeadline: '2026-08-15',
     fee: 2000,
-    link: 'https://www.iba-suk.edu.pk/admissions',
+    link: 'https://www.iba-suk.edu.pk/admissions/',
     status: 'upcoming',
   },
   // ========== UAF ==========
@@ -644,7 +644,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-06-15',
     applicationDeadline: '2026-09-15',
     fee: 1500,
-    link: 'https://www.uaf.edu.pk/admissions/',
+    link: 'https://www.uaf.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== KPK Medical ==========
@@ -660,7 +660,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-09-01',
     applicationDeadline: '2026-10-31',
     fee: 3000,
-    link: 'https://www.kmu.edu.pk/admissions/',
+    link: 'https://www.kmu.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== Sindh Medical ==========
@@ -676,7 +676,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: '2026-09-15',
     applicationDeadline: '2026-11-15',
     fee: 3000,
-    link: 'https://www.duhs.edu.pk/admissions/',
+    link: 'https://www.duhs.edu.pk/admissions',
     status: 'upcoming',
   },
   // ========== HEC LAT ==========

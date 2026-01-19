@@ -1,0 +1,444 @@
+/**
+ * FAQScreen - Frequently Asked Questions
+ * Dedicated FAQ page for common student questions about the app
+ */
+
+import React, {useState, useRef} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Animated,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import {useTheme} from '../contexts/ThemeContext';
+import {Icon} from '../components/icons';
+import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+}
+
+interface FAQCategory {
+  id: string;
+  title: string;
+  icon: string;
+  color: string;
+}
+
+const FAQ_CATEGORIES: FAQCategory[] = [
+  {id: 'general', title: 'General', icon: 'help-circle-outline', color: '#4573DF'},
+  {id: 'merit', title: 'Merit Calculator', icon: 'calculator-outline', color: '#10B981'},
+  {id: 'universities', title: 'Universities', icon: 'school-outline', color: '#F59E0B'},
+  {id: 'scholarships', title: 'Scholarships', icon: 'wallet-outline', color: '#EF4444'},
+  {id: 'account', title: 'Account & Data', icon: 'person-outline', color: '#8B5CF6'},
+];
+
+const FAQ_ITEMS: FAQItem[] = [
+  // General
+  {
+    id: '1',
+    category: 'general',
+    question: 'What is PakUni?',
+    answer: 'PakUni is a comprehensive mobile app designed to help Pakistani students navigate their higher education journey. It provides information about universities, merit calculators, scholarships, entry tests, and career guidance all in one place.',
+  },
+  {
+    id: '2',
+    category: 'general',
+    question: 'Is PakUni free to use?',
+    answer: 'Yes! PakUni is completely free to use. All features including merit calculation, university search, scholarship information, and career guidance are available at no cost.',
+  },
+  {
+    id: '3',
+    category: 'general',
+    question: 'How often is the data updated?',
+    answer: 'We regularly update our database with the latest information from official university websites and HEC. Merit cutoffs are updated after each admission cycle, and scholarship deadlines are refreshed regularly.',
+  },
+  // Merit Calculator
+  {
+    id: '4',
+    category: 'merit',
+    question: 'How does the merit calculator work?',
+    answer: 'The merit calculator uses official university formulas to calculate your aggregate/merit score. You enter your Matric percentage, FSc/Intermediate percentage, and entry test score. The calculator applies the specific weightage used by each university.',
+  },
+  {
+    id: '5',
+    category: 'merit',
+    question: 'Which university formulas are available?',
+    answer: 'We support merit formulas for major universities including NUST, FAST, COMSATS, UET, GIKI, Punjab University, LUMS, and many more. Each formula follows the official weightage announced by the respective university.',
+  },
+  {
+    id: '6',
+    category: 'merit',
+    question: 'What is the Hafiz-e-Quran bonus?',
+    answer: 'Some universities like FAST offer a 20-mark bonus for Hafiz-e-Quran students. This is added to your aggregate score. Make sure to enable this option in the calculator if applicable.',
+  },
+  {
+    id: '7',
+    category: 'merit',
+    question: 'Are the merit cutoffs accurate?',
+    answer: 'Merit cutoffs shown are based on previous admission cycles. Actual cutoffs may vary each year depending on the applicant pool. Use them as a reference, not a guarantee of admission.',
+  },
+  // Universities
+  {
+    id: '8',
+    category: 'universities',
+    question: 'How are universities ranked?',
+    answer: 'Universities are ranked based on HEC (Higher Education Commission) Pakistan categories. W4 is the general category, and rankings are determined by factors like research output, faculty qualifications, facilities, and accreditation status.',
+  },
+  {
+    id: '9',
+    category: 'universities',
+    question: 'Can I compare universities?',
+    answer: 'Yes! Use the Compare tool to compare up to 3 universities side by side. You can compare rankings, fee structures, programs offered, facilities, and more to make an informed decision.',
+  },
+  {
+    id: '10',
+    category: 'universities',
+    question: 'How do I find universities by location?',
+    answer: 'Use the filter options on the Universities page. You can filter by province, city, university type (public/private), and specific programs offered.',
+  },
+  // Scholarships
+  {
+    id: '11',
+    category: 'scholarships',
+    question: 'How do I find scholarships I\'m eligible for?',
+    answer: 'Browse the Scholarships section and use filters to find opportunities matching your profile. Filter by merit-based, need-based, university-specific, or government scholarships.',
+  },
+  {
+    id: '12',
+    category: 'scholarships',
+    question: 'Are scholarship deadlines updated regularly?',
+    answer: 'Yes, we update scholarship information regularly. However, always verify deadlines from official sources before applying, as dates may change.',
+  },
+  {
+    id: '13',
+    category: 'scholarships',
+    question: 'Can I save scholarships to apply later?',
+    answer: 'Absolutely! Tap the heart icon on any scholarship to add it to your Favorites. You can access all saved scholarships from Settings > My Favorites.',
+  },
+  // Account & Data
+  {
+    id: '14',
+    category: 'account',
+    question: 'Is my data secure?',
+    answer: 'Yes, your data is securely stored and encrypted. We use industry-standard security practices. Your personal information is never shared with third parties without your consent.',
+  },
+  {
+    id: '15',
+    category: 'account',
+    question: 'Can I use PakUni without an account?',
+    answer: 'Yes, you can use most features as a guest. However, creating an account allows you to save favorites, track progress, sync across devices, and receive personalized recommendations.',
+  },
+  {
+    id: '16',
+    category: 'account',
+    question: 'How do I delete my account?',
+    answer: 'You can delete your account from Settings > Account > Delete Account. This will permanently remove all your data from our servers. This action cannot be undone.',
+  },
+];
+
+const FAQScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const {colors, isDark} = useTheme();
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (itemId: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const newExpanded = new Set(expandedItems);
+    if (newExpanded.has(itemId)) {
+      newExpanded.delete(itemId);
+    } else {
+      newExpanded.add(itemId);
+    }
+    setExpandedItems(newExpanded);
+  };
+
+  const filteredFAQs = selectedCategory === 'all' 
+    ? FAQ_ITEMS 
+    : FAQ_ITEMS.filter(item => item.category === selectedCategory);
+
+  const getCategoryColor = (categoryId: string) => {
+    return FAQ_CATEGORIES.find(c => c.id === categoryId)?.color || '#4573DF';
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]} edges={['top']}>
+      {/* Header */}
+      <LinearGradient
+        colors={['#4573DF', '#3660C9']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={styles.header}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>Help & FAQ</Text>
+          <Text style={styles.headerSubtitle}>Find answers to common questions</Text>
+        </View>
+        <View style={styles.headerIconContainer}>
+          <Icon name="help-circle" family="Ionicons" size={28} color="rgba(255,255,255,0.3)" />
+        </View>
+      </LinearGradient>
+
+      {/* Category Filter */}
+      <View style={styles.categoryContainer}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryScroll}>
+          <TouchableOpacity
+            style={[
+              styles.categoryChip,
+              {backgroundColor: selectedCategory === 'all' ? colors.primary : colors.card},
+            ]}
+            onPress={() => setSelectedCategory('all')}>
+            <Text style={[
+              styles.categoryText,
+              {color: selectedCategory === 'all' ? '#FFFFFF' : colors.text},
+            ]}>
+              All
+            </Text>
+          </TouchableOpacity>
+          {FAQ_CATEGORIES.map(category => (
+            <TouchableOpacity
+              key={category.id}
+              style={[
+                styles.categoryChip,
+                {backgroundColor: selectedCategory === category.id ? category.color : colors.card},
+              ]}
+              onPress={() => setSelectedCategory(category.id)}>
+              <Icon 
+                name={category.icon} 
+                family="Ionicons" 
+                size={16} 
+                color={selectedCategory === category.id ? '#FFFFFF' : category.color} 
+              />
+              <Text style={[
+                styles.categoryText,
+                {color: selectedCategory === category.id ? '#FFFFFF' : colors.text},
+              ]}>
+                {category.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* FAQ List */}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        {filteredFAQs.map((item, index) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[styles.faqItem, {backgroundColor: colors.card}]}
+            onPress={() => toggleExpand(item.id)}
+            activeOpacity={0.7}>
+            <View style={styles.faqHeader}>
+              <View style={[styles.faqIcon, {backgroundColor: getCategoryColor(item.category) + '20'}]}>
+                <Icon name="help" family="Ionicons" size={16} color={getCategoryColor(item.category)} />
+              </View>
+              <Text style={[styles.faqQuestion, {color: colors.text}]}>{item.question}</Text>
+              <Icon 
+                name={expandedItems.has(item.id) ? 'chevron-up' : 'chevron-down'} 
+                family="Ionicons" 
+                size={20} 
+                color={colors.textSecondary} 
+              />
+            </View>
+            {expandedItems.has(item.id) && (
+              <View style={[styles.faqAnswer, {borderTopColor: colors.border}]}>
+                <Text style={[styles.answerText, {color: colors.textSecondary}]}>
+                  {item.answer}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        ))}
+
+        {/* Contact Section */}
+        <View style={[styles.contactCard, {backgroundColor: colors.card}]}>
+          <View style={[styles.contactIcon, {backgroundColor: '#4573DF20'}]}>
+            <Icon name="chatbubbles" family="Ionicons" size={24} color="#4573DF" />
+          </View>
+          <Text style={[styles.contactTitle, {color: colors.text}]}>Still have questions?</Text>
+          <Text style={[styles.contactText, {color: colors.textSecondary}]}>
+            Can't find what you're looking for? Contact our support team.
+          </Text>
+          <TouchableOpacity
+            style={[styles.contactButton, {backgroundColor: colors.primary}]}
+            onPress={() => navigation.navigate('ContactSupport' as never)}>
+            <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
+            <Text style={styles.contactButtonText}>Contact Support</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{height: 40}} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    paddingTop: 12,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  headerTitle: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  headerSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: 'rgba(255,255,255,0.8)',
+    marginTop: 2,
+  },
+  headerIconContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoryContainer: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  categoryScroll: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  categoryChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 6,
+    marginRight: 8,
+  },
+  categoryText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  faqItem: {
+    borderRadius: RADIUS.lg,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  faqHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  faqIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  faqQuestion: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: '600',
+    lineHeight: 22,
+  },
+  faqAnswer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    paddingTop: 12,
+    marginTop: 4,
+    marginHorizontal: 16,
+    borderTopWidth: 1,
+  },
+  answerText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 22,
+  },
+  contactCard: {
+    borderRadius: RADIUS.lg,
+    padding: 20,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  contactIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  contactTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  contactText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  contactButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: RADIUS.md,
+    gap: 8,
+  },
+  contactButtonText: {
+    color: '#FFFFFF',
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: '600',
+  },
+});
+
+export default FAQScreen;

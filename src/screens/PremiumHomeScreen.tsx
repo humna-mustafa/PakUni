@@ -677,6 +677,17 @@ const PremiumHomeScreen = () => {
   
   // Real notifications from notification service
   const {notifications: localNotifications, markAsRead, clearAll} = useNotifications();
+
+  // Handle search submission - navigate to Universities with search query
+  const handleSearch = useCallback(() => {
+    if (searchQuery.trim()) {
+      // Navigate to Universities tab with search query
+      navigation.navigate('MainTabs', {
+        screen: 'Universities',
+        params: {searchQuery: searchQuery.trim()},
+      });
+    }
+  }, [searchQuery, navigation]);
   
   // Convert to NotificationBell format
   const bellNotifications: Notification[] = localNotifications.map(convertToNotification);
@@ -836,6 +847,7 @@ const PremiumHomeScreen = () => {
               onChangeText={setSearchQuery}
               placeholder="Search universities, scholarships..."
               variant="filled"
+              onSubmit={handleSearch}
             />
           </View>
 

@@ -47,6 +47,33 @@ const getCareerCategory = (career: CareerField): string => {
   return 'Other';
 };
 
+// Helper to extract career duration from education requirements
+const getCareerDuration = (career: CareerField): string => {
+  const educationList = career.required_education || [];
+  
+  // Look for duration patterns in education requirements
+  for (const edu of educationList) {
+    // Match patterns like "(5 years + 1 year house job)", "(4 years)", "4-5 years", etc.
+    const durationMatch = edu.match(/\((\d+(?:-\d+)?\s*years?(?:\s*\+[^)]+)?)\)/i) || 
+                          edu.match(/(\d+(?:-\d+)?\s*years?)/i);
+    if (durationMatch) {
+      return durationMatch[1].trim();
+    }
+  }
+  
+  // Career-specific defaults based on career ID
+  const id = career.id.toLowerCase();
+  if (id.includes('medicine') || id.includes('mbbs')) return '5 years + house job';
+  if (id.includes('dentistry') || id.includes('bds')) return '4 years + house job';
+  if (id.includes('pharmacy')) return '5 years';
+  if (id.includes('chartered') || id.includes('ca')) return '5-7 years';
+  if (id.includes('civil-service') || id.includes('css')) return '1-2 years prep';
+  if (id.includes('law') || id.includes('llb')) return '5 years';
+  
+  // Default for most BS degrees
+  return '4 years';
+};
+
 // Salary bar component
 const SalaryBar = ({
   min,
@@ -220,7 +247,7 @@ const CareerCard = ({
 
           {/* Skills */}
           <View style={styles.skillsContainer}>
-            {(career.skills || ['Problem Solving', 'Communication', 'Technical']).slice(0, 3).map((skill: string, i: number) => (
+            {(career.key_skills || career.skills || ['Problem Solving', 'Communication', 'Technical']).slice(0, 3).map((skill: string, i: number) => (
               <View key={i} style={[styles.skillChip, {backgroundColor: colors.background}]}>
                 <Text style={[styles.skillText, {color: colors.textSecondary}]}>
                   {skill}
@@ -241,11 +268,11 @@ const CareerCard = ({
                   colors={['#27ae60', '#2ecc71']}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
-                  style={[styles.salaryProgress, {width: `${(career.maxSalary || 200000) / 5000}%`}]}
+                  style={[styles.salaryProgress, {width: `${(career.average_senior_salary || career.maxSalary || 200000) / 10000}%`}]}
                 />
               </View>
               <Text style={[styles.salaryAmount, {color: colors.success}]}>
-                {((career.minSalary || 50000) / 1000).toFixed(0)}K - {((career.maxSalary || 200000) / 1000).toFixed(0)}K PKR/month
+                {((career.average_starting_salary || career.minSalary || 50000) / 1000).toFixed(0)}K - {((career.average_senior_salary || career.maxSalary || 200000) / 1000).toFixed(0)}K PKR/month
               </Text>
             </View>
           </View>
@@ -254,13 +281,13 @@ const CareerCard = ({
             <View style={styles.metaItem}>
               <Icon name="school-outline" family="Ionicons" size={14} color={colors.textSecondary} />
               <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                {career.education || 'Bachelor\'s'}
+                {career.required_education?.[1]?.split('(')[0]?.trim() || career.education || 'Bachelor\'s'}
               </Text>
             </View>
             <View style={styles.metaItem}>
               <Icon name="time-outline" family="Ionicons" size={14} color={colors.textSecondary} />
               <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                {career.duration || '4 years'}
+                {getCareerDuration(career)}
               </Text>
             </View>
             <TouchableOpacity

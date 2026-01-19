@@ -172,10 +172,10 @@ const MATERIAL_TYPE_OPTIONS: {value: MaterialType; label: string; icon: string; 
 ];
 
 const QUICK_HELP_ITEMS = [
-  {id: '1', title: 'How to calculate merit?', icon: 'calculator-outline'},
-  {id: '2', title: 'University rankings explained', icon: 'trophy-outline'},
-  {id: '3', title: 'Scholarship eligibility', icon: 'checkmark-circle-outline'},
-  {id: '4', title: 'Entry test preparation', icon: 'book-outline'},
+  {id: '1', title: 'How to calculate merit?', icon: 'calculator-outline', screen: 'Calculator'},
+  {id: '2', title: 'University rankings explained', icon: 'trophy-outline', screen: 'UniversityRankingsInfo'},
+  {id: '3', title: 'Scholarship eligibility', icon: 'checkmark-circle-outline', screen: 'Scholarships'},
+  {id: '4', title: 'Entry test preparation', icon: 'book-outline', screen: 'EntryTests'},
 ];
 
 // ============================================================================
@@ -256,32 +256,47 @@ const ContactSupportScreen: React.FC = () => {
       return;
     }
 
+    // Email validation if provided
+    if (formData.email && formData.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        Alert.alert('Invalid Email', 'Please enter a valid email address');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Prepare the feedback data
+      // Build comprehensive message with all details
+      const messageDetails = buildMessage(formData);
+      
+      // Add metadata info to message (in case metadata column doesn't exist)
+      const fullMessage = `${messageDetails}
+
+---
+Additional Details:
+- Feedback Type: ${formData.type}
+- Severity: ${formData.severity || 'N/A'}
+- Content Type: ${formData.contentType || 'N/A'}
+- Material Type: ${formData.materialType || 'N/A'}
+- University: ${formData.universityName || 'N/A'}
+- Scholarship: ${formData.scholarshipName || 'N/A'}
+- Material URL: ${formData.materialUrl || 'N/A'}
+- Would Recommend: ${formData.wouldRecommend !== undefined ? (formData.wouldRecommend ? 'Yes' : 'No') : 'N/A'}
+- Device: ${Platform.OS}
+- Submitted: ${new Date().toISOString()}`;
+
+      // Prepare the feedback data (only core fields that always exist)
       const feedbackData = {
         user_id: user?.id || null,
         type: mapFeedbackType(formData.type),
         category: mapToCategory(formData.type),
         title: formData.title || getTitleFromType(formData.type),
-        message: buildMessage(formData),
-        contact_email: formData.email || null,
+        message: fullMessage,
+        contact_email: formData.email?.trim() || null,
         rating: formData.rating || null,
         status: 'new',
-        metadata: {
-          feedbackType: formData.type,
-          severity: formData.severity,
-          contentType: formData.contentType,
-          materialType: formData.materialType,
-          universityName: formData.universityName,
-          scholarshipName: formData.scholarshipName,
-          materialUrl: formData.materialUrl,
-          wouldRecommend: formData.wouldRecommend,
-          deviceInfo: Platform.OS,
-          appVersion: '1.0.0',
-          submittedAt: new Date().toISOString(),
-        },
       };
 
       // Submit to Supabase
@@ -289,7 +304,10 @@ const ContactSupportScreen: React.FC = () => {
         .from('user_feedback')
         .insert([feedbackData]);
 
-      if (error) throw error;
+      if (error) {
+        logger.error('Supabase insert error', error, 'ContactSupport');
+        throw error;
+      }
 
       setIsSubmitting(false);
       setShowFeedbackModal(false);
@@ -394,7 +412,19 @@ const ContactSupportScreen: React.FC = () => {
   };
 
   const handleEmailSupport = () => {
-    // Open in-app feedback form instead of email
+    // Set default option to general feedback and open modal
+    const generalFeedback = FEEDBACK_OPTIONS.find(opt => opt.id === 'general_feedback');
+    if (generalFeedback) {
+      setSelectedOption(generalFeedback);
+      setFormData({
+        type: 'general_feedback',
+        title: '',
+        description: '',
+        email: user?.email || '',
+        rating: 0,
+        wouldRecommend: undefined,
+      });
+    }
     setShowFeedbackModal(true);
   };
 
@@ -646,7 +676,9 @@ const ContactSupportScreen: React.FC = () => {
   };
 
   const renderFeedbackForm = () => {
-    if (!selectedOption) return null;
+    // Use selectedOption or fallback to general feedback
+    const option = selectedOption || FEEDBACK_OPTIONS.find(opt => opt.id === 'general_feedback');
+    if (!option) return null;
 
     return (
       <KeyboardAvoidingView
@@ -657,13 +689,13 @@ const ContactSupportScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           {/* Type-specific fields */}
-          {selectedOption.id === 'bug_report' && renderBugSeverity()}
-          {selectedOption.id === 'content_update' && renderContentTypeSelector()}
-          {selectedOption.id === 'material_submission' && renderMaterialTypeSelector()}
-          {selectedOption.id === 'general_feedback' && renderStarRating()}
+          {option.id === 'bug_report' && renderBugSeverity()}
+          {option.id === 'content_update' && renderContentTypeSelector()}
+          {option.id === 'material_submission' && renderMaterialTypeSelector()}
+          {option.id === 'general_feedback' && renderStarRating()}
 
           {/* Title (for bug reports) */}
-          {selectedOption.id === 'bug_report' && (
+          {option.id === 'bug_report' && (
             <View style={styles.inputGroup}>
               <Text style={[styles.inputLabel, {color: colors.text}]}>Issue Title *</Text>
               <TextInput
@@ -680,10 +712,10 @@ const ContactSupportScreen: React.FC = () => {
           {/* Main description */}
           <View style={styles.inputGroup}>
             <Text style={[styles.inputLabel, {color: colors.text}]}>
-              {selectedOption.id === 'bug_report' ? 'Steps to Reproduce *' :
-               selectedOption.id === 'feature_request' ? 'Describe Your Idea *' :
-               selectedOption.id === 'content_update' ? 'What needs to be updated? *' :
-               selectedOption.id === 'material_submission' ? 'Material Details *' :
+              {option.id === 'bug_report' ? 'Steps to Reproduce *' :
+               option.id === 'feature_request' ? 'Describe Your Idea *' :
+               option.id === 'content_update' ? 'What needs to be updated? *' :
+               option.id === 'material_submission' ? 'Material Details *' :
                'Your Feedback *'}
             </Text>
             <TextInput
@@ -692,11 +724,11 @@ const ContactSupportScreen: React.FC = () => {
                 {backgroundColor: colors.background, color: colors.text},
               ]}
               placeholder={
-                selectedOption.id === 'bug_report' 
+                option.id === 'bug_report' 
                   ? '1. What were you doing?\n2. What happened?\n3. What did you expect to happen?' 
-                  : selectedOption.id === 'feature_request'
+                  : option.id === 'feature_request'
                   ? 'Describe your feature idea and how it would help students...'
-                  : selectedOption.id === 'material_submission'
+                  : option.id === 'material_submission'
                   ? 'Describe the material you\'re sharing (university, year, subject, etc.)...'
                   : 'Share your thoughts...'
               }
@@ -712,7 +744,7 @@ const ContactSupportScreen: React.FC = () => {
           {/* Contact email */}
           <View style={styles.inputGroup}>
             <Text style={[styles.inputLabel, {color: colors.text}]}>
-              Contact Email {selectedOption.id === 'bug_report' ? '(for follow-up)' : '(optional)'}
+              Contact Email {option.id === 'bug_report' ? '(for follow-up)' : '(optional)'}
             </Text>
             <TextInput
               style={[styles.textInput, {backgroundColor: colors.background, color: colors.text}]}
@@ -726,7 +758,7 @@ const ContactSupportScreen: React.FC = () => {
           </View>
 
           {/* Would recommend question for general feedback */}
-          {selectedOption.id === 'general_feedback' && renderRecommendQuestion()}
+          {option.id === 'general_feedback' && renderRecommendQuestion()}
 
           {/* Submit button */}
           <TouchableOpacity
@@ -734,7 +766,7 @@ const ContactSupportScreen: React.FC = () => {
             onPress={handleSubmit}
             disabled={isSubmitting}>
             <LinearGradient
-              colors={selectedOption.gradient}
+              colors={option.gradient}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               style={styles.submitGradient}>
@@ -902,7 +934,23 @@ const ContactSupportScreen: React.FC = () => {
                     borderBottomColor: colors.border,
                   },
                 ]}
-                onPress={() => navigation.navigate('Guides' as never)}>
+                onPress={() => {
+                  if (item.screen === 'UniversityRankingsInfo') {
+                    // Show inline modal with ranking info
+                    Alert.alert(
+                      '📊 University Rankings Explained',
+                      'HEC Pakistan categorizes universities into categories:\n\n' +
+                      '⭐ W4 (General Category)\nMeets basic HEC standards for degree programs.\n\n' +
+                      '⭐ W3 (Professional Category)\nMeets standards for professional programs (Engineering, Medical, etc.)\n\n' +
+                      '🏆 National Ranking\nBased on research output, faculty qualifications, and facilities.\n\n' +
+                      '🌍 QS World Ranking\nInternational ranking by Quacquarelli Symonds.\n\n' +
+                      'Tip: Rankings are just one factor. Consider location, programs, campus culture, and fee structure too!',
+                      [{text: 'Got it!', style: 'default'}]
+                    );
+                  } else {
+                    navigation.navigate(item.screen as never);
+                  }
+                }}>
                 <Icon name={item.icon} family="Ionicons" size={20} color={colors.primary} />
                 <Text style={[styles.quickHelpText, {color: colors.text}]}>{item.title}</Text>
                 <Icon name="chevron-forward" family="Ionicons" size={18} color={colors.textSecondary} />
@@ -947,17 +995,15 @@ const ContactSupportScreen: React.FC = () => {
               
               {/* Modal Header */}
               <View style={styles.modalHeader}>
-                {selectedOption && (
-                  <View style={[styles.modalIconBg, {backgroundColor: selectedOption.color + '20'}]}>
-                    <Icon name={selectedOption.icon} family="Ionicons" size={24} color={selectedOption.color} />
-                  </View>
-                )}
+                <View style={[styles.modalIconBg, {backgroundColor: (selectedOption?.color || '#4573DF') + '20'}]}>
+                  <Icon name={selectedOption?.icon || 'chatbubbles'} family="Ionicons" size={24} color={selectedOption?.color || '#4573DF'} />
+                </View>
                 <View style={styles.modalHeaderText}>
                   <Text style={[styles.modalTitle, {color: colors.text}]}>
-                    {selectedOption?.title}
+                    {selectedOption?.title || 'Send Feedback'}
                   </Text>
                   <Text style={[styles.modalSubtitle, {color: colors.textSecondary}]}>
-                    {selectedOption?.subtitle}
+                    {selectedOption?.subtitle || 'Share your thoughts with us'}
                   </Text>
                 </View>
                 <TouchableOpacity

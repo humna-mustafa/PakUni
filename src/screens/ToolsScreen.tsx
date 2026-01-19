@@ -163,21 +163,27 @@ interface MeritCalculatorProps {
 
 const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}) => {
   const [matricMarks, setMatricMarks] = useState('');
+  const [matricTotal, setMatricTotal] = useState('1100');
   const [interMarks, setInterMarks] = useState('');
+  const [interTotal, setInterTotal] = useState('1100');
   const [testMarks, setTestMarks] = useState('');
+  const [testTotal, setTestTotal] = useState('200');
   const [result, setResult] = useState<number | null>(null);
 
   const calculateMerit = () => {
     const matric = parseFloat(matricMarks) || 0;
+    const mTotal = parseFloat(matricTotal) || 1100;
     const inter = parseFloat(interMarks) || 0;
+    const iTotal = parseFloat(interTotal) || 1100;
     const test = parseFloat(testMarks) || 0;
+    const tTotal = parseFloat(testTotal) || 200;
 
-    // Common merit formula: 40% matric + 50% inter + 10% test
-    // Convert to percentages if needed
-    const matricPercent = matric > 100 ? (matric / 1100) * 100 : matric;
-    const interPercent = inter > 100 ? (inter / 1100) * 100 : inter;
-    const testPercent = test > 100 ? (test / 1100) * 100 : test;
+    // Convert to percentages using actual total marks
+    const matricPercent = (matric / mTotal) * 100;
+    const interPercent = (inter / iTotal) * 100;
+    const testPercent = (test / tTotal) * 100;
 
+    // Common merit formula: 10% matric + 50% inter + 40% test
     const merit = (matricPercent * 0.1) + (interPercent * 0.5) + (testPercent * 0.4);
     setResult(Math.min(100, Math.max(0, merit)));
   };
@@ -204,15 +210,28 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             </View>
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Matric Marks</Text>
-              <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <TextInput
-                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
-                  placeholder="Enter marks..."
-                  placeholderTextColor={colors.textSecondary}
-                  keyboardType="numeric"
-                  value={matricMarks}
-                  onChangeText={setMatricMarks}
-                />
+              <View style={styles.marksRow}>
+                <View style={[styles.inputField, styles.marksInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Obtained"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={matricMarks}
+                    onChangeText={setMatricMarks}
+                  />
+                </View>
+                <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
+                <View style={[styles.inputField, styles.totalInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Total"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={matricTotal}
+                    onChangeText={setMatricTotal}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -227,15 +246,28 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             </View>
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Inter Marks</Text>
-              <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <TextInput
-                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
-                  placeholder="Enter marks..."
-                  placeholderTextColor={colors.textSecondary}
-                  keyboardType="numeric"
-                  value={interMarks}
-                  onChangeText={setInterMarks}
-                />
+              <View style={styles.marksRow}>
+                <View style={[styles.inputField, styles.marksInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Obtained"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={interMarks}
+                    onChangeText={setInterMarks}
+                  />
+                </View>
+                <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
+                <View style={[styles.inputField, styles.totalInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Total"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={interTotal}
+                    onChangeText={setInterTotal}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -250,15 +282,28 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
             </View>
             <View style={styles.inputContent}>
               <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Entry Test Marks</Text>
-              <View style={[styles.inputField, {backgroundColor: colors.background}]}>
-                <TextInput
-                  style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
-                  placeholder="Enter marks..."
-                  placeholderTextColor={colors.textSecondary}
-                  keyboardType="numeric"
-                  value={testMarks}
-                  onChangeText={setTestMarks}
-                />
+              <View style={styles.marksRow}>
+                <View style={[styles.inputField, styles.marksInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Obtained"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={testMarks}
+                    onChangeText={setTestMarks}
+                  />
+                </View>
+                <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
+                <View style={[styles.inputField, styles.totalInput, {backgroundColor: colors.background}]}>
+                  <TextInput
+                    style={{color: colors.text, fontSize: 16, flex: 1, padding: 0}}
+                    placeholder="Total"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="numeric"
+                    value={testTotal}
+                    onChangeText={setTestTotal}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -807,6 +852,21 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
+  },
+  marksRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  marksInput: {
+    flex: 1,
+  },
+  totalInput: {
+    width: 80,
+  },
+  marksDivider: {
+    fontSize: 20,
+    fontWeight: '600',
   },
   formulaCard: {
     flexDirection: 'row',

@@ -326,7 +326,22 @@ const ResultGameScreen: React.FC = () => {
                 <View style={styles.resultButtons}>
                   <TouchableOpacity
                     style={styles.shareButton}
-                    onPress={() => shareResultPrediction('Your Dream University', 'Uni', 85)}>
+                    onPress={() => {
+                      // Get the percentage range based on selected option
+                      const selectedOptionData = PREDICTION_OPTIONS.find(opt => opt.id === selectedOption);
+                      let scorePercentage = 85; // default
+                      if (selectedOption === 'flying') scorePercentage = 95;
+                      else if (selectedOption === 'excellent') scorePercentage = 85;
+                      else if (selectedOption === 'good') scorePercentage = 75;
+                      else if (selectedOption === 'satisfactory') scorePercentage = 65;
+                      else if (selectedOption === 'surprise') scorePercentage = Math.floor(Math.random() * 40) + 60; // 60-99
+                      
+                      shareResultPrediction(
+                        selectedOptionData?.label || 'Your Prediction',
+                        selectedOptionData?.description || '',
+                        scorePercentage
+                      );
+                    }}>
                     <Icon name="share-social-outline" size={20} color="#FFF" />
                     <Text style={styles.shareButtonText}>Share Result</Text>
                   </TouchableOpacity>

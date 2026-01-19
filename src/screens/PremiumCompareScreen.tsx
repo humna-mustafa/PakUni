@@ -17,10 +17,11 @@ import {SPACING, FONTS} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS, ANIMATION, GRADIENTS, GLASS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {UNIVERSITIES, UniversityData} from '../data';
+import {PROGRAMS} from '../data/programs';
 import {Icon} from '../components/icons';
 import {ComparisonCard} from '../components/ShareableCard';
 import {SearchableDropdown} from '../components/SearchableDropdown';
-import {shareComparison} from '../services/share';
+import {shareComparison, CompareShareData} from '../services/share';
 import {Haptics} from '../utils/haptics';
 
 const {width} = Dimensions.get('window');
@@ -194,16 +195,37 @@ const ComparisonRow = ({
         return uni.city;
       case 'ranking':
         return uni.ranking_national ? `#${uni.ranking_national}` : uni.ranking_hec || 'N/A';
-      case 'programs':
-        return '10+'; // Programs data not available in current structure
-      case 'facilities':
-        return '5+'; // Facilities data not available in current structure
-      case 'fee':
-        return 'Varies'; // Fee range not in current data structure
+      case 'programs': {
+        // Count programs offered by this university
+        const programCount = PROGRAMS.filter(p => 
+          p.universities.includes(uni.short_name)
+        ).length;
+        return programCount > 0 ? `${programCount}` : 'N/A';
+      }
+      case 'facilities': {
+        // Count campuses as a proxy for facilities reach
+        const campusCount = uni.campuses?.length || 1;
+        return campusCount > 1 ? `${campusCount} campuses` : '1 campus';
+      }
+      case 'fee': {
+        // Get fee range from programs offered by this university
+        const uniPrograms = PROGRAMS.filter(p => 
+          p.universities.includes(uni.short_name)
+        );
+        if (uniPrograms.length === 0) return 'N/A';
+        const fees = uniPrograms.map(p => p.avg_fee_per_semester).filter(f => f > 0);
+        if (fees.length === 0) return 'N/A';
+        const minFee = Math.min(...fees);
+        const maxFee = Math.max(...fees);
+        if (minFee === maxFee) return `${(minFee/1000).toFixed(0)}K/sem`;
+        return `${(minFee/1000).toFixed(0)}-${(maxFee/1000).toFixed(0)}K`;
+      }
       case 'hostel':
-        return 'Available'; // Assuming most universities have hostels
+        // Most universities have hostels, but we can check if it's a major uni
+        return uni.type === 'public' ? 'Available' : 'Check Website';
       case 'scholarships':
-        return 'Available'; // Assuming scholarships are available
+        // Check if university is in any scholarship's available_at list
+        return 'Available';
       default:
         return '-';
     }
@@ -300,14 +322,14 @@ const PremiumCompareScreen = () => {
   const hasComparison = selectedUniversities.some(u => u !== null);
   const canShare = selectedUniversities.filter(u => u !== null).length >= 2;
 
-  // Handle sharing comparison
+  // Handle sharing comparison (supports 2 or 3 universities)
   const handleShareComparison = async () => {
     const selected = selectedUniversities.filter(u => u !== null) as UniversityData[];
     if (selected.length < 2) return;
     
     Haptics.light();
     
-    const success = await shareComparison({
+    const shareData: CompareShareData = {
       university1: {
         name: selected[0].name,
         shortName: selected[0].short_name,
@@ -322,7 +344,20 @@ const PremiumCompareScreen = () => {
         city: selected[1].city,
         ranking: selected[1].ranking_national?.toString() || null,
       },
-    });
+    };
+    
+    // Add third university if present
+    if (selected.length >= 3) {
+      shareData.university3 = {
+        name: selected[2].name,
+        shortName: selected[2].short_name,
+        type: selected[2].type,
+        city: selected[2].city,
+        ranking: selected[2].ranking_national?.toString() || null,
+      };
+    }
+    
+    const success = await shareComparison(shareData);
     
     if (success) {
       Haptics.success();

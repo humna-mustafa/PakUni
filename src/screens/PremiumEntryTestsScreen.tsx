@@ -10,6 +10,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Linking,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -723,7 +724,18 @@ const PremiumEntryTestsScreen = () => {
                   </Text>
                 </View>
 
-                <TouchableOpacity style={styles.registerButton}>
+                <TouchableOpacity 
+                  style={styles.registerButton}
+                  onPress={() => {
+                    if (selectedTest.website) {
+                      Linking.openURL(selectedTest.website).catch(err => {
+                        logger.error('Error opening registration URL', err, 'EntryTests');
+                        Alert.alert('Error', 'Unable to open registration website. Please visit: ' + selectedTest.website);
+                      });
+                    } else {
+                      Alert.alert('Website Not Available', 'Registration website is not available for this test.');
+                    }
+                  }}>
                   <LinearGradient
                     colors={[STATUS_COLORS.urgency.safe, '#059669']}
                     start={{x: 0, y: 0}}

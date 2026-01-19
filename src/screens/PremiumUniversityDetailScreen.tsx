@@ -454,7 +454,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="trophy-outline"
             label="HEC Ranking"
-            value={university.ranking_hec ? `#${university.ranking_hec}` : 'N/A'}
+            value={university.ranking_national ? `#${university.ranking_national}` : (university.ranking_hec || 'N/A')}
             index={2}
             colors={colors}
             isDark={isDark}
@@ -1069,10 +1069,12 @@ const PremiumUniversityDetailScreen = () => {
             <View style={styles.typeBadge}>
               <Text style={styles.typeBadgeText}>{university.type.toUpperCase()}</Text>
             </View>
-            {university.ranking_hec && (
+            {(university.ranking_national || university.ranking_hec) && (
               <View style={styles.rankBadge}>
                 <Icon name="trophy" family="Ionicons" size={12} color="#F59E0B" />
-                <Text style={styles.rankBadgeText}>HEC #{university.ranking_hec}</Text>
+                <Text style={styles.rankBadgeText}>
+                  HEC #{university.ranking_national || university.ranking_hec}
+                </Text>
               </View>
             )}
           </View>

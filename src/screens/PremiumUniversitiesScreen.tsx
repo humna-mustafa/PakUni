@@ -11,16 +11,17 @@ import {
   Platform,
   RefreshControl,
   Image,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
-import {RootStackParamList} from '../navigation/AppNavigator';
+import {RootStackParamList, TabParamList} from '../navigation/AppNavigator';
 import {PROVINCES} from '../data';
 import {hybridDataService} from '../services/hybridData';
 import type {TursoUniversity} from '../services/turso';
@@ -152,12 +153,16 @@ const FilterChip = ({
 const UniversityCard = ({
   item,
   onPress,
+  onToggleFavorite,
+  isFavorite,
   colors,
   isDark,
   index,
 }: {
   item: UniversityData;
   onPress: () => void;
+  onToggleFavorite: (id: string) => void;
+  isFavorite: boolean;
   colors: any;
   isDark: boolean;
   index: number;
@@ -267,7 +272,7 @@ const UniversityCard = ({
               </View>
             </View>
 
-            {/* Rank + Arrow */}
+            {/* Rank + Favorite + Arrow */}
             <View style={styles.cardHeaderRight}>
               {item.ranking_national && (
                 <LinearGradient
@@ -276,6 +281,22 @@ const UniversityCard = ({
                   <Text style={styles.rankText}>#{item.ranking_national}</Text>
                 </LinearGradient>
               )}
+              <TouchableOpacity
+                style={[styles.favoriteBtn, {backgroundColor: isFavorite ? '#FEE2E2' : colors.background}]}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite(item.short_name);
+                }}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                accessibilityRole="button"
+                accessibilityLabel={isFavorite ? "Remove from favorites" : "Add to favorites"}>
+                <Icon 
+                  name={isFavorite ? "heart" : "heart-outline"} 
+                  family="Ionicons" 
+                  size={18} 
+                  color={isFavorite ? "#EF4444" : colors.textSecondary} 
+                />
+              </TouchableOpacity>
               <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textSecondary} />
             </View>
           </View>
@@ -309,11 +330,17 @@ const UniversityCard = ({
   );
 };
 
+type UniversitiesRouteProp = RouteProp<TabParamList, 'Universities'>;
+
 const PremiumUniversitiesScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute<UniversitiesRouteProp>();
   const {colors, isDark} = useTheme();
-  const {user} = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
+  const {user, addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
+  
+  // Initialize search query from route params if provided
+  const initialSearchQuery = route.params?.searchQuery || '';
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedProvince, setSelectedProvince] = useState('all');
   const [selectedType, setSelectedType] = useState<'all' | 'public' | 'private'>('all');
   const [sortBy, setSortBy] = useState('ranking');
@@ -322,6 +349,13 @@ const PremiumUniversitiesScreen = () => {
   const [universities, setUniversities] = useState<UniversityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const headerAnim = useRef(new Animated.Value(0)).current;
+
+  // Update search query when route params change (e.g., from Home page search)
+  useEffect(() => {
+    if (route.params?.searchQuery) {
+      setSearchQuery(route.params.searchQuery);
+    }
+  }, [route.params?.searchQuery]);
 
   // Debounce search query for better performance
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
@@ -367,6 +401,30 @@ const PremiumUniversitiesScreen = () => {
       setRefreshing(false);
     }
   }, []);
+
+  // Handle favorite toggle
+  const handleToggleFavorite = useCallback(async (universityId: string) => {
+    if (isGuest) {
+      Alert.alert(
+        'Sign In Required',
+        'Please sign in to save universities to your favorites.',
+        [{text: 'OK'}]
+      );
+      return;
+    }
+    
+    try {
+      if (isFavorite(universityId, 'university')) {
+        await removeFavorite(universityId, 'university');
+        Haptics.light();
+      } else {
+        await addFavorite(universityId, 'university');
+        Haptics.success();
+      }
+    } catch (error) {
+      Haptics.error();
+    }
+  }, [isGuest, isFavorite, addFavorite, removeFavorite]);
 
   // FlatList optimization: getItemLayout for fixed height items
   const ITEM_HEIGHT = LIST_ITEM_HEIGHTS.UNIVERSITY_CARD;
@@ -438,7 +496,9 @@ const PremiumUniversitiesScreen = () => {
     return 'U';
   };
 
-  const renderHeader = () => (
+  // Memoize renderHeader to prevent keyboard dismissal during typing
+  // The search bar state changes cause re-renders, so we need useCallback
+  const renderHeader = useCallback(() => (
     <View style={styles.listHeader}>
       {/* Top Header Row with Profile */}
       <View style={styles.topHeaderRow}>
@@ -592,19 +652,21 @@ const PremiumUniversitiesScreen = () => {
         </>
       )}
     </View>
-  );
+  ), [colors, showFilters, filteredUniversities.length, sortBy, selectedProvince, selectedType, searchQuery, user?.avatarUrl, navigation, setSearchQuery, setSortBy, setSelectedProvince, setSelectedType, setShowFilters]);
 
   const renderUniversityCard = useCallback(
     ({item, index}: {item: UniversityItem; index: number}) => (
       <UniversityCard
         item={item as any}
         onPress={() => handleUniversityPress(item)}
+        onToggleFavorite={handleToggleFavorite}
+        isFavorite={isFavorite(item.short_name, 'university')}
         colors={colors}
         isDark={isDark}
         index={index}
       />
     ),
-    [handleUniversityPress, colors, isDark],
+    [handleUniversityPress, handleToggleFavorite, isFavorite, colors, isDark],
   );
 
   return (
@@ -1065,6 +1127,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.xs,
+  },
+  favoriteBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

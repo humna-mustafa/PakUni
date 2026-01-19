@@ -26,6 +26,8 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyAchievement} from '../services/achievements';
@@ -41,6 +43,7 @@ import {
   captureAndShareCard,
   captureAndSaveCard,
 } from '../services/cardCapture';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 // Custom images type (previously from CardImageCustomizer)
 export interface CardCustomImages {
@@ -57,6 +60,208 @@ const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - 32;
 
 // CardCustomImages is now defined above as an interface
+
+// ============================================================================
+// IMAGE PICKER MODAL - Reusable component for all card types
+// ============================================================================
+
+interface ImagePickerModalProps {
+  visible: boolean;
+  onClose: () => void;
+  images: CardCustomImages;
+  onImagesChange: (images: CardCustomImages) => void;
+  cardType: 'merit' | 'admission' | 'test' | 'scholarship' | 'custom';
+}
+
+const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
+  visible,
+  onClose,
+  images,
+  onImagesChange,
+  cardType,
+}) => {
+  const pickImage = async (imageType: keyof CardCustomImages) => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+        maxWidth: 800,
+        maxHeight: 800,
+      });
+
+      if (result.assets && result.assets[0]?.uri) {
+        onImagesChange({
+          ...images,
+          [imageType]: result.assets[0].uri,
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to pick image. Please try again.');
+    }
+  };
+
+  const removeImage = (imageType: keyof CardCustomImages) => {
+    const newImages = {...images};
+    delete newImages[imageType];
+    onImagesChange(newImages);
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      onRequestClose={onClose}>
+      <View style={imagePickerStyles.overlay}>
+        <View style={imagePickerStyles.container}>
+          <View style={imagePickerStyles.header}>
+            <Text style={imagePickerStyles.title}>Customize Your Card</Text>
+            <TouchableOpacity onPress={onClose} style={imagePickerStyles.closeBtn}>
+              <Icon name="close" family="Ionicons" size={24} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={imagePickerStyles.content}>
+            {/* Personal Photo */}
+            <TouchableOpacity 
+              style={imagePickerStyles.imageOption}
+              onPress={() => pickImage('personalPhoto')}>
+              <View style={imagePickerStyles.imagePreview}>
+                {images.personalPhoto ? (
+                  <Image source={{uri: images.personalPhoto}} style={imagePickerStyles.previewImage} />
+                ) : (
+                  <Icon name="person-circle" family="Ionicons" size={40} color="#999" />
+                )}
+              </View>
+              <View style={imagePickerStyles.imageInfo}>
+                <Text style={imagePickerStyles.imageLabel}>Your Photo</Text>
+                <Text style={imagePickerStyles.imageHint}>Add a personal photo to your card</Text>
+              </View>
+              {images.personalPhoto && (
+                <TouchableOpacity 
+                  onPress={() => removeImage('personalPhoto')}
+                  style={imagePickerStyles.removeBtn}>
+                  <Icon name="trash-outline" family="Ionicons" size={20} color="#EF4444" />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+
+            {/* Campus/Background Image */}
+            <TouchableOpacity 
+              style={imagePickerStyles.imageOption}
+              onPress={() => pickImage('campusImage')}>
+              <View style={imagePickerStyles.imagePreview}>
+                {images.campusImage ? (
+                  <Image source={{uri: images.campusImage}} style={imagePickerStyles.previewImage} />
+                ) : (
+                  <Icon name="image" family="Ionicons" size={40} color="#999" />
+                )}
+              </View>
+              <View style={imagePickerStyles.imageInfo}>
+                <Text style={imagePickerStyles.imageLabel}>Campus Photo</Text>
+                <Text style={imagePickerStyles.imageHint}>Add university campus as background</Text>
+              </View>
+              {images.campusImage && (
+                <TouchableOpacity 
+                  onPress={() => removeImage('campusImage')}
+                  style={imagePickerStyles.removeBtn}>
+                  <Icon name="trash-outline" family="Ionicons" size={20} color="#EF4444" />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+          </ScrollView>
+
+          <TouchableOpacity style={imagePickerStyles.doneBtn} onPress={onClose}>
+            <Text style={imagePickerStyles.doneBtnText}>Done</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const imagePickerStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
+  },
+  container: {
+    backgroundColor: '#1D2127',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: '70%',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFF',
+  },
+  closeBtn: {
+    padding: 4,
+  },
+  content: {
+    padding: 16,
+  },
+  imageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  imagePreview: {
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
+  },
+  imageInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  imageLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFF',
+    marginBottom: 2,
+  },
+  imageHint: {
+    fontSize: 13,
+    color: '#999',
+  },
+  removeBtn: {
+    padding: 8,
+  },
+  doneBtn: {
+    backgroundColor: '#4573DF',
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  doneBtnText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
 
 // ============================================================================
 // MERIT SUCCESS CARD - Gold & Royal Theme
@@ -315,6 +520,15 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Picker Modal */}
+      <ImagePickerModal
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        images={images}
+        onImagesChange={setImages}
+        cardType="merit"
+      />
     </View>
   );
 };
@@ -548,6 +762,15 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Picker Modal */}
+      <ImagePickerModal
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        images={images}
+        onImagesChange={setImages}
+        cardType="admission"
+      />
     </View>
   );
 };
@@ -780,6 +1003,15 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Picker Modal */}
+      <ImagePickerModal
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        images={images}
+        onImagesChange={setImages}
+        cardType="test"
+      />
     </View>
   );
 };
@@ -1019,6 +1251,15 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Image Picker Modal */}
+      <ImagePickerModal
+        visible={showImagePicker}
+        onClose={() => setShowImagePicker(false)}
+        images={images}
+        onImagesChange={setImages}
+        cardType="scholarship"
+      />
     </View>
   );
 };

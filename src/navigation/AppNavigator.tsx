@@ -46,6 +46,7 @@ import MoreScreen from '../screens/MoreScreen';
 // Legal Screens
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
+import FAQScreen from '../screens/FAQScreen';
 
 // User Feature Screens
 import NotificationsScreen from '../screens/NotificationsScreen';
@@ -100,7 +101,7 @@ import type {NavigatorScreenParams} from '@react-navigation/native';
 
 export type TabParamList = {
   Home: undefined;
-  Universities: undefined;
+  Universities: {searchQuery?: string} | undefined;
   Scholarships: undefined;
   More: undefined;
   Profile: undefined;
@@ -131,6 +132,7 @@ export type RootStackParamList = {
   MeritArchive: undefined;
   PrivacyPolicy: undefined;
   TermsOfService: undefined;
+  FAQ: undefined;
   // New Feature Screens
   Guides: undefined;
   Tools: undefined;
@@ -415,6 +417,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="TermsOfService"
             component={TermsOfServiceScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="FAQ"
+            component={FAQScreen}
             options={{headerShown: false}}
           />
           {/* New Feature Screens */}

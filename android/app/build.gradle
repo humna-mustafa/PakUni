@@ -90,8 +90,8 @@ android {
         applicationId "com.pakuni"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.2.1"
+        versionCode 5
+        versionName "1.2.2"
         
         // Enable multidex for larger apps
         multiDexEnabled true

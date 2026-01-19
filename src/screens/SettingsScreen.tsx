@@ -605,7 +605,7 @@ const SettingsScreen: React.FC = () => {
               iconColor="#4573DF"
               title="Help & FAQ"
               colors={colors}
-              onPress={() => navigation.navigate('Guides' as never)}
+              onPress={() => navigation.navigate('FAQ' as never)}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem

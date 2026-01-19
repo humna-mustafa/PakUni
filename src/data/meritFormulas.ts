@@ -154,10 +154,10 @@ export const MERIT_FORMULAS: MeritFormulaData[] = [
     matric_weightage: 10,
     inter_weightage: 30,
     entry_test_weightage: 60,
-    hafiz_bonus: 0,
+    hafiz_bonus: 20,
     applicable_fields: ['Computer Science', 'Software Engineering', 'Electrical Engineering', 'Data Science'],
     entry_test_name: 'FAST NAT (NU Test)',
-    formula_expression: 'Aggregate = (Matric% × 0.10) + (FSc% × 0.30) + (NAT% × 0.60)',
+    formula_expression: 'Aggregate = (Matric% × 0.10) + (FSc% × 0.30) + (NAT% × 0.60) + Hafiz Bonus (20 marks)',
     official_link: 'https://www.nu.edu.pk/Admissions',
   },
   {

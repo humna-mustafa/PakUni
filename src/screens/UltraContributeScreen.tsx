@@ -580,14 +580,19 @@ const EntitySelectionStep: React.FC<{
       setLoading(true);
       try {
         const universities = await hybridDataService.getUniversities();
+        const query = searchQuery.toLowerCase();
         const matched = universities
-          .filter(u => u.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .slice(0, 6)
+          .filter(u => 
+            u.name.toLowerCase().includes(query) || 
+            u.short_name.toLowerCase().includes(query) ||
+            ((u as any).city && (u as any).city.toLowerCase().includes(query))
+          )
+          .slice(0, 8)
           .map(u => ({
-            id: u.name.toLowerCase().replace(/\s+/g, '_'),
+            id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
             name: u.name,
             type: u.type || 'University',
-            location: (u as any).city || (u as any).location,
+            location: (u as any).city || (u as any).location || '',
             verified: true,
           }));
         setSuggestions(matched);

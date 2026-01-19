@@ -418,6 +418,51 @@ const PremiumGoalSettingScreen = () => {
     }
   };
 
+  // Create goal from template
+  const handleCreateFromTemplate = (template: typeof GOAL_TEMPLATES[0]) => {
+    const newGoal: UserGoal = {
+      id: `${template.id}-${Date.now()}`,
+      title: template.title,
+      iconName: template.iconName,
+      color: template.color,
+      progress: 0,
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      milestones: template.milestones.map(m => ({text: m, completed: false})),
+    };
+    setGoals(prev => [...prev, newGoal]);
+    closeAddModal();
+  };
+
+  // Create custom goal
+  const handleCreateCustomGoal = () => {
+    if (!newGoalTitle.trim()) {
+      return; // Don't create empty goals
+    }
+    
+    const newGoal: UserGoal = {
+      id: `custom-${Date.now()}`,
+      title: newGoalTitle.trim(),
+      iconName: 'flag-outline',
+      color: '#e74c3c',
+      progress: 0,
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      milestones: [
+        {text: 'Start working on this goal', completed: false},
+        {text: 'Make progress', completed: false},
+        {text: 'Complete the goal', completed: false},
+      ],
+    };
+    setGoals(prev => [...prev, newGoal]);
+    setNewGoalTitle('');
+    closeAddModal();
+  };
+
+  // Delete a goal
+  const handleDeleteGoal = (goalId: string) => {
+    setGoals(prev => prev.filter(g => g.id !== goalId));
+    closeDetailModal();
+  };
+
   const totalProgress = goals.length > 0
     ? Math.round(goals.reduce((sum, g) => sum + g.progress, 0) / goals.length)
     : 0;
@@ -578,7 +623,7 @@ const PremiumGoalSettingScreen = () => {
                 <TemplateCard
                   key={template.id}
                   template={template}
-                  onSelect={closeAddModal}
+                  onSelect={() => handleCreateFromTemplate(template)}
                   colors={colors}
                 />
               ))}
@@ -601,7 +646,9 @@ const PremiumGoalSettingScreen = () => {
                 onChangeText={setNewGoalTitle}
               />
             </View>
-            <TouchableOpacity style={styles.createBtn}>
+            <TouchableOpacity 
+              style={styles.createBtn}
+              onPress={handleCreateCustomGoal}>
               <LinearGradient
                 colors={['#e74c3c', '#c0392b']}
                 style={styles.createBtnGradient}>

@@ -136,12 +136,16 @@ const ScholarshipCard = ({
   colors,
   isDark,
   onPress,
+  onToggleFavorite,
+  isFavorited,
   index,
 }: {
   item: ScholarshipData;
   colors: any;
   isDark: boolean;
   onPress: () => void;
+  onToggleFavorite: (id: string) => void;
+  isFavorited: boolean;
   index: number;
 }) => {
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -264,6 +268,24 @@ const ScholarshipCard = ({
                 {item.coverage_percentage}% Coverage
               </Text>
             </View>
+            
+            {/* Favorite Button */}
+            <TouchableOpacity
+              style={[styles.cardFavoriteBtn, {backgroundColor: isFavorited ? '#FEE2E2' : colors.background}]}
+              onPress={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(item.id);
+              }}
+              hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+              accessibilityRole="button"
+              accessibilityLabel={isFavorited ? "Remove from favorites" : "Add to favorites"}>
+              <Icon 
+                name={isFavorited ? "heart" : "heart-outline"} 
+                family="Ionicons" 
+                size={16} 
+                color={isFavorited ? "#EF4444" : colors.textSecondary} 
+              />
+            </TouchableOpacity>
           </View>
 
           {/* Header */}
@@ -431,6 +453,30 @@ const PremiumScholarshipsScreen = () => {
       logger.error('Error toggling favorite', error, 'Scholarships');
     }
   }, [selectedScholarship, isFav, isGuest, addFavorite, removeFavorite]);
+
+  // Toggle favorite from card (not modal)
+  const handleCardToggleFavorite = useCallback(async (scholarshipId: string) => {
+    if (isGuest) {
+      Alert.alert(
+        'Sign In Required',
+        'Please sign in to save scholarships to your favorites.',
+        [{text: 'OK'}]
+      );
+      return;
+    }
+    
+    try {
+      if (isFavorite(scholarshipId, 'scholarship')) {
+        await removeFavorite(scholarshipId, 'scholarship');
+        Haptics.light();
+      } else {
+        await addFavorite(scholarshipId, 'scholarship');
+        Haptics.success();
+      }
+    } catch (error) {
+      logger.error('Error toggling favorite', error, 'Scholarships');
+    }
+  }, [isGuest, isFavorite, addFavorite, removeFavorite]);
 
   // Track search queries for analytics
   useEffect(() => {
@@ -1015,6 +1061,8 @@ const PremiumScholarshipsScreen = () => {
               colors={colors}
               isDark={isDark}
               index={index}
+              onToggleFavorite={handleCardToggleFavorite}
+              isFavorited={isFavorite(item.id, 'scholarship')}
               onPress={() => {
                 // Track scholarship view for analytics
                 analytics.trackScholarshipView(item.name, item.name);
@@ -1621,9 +1669,18 @@ const styles = StyleSheet.create({
   // NEW: Enhanced card styles for university availability and status
   badgesRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: SPACING.xs,
+    gap: SPACING.xs,
+  },
+  cardFavoriteBtn: {
+    marginLeft: 'auto',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   statusBadge: {
     flexDirection: 'row',

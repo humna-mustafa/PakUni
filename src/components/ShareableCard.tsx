@@ -157,7 +157,7 @@ interface MeritSuccessCardProps {
   aggregate: number;
   universityName: string;
   universityShortName: string;
-  chance: 'high' | 'medium' | 'low';
+  chance: 'high' | 'medium' | 'low' | 'unlikely';
   breakdown?: {
     matricContribution: number;
     interContribution: number;
@@ -175,6 +175,8 @@ export const MeritSuccessCard = forwardRef<View, MeritSuccessCardProps>(
           return 'Good Chance';
         case 'low':
           return 'Fair Chance';
+        case 'unlikely':
+          return 'Needs Improvement';
       }
     };
 
@@ -186,6 +188,8 @@ export const MeritSuccessCard = forwardRef<View, MeritSuccessCardProps>(
           return '📈';
         case 'low':
           return '💪';
+        case 'unlikely':
+          return '📚';
       }
     };
 
@@ -197,6 +201,8 @@ export const MeritSuccessCard = forwardRef<View, MeritSuccessCardProps>(
           return ['#4573DF', '#3660C9', '#3730A3'];
         case 'low':
           return ['#F59E0B', '#D97706', '#B45309'];
+        case 'unlikely':
+          return ['#EF4444', '#DC2626', '#B91C1C'];
       }
     };
 

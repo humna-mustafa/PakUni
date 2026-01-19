@@ -67,6 +67,13 @@ export interface CompareShareData {
     city: string;
     ranking: string | null;
   };
+  university3?: {
+    name: string;
+    shortName: string;
+    type: string;
+    city: string;
+    ranking: string | null;
+  };
 }
 
 export interface PollShareData {
@@ -255,21 +262,34 @@ export const shareMeritSuccessCard = async (
 };
 
 /**
- * Share university comparison
+ * Share university comparison (supports 2 or 3 universities)
  */
 export const shareComparison = async (
   data: CompareShareData
 ): Promise<boolean> => {
   const uni1 = data.university1;
   const uni2 = data.university2;
+  const uni3 = data.university3;
   
   const ranking1 = uni1.ranking ? ` (Rank #${uni1.ranking})` : '';
   const ranking2 = uni2.ranking ? ` (Rank #${uni2.ranking})` : '';
   
-  const message = `🏛️ University Comparison\n\n${uni1.shortName}${ranking1}\n• ${uni1.type} | ${uni1.city}\n\n🆚\n\n${uni2.shortName}${ranking2}\n• ${uni2.type} | ${uni2.city}\n\nCompare more universities on PakUni App! 📚`;
+  let message = `🏛️ University Comparison\n\n${uni1.shortName}${ranking1}\n• ${uni1.type} | ${uni1.city}\n\n🆚\n\n${uni2.shortName}${ranking2}\n• ${uni2.type} | ${uni2.city}`;
+  
+  // Add third university if present
+  if (uni3) {
+    const ranking3 = uni3.ranking ? ` (Rank #${uni3.ranking})` : '';
+    message += `\n\n🆚\n\n${uni3.shortName}${ranking3}\n• ${uni3.type} | ${uni3.city}`;
+  }
+  
+  message += '\n\nCompare more universities on PakUni App! 📚';
+  
+  const title = uni3 
+    ? `${uni1.shortName} vs ${uni2.shortName} vs ${uni3.shortName}`
+    : `${uni1.shortName} vs ${uni2.shortName}`;
   
   return shareContent({
-    title: `${uni1.shortName} vs ${uni2.shortName}`,
+    title,
     message,
   });
 };
@@ -295,19 +315,26 @@ export const sharePollResults = async (
 
 /**
  * Get chance level based on aggregate compared to historical merits
+ * More realistic thresholds for Pakistan university admissions
  */
-export const getChanceLevel = (aggregate: number, closingMerit?: number): 'high' | 'medium' | 'low' => {
+export const getChanceLevel = (aggregate: number, closingMerit?: number): 'high' | 'medium' | 'low' | 'unlikely' => {
+  // If aggregate is too low, be honest about chances
+  if (aggregate < 40) return 'unlikely';
+  
   if (!closingMerit) {
     // Default thresholds if no historical data
+    // These reflect typical Pakistani university merit requirements
     if (aggregate >= 85) return 'high';
     if (aggregate >= 70) return 'medium';
-    return 'low';
+    if (aggregate >= 55) return 'low';
+    return 'unlikely';
   }
   
   const diff = aggregate - closingMerit;
   if (diff >= 5) return 'high';
   if (diff >= -3) return 'medium';
-  return 'low';
+  if (diff >= -10) return 'low';
+  return 'unlikely';
 };
 
 // ============================================================================

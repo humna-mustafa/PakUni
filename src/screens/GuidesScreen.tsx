@@ -64,6 +64,56 @@ interface GuideStep {
   important?: boolean;
 }
 
+// Helper function to calculate accurate read time based on actual content
+const calculateReadTime = (guide: Guide): string => {
+  let wordCount = 0;
+  
+  // Count words in description
+  wordCount += guide.description.split(/\s+/).length;
+  
+  // Count words in content
+  if (guide.content) {
+    wordCount += guide.content.split(/\s+/).length;
+  }
+  
+  // Count words in steps
+  if (guide.steps) {
+    guide.steps.forEach(step => {
+      wordCount += step.title.split(/\s+/).length;
+      wordCount += step.description.split(/\s+/).length;
+      if (step.tips) {
+        step.tips.forEach(tip => {
+          wordCount += tip.split(/\s+/).length;
+        });
+      }
+    });
+  }
+  
+  // Count words in tips
+  if (guide.tips) {
+    guide.tips.forEach(tip => {
+      wordCount += tip.split(/\s+/).length;
+    });
+  }
+  
+  // Count words in resources
+  if (guide.resources) {
+    guide.resources.forEach(resource => {
+      wordCount += resource.title.split(/\s+/).length;
+    });
+  }
+  
+  // Average reading speed: 200-250 words per minute
+  // We use 200 for educational content (takes longer to process)
+  const readingSpeedWPM = 200;
+  const minutes = Math.ceil(wordCount / readingSpeedWPM);
+  
+  // Minimum 1 minute, maximum capped at actual estimate
+  if (minutes < 1) return '1 min';
+  if (minutes > 30) return '30+ min';
+  return `${minutes} min`;
+};
+
 // ============================================================================
 // GUIDE CATEGORIES
 // ============================================================================
@@ -810,7 +860,7 @@ const GuideListItem: React.FC<GuideListItemProps> = ({guide, onPress, colors}) =
           <View style={guideItemStyles.meta}>
             <Icon name="time-outline" size={12} color={colors.textSecondary} />
             <Text style={[guideItemStyles.metaText, {color: colors.textSecondary}]}>
-              {guide.readTime}
+              {calculateReadTime(guide)}
             </Text>
           </View>
         </View>
@@ -937,7 +987,7 @@ const GuideDetail: React.FC<GuideDetailProps> = ({guide, onClose, colors}) => {
           <Text style={detailStyles.headerTitle}>{guide.title}</Text>
           <View style={detailStyles.headerMeta}>
             <Icon name="time-outline" size={14} color="rgba(255,255,255,0.8)" />
-            <Text style={detailStyles.headerMetaText}>{guide.readTime}</Text>
+            <Text style={detailStyles.headerMetaText}>{calculateReadTime(guide)}</Text>
             <View style={detailStyles.difficultyBadge}>
               <Text style={detailStyles.difficultyText}>
                 {guide.difficulty.charAt(0).toUpperCase() + guide.difficulty.slice(1)}

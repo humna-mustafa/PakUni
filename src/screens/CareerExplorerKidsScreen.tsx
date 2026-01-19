@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  Modal,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, FONTS, BORDER_RADIUS} from '../constants/theme';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
+import {Haptics} from '../utils/haptics';
 
 const {width} = Dimensions.get('window');
 
@@ -234,10 +237,60 @@ const KIDS_CAREERS: Career[] = [
   },
 ];
 
+// Quiz questions for each career type
+const CAREER_QUIZ_QUESTIONS: Record<string, {question: string; options: string[]; correctIndex: number; explanation: string}[]> = {
+  doctor: [
+    {question: "Do you like helping people feel better?", options: ["Yes! I love helping!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Great! Doctors need to love helping people."},
+    {question: "Are you okay with studying for many years?", options: ["Yes, I'm patient!", "Maybe", "No, that's too long"], correctIndex: 0, explanation: "Being a doctor requires about 6+ years of study!"},
+    {question: "Can you stay calm when someone is hurt?", options: ["Yes, I stay calm", "I try to", "I get scared"], correctIndex: 0, explanation: "Doctors need to stay calm in emergencies."},
+  ],
+  engineer: [
+    {question: "Do you like building things?", options: ["Yes! I love building!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Engineers build amazing things!"},
+    {question: "Are you good at solving puzzles?", options: ["Yes, I love puzzles!", "Kind of", "Not really"], correctIndex: 0, explanation: "Engineering is like solving big puzzles!"},
+    {question: "Do you enjoy math?", options: ["Yes!", "It's okay", "No"], correctIndex: 0, explanation: "Math is an important tool for engineers."},
+  ],
+  pilot: [
+    {question: "Do you love airplanes?", options: ["Yes! They're amazing!", "They're okay", "Not really"], correctIndex: 0, explanation: "Pilots fly these incredible machines!"},
+    {question: "Are you brave?", options: ["Yes, very brave!", "Kind of", "Not really"], correctIndex: 0, explanation: "Pilots need to be brave and confident!"},
+    {question: "Can you stay focused for long periods?", options: ["Yes!", "Sometimes", "I get distracted easily"], correctIndex: 0, explanation: "Flying requires lots of concentration!"},
+  ],
+  teacher: [
+    {question: "Do you enjoy explaining things to others?", options: ["Yes! I love teaching!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Teachers help others learn new things!"},
+    {question: "Are you patient?", options: ["Yes, very patient!", "Kind of", "Not really"], correctIndex: 0, explanation: "Patience is a teacher's superpower!"},
+    {question: "Do you like being around kids?", options: ["Yes!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Teachers work with students every day!"},
+  ],
+  artist: [
+    {question: "Do you love drawing or painting?", options: ["Yes! All the time!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Artists express themselves through art!"},
+    {question: "Are you creative?", options: ["Yes, very!", "Kind of", "Not really"], correctIndex: 0, explanation: "Creativity is an artist's main tool!"},
+    {question: "Do you see the world in colors?", options: ["Yes!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Artists notice beauty everywhere!"},
+  ],
+  scientist: [
+    {question: "Do you like asking 'Why?' about everything?", options: ["Yes! I'm curious!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Scientists are always curious!"},
+    {question: "Do you enjoy experiments?", options: ["Yes!", "Sometimes", "No"], correctIndex: 0, explanation: "Experiments help scientists discover new things!"},
+    {question: "Are you patient enough to try again if something fails?", options: ["Yes!", "Sometimes", "I give up easily"], correctIndex: 0, explanation: "Scientists learn from failures!"},
+  ],
+  athlete: [
+    {question: "Do you love playing sports?", options: ["Yes! Every day!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Athletes play sports professionally!"},
+    {question: "Can you handle losing sometimes?", options: ["Yes, I learn from it!", "It's hard but okay", "No, I hate losing"], correctIndex: 0, explanation: "Even champions lose sometimes!"},
+    {question: "Are you willing to exercise every day?", options: ["Yes!", "Maybe", "No"], correctIndex: 0, explanation: "Athletes train their bodies daily!"},
+  ],
+  youtuber: [
+    {question: "Do you enjoy making videos?", options: ["Yes! It's fun!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Content creators make videos people love!"},
+    {question: "Are you comfortable being on camera?", options: ["Yes!", "A little nervous", "No way!"], correctIndex: 0, explanation: "Being on camera gets easier with practice!"},
+    {question: "Can you be consistent and post regularly?", options: ["Yes!", "I'll try", "That's hard"], correctIndex: 0, explanation: "Success needs consistency!"},
+  ],
+};
+
 const CareerExplorerKidsScreen = () => {
   const {colors, isDark} = useTheme();
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const [showDetail, setShowDetail] = useState(false);
+  
+  // Quiz state
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -245,6 +298,63 @@ const CareerExplorerKidsScreen = () => {
       case 'Medium': return colors.warning;
       case 'Hard': return '#FF7043';
       default: return colors.error;
+    }
+  };
+
+  // Start quiz for selected career
+  const handleStartQuiz = () => {
+    if (!selectedCareer) return;
+    setCurrentQuestion(0);
+    setScore(0);
+    setQuizCompleted(false);
+    setShowQuiz(true);
+    Haptics.light();
+  };
+
+  // Handle quiz answer
+  const handleAnswer = (answerIndex: number) => {
+    if (!selectedCareer) return;
+    const questions = CAREER_QUIZ_QUESTIONS[selectedCareer.id] || [];
+    const currentQ = questions[currentQuestion];
+    
+    if (answerIndex === currentQ.correctIndex) {
+      setScore(prev => prev + 1);
+      Haptics.success();
+    } else {
+      Haptics.light();
+    }
+    
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else {
+      setQuizCompleted(true);
+    }
+  };
+
+  // Get quiz result message
+  const getQuizResult = () => {
+    if (!selectedCareer) return {title: '', message: '', emoji: ''};
+    const questions = CAREER_QUIZ_QUESTIONS[selectedCareer.id] || [];
+    const percentage = (score / questions.length) * 100;
+    
+    if (percentage >= 80) {
+      return {
+        title: "Perfect Match! 🎉",
+        message: `You would make an AMAZING ${selectedCareer.title}! You have all the right qualities!`,
+        emoji: '🌟',
+      };
+    } else if (percentage >= 50) {
+      return {
+        title: "Good Match! 👍",
+        message: `${selectedCareer.title} could be a good career for you! Keep exploring and learning!`,
+        emoji: '✨',
+      };
+    } else {
+      return {
+        title: "Keep Exploring! 🔍",
+        message: `Maybe try exploring other careers too! There might be something else perfect for you!`,
+        emoji: '🚀',
+      };
     }
   };
 
@@ -399,7 +509,9 @@ const CareerExplorerKidsScreen = () => {
         </View>
 
         {/* Quiz Button */}
-        <TouchableOpacity style={[styles.quizBtn, {backgroundColor: selectedCareer.color}]}>
+        <TouchableOpacity 
+          style={[styles.quizBtn, {backgroundColor: selectedCareer.color}]}
+          onPress={handleStartQuiz}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
             <View style={{marginRight: 8}}>
               <Icon name="game-controller-outline" family="Ionicons" size={20} color={colors.white} />
@@ -410,6 +522,97 @@ const CareerExplorerKidsScreen = () => {
 
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
+    );
+  };
+
+  // Render Quiz Modal
+  const renderQuizModal = () => {
+    if (!selectedCareer) return null;
+    const questions = CAREER_QUIZ_QUESTIONS[selectedCareer.id] || [];
+    const currentQ = questions[currentQuestion];
+    const result = getQuizResult();
+    
+    return (
+      <Modal
+        visible={showQuiz}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowQuiz(false)}>
+        <View style={styles.quizModalOverlay}>
+          <View style={[styles.quizModalContent, {backgroundColor: colors.card}]}>
+            {/* Header */}
+            <View style={[styles.quizModalHeader, {backgroundColor: selectedCareer.color}]}>
+              <TouchableOpacity 
+                style={styles.quizCloseBtn}
+                onPress={() => setShowQuiz(false)}>
+                <Icon name="close" family="Ionicons" size={24} color="#FFF" />
+              </TouchableOpacity>
+              <Icon name={selectedCareer.iconName} family="Ionicons" size={40} color="#FFF" />
+              <Text style={styles.quizModalTitle}>
+                {quizCompleted ? 'Quiz Complete!' : `Question ${currentQuestion + 1}/${questions.length}`}
+              </Text>
+            </View>
+            
+            {/* Quiz Content */}
+            <View style={styles.quizBody}>
+              {quizCompleted ? (
+                // Result Screen
+                <View style={styles.quizResult}>
+                  <Text style={styles.resultEmoji}>{result.emoji}</Text>
+                  <Text style={[styles.resultTitle, {color: colors.text}]}>{result.title}</Text>
+                  <Text style={[styles.resultMessage, {color: colors.textSecondary}]}>{result.message}</Text>
+                  <Text style={[styles.resultScore, {color: selectedCareer.color}]}>
+                    Score: {score}/{questions.length}
+                  </Text>
+                  <TouchableOpacity
+                    style={[styles.retryBtn, {backgroundColor: selectedCareer.color}]}
+                    onPress={() => {
+                      setCurrentQuestion(0);
+                      setScore(0);
+                      setQuizCompleted(false);
+                    }}>
+                    <Icon name="refresh" family="Ionicons" size={18} color="#FFF" />
+                    <Text style={styles.retryBtnText}>Try Again</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.doneBtn, {borderColor: selectedCareer.color}]}
+                    onPress={() => setShowQuiz(false)}>
+                    <Text style={[styles.doneBtnText, {color: selectedCareer.color}]}>Done</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                // Question Screen
+                <>
+                  <Text style={[styles.quizQuestion, {color: colors.text}]}>
+                    {currentQ?.question}
+                  </Text>
+                  <View style={styles.quizOptions}>
+                    {currentQ?.options.map((option, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.quizOption,
+                          {
+                            backgroundColor: index === 0 ? selectedCareer.color + '15' : colors.background,
+                            borderColor: index === 0 ? selectedCareer.color : colors.border,
+                          },
+                        ]}
+                        onPress={() => handleAnswer(index)}>
+                        <Text style={[
+                          styles.quizOptionText,
+                          {color: index === 0 ? selectedCareer.color : colors.text}
+                        ]}>
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
     );
   };
 
@@ -439,6 +642,9 @@ const CareerExplorerKidsScreen = () => {
       ) : (
         renderDetailView()
       )}
+      
+      {/* Quiz Modal */}
+      {renderQuizModal()}
     </SafeAreaView>
   );
 };
@@ -663,6 +869,111 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quizBtnText: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: 'bold',
+  },
+  // Quiz Modal Styles
+  quizModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: SPACING.lg,
+  },
+  quizModalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: BORDER_RADIUS.xl,
+    overflow: 'hidden',
+  },
+  quizModalHeader: {
+    padding: SPACING.xl,
+    alignItems: 'center',
+  },
+  quizCloseBtn: {
+    position: 'absolute',
+    top: SPACING.md,
+    right: SPACING.md,
+    padding: 4,
+  },
+  quizModalTitle: {
+    color: '#FFF',
+    fontSize: FONTS.sizes.lg,
+    fontWeight: 'bold',
+    marginTop: SPACING.sm,
+  },
+  quizBody: {
+    padding: SPACING.lg,
+  },
+  quizQuestion: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: SPACING.xl,
+    lineHeight: 28,
+  },
+  quizOptions: {
+    gap: SPACING.md,
+  },
+  quizOption: {
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.lg,
+    borderWidth: 2,
+  },
+  quizOptionText: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  quizResult: {
+    alignItems: 'center',
+    padding: SPACING.lg,
+  },
+  resultEmoji: {
+    fontSize: 64,
+    marginBottom: SPACING.md,
+  },
+  resultTitle: {
+    fontSize: FONTS.sizes.xl,
+    fontWeight: 'bold',
+    marginBottom: SPACING.sm,
+  },
+  resultMessage: {
+    fontSize: FONTS.sizes.md,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: SPACING.md,
+  },
+  resultScore: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: 'bold',
+    marginBottom: SPACING.xl,
+  },
+  retryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    borderRadius: BORDER_RADIUS.lg,
+    gap: SPACING.xs,
+    width: '100%',
+    marginBottom: SPACING.sm,
+  },
+  retryBtnText: {
+    color: '#FFF',
+    fontSize: FONTS.sizes.md,
+    fontWeight: 'bold',
+  },
+  doneBtn: {
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    borderRadius: BORDER_RADIUS.lg,
+    borderWidth: 2,
+    width: '100%',
+    alignItems: 'center',
+  },
+  doneBtnText: {
     fontSize: FONTS.sizes.md,
     fontWeight: 'bold',
   },

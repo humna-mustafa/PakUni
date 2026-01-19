@@ -190,12 +190,14 @@ const ResultCard = ({
   matchReasons,
   index,
   colors,
+  onViewDetails,
 }: {
   university: any;
   matchScore: number;
   matchReasons: string[];
   index: number;
   colors: any;
+  onViewDetails: () => void;
 }) => {
   const slideAnim = useRef(new Animated.Value(100)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -316,7 +318,8 @@ const ResultCard = ({
         </View>
 
         <TouchableOpacity
-          style={[styles.viewDetailBtn, {borderColor: colors.primary}]}>
+          style={[styles.viewDetailBtn, {borderColor: colors.primary}]}
+          onPress={onViewDetails}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6}}>
             <Text style={[styles.viewDetailText, {color: colors.primary}]}>View Details</Text>
             <Icon name="arrow-forward" family="Ionicons" size={16} color={colors.primary} />
@@ -330,20 +333,46 @@ const ResultCard = ({
 
 const PremiumRecommendationsScreen = () => {
   const {colors, isDark} = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [currentStep, setCurrentStep] = useState(1);
   const [showResults, setShowResults] = useState(false);
   
-  // Form state
+  // Form state - now with customizable total marks (default 1200 as per 2024+ Pakistan)
   const [matricMarks, setMatricMarks] = useState('');
+  const [matricTotal, setMatricTotal] = useState('1200');
   const [fscMarks, setFscMarks] = useState('');
+  const [fscTotal, setFscTotal] = useState('1200');
   const [entryTestScore, setEntryTestScore] = useState('');
+  const [entryTestTotal, setEntryTestTotal] = useState('200');
   const [preferredPrograms, setPreferredPrograms] = useState<string[]>([]);
   const [preferredCities, setPreferredCities] = useState<string[]>([]);
   const [preferredType, setPreferredType] = useState('');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const contentAnim = useRef(new Animated.Value(0)).current;
+
+  // Validation helpers
+  const validateNumericInput = (value: string) => {
+    // Only allow numbers and decimals
+    return /^[0-9]*\.?[0-9]*$/.test(value);
+  };
+
+  const handleMarksChange = (value: string, setter: (val: string) => void, total: string) => {
+    if (!validateNumericInput(value)) return;
+    
+    const numValue = parseFloat(value) || 0;
+    const numTotal = parseFloat(total) || 1200;
+    
+    if (numValue > numTotal) {
+      setValidationError(`Marks cannot exceed total (${total})`);
+      setTimeout(() => setValidationError(null), 3000);
+      return;
+    }
+    
+    setter(value);
+    setValidationError(null);
+  };
 
   useEffect(() => {
     Animated.parallel([
@@ -391,22 +420,39 @@ const PremiumRecommendationsScreen = () => {
     }
   };
 
-  // Generate recommendations using the real engine
+  // Generate recommendations using the real engine with city filtering
   const recommendations = React.useMemo(() => {
     if (!showResults) return [];
     
-    return getRecommendations({
+    const allRecommendations = getRecommendations({
       matricMarks: parseFloat(matricMarks) || 0,
-      matricTotal: 1100, // Default total
+      matricTotal: parseFloat(matricTotal) || 1200,
       interMarks: parseFloat(fscMarks) || 0,
-      interTotal: 1100, // Default total
+      interTotal: parseFloat(fscTotal) || 1200,
       entryTestScore: parseFloat(entryTestScore) || undefined,
-      entryTestTotal: 200, // Default total
+      entryTestTotal: parseFloat(entryTestTotal) || 200,
       preferredPrograms,
       preferredCities,
       universityType: preferredType === 'Public' ? 'Public' : preferredType === 'Private' ? 'Private' : 'Both',
     });
-  }, [showResults, matricMarks, fscMarks, entryTestScore, preferredPrograms, preferredCities, preferredType]);
+    
+    // STRICT CITY FILTERING: Only show universities in selected cities
+    if (preferredCities.length > 0) {
+      return allRecommendations.filter(uni => 
+        preferredCities.some(city => 
+          uni.city.toLowerCase().includes(city.toLowerCase()) ||
+          city.toLowerCase().includes(uni.city.toLowerCase())
+        )
+      );
+    }
+    
+    return allRecommendations;
+  }, [showResults, matricMarks, matricTotal, fscMarks, fscTotal, entryTestScore, entryTestTotal, preferredPrograms, preferredCities, preferredType]);
+
+  // Handle navigation to university details
+  const handleViewDetails = (universityId: string) => {
+    navigation.navigate('UniversityDetail', {universityId});
+  };
 
   if (showResults) {
     return (
@@ -428,23 +474,34 @@ const PremiumRecommendationsScreen = () => {
           <Icon name="trophy" family="Ionicons" size={48} color="#FFFFFF" />
           <Text style={styles.resultsTitle}>Your Matches!</Text>
           <Text style={styles.resultsSubtitle}>
-            Based on your preferences, here are your top university matches
+            Found {recommendations.length} universities matching your criteria
           </Text>
         </LinearGradient>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.resultsContainer}>
-          {recommendations.map((uni, index) => (
-            <ResultCard
-              key={uni.short_name || uni.name}
-              university={uni}
-              matchScore={uni.matchScore}
-              matchReasons={uni.matchReasons || []}
-              index={index}
-              colors={colors}
-            />
-          ))}
+          {recommendations.length > 0 ? (
+            recommendations.map((uni, index) => (
+              <ResultCard
+                key={uni.short_name || uni.name}
+                university={uni}
+                matchScore={uni.matchScore}
+                matchReasons={uni.matchReasons || []}
+                index={index}
+                colors={colors}
+                onViewDetails={() => handleViewDetails(uni.short_name || uni.id)}
+              />
+            ))
+          ) : (
+            <View style={[styles.noResultsCard, {backgroundColor: colors.card}]}>
+              <Icon name="search-outline" family="Ionicons" size={48} color={colors.textSecondary} />
+              <Text style={[styles.noResultsTitle, {color: colors.text}]}>No Matches Found</Text>
+              <Text style={[styles.noResultsText, {color: colors.textSecondary}]}>
+                Try selecting different cities or programs to find more universities.
+              </Text>
+            </View>
+          )}
 
           {/* Tips Card */}
           <View style={[styles.tipsCard, {backgroundColor: colors.card}]}>
@@ -555,6 +612,16 @@ const PremiumRecommendationsScreen = () => {
               ],
             },
           ]}>
+          {/* Validation Error Banner */}
+          {validationError && (
+            <View style={[styles.validationError, {backgroundColor: colors.error + '20'}]}>
+              <Icon name="warning" family="Ionicons" size={18} color={colors.error} />
+              <Text style={[styles.validationErrorText, {color: colors.error}]}>
+                {validationError}
+              </Text>
+            </View>
+          )}
+
           {/* Step 1: Academic Info */}
           {currentStep === 1 && (
             <View style={styles.stepContent}>
@@ -563,41 +630,86 @@ const PremiumRecommendationsScreen = () => {
                 <Text style={[styles.stepTitle, {color: colors.text}]}>Academic Information</Text>
               </View>
               <Text style={[styles.stepDescription, {color: colors.textSecondary}]}>
-                Enter your marks to calculate merit
+                Enter your marks to calculate merit (new total marks: 1200 for 2024+)
               </Text>
 
-              <InputField
-                label="Matric Marks"
-                value={matricMarks}
-                onChangeText={setMatricMarks}
-                placeholder="Enter your marks"
-                iconName="document-text-outline"
-                colors={colors}
-                keyboardType="numeric"
-                suffix="/ 1100"
-              />
+              {/* Matric Marks Row */}
+              <View style={styles.marksRow}>
+                <View style={styles.marksObtained}>
+                  <InputField
+                    label="Matric Obtained"
+                    value={matricMarks}
+                    onChangeText={(val: string) => handleMarksChange(val, setMatricMarks, matricTotal)}
+                    placeholder="Obtained"
+                    iconName="document-text-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.marksTotal}>
+                  <InputField
+                    label="Total"
+                    value={matricTotal}
+                    onChangeText={setMatricTotal}
+                    placeholder="1200"
+                    iconName="calculator-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
 
-              <InputField
-                label="FSc / Intermediate Marks"
-                value={fscMarks}
-                onChangeText={setFscMarks}
-                placeholder="Enter your marks"
-                iconName="book-outline"
-                colors={colors}
-                keyboardType="numeric"
-                suffix="/ 1100"
-              />
+              {/* FSc/Inter Marks Row */}
+              <View style={styles.marksRow}>
+                <View style={styles.marksObtained}>
+                  <InputField
+                    label="FSc / Inter Obtained"
+                    value={fscMarks}
+                    onChangeText={(val: string) => handleMarksChange(val, setFscMarks, fscTotal)}
+                    placeholder="Obtained"
+                    iconName="book-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.marksTotal}>
+                  <InputField
+                    label="Total"
+                    value={fscTotal}
+                    onChangeText={setFscTotal}
+                    placeholder="1200"
+                    iconName="calculator-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
 
-              <InputField
-                label="Entry Test Score (Optional)"
-                value={entryTestScore}
-                onChangeText={setEntryTestScore}
-                placeholder="If taken"
-                iconName="create-outline"
-                colors={colors}
-                keyboardType="numeric"
-                suffix="/ 200"
-              />
+              {/* Entry Test Row */}
+              <View style={styles.marksRow}>
+                <View style={styles.marksObtained}>
+                  <InputField
+                    label="Entry Test (Optional)"
+                    value={entryTestScore}
+                    onChangeText={(val: string) => handleMarksChange(val, setEntryTestScore, entryTestTotal)}
+                    placeholder="If taken"
+                    iconName="create-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.marksTotal}>
+                  <InputField
+                    label="Total"
+                    value={entryTestTotal}
+                    onChangeText={setEntryTestTotal}
+                    placeholder="200"
+                    iconName="calculator-outline"
+                    colors={colors}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
             </View>
           )}
 
@@ -670,7 +782,7 @@ const PremiumRecommendationsScreen = () => {
                     <Text style={[styles.reviewLabel, {color: colors.textSecondary}]}>Matric Marks</Text>
                   </View>
                   <Text style={[styles.reviewValue, {color: colors.text}]}>
-                    {matricMarks} / 1100
+                    {matricMarks} / {matricTotal}
                   </Text>
                 </View>
                 <View style={[styles.reviewDivider, {backgroundColor: colors.border}]} />
@@ -681,10 +793,25 @@ const PremiumRecommendationsScreen = () => {
                     <Text style={[styles.reviewLabel, {color: colors.textSecondary}]}>FSc Marks</Text>
                   </View>
                   <Text style={[styles.reviewValue, {color: colors.text}]}>
-                    {fscMarks} / 1100
+                    {fscMarks} / {fscTotal}
                   </Text>
                 </View>
                 <View style={[styles.reviewDivider, {backgroundColor: colors.border}]} />
+
+                {entryTestScore && (
+                  <>
+                    <View style={styles.reviewSection}>
+                      <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+                        <Icon name="create-outline" family="Ionicons" size={16} color={colors.textSecondary} />
+                        <Text style={[styles.reviewLabel, {color: colors.textSecondary}]}>Entry Test</Text>
+                      </View>
+                      <Text style={[styles.reviewValue, {color: colors.text}]}>
+                        {entryTestScore} / {entryTestTotal}
+                      </Text>
+                    </View>
+                    <View style={[styles.reviewDivider, {backgroundColor: colors.border}]} />
+                  </>
+                )}
                 
                 <View style={styles.reviewSection}>
                   <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
@@ -700,7 +827,7 @@ const PremiumRecommendationsScreen = () => {
                 <View style={styles.reviewSection}>
                   <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
                     <Icon name="location-outline" family="Ionicons" size={16} color={colors.textSecondary} />
-                    <Text style={[styles.reviewLabel, {color: colors.textSecondary}]}>Cities</Text>
+                    <Text style={[styles.reviewLabel, {color: colors.textSecondary}]}>Cities (Filter Active)</Text>
                   </View>
                   <Text style={[styles.reviewValue, {color: colors.text}]}>
                     {preferredCities.join(', ') || 'Not selected'}
@@ -1147,6 +1274,48 @@ const styles = StyleSheet.create({
   tipText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  // New styles for marks input rows
+  marksRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginBottom: SPACING.xs,
+  },
+  marksObtained: {
+    flex: 2,
+  },
+  marksTotal: {
+    flex: 1,
+  },
+  // Validation error styles
+  validationError: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: SPACING.sm,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.sm,
+  },
+  validationErrorText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+  },
+  // No results styles
+  noResultsCard: {
+    padding: SPACING.xl,
+    borderRadius: RADIUS.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noResultsTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '700',
+    marginTop: SPACING.md,
+  },
+  noResultsText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    textAlign: 'center',
+    marginTop: SPACING.xs,
   },
 });
 

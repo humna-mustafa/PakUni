@@ -20,6 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
+import {useTheme} from '../../contexts/ThemeContext';
 
 // ============================================================================
 // TYPES
@@ -91,6 +92,12 @@ interface WeightSliderProps {
   onChange: (value: number) => void;
   color: string;
   icon: string;
+  themeColors?: {
+    text: string;
+    textSecondary: string;
+    border: string;
+    card: string;
+  };
 }
 
 const WeightSlider: React.FC<WeightSliderProps> = ({
@@ -99,6 +106,7 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
   onChange,
   color,
   icon,
+  themeColors,
 }) => {
   const handleIncrement = () => {
     if (value < 100) onChange(value + 5);
@@ -108,21 +116,26 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
     if (value > 0) onChange(value - 5);
   };
 
+  const buttonBg = themeColors?.card || '#F1F5F9';
+  const trackBg = themeColors?.border || '#E2E8F0';
+  const labelColor = themeColors?.textSecondary || '#475569';
+  const iconColor = themeColors?.textSecondary || '#64748B';
+
   return (
     <View style={weightStyles.container}>
       <View style={weightStyles.header}>
         <Icon name={icon} size={18} color={color} />
-        <Text style={weightStyles.label}>{label}</Text>
+        <Text style={[weightStyles.label, {color: labelColor}]}>{label}</Text>
         <Text style={[weightStyles.value, {color}]}>{value}%</Text>
       </View>
       <View style={weightStyles.sliderRow}>
         <TouchableOpacity
           onPress={handleDecrement}
-          style={weightStyles.button}
+          style={[weightStyles.button, {backgroundColor: buttonBg}]}
           activeOpacity={0.7}>
-          <Icon name="remove" size={20} color="#64748B" />
+          <Icon name="remove" size={20} color={iconColor} />
         </TouchableOpacity>
-        <View style={weightStyles.track}>
+        <View style={[weightStyles.track, {backgroundColor: trackBg}]}>
           <Animated.View
             style={[
               weightStyles.fill,
@@ -132,9 +145,9 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
         </View>
         <TouchableOpacity
           onPress={handleIncrement}
-          style={weightStyles.button}
+          style={[weightStyles.button, {backgroundColor: buttonBg}]}
           activeOpacity={0.7}>
-          <Icon name="add" size={20} color="#64748B" />
+          <Icon name="add" size={20} color={iconColor} />
         </TouchableOpacity>
       </View>
     </View>
@@ -154,7 +167,6 @@ const weightStyles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: '#475569',
     marginLeft: SPACING.sm,
   },
   value: {
@@ -169,14 +181,12 @@ const weightStyles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F1F5F9',
     justifyContent: 'center',
     alignItems: 'center',
   },
   track: {
     flex: 1,
     height: 12,
-    backgroundColor: '#E2E8F0',
     borderRadius: 6,
     marginHorizontal: SPACING.sm,
     overflow: 'hidden',
@@ -196,6 +206,12 @@ interface FormulaCardProps {
   onSelect: () => void;
   onDelete: () => void;
   isSelected?: boolean;
+  themeColors?: {
+    text: string;
+    textSecondary: string;
+    textMuted: string;
+    card: string;
+  };
 }
 
 const FormulaCard: React.FC<FormulaCardProps> = ({
@@ -203,56 +219,63 @@ const FormulaCard: React.FC<FormulaCardProps> = ({
   onSelect,
   onDelete,
   isSelected,
-}) => (
-  <TouchableOpacity
-    onPress={onSelect}
-    style={[
-      cardStyles.container,
-      isSelected && {borderColor: formula.color, borderWidth: 2},
-    ]}
-    activeOpacity={0.8}>
-    <LinearGradient
-      colors={[formula.color, formula.color + 'CC']}
-      style={cardStyles.colorStrip}
-    />
-    <View style={cardStyles.content}>
-      <View style={cardStyles.header}>
-        <Text style={cardStyles.name}>{formula.name}</Text>
-        <TouchableOpacity
-          onPress={onDelete}
-          style={cardStyles.deleteButton}
-          hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-          <Icon name="trash-outline" size={16} color="#EF4444" />
-        </TouchableOpacity>
+  themeColors,
+}) => {
+  const cardBg = themeColors?.card || '#FFF';
+  const nameColor = themeColors?.text || '#1E293B';
+  const labelColor = themeColors?.textMuted || '#94A3B8';
+  
+  return (
+    <TouchableOpacity
+      onPress={onSelect}
+      style={[
+        cardStyles.container,
+        {backgroundColor: cardBg},
+        isSelected && {borderColor: formula.color, borderWidth: 2},
+      ]}
+      activeOpacity={0.8}>
+      <LinearGradient
+        colors={[formula.color, formula.color + 'CC']}
+        style={cardStyles.colorStrip}
+      />
+      <View style={cardStyles.content}>
+        <View style={cardStyles.header}>
+          <Text style={[cardStyles.name, {color: nameColor}]}>{formula.name}</Text>
+          <TouchableOpacity
+            onPress={onDelete}
+            style={cardStyles.deleteButton}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+            <Icon name="trash-outline" size={16} color="#EF4444" />
+          </TouchableOpacity>
+        </View>
+        <View style={cardStyles.weights}>
+          <View style={cardStyles.weightItem}>
+            <Text style={[cardStyles.weightLabel, {color: labelColor}]}>Matric</Text>
+            <Text style={[cardStyles.weightValue, {color: formula.color}]}>
+              {formula.matricWeight}%
+            </Text>
+          </View>
+          <View style={cardStyles.weightItem}>
+            <Text style={[cardStyles.weightLabel, {color: labelColor}]}>Inter</Text>
+            <Text style={[cardStyles.weightValue, {color: formula.color}]}>
+              {formula.interWeight}%
+            </Text>
+          </View>
+          <View style={cardStyles.weightItem}>
+            <Text style={[cardStyles.weightLabel, {color: labelColor}]}>{formula.testName}</Text>
+            <Text style={[cardStyles.weightValue, {color: formula.color}]}>
+              {formula.testWeight}%
+            </Text>
+          </View>
+        </View>
       </View>
-      <View style={cardStyles.weights}>
-        <View style={cardStyles.weightItem}>
-          <Text style={cardStyles.weightLabel}>Matric</Text>
-          <Text style={[cardStyles.weightValue, {color: formula.color}]}>
-            {formula.matricWeight}%
-          </Text>
-        </View>
-        <View style={cardStyles.weightItem}>
-          <Text style={cardStyles.weightLabel}>Inter</Text>
-          <Text style={[cardStyles.weightValue, {color: formula.color}]}>
-            {formula.interWeight}%
-          </Text>
-        </View>
-        <View style={cardStyles.weightItem}>
-          <Text style={cardStyles.weightLabel}>{formula.testName}</Text>
-          <Text style={[cardStyles.weightValue, {color: formula.color}]}>
-            {formula.testWeight}%
-          </Text>
-        </View>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
+    </TouchableOpacity>
+  );
+};
 
 const cardStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#FFF',
     borderRadius: RADIUS.lg,
     marginBottom: SPACING.sm,
     overflow: 'hidden',
@@ -278,7 +301,6 @@ const cardStyles = StyleSheet.create({
   name: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '700',
-    color: '#1E293B',
   },
   deleteButton: {
     padding: 4,
@@ -292,7 +314,6 @@ const cardStyles = StyleSheet.create({
   },
   weightLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: '#94A3B8',
     marginBottom: 2,
   },
   weightValue: {
@@ -309,6 +330,9 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
   onFormulaCreated,
   onFormulaSelected,
 }) => {
+  // Theme
+  const {colors, isDark} = useTheme();
+  
   // State
   const [formulas, setFormulas] = useState<CustomFormula[]>([]);
   const [selectedFormula, setSelectedFormula] = useState<CustomFormula | null>(null);
@@ -435,18 +459,18 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       animationType="slide"
       presentationStyle="pageSheet"
       onRequestClose={() => setShowModal(false)}>
-      <View style={modalStyles.container}>
+      <View style={[modalStyles.container, {backgroundColor: colors.background}]}>
         {/* Modal Header */}
-        <View style={modalStyles.header}>
+        <View style={[modalStyles.header, {backgroundColor: colors.card, borderBottomColor: colors.border}]}>
           <TouchableOpacity
             onPress={() => {
               setShowModal(false);
               resetForm();
             }}
             style={modalStyles.closeButton}>
-            <Icon name="close" size={24} color="#64748B" />
+            <Icon name="close" size={24} color={colors.textSecondary} />
           </TouchableOpacity>
-          <Text style={modalStyles.title}>Create Custom Formula</Text>
+          <Text style={[modalStyles.title, {color: colors.text}]}>Create Custom Formula</Text>
           <View style={{width: 24}} />
         </View>
 
@@ -518,8 +542,8 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
                 style={[
                   modalStyles.totalBadge,
                   isValidTotal
-                    ? {backgroundColor: '#DCFCE7'}
-                    : {backgroundColor: '#FEE2E2'},
+                    ? {backgroundColor: isDark ? '#064E3B' : '#DCFCE7'}
+                    : {backgroundColor: isDark ? '#7F1D1D' : '#FEE2E2'},
                 ]}>
                 <Text
                   style={[
@@ -537,6 +561,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
               onChange={setMatricWeight}
               color="#4573DF"
               icon="school-outline"
+              themeColors={colors}
             />
 
             <WeightSlider
@@ -545,6 +570,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
               onChange={setInterWeight}
               color="#10B981"
               icon="book-outline"
+              themeColors={colors}
             />
 
             <WeightSlider
@@ -553,6 +579,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
               onChange={setTestWeight}
               color="#F59E0B"
               icon="create-outline"
+              themeColors={colors}
             />
 
             {!isValidTotal && (
@@ -606,16 +633,16 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
   const modalStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F8FAFC',
+      backgroundColor: colors.background,
     },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: SPACING.lg,
-      backgroundColor: '#FFF',
+      backgroundColor: colors.card,
       borderBottomWidth: 1,
-      borderBottomColor: '#E2E8F0',
+      borderBottomColor: colors.border,
     },
     closeButton: {
       padding: 4,
@@ -623,7 +650,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     title: {
       fontSize: TYPOGRAPHY.sizes.lg,
       fontWeight: '700',
-      color: '#1E293B',
+      color: colors.text,
     },
     content: {
       flex: 1,
@@ -635,18 +662,18 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     inputLabel: {
       fontSize: TYPOGRAPHY.sizes.sm,
       fontWeight: '600',
-      color: '#475569',
+      color: colors.textSecondary,
       marginBottom: SPACING.xs,
     },
     textInput: {
-      backgroundColor: '#FFF',
+      backgroundColor: colors.card,
       borderWidth: 1,
-      borderColor: '#E2E8F0',
+      borderColor: colors.border,
       borderRadius: RADIUS.md,
       paddingHorizontal: SPACING.md,
       paddingVertical: SPACING.sm,
       fontSize: TYPOGRAPHY.sizes.md,
-      color: '#1E293B',
+      color: colors.text,
     },
     colorPicker: {
       flexDirection: 'row',
@@ -663,7 +690,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     colorOptionSelected: {
       borderWidth: 3,
-      borderColor: '#FFF',
+      borderColor: colors.card,
       shadowColor: '#000',
       shadowOffset: {width: 0, height: 2},
       shadowOpacity: 0.3,
@@ -671,7 +698,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       elevation: 4,
     },
     weightsSection: {
-      backgroundColor: '#FFF',
+      backgroundColor: colors.card,
       borderRadius: RADIUS.lg,
       padding: SPACING.md,
       marginBottom: SPACING.lg,
@@ -685,7 +712,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     weightsTitle: {
       fontSize: TYPOGRAPHY.sizes.md,
       fontWeight: '700',
-      color: '#1E293B',
+      color: colors.text,
     },
     totalBadge: {
       paddingHorizontal: SPACING.sm,
@@ -699,14 +726,14 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     warningBox: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#FEF3C7',
+      backgroundColor: isDark ? '#422006' : '#FEF3C7',
       borderRadius: RADIUS.md,
       padding: SPACING.sm,
       marginTop: SPACING.sm,
     },
     warningText: {
       fontSize: TYPOGRAPHY.sizes.sm,
-      color: '#92400E',
+      color: isDark ? '#FCD34D' : '#92400E',
       marginLeft: SPACING.sm,
     },
     previewSection: {
@@ -715,25 +742,25 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     previewTitle: {
       fontSize: TYPOGRAPHY.sizes.sm,
       fontWeight: '600',
-      color: '#64748B',
+      color: colors.textSecondary,
       marginBottom: SPACING.sm,
     },
     previewCard: {
-      backgroundColor: '#FFF',
+      backgroundColor: colors.card,
       borderRadius: RADIUS.md,
       padding: SPACING.md,
       borderLeftWidth: 4,
     },
     previewFormula: {
       fontSize: TYPOGRAPHY.sizes.sm,
-      color: '#475569',
+      color: colors.textSecondary,
       lineHeight: 20,
     },
     footer: {
       padding: SPACING.lg,
-      backgroundColor: '#FFF',
+      backgroundColor: colors.card,
       borderTopWidth: 1,
-      borderTopColor: '#E2E8F0',
+      borderTopColor: colors.border,
     },
     createButton: {
       flexDirection: 'row',
@@ -780,6 +807,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
               onSelect={() => handleSelectFormula(formula)}
               onDelete={() => handleDeleteFormula(formula.id)}
               isSelected={selectedFormula?.id === formula.id}
+              themeColors={colors}
             />
           ))}
         </View>
@@ -788,7 +816,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       {/* Empty State */}
       {formulas.length === 0 && !isLoading && (
         <View style={styles.emptyState}>
-          <Icon name="flask-outline" size={48} color="#CBD5E1" />
+          <Icon name="flask-outline" size={48} color={colors.border} />
           <Text style={styles.emptyTitle}>No Custom Formulas</Text>
           <Text style={styles.emptyText}>
             Create a custom formula for universities not in our database
@@ -826,7 +854,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
+    backgroundColor: colors.card,
     borderRadius: RADIUS.xl,
     padding: SPACING.lg,
     marginVertical: SPACING.md,
@@ -854,11 +882,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
-    color: '#1E293B',
+    color: colors.text,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#64748B',
+    color: colors.textSecondary,
     marginTop: 2,
   },
   savedSection: {
@@ -867,7 +895,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: '#64748B',
+    color: colors.textSecondary,
     marginBottom: SPACING.sm,
   },
   emptyState: {
@@ -877,12 +905,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
-    color: '#64748B',
+    color: colors.textSecondary,
     marginTop: SPACING.md,
   },
   emptyText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: '#94A3B8',
+    color: colors.textMuted,
     textAlign: 'center',
     marginTop: SPACING.xs,
   },

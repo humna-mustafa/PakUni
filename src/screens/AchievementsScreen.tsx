@@ -161,12 +161,17 @@ const AddAchievementModal = ({
     
     // University field - show university dropdown
     if (fieldKey === 'universityname') {
+      // Find current option by label/name to display correct selection
+      const currentOption = universityOptions.find(opt => 
+        opt.label === formData[field.key] || 
+        opt.metadata?.name === formData[field.key]
+      );
       return (
         <SearchableDropdown
           label={field.label + (field.required ? ' *' : '')}
           placeholder={field.placeholder}
           options={universityOptions}
-          value={formData[field.key]}
+          value={currentOption?.value}
           onSelect={(option, value) => {
             // Use the full university name from metadata
             const displayName = option.metadata?.name || option.label;
@@ -182,12 +187,14 @@ const AddAchievementModal = ({
     
     // Test name field - show entry test dropdown
     if (fieldKey === 'testname' && (template.type === 'entry_test' || template.type === 'result')) {
+      // Find current option by label to display correct selection
+      const currentOption = entryTestOptions.find(opt => opt.label === formData[field.key]);
       return (
         <SearchableDropdown
           label={field.label + (field.required ? ' *' : '')}
           placeholder={field.placeholder}
           options={entryTestOptions}
-          value={formData[field.key]}
+          value={currentOption?.value}
           onSelect={(option, value) => {
             setFormData(prev => ({...prev, [field.key]: option.label}));
           }}
@@ -200,6 +207,7 @@ const AddAchievementModal = ({
     
     // Program name field - show program dropdown
     if (fieldKey === 'programname') {
+      // Program options use value as the display text, so just pass through
       return (
         <SearchableDropdown
           label={field.label + (field.required ? ' *' : '')}
@@ -218,12 +226,14 @@ const AddAchievementModal = ({
     
     // Scholarship name field - show scholarship dropdown
     if (fieldKey === 'scholarshipname') {
+      // Find current option by label to display correct selection
+      const currentOption = scholarshipOptions.find(opt => opt.label === formData[field.key]);
       return (
         <SearchableDropdown
           label={field.label + (field.required ? ' *' : '')}
           placeholder={field.placeholder}
           options={scholarshipOptions}
-          value={formData[field.key]}
+          value={currentOption?.value}
           onSelect={(option, value) => {
             setFormData(prev => ({...prev, [field.key]: option.label}));
           }}
