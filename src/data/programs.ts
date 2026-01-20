@@ -276,7 +276,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Security Analyst', 'Penetration Tester', 'Security Engineer', 'SOC Analyst'],
     avg_fee_per_semester: 85000,
-    universities: ['NUST', 'AU', 'COMSATS', 'FAST', 'Bahria'],
+    universities: ['NUST', 'AU', 'COMSATS', 'FAST', 'Bahria', 'GIKI', 'PIEAS'],
   },
   // ========== BUSINESS ==========
   {
@@ -326,6 +326,22 @@ export const PROGRAMS: ProgramData[] = [
     career_prospects: ['Economist', 'Policy Analyst', 'Research Analyst', 'Financial Consultant'],
     avg_fee_per_semester: 85000,
     universities: ['LUMS', 'QAU', 'IBA', 'NUST', 'PU', 'UoK'],
+  },
+  {
+    id: 'bs-fintech',
+    name: 'BS Fintech',
+    degree_title: 'BS Financial Technology',
+    level: 'bachelor',
+    field: 'Business',
+    duration_years: 4,
+    credit_hours: 130,
+    eligibility: 'FSc/ICS/A-Levels with 50%+ marks',
+    required_subjects: ['Mathematics'],
+    min_percentage: 50,
+    entry_test: 'University Test',
+    career_prospects: ['Fintech Analyst', 'Digital Banking Specialist', 'Blockchain Developer', 'Financial Consultant'],
+    avg_fee_per_semester: 95000,
+    universities: ['FAST', 'NUST', 'Bahria', 'UMT', 'UCP'],
   },
   {
     id: 'mba',
@@ -747,7 +763,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Bioinformatics Analyst', 'Computational Biologist', 'Data Scientist (Healthcare)'],
     avg_fee_per_semester: 70000,
-    universities: ['COMSATS', 'QAU', 'VU', 'PU'],
+    universities: ['COMSATS', 'QAU', 'VU', 'PU', 'NUST'],
   },
   // ========== ADDITIONAL BUSINESS PROGRAMS ==========
   {

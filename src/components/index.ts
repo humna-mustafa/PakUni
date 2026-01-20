@@ -58,6 +58,12 @@ export { default as EnhancedErrorBoundary, GlobalErrorProvider } from './Enhance
 export { default as EnhancedErrorToast } from './EnhancedErrorToast';
 
 // =============================================================================
+// SWIPEABLE CARDS (Modern Gesture-Enabled)
+// =============================================================================
+
+export { SwipeableUniversityCard } from './cards';
+
+// =============================================================================
 // PREMIUM UI SYSTEM (Production Design)
 // =============================================================================
 
@@ -240,3 +246,24 @@ export { ExternalLinksCard, AddToCalendarButton } from './integrations/ExternalL
 
 export { default as EntryTestCountdown } from './widgets/EntryTestCountdown';
 export { default as SpecialOccasionCard } from './widgets/SpecialOccasionCard';
+// =============================================================================
+// MODERN GESTURE COMPONENTS (React Native Reanimated)
+// =============================================================================
+
+export {
+  SwipeableCard,
+  AnimatedPressable,
+  GestureBottomSheet,
+  AnimatedList,
+  ParallaxHeader,
+  AnimatedListItem,
+  PullToRefreshView,
+  useScalePress,
+  useDragAnimation,
+  useEntranceAnimation,
+  useStaggeredAnimation,
+  useParallaxScroll,
+  SPRING_CONFIGS,
+  TIMING_CONFIGS,
+} from './gestures';
+export type { GestureBottomSheetRef } from './gestures';

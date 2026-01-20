@@ -69,8 +69,8 @@ async function importUniversities() {
         sql: `INSERT INTO universities (
           id, name, short_name, type, province, city, address, website, email, phone,
           established_year, ranking_hec, ranking_national, is_hec_recognized, logo_url,
-          description, admission_url, campuses, status_notes, application_steps
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          description, admission_url, campuses, campus_details, status_notes, application_steps
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args: [
           id,
           uni.name,
@@ -90,6 +90,7 @@ async function importUniversities() {
           uni.description || null,
           uni.admission_url || null,
           safeJson(uni.campuses),
+          safeJson((uni as any).campus_details),
           (uni as any).status_notes || null,
           safeJson((uni as any).application_steps),
         ]

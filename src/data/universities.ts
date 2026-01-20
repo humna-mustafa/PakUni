@@ -2,6 +2,17 @@
 // Real, verified data from HEC and official sources
 // Logos stored statically in Supabase Storage for reliability and cost efficiency
 
+export interface CampusData {
+  id: string;
+  name: string;
+  city: string;
+  address: string;
+  phone?: string;
+  email?: string;
+  is_main: boolean;
+  type?: 'public' | 'private' | 'semi_government'; // Optional if different from parent
+}
+
 export interface UniversityData {
   name: string;
   short_name: string;
@@ -19,7 +30,8 @@ export interface UniversityData {
   logo_url: string;
   description: string;
   admission_url: string;
-  campuses: string[];
+  campuses: string[]; // Keep for backward compatibility
+  campus_details?: CampusData[];
   // NEW FIELDS for enhanced UX
   status_notes?: string;
   application_steps?: string[];
@@ -77,7 +89,16 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: getLogo('NUST'),
     description: 'Top engineering and technology university with world-class research facilities.',
     admission_url: 'https://nust.edu.pk/admissions/',
-    campuses: ['H-12 Islamabad', 'Rawalpindi', 'Karachi', 'Risalpur'],
+    campuses: ['H-12 Islamabad', 'Rawalpindi', 'Karachi', 'Risalpur', 'Quetta'],
+    campus_details: [
+      { id: 'nust-h12', name: 'H-12 Campus', city: 'Islamabad', address: 'H-12 Sector, Islamabad', is_main: true },
+      { id: 'nust-mcs', name: 'MCS', city: 'Rawalpindi', address: 'Humayun Road, Rawalpindi', is_main: false },
+      { id: 'nust-ceme', name: 'CEME', city: 'Rawalpindi', address: 'Peshawar Road, Rawalpindi', is_main: false },
+      { id: 'nust-pnec', name: 'PNEC', city: 'Karachi', address: 'Habib Ibrahim Rehmatullah Road, Karachi', is_main: false },
+      { id: 'nust-cae', name: 'CAE', city: 'Risalpur', address: 'Risalpur Cantt', is_main: false },
+      { id: 'nust-mce', name: 'MCE', city: 'Risalpur', address: 'Risalpur Cantt', is_main: false },
+      { id: 'nust-nbc', name: 'NBC', city: 'Quetta', address: 'Quetta Cantt', is_main: false },
+    ],
     status_notes: 'Undergraduate Series-1 Admissions Open',
     application_steps: [
       'Create account on NUST Admission Portal',
@@ -105,6 +126,15 @@ export const UNIVERSITIES: UniversityData[] = [
     description: 'Leading IT and technology university with campuses across Pakistan.',
     admission_url: 'https://www.comsats.edu.pk/Admissions.aspx',
     campuses: ['Islamabad', 'Lahore', 'Abbottabad', 'Wah', 'Attock', 'Sahiwal', 'Vehari'],
+    campus_details: [
+      { id: 'cui-islamabad', name: 'Islamabad Campus', city: 'Islamabad', address: 'Park Road, Chak Shahzad', is_main: true },
+      { id: 'cui-lahore', name: 'Lahore Campus', city: 'Lahore', address: 'Defence Road, Off Raiwind Road', is_main: false },
+      { id: 'cui-abbottabad', name: 'Abbottabad Campus', city: 'Abbottabad', address: 'University Road', is_main: false },
+      { id: 'cui-wah', name: 'Wah Campus', city: 'Wah Cantt', address: 'GT Road', is_main: false },
+      { id: 'cui-attock', name: 'Attock Campus', city: 'Attock', address: 'Kamra Road', is_main: false },
+      { id: 'cui-sahiwal', name: 'Sahiwal Campus', city: 'Sahiwal', address: 'COMSATS Road', is_main: false },
+      { id: 'cui-vehari', name: 'Vehari Campus', city: 'Vehari', address: 'Multan Road', is_main: false },
+    ],
     status_notes: 'Admissions Open for Spring 2026',
     application_steps: [
       'Create profile on CUI Online Admission Portal',
@@ -188,6 +218,11 @@ export const UNIVERSITIES: UniversityData[] = [
     description: 'PAF affiliated university with strong aerospace and engineering programs.',
     admission_url: 'https://www.au.edu.pk/admissions/',
     campuses: ['E-9 Islamabad', 'Multan', 'Kamra'],
+    campus_details: [
+      { id: 'au-islamabad', name: 'Islamabad Campus', city: 'Islamabad', address: 'E-9, Islamabad', is_main: true },
+      { id: 'au-multan', name: 'Multan Campus', city: 'Multan', address: 'Abdali Road', is_main: false },
+      { id: 'au-kamra', name: 'Kamra Campus', city: 'Attock', address: 'PAC Kamra', is_main: false },
+    ],
     status_notes: 'Spring 2026 Admissions Open',
     application_steps: [
       'Apply online via portal.au.edu.pk',
@@ -216,6 +251,11 @@ export const UNIVERSITIES: UniversityData[] = [
     description: 'Pakistan Navy affiliated university with diverse programs in management, engineering, and health sciences.',
     admission_url: 'https://www.bahria.edu.pk/admissions/',
     campuses: ['Islamabad', 'Lahore', 'Karachi'],
+    campus_details: [
+      { id: 'bu-islamabad', name: 'Islamabad Campus', city: 'Islamabad', address: 'Shangrila Road, E-8', is_main: true },
+      { id: 'bu-lahore', name: 'Lahore Campus', city: 'Lahore', address: 'Johar Town', is_main: false },
+      { id: 'bu-karachi', name: 'Karachi Campus', city: 'Karachi', address: 'National Stadium Road', is_main: false },
+    ],
     status_notes: 'Admissions for Fall 2026 Opening Soon',
     application_steps: [
       'Register on Bahria Admission Portal',
@@ -573,6 +613,13 @@ export const UNIVERSITIES: UniversityData[] = [
     description: 'Premier engineering university of Pakistan with 100+ years of excellence. Mandatory ECAT required for admission.',
     admission_url: 'https://uet.edu.pk/home/admissions',
     campuses: ['Lahore', 'Faisalabad', 'KSK', 'Narowal', 'RCET'],
+    campus_details: [
+      { id: 'uet-main', name: 'Main Campus', city: 'Lahore', address: 'G.T. Road, Lahore', is_main: true },
+      { id: 'uet-ksk', name: 'Kala Shah Kaku Campus', city: 'Sheikhupura', address: 'KSK, Near Lahore', is_main: false },
+      { id: 'uet-fsd', name: 'Faisalabad Campus', city: 'Faisalabad', address: 'Faisalabad', is_main: false },
+      { id: 'uet-narowal', name: 'Narowal Campus', city: 'Narowal', address: 'Narowal', is_main: false },
+      { id: 'uet-rcet', name: 'Rachna College (RCET)', city: 'Gujranwala', address: 'Gujranwala', is_main: false },
+    ],
     status_notes: 'ECAT 2026 Registration Opens May 2026',
     application_steps: [
       'Obtain E-Token from HBL for ECAT registration',
@@ -2422,6 +2469,13 @@ export const UNIVERSITIES: UniversityData[] = [
     description: 'Leading CS/IT university with campuses across Pakistan.',
     admission_url: 'https://www.nu.edu.pk/Admissions',
     campuses: ['Islamabad', 'Lahore', 'Karachi', 'Faisalabad', 'Peshawar', 'Chiniot-Faisalabad'],
+    campus_details: [
+      { id: 'fast-islamabad', name: 'Islamabad Campus', city: 'Islamabad', address: 'A.K. Brohi Road, H-11/4', is_main: true },
+      { id: 'fast-lahore', name: 'Lahore Campus', city: 'Lahore', address: '190-B, Gulberg III', is_main: false },
+      { id: 'fast-karachi', name: 'Karachi Campus', city: 'Karachi', address: 'ST-4, Sector 17-D, NHW', is_main: false },
+      { id: 'fast-peshawar', name: 'Peshawar Campus', city: 'Peshawar', address: '160, Industrial Estate, Jamrud Road', is_main: false },
+      { id: 'fast-cfd', name: 'Chiniot-Faisalabad Campus', city: 'Chiniot', address: 'Loonay Wala, Chiniot', is_main: false },
+    ],
     status_notes: 'FAST Entry Test required - top CS university',
   },
   {

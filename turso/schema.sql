@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS universities (
     logo_url TEXT,
     description TEXT,
     admission_url TEXT,
-    campuses TEXT, -- JSON array
+    campuses TEXT, -- JSON array (backward compatibility)
+    campus_details TEXT, -- JSON array (structured campus data)
     status_notes TEXT,
     application_steps TEXT, -- JSON array
     created_at TEXT DEFAULT (datetime('now')),

@@ -1,6 +1,8 @@
 // Entry Tests Data with Deadlines and Important Dates
 // Real dates based on typical Pakistani academic calendar
 
+
+
 export interface EntryTestData {
   id: string;
   name: string;
@@ -28,8 +30,10 @@ export interface EntryTestData {
   application_steps?: string[];
   status_notes?: string;
   brand_colors?: {
+
     primary: string;
     secondary: string;
+
     gradient: string[];
   };
 }
@@ -75,7 +79,94 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     test_date: '2026-08-27',
     result_date: '2026-09-20',
     website: 'https://www.pmc.gov.pk/',
-    fee: 5500,
+    fee: 6000,
+    eligibility: [
+      'FSc Pre-Medical with minimum 65% marks',
+      'A-Levels with Biology, Chemistry, Physics/Math (equivalence required)',
+      'Pakistani citizen or overseas Pakistani',
+      'Age: No upper limit for MBBS',
+    ],
+    test_format: {
+      total_marks: 210,
+      total_questions: 210,
+      duration_minutes: 210,
+      negative_marking: false,
+      sections: [
+        {name: 'Biology', questions: 68, marks: 68},
+        {name: 'Chemistry', questions: 54, marks: 54},
+        {name: 'Physics', questions: 54, marks: 54},
+        {name: 'English', questions: 18, marks: 18},
+        {name: 'Logical Reasoning', questions: 6, marks: 6},
+      ],
+    },
+    tips: [
+      'Focus on PMC syllabus - 80% questions from it',
+      'Practice past papers from PMC website',
+      'Biology has highest weightage - prioritize it',
+      'Time management is key - 1 min per question',
+      'Study PMC official syllabus document carefully',
+      'Practice MCQs daily - aim for 200+ per day',
+    ],
+    provinces: ['all-pakistan'],
+    status_notes: 'Registration Expected June 2026 - Check PMC website',
+    application_steps: [
+      'Create profile on PMC Online Portal (pmc.gov.pk)',
+      'Upload Scanned Documents (Form-B/CNIC, FSc Result/Hope Certificate)',
+      'Generate Fee Challan and pay at any HBL/ABL branch',
+      'Upload paid challan and select preferred test city',
+      'Download Admit Card 1 week before the test',
+      'Bring original CNIC/B-Form on test day',
+    ],
+    brand_colors: ENTRY_TEST_BRAND_COLORS.mdcat,
+  },
+  {
+    id: 'nust-net-2026',
+    name: 'NUST NET',
+    full_name: 'NUST Entry Test',
+    conducting_body: 'National University of Sciences and Technology',
+    description: 'Entrance test for NUST undergraduate programs. Conducted in four series (NET-1 to NET-4). Series 2 is currently active.',
+    applicable_for: ['Engineering', 'Computer Science', 'Business', 'Social Sciences', 'Architecture'],
+    registration_start: '2025-12-14',
+    registration_deadline: '2026-01-25',
+    test_date: '2026-01-31',
+    result_date: '2026-02-15',
+    website: 'https://ugadmissions.nust.edu.pk/',
+    fee: 5000,
+    eligibility: [
+      'FSc or equivalent with 60% marks',
+      'Matric or equivalent with 60% marks',
+      'Candidate must be appearing in HSSC Part-II or have completed it',
+    ],
+    test_format: {
+      total_marks: 200,
+      total_questions: 200,
+      duration_minutes: 180,
+      negative_marking: false,
+      sections: [
+        {name: 'Mathematics', questions: 80, marks: 80},
+        {name: 'Physics', questions: 60, marks: 60},
+        {name: 'Chemistry', questions: 30, marks: 30},
+        {name: 'English', questions: 20, marks: 20},
+        {name: 'Intelligence', questions: 10, marks: 10},
+      ],
+    },
+    tips: [
+      'Focus on textbook concepts of Punjab/Federal boards',
+      'Time management is key - 200 questions in 180 minutes',
+      'No negative marking, so attempt all questions',
+      'Practice past papers for pattern familiarity',
+    ],
+    provinces: ['all-pakistan'],
+    application_steps: [
+      'Register on NUST login portal',
+      'Fill in personal and academic details',
+      'Upload recent photograph',
+      'Generate and pay challan in HBL',
+      'Select your test series and date (Series 2 ending Jan 25)',
+    ],
+    status_notes: 'NET Series-2 Registration Open! (Closing Jan 25)',
+    brand_colors: ENTRY_TEST_BRAND_COLORS.nust,
+  },
     eligibility: [
       'FSc Pre-Medical with minimum 65% marks',
       'A-Levels with Biology, Chemistry, Physics/Math (equivalence required)',
