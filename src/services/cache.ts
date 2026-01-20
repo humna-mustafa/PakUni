@@ -443,8 +443,7 @@ class CacheService {
         } else {
           // Invalid entry, remove it
           CacheStorage.delete(key);
-          cleaned++;;
-          }
+          cleaned++;
         }
       }
       

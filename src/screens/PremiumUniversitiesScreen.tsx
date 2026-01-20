@@ -156,7 +156,7 @@ const FilterChip = ({
       </TouchableOpacity>
     </Animated.View>
   );
-}};
+};
 
 // Swipeable University Card Component with gestures
 const SwipeableUniversityCard = ({

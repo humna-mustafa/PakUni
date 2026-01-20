@@ -1,6 +1,6 @@
 {
   "name": "PakUni",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -60,7 +60,7 @@
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-mmkv": "^3.3.3",
-    "react-native-reanimated": "^3.19.5",
+    "react-native-reanimated": "^3.20.0-nightly-20251222-31bfe9311",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.19.0",
     "react-native-share": "^12.2.2",
