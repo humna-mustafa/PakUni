@@ -1,9 +1,15 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {NavigationContainer, DefaultTheme, DarkTheme} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createNativeStackNavigator, NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {createBottomTabNavigator, type BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {Icon} from '../components';
+import {
+  ScaleFadeTransition,
+  SlideFromBottomTransition,
+  FadeTransition,
+  NAVIGATION_SPRINGS,
+} from './transitions';
 
 // Auth & Onboarding Screens
 import AuthScreen from '../screens/AuthScreen';
@@ -304,40 +310,66 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
               fontSize: 18,
             },
             headerShadowVisible: false,
+            // Modern iOS-style slide with spring animation
             animation: 'slide_from_right',
+            animationDuration: 300,
+            gestureEnabled: true,
+            gestureDirection: 'horizontal',
             contentStyle: {backgroundColor: colors.background},
           }}>
-          {/* Auth Flow */}
+          {/* Auth Flow - Fade transition */}
           <Stack.Screen
             name="Auth"
             component={AuthScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'fade',
+            }}
           />
           <Stack.Screen
             name="Onboarding"
             component={OnboardingScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }}
           />
           {/* Main App */}
           <Stack.Screen
             name="MainTabs"
             component={MainTabs}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'fade',
+            }}
           />
+          {/* Detail screens - Scale fade for immersive feel */}
           <Stack.Screen
             name="UniversityDetail"
             component={PremiumUniversityDetailScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'fade_from_bottom',
+              animationDuration: 250,
+            }}
           />
           <Stack.Screen
             name="Calculator"
             component={PremiumCalculatorScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+              presentation: 'modal',
+            }}
           />
           <Stack.Screen
             name="Compare"
             component={PremiumCompareScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+              presentation: 'modal',
+            }}
           />
           <Stack.Screen
             name="EntryTests"

@@ -267,3 +267,49 @@ export {
   TIMING_CONFIGS,
 } from './gestures';
 export type { GestureBottomSheetRef } from './gestures';
+
+// =============================================================================
+// PREMIUM THIRD-PARTY COMPONENTS (Industry Standard)
+// =============================================================================
+
+// @gorhom/bottom-sheet - #1 Bottom Sheet library
+export {
+  PremiumBottomSheet,
+  PremiumBottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+  BottomSheetScrollView,
+  BottomSheetFlatList,
+  useBottomSheet,
+  useBottomSheetModal,
+} from './premium';
+export type {BottomSheetModal} from './premium';
+
+// @shopify/flash-list - 10x faster than FlatList
+export {
+  PremiumFlashList,
+  FlashList,
+  AnimatedFlashList,
+} from './premium';
+
+// react-native-fast-image - High-performance image loading
+export {
+  PremiumFastImage,
+  AvatarImage,
+  ThumbnailImage,
+  HeroImage,
+  preloadImages,
+  clearImageCache,
+} from './premium';
+
+// lottie-react-native - Premium animations
+export {
+  LottieAnimation,
+  LoadingAnimation,
+  SuccessAnimation,
+  ErrorAnimation,
+  ConfettiAnimation,
+  EmptySearchAnimation,
+  NoInternetAnimation,
+  LOTTIE_ANIMATIONS,
+} from './premium';

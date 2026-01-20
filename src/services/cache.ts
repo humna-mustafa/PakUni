@@ -2,7 +2,7 @@
  * Cache Service - Optimized for Supabase Free Tier
  * 
  * CRITICAL: This service minimizes egress by:
- * - Caching all data locally with AsyncStorage
+ * - Caching all data locally with MMKV (30x faster than AsyncStorage)
  * - Using stale-while-revalidate pattern
  * - Batching requests to reduce API calls
  * - No real-time subscriptions (saves massive egress)
@@ -13,9 +13,14 @@
  * - 5GB Bandwidth (egress) per month
  * - 1GB Storage
  * - 50,000 MAUs
+ * 
+ * PERFORMANCE: Using MMKV instead of AsyncStorage:
+ * - Synchronous operations (no async overhead)
+ * - 30x faster read/write
+ * - Used by WeChat, Instagram, Discord
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CacheStorage} from './mmkvStorage';
 import {logger} from '../utils/logger';
 
 // ============================================================================
@@ -157,17 +162,17 @@ class CacheService {
   private async initialize(): Promise<void> {
     try {
       // Check cache version
-      const storedVersion = await AsyncStorage.getItem(CACHE_KEYS.CACHE_VERSION);
+      const storedVersion = CacheStorage.getString(CACHE_KEYS.CACHE_VERSION);
       if (storedVersion !== String(CACHE_VERSION)) {
         logger.debug('Version mismatch, clearing cache', null, 'Cache');
         await this.clearAll();
-        await AsyncStorage.setItem(CACHE_KEYS.CACHE_VERSION, String(CACHE_VERSION));
+        CacheStorage.setString(CACHE_KEYS.CACHE_VERSION, String(CACHE_VERSION));
       }
 
       // Load stats
-      const statsStr = await AsyncStorage.getItem(CACHE_KEYS.CACHE_STATS);
-      if (statsStr) {
-        this.stats = JSON.parse(statsStr);
+      const stats = CacheStorage.getObject<CacheStats>(CACHE_KEYS.CACHE_STATS);
+      if (stats) {
+        this.stats = stats;
       }
 
       // Cleanup expired entries on startup
@@ -193,14 +198,12 @@ class CacheService {
         return memEntry.data as T;
       }
 
-      // Check persistent cache
-      const stored = await AsyncStorage.getItem(key);
-      if (!stored) {
+      // Check persistent cache (MMKV - synchronous)
+      const entry = CacheStorage.getObject<CacheEntry<T>>(key);
+      if (!entry) {
         this.stats.missCount++;
         return null;
       }
-
-      const entry: CacheEntry<T> = JSON.parse(stored);
       
       // Check if expired
       if (entry.expiresAt < Date.now()) {
@@ -242,8 +245,8 @@ class CacheService {
         return false;
       }
 
-      // Save to both caches
-      await AsyncStorage.setItem(key, serialized);
+      // Save to both caches (MMKV is synchronous - super fast!)
+      CacheStorage.setObject(key, entry);
       this.memoryCache.set(key, entry);
       
       this.stats.totalEntries++;
@@ -261,7 +264,7 @@ class CacheService {
    */
   async remove(key: string): Promise<boolean> {
     try {
-      await AsyncStorage.removeItem(key);
+      CacheStorage.delete(key);
       this.memoryCache.delete(key);
       this.stats.totalEntries = Math.max(0, this.stats.totalEntries - 1);
       await this.saveStats();
@@ -293,10 +296,9 @@ class CacheService {
       // Try to get from cache first
       const cached = await this.get<T>(key);
       
-      // Check if we need to revalidate
-      const stored = await AsyncStorage.getItem(key);
-      if (stored) {
-        const entry: CacheEntry<T> = JSON.parse(stored);
+      // Check if we need to revalidate (MMKV is synchronous)
+      const entry = CacheStorage.getObject<CacheEntry<T>>(key);
+      if (entry) {
         const isStale = entry.expiresAt < Date.now();
         
         if (isStale && this.config.staleWhileRevalidate) {
@@ -381,7 +383,8 @@ class CacheService {
   async clearAll(): Promise<void> {
     try {
       const keys = Object.values(CACHE_KEYS);
-      await AsyncStorage.multiRemove(keys);
+      // Clear each key (MMKV is synchronous)
+      keys.forEach(key => CacheStorage.delete(key));
       this.memoryCache.clear();
       this.stats = {
         totalEntries: 0,
@@ -402,9 +405,9 @@ class CacheService {
    */
   async clearByPrefix(prefix: string): Promise<void> {
     try {
-      const allKeys = await AsyncStorage.getAllKeys();
+      const allKeys = CacheStorage.getAllKeys();
       const keysToRemove = allKeys.filter(key => key.startsWith(prefix));
-      await AsyncStorage.multiRemove(keysToRemove);
+      keysToRemove.forEach(key => CacheStorage.delete(key));
       
       // Also clear from memory cache
       for (const key of keysToRemove) {
@@ -423,26 +426,24 @@ class CacheService {
   async cleanup(): Promise<void> {
     try {
       const now = Date.now();
-      const allKeys = await AsyncStorage.getAllKeys();
+      const allKeys = CacheStorage.getAllKeys();
       const cacheKeys = allKeys.filter(key => key.startsWith('pakuni_cache_'));
       
       let cleaned = 0;
       
       for (const key of cacheKeys) {
-        const stored = await AsyncStorage.getItem(key);
-        if (stored) {
-          try {
-            const entry = JSON.parse(stored);
-            // Only remove if really old (2x TTL)
-            if (entry.expiresAt && entry.expiresAt < now - this.config.ttl) {
-              await AsyncStorage.removeItem(key);
-              this.memoryCache.delete(key);
-              cleaned++;
-            }
-          } catch {
-            // Invalid entry, remove it
-            await AsyncStorage.removeItem(key);
+        const entry = CacheStorage.getObject<CacheEntry<any>>(key);
+        if (entry) {
+          // Only remove if really old (2x TTL)
+          if (entry.expiresAt && entry.expiresAt < now - this.config.ttl) {
+            CacheStorage.delete(key);
+            this.memoryCache.delete(key);
             cleaned++;
+          }
+        } else {
+          // Invalid entry, remove it
+          CacheStorage.delete(key);
+          cleaned++;;
           }
         }
       }
@@ -482,7 +483,7 @@ class CacheService {
    */
   private async saveStats(): Promise<void> {
     try {
-      await AsyncStorage.setItem(CACHE_KEYS.CACHE_STATS, JSON.stringify(this.stats));
+      CacheStorage.setObject(CACHE_KEYS.CACHE_STATS, this.stats);
     } catch (error) {
       logger.error('Save stats error', error, 'Cache');
     }
@@ -493,7 +494,7 @@ class CacheService {
    */
   async getLastSync(): Promise<number | null> {
     try {
-      const lastSync = await AsyncStorage.getItem(CACHE_KEYS.LAST_SYNC);
+      const lastSync = CacheStorage.getString(CACHE_KEYS.LAST_SYNC);
       return lastSync ? parseInt(lastSync, 10) : null;
     } catch {
       return null;
@@ -504,7 +505,7 @@ class CacheService {
    * Update last sync timestamp
    */
   async updateLastSync(): Promise<void> {
-    await AsyncStorage.setItem(CACHE_KEYS.LAST_SYNC, String(Date.now()));
+    CacheStorage.setString(CACHE_KEYS.LAST_SYNC, String(Date.now()));
   }
 
   // -------------------------------------------------------------------------

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   Dimensions,
   Animated,
@@ -13,6 +12,16 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import {FlashList} from '@shopify/flash-list';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import ReanimatedView, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  runOnJS,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -147,9 +156,285 @@ const FilterChip = ({
       </TouchableOpacity>
     </Animated.View>
   );
+}};
+
+// Swipeable University Card Component with gestures
+const SwipeableUniversityCard = ({
+  item,
+  onPress,
+  onToggleFavorite,
+  onCompare,
+  isFavorite,
+  colors,
+  isDark,
+  index,
+}: {
+  item: UniversityData;
+  onPress: () => void;
+  onToggleFavorite: (id: string) => void;
+  onCompare?: (id: string) => void;
+  isFavorite: boolean;
+  colors: any;
+  isDark: boolean;
+  index: number;
+}) => {
+  const translateX = useSharedValue(0);
+  const itemHeight = useSharedValue(LIST_ITEM_HEIGHTS.UNIVERSITY_CARD);
+  const opacity = useSharedValue(1);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  // Threshold for swipe actions
+  const SWIPE_THRESHOLD = 80;
+  const MAX_SWIPE = 120;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay: Math.min(index * 40, 200), // Cap delay for performance
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        delay: Math.min(index * 40, 200),
+        ...ANIMATION.spring.gentle,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  // Swipe gesture handler
+  const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-5, 5])
+    .onUpdate((event) => {
+      // Clamp the translation
+      translateX.value = Math.max(-MAX_SWIPE, Math.min(MAX_SWIPE, event.translationX));
+    })
+    .onEnd((event) => {
+      if (event.translationX < -SWIPE_THRESHOLD) {
+        // Swipe left - Add to favorites
+        runOnJS(Haptics.medium)();
+        runOnJS(onToggleFavorite)(item.short_name);
+        translateX.value = withSpring(0, {damping: 15, stiffness: 150});
+      } else if (event.translationX > SWIPE_THRESHOLD && onCompare) {
+        // Swipe right - Compare
+        runOnJS(Haptics.light)();
+        runOnJS(onCompare)(item.short_name);
+        translateX.value = withSpring(0, {damping: 15, stiffness: 150});
+      } else {
+        // Snap back
+        translateX.value = withSpring(0, {damping: 15, stiffness: 150});
+      }
+    });
+
+  // Animated styles for the card
+  const animatedCardStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: translateX.value}],
+  }));
+
+  // Animated styles for left action (compare)
+  const leftActionStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateX.value,
+      [0, SWIPE_THRESHOLD],
+      [0, 1],
+      Extrapolation.CLAMP
+    ),
+    transform: [{
+      scale: interpolate(
+        translateX.value,
+        [0, SWIPE_THRESHOLD],
+        [0.5, 1],
+        Extrapolation.CLAMP
+      ),
+    }],
+  }));
+
+  // Animated styles for right action (favorite)
+  const rightActionStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      translateX.value,
+      [-SWIPE_THRESHOLD, 0],
+      [1, 0],
+      Extrapolation.CLAMP
+    ),
+    transform: [{
+      scale: interpolate(
+        translateX.value,
+        [-SWIPE_THRESHOLD, 0],
+        [1, 0.5],
+        Extrapolation.CLAMP
+      ),
+    }],
+  }));
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: ANIMATION_SCALES.PRESS,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      ...ANIMATION.spring.snappy,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const getRankColor = (rank: number | undefined) => {
+    if (!rank) return [colors.primary, colors.primaryLight];
+    if (rank === 1) return ['#FFD700', '#FFA500'];
+    if (rank === 2) return ['#C0C0C0', '#A0A0A0'];
+    if (rank === 3) return ['#CD7F32', '#8B4513'];
+    if (rank <= 10) return [colors.primary, colors.secondary];
+    return [colors.primary, colors.primaryLight];
+  };
+
+  return (
+    <Animated.View
+      style={[
+        {
+          opacity: fadeAnim,
+          transform: [{scale: scaleAnim}, {translateY: slideAnim}],
+        },
+      ]}>
+      {/* Swipe action backgrounds */}
+      <View style={styles.swipeActionsContainer}>
+        {/* Left action - Compare */}
+        <ReanimatedView style={[styles.swipeAction, styles.swipeActionLeft, {backgroundColor: colors.secondary}, leftActionStyle]}>
+          <Icon name="git-compare-outline" family="Ionicons" size={24} color="#FFFFFF" />
+          <Text style={styles.swipeActionText}>Compare</Text>
+        </ReanimatedView>
+        
+        {/* Right action - Favorite */}
+        <ReanimatedView style={[styles.swipeAction, styles.swipeActionRight, {backgroundColor: isFavorite ? '#EF4444' : '#10B981'}, rightActionStyle]}>
+          <Icon name={isFavorite ? "heart-dislike" : "heart"} family="Ionicons" size={24} color="#FFFFFF" />
+          <Text style={styles.swipeActionText}>{isFavorite ? 'Remove' : 'Save'}</Text>
+        </ReanimatedView>
+      </View>
+
+      {/* Swipeable card */}
+      <GestureDetector gesture={panGesture}>
+        <ReanimatedView style={animatedCardStyle}>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onPress={onPress}
+            accessibilityRole="button"
+            accessibilityLabel={`${item.name}, ${item.type} university in ${item.city}${item.ranking_national ? `, ranked number ${item.ranking_national} nationally` : ''}. Swipe left to save, swipe right to compare.`}
+            accessibilityHint="Double tap to view university details">
+            <View style={[styles.universityCard, {backgroundColor: colors.card}]}>
+              {/* Enhanced Header Row - With Logo */}
+              <View style={styles.cardHeader}>
+                {/* University Logo */}
+                <View style={[styles.logoContainer, {backgroundColor: colors.background}]}>
+                  <UniversityLogo
+                    universityName={item.name}
+                    size={44}
+                    style={styles.uniLogo}
+                  />
+                </View>
+
+                {/* Info */}
+                <View style={styles.headerInfo}>
+                  <View style={styles.nameRow}>
+                    <Text style={[styles.universityName, {color: colors.text}]} numberOfLines={1}>
+                      {item.name}
+                    </Text>
+                  </View>
+                  <View style={styles.shortNameRow}>
+                    <Text style={[styles.shortName, {color: getUniversityBrandColor(item.name) || colors.primary, fontWeight: '700'}]}>
+                      {item.short_name}
+                    </Text>
+                    <View style={[
+                      styles.typeBadgeSmall, 
+                      {backgroundColor: item.type === 'public' ? `${colors.success}15` : `${colors.primary}15`}
+                    ]}>
+                      <Text style={[
+                        styles.typeBadgeText, 
+                        {color: item.type === 'public' ? colors.success : colors.primary}
+                      ]}>
+                        {item.type.toUpperCase()}
+                      </Text>
+                    </View>
+                    {item.is_hec_recognized && (
+                      <View style={[styles.hecBadge, {backgroundColor: `${colors.success}15`}]}>
+                        <Icon name="checkmark-circle" family="Ionicons" size={10} color={colors.success} />
+                        <Text style={[styles.hecText, {color: colors.success}]}>HEC</Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
+
+                {/* Rank + Favorite + Arrow */}
+                <View style={styles.cardHeaderRight}>
+                  {item.ranking_national && (
+                    <LinearGradient
+                      colors={getRankColor(item.ranking_national)}
+                      style={styles.rankBadgeCompact}>
+                      <Text style={styles.rankText}>#{item.ranking_national}</Text>
+                    </LinearGradient>
+                  )}
+                  <TouchableOpacity
+                    style={[styles.favoriteBtn, {backgroundColor: isFavorite ? '#FEE2E2' : colors.background}]}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      onToggleFavorite(item.short_name);
+                    }}
+                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                    accessibilityRole="button"
+                    accessibilityLabel={isFavorite ? "Remove from favorites" : "Add to favorites"}>
+                    <Icon 
+                      name={isFavorite ? "heart" : "heart-outline"} 
+                      family="Ionicons" 
+                      size={18} 
+                      color={isFavorite ? "#EF4444" : colors.textSecondary} 
+                    />
+                  </TouchableOpacity>
+                  <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textSecondary} />
+                </View>
+              </View>
+
+              {/* Compact Details Row */}
+              <View style={styles.cardDetailsCompact}>
+                <View style={styles.detailItem}>
+                  <Icon name="location" family="Ionicons" size={12} color={colors.primary} />
+                  <Text style={[styles.detailText, {color: colors.text}]}>
+                    {item.city}
+                  </Text>
+                </View>
+                <View style={styles.detailItem}>
+                  <Icon name="calendar" family="Ionicons" size={12} color={colors.primary} />
+                  <Text style={[styles.detailText, {color: colors.text}]}>
+                    {item.established_year}
+                  </Text>
+                </View>
+                {item.campuses.length > 1 && (
+                  <View style={styles.detailItem}>
+                    <Icon name="business" family="Ionicons" size={12} color={colors.primary} />
+                    <Text style={[styles.detailText, {color: colors.text}]}>
+                      {item.campuses.length} Campuses
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+        </ReanimatedView>
+      </GestureDetector>
+    </Animated.View>
+  );
 };
 
-// University Card Component
+// Legacy University Card Component (non-swipeable fallback)
 const UniversityCard = ({
   item,
   onPress,
@@ -654,19 +939,26 @@ const PremiumUniversitiesScreen = () => {
     </View>
   ), [colors, showFilters, filteredUniversities.length, sortBy, selectedProvince, selectedType, searchQuery, user?.avatarUrl, navigation, setSearchQuery, setSortBy, setSelectedProvince, setSelectedType, setShowFilters]);
 
+  // Handle compare action from swipe
+  const handleCompare = useCallback((universityId: string) => {
+    // Navigate to compare screen with this university pre-selected
+    navigation.navigate('Compare');
+  }, [navigation]);
+
   const renderUniversityCard = useCallback(
     ({item, index}: {item: UniversityItem; index: number}) => (
-      <UniversityCard
+      <SwipeableUniversityCard
         item={item as any}
         onPress={() => handleUniversityPress(item)}
         onToggleFavorite={handleToggleFavorite}
+        onCompare={handleCompare}
         isFavorite={isFavorite(item.short_name, 'university')}
         colors={colors}
         isDark={isDark}
         index={index}
       />
     ),
-    [handleUniversityPress, handleToggleFavorite, isFavorite, colors, isDark],
+    [handleUniversityPress, handleToggleFavorite, handleCompare, isFavorite, colors, isDark],
   );
 
   return (
@@ -681,18 +973,14 @@ const PremiumUniversitiesScreen = () => {
         {loading ? (
           <UniversitiesListSkeleton />
         ) : (
-        <FlatList
+        <FlashList
           data={filteredUniversities}
           keyExtractor={item => item.short_name}
           renderItem={renderUniversityCard}
           ListHeaderComponent={renderHeader}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
-          initialNumToRender={8}
-          maxToRenderPerBatch={10}
-          windowSize={5}
-          removeClippedSubviews={Platform.OS === 'android'}
-          getItemLayout={getItemLayout}
+          estimatedItemSize={ITEM_HEIGHT}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           refreshControl={
@@ -1134,6 +1422,45 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  // Swipe action styles
+  swipeActionsContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    marginHorizontal: SPACING.md,
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+  },
+  swipeAction: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.md,
+    gap: 4,
+  },
+  swipeActionLeft: {
+    position: 'absolute',
+    left: 0,
+  },
+  swipeActionRight: {
+    position: 'absolute',
+    right: 0,
+  },
+  swipeActionText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 });
 
