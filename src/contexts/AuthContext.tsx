@@ -30,12 +30,6 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
-// Configure Google Sign-In with Web Client ID
-GoogleSignin.configure({
-  webClientId: '69201457652-q8n88n7sf55dl0sp70488agcrjctttc9.apps.googleusercontent.com',
-  offlineAccess: true,
-});
-
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -224,6 +218,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   // =========================================================================
 
   useEffect(() => {
+    // Configure Google Sign-In with Web Client ID
+    // Scopes required for Supabase authentication
+    GoogleSignin.configure({
+      webClientId: '69201457652-q8n88n7sf55dl0sp70488agcrjctttc9.apps.googleusercontent.com',
+      offlineAccess: false, // Set to false for better native compatibility
+      scopes: ['email', 'profile'],
+    });
+
     initializeAuth();
   }, []);
 
@@ -462,31 +464,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setState(prev => ({...prev, isLoading: true, authError: null}));
 
       // Check if Google Play Services are available
-      await GoogleSignin.hasPlayServices();
+      try {
+        await GoogleSignin.hasPlayServices();
+      } catch (playServicesError: any) {
+        logger.error('Google Play Services not available', playServicesError, 'Auth');
+        let playServicesMsg = 'Google Play Services is not installed or needs updating';
+        if (playServicesError?.message?.includes('SERVICE_MISSING')) {
+          playServicesMsg = 'Google Play Services not installed. Please install or update from Play Store.';
+        } else if (playServicesError?.message?.includes('SERVICE_DISABLED')) {
+          playServicesMsg = 'Google Play Services is disabled. Enable it in Settings > Apps > Google Play Services';
+        }
+        throw new Error(playServicesMsg);
+      }
       
       // Sign in with Google natively
       const userInfo = await GoogleSignin.signIn();
       
       logger.debug('Google sign-in successful, getting ID token...', null, 'Auth');
       
-      // Get the ID token
+      // Get the ID token and access token
       const tokens = await GoogleSignin.getTokens();
       const idToken = tokens.idToken;
+      const accessToken = tokens.accessToken;
       
       if (!idToken) {
         throw new Error('No ID token received from Google');
       }
 
-      logger.debug('Signing in to Supabase with Google ID token...', null, 'Auth');
+      logger.debug('Signing in to Supabase with Google credentials...', null, 'Auth');
       
-      // Sign in to Supabase using the ID token
-      const {data, error} = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken,
+      // For Supabase, directly create user session from Google tokens
+      // This bypasses the OAuth callback flow and uses native mobile auth
+      const {data, error} = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: '', // Google doesn't provide refresh via native SDK
       });
 
       if (error) {
-        throw error;
+        logger.debug('Direct session method failed, trying signInWithIdToken...', error, 'Auth');
+        
+        // Fallback: Try signInWithIdToken as backup
+        const {data: fallbackData, error: fallbackError} = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: idToken,
+        });
+        
+        if (fallbackError) {
+          throw fallbackError;
+        }
+        
+        if (!fallbackData.user) {
+          throw new Error('Unable to create session with provided token');
+        }
       }
 
       if (data.user) {
@@ -509,14 +538,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         errorMessage = 'Google Play Services not available';
       } else if (error.code === '10' || error.code === 10 || 
                  (error.message && error.message.toLowerCase().includes('developer_error'))) {
-        // DEVELOPER_ERROR - usually SHA-1 fingerprint mismatch
-        errorMessage = '⚠️ Google Sign-In Configuration Issue\n\nTry:\n1. Use Email/Password Login\n2. Continue as Guest\n3. Update app from Play Store';
-        logger.warn('DEVELOPER_ERROR: Check SHA-1 fingerprint in Google Cloud Console', {
-          debugSHA1: '5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25',
-          releaseSHA1: '2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66',
+        // DEVELOPER_ERROR - SHA-1 fingerprint mismatch between APK signing cert and Google Cloud Console
+        // SOLUTION: Add this SHA-1 to Google Cloud Console OAuth credentials
+        const sha1Fingerprint = '2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66';
+        errorMessage = `⚠️ Google Sign-In Setup Required\n\nTo fix this:\n1. Go to Google Cloud Console\n2. Add SHA-1: ${sha1Fingerprint}\n3. Reinstall the app\n\nAlternatively:\n• Use Email/Password\n• Continue as Guest`;
+        logger.error('DEVELOPER_ERROR: SHA-1 Fingerprint Mismatch', {
+          sha1: sha1Fingerprint,
+          instruction: 'Add to Google Cloud Console > OAuth 2.0 > Android Credential',
+          docLink: 'https://developers.google.com/identity/sign-in/android/start-integrating'
         }, 'Auth');
       } else if (error.code === '7') {
         errorMessage = 'Network error. Please check your connection.';
+      } else if (error.code === '12' || error.code === 12) {
+        errorMessage = 'Unable to connect to Google servers. Try:\n1. Check WiFi/Mobile data\n2. Restart your device\n3. Update Google Play Services';
+      } else if (error.message && (
+        error.message.toLowerCase().includes('no internet') ||
+        error.message.toLowerCase().includes('cannot resolve host') ||
+        error.message.toLowerCase().includes('network') ||
+        error.message.toLowerCase().includes('connection refused') ||
+        error.message.toLowerCase().includes('unable to connect')
+      )) {
+        errorMessage = '🌐 Connection Issue\n\nCould not reach Google servers. Check:\n• WiFi/Mobile data is active\n• Not using restrictive VPN\n• Device date/time is correct\n• Google Play Services is updated';
       } else if (error.message) {
         errorMessage = error.message;
       }
