@@ -490,7 +490,7 @@ const PremiumRecommendationsScreen = () => {
                 matchReasons={uni.matchReasons || []}
                 index={index}
                 colors={colors}
-                onViewDetails={() => handleViewDetails(uni.short_name || uni.id)}
+                onViewDetails={() => handleViewDetails(uni.short_name)}
               />
             ))
           ) : (

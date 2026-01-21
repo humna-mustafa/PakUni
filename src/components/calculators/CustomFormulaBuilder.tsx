@@ -854,7 +854,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.card,
+    // backgroundColor set dynamically via colors.card
     borderRadius: RADIUS.xl,
     padding: SPACING.lg,
     marginVertical: SPACING.md,
@@ -882,11 +882,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
-    color: colors.text,
+    // color set dynamically via colors.text
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: colors.textSecondary,
+    // color set dynamically via colors.textSecondary
     marginTop: 2,
   },
   savedSection: {
@@ -895,7 +895,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: colors.textSecondary,
+    // color set dynamically via colors.textSecondary
     marginBottom: SPACING.sm,
   },
   emptyState: {
@@ -905,12 +905,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
-    color: colors.textSecondary,
+    // color set dynamically via colors.textSecondary
     marginTop: SPACING.md,
   },
   emptyText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: colors.textMuted,
+    // color set dynamically via colors.textMuted
     textAlign: 'center',
     marginTop: SPACING.xs,
   },

@@ -583,7 +583,9 @@ const PremiumCalculatorScreen = () => {
   const performShare = async () => {
     if (!shareResult) return;
     
-    const chance = getChanceLevel(shareResult.aggregate);
+    const rawChance = getChanceLevel(shareResult.aggregate);
+    // Map 'unlikely' to 'low' for share function which only accepts high/medium/low
+    const chance: 'high' | 'medium' | 'low' = rawChance === 'unlikely' ? 'low' : rawChance;
     
     const success = await shareMeritSuccessCard({
       aggregate: shareResult.aggregate,

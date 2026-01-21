@@ -184,7 +184,10 @@ class HybridDataService {
   async getUniversity(idOrShortName: string): Promise<(TursoUniversity | UniversityData) | undefined> {
     const universities = await this.getUniversities();
     return universities.find(
-      u => u.short_name === idOrShortName || u.name === idOrShortName || (u as TursoUniversity).id === idOrShortName
+      u => 
+        u.short_name === idOrShortName || 
+        u.name === idOrShortName || 
+        String(u.id) === String(idOrShortName)
     );
   }
 

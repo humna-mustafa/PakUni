@@ -18,7 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from './icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
 import {getScholarshipBrandColors} from '../data/scholarships';
-import {getUniversityBrandColor, UNIVERSITY_LOGO_MAP} from '../utils/universityLogos';
+import {getUniversityBrandColor, getLogo} from '../utils/universityLogos';
 import UniversityLogo from './UniversityLogo';
 
 // ============================================================================

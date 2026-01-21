@@ -32,9 +32,8 @@ export {
   HeroImage,
   preloadImages,
   clearImageCache,
-  ResizeMode as ImageResizeMode,
-  Priority as ImagePriority,
 } from './FastImageWrapper';
+export type {ResizeMode as ImageResizeMode, Priority as ImagePriority} from './FastImageWrapper';
 
 // Lottie Animations - lottie-react-native
 export {

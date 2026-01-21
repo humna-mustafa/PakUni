@@ -7,12 +7,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69201457652:android:pakuni",
+        "mobilesdk_app_id": "1:69201457652:android:f9c3d5e8a7b2c4d5f",
         "android_client_info": {
           "package_name": "com.pakuni"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "69201457652-android.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakuni",
+            "certificate_hash": "2d63fee0e1e825d33b4bfe8a4899c37ac6d5d166"
+          }
+        },
+        {
+          "client_id": "69201457652-debug.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakuni",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
         {
           "client_id": "69201457652-q8n88n7sf55dl0sp70488agcrjctttc9.apps.googleusercontent.com",
           "client_type": 3

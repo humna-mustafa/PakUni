@@ -146,15 +146,12 @@ export {
 
 export {useAuthToast} from './useAuthToast';
 // ============================================================================
-// GESTURE ANIMATION HOOKS (React Native Reanimated)
+// GESTURE ANIMATION HOOKS (Standard React Native Animated)
 // ============================================================================
 
 export {
   useScalePress,
-  useDragAnimation,
   useEntranceAnimation,
-  useStaggeredAnimation,
-  useParallaxScroll,
   SPRING_CONFIGS,
   TIMING_CONFIGS,
 } from './useGestureAnimation';

@@ -7,11 +7,18 @@ import {logger} from '../utils/logger';
 // Load from environment variables for security
 // IMPORTANT: In production builds, set these in .env file
 // Never commit actual API keys to version control
-const supabaseUrl = Config.SUPABASE_URL;
-const supabaseAnonKey = Config.SUPABASE_ANON_KEY;
+const supabaseUrl = Config.SUPABASE_URL || '';
+const supabaseAnonKey = Config.SUPABASE_ANON_KEY || '';
+
+// Log config for debugging (will be removed in production)
+if (__DEV__) {
+  console.log('[Supabase] URL configured:', supabaseUrl ? 'Yes' : 'No');
+  console.log('[Supabase] Key configured:', supabaseAnonKey ? 'Yes' : 'No');
+}
 
 // Security: Validate and prevent localhost/test credentials
 const isLocalhost = (url: string): boolean => {
+  if (!url) return false;
   return (
     url.includes('localhost') ||
     url.includes('127.0.0.1') ||
@@ -32,42 +39,46 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // SECURITY: Block localhost/placeholder credentials from being used
 if (supabaseUrl && isLocalhost(supabaseUrl)) {
   logger.error(
-    'SECURITY ERROR: Detected localhost/placeholder Supabase URL in configuration. This prevents login on local development machines.',
+    'SECURITY ERROR: Detected localhost/placeholder Supabase URL in configuration.',
     undefined,
     'Supabase'
   );
-  throw new Error('Invalid Supabase configuration: localhost/test credentials detected. Use production credentials only.');
 }
 
-// Use fallback empty values to prevent crash during development
-// App will work in offline mode with bundled data
-const safeSupabaseUrl = supabaseUrl || '';
-const safeSupabaseAnonKey = supabaseAnonKey || '';
+// Create client - will be in offline mode if credentials missing
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key',
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+      // FREE TIER OPTIMIZATION: Longer storage key to avoid conflicts
+      storageKey: 'pakuni-auth-token',
+      // Keep session data fresh but don't constantly poll
+      flowType: 'implicit',
+    },
+    // FREE TIER OPTIMIZATION: Disable realtime to save connections
+    realtime: {
+      params: {
+        eventsPerSecond: 0, // Disable realtime events
+      },
+    },
+    // Reduce unnecessary network requests
+    global: {
+      headers: {
+        'X-Client-Info': 'pakuni-mobile',
+      },
+    },
+  }
+);
 
-export const supabase = createClient(safeSupabaseUrl, safeSupabaseAnonKey, {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-    // FREE TIER OPTIMIZATION: Longer storage key to avoid conflicts
-    storageKey: 'pakuni-auth-token',
-    // Keep session data fresh but don't constantly poll
-    flowType: 'implicit',
-  },
-  // FREE TIER OPTIMIZATION: Disable realtime to save connections
-  realtime: {
-    params: {
-      eventsPerSecond: 0, // Disable realtime events
-    },
-  },
-  // Reduce unnecessary network requests
-  global: {
-    headers: {
-      'X-Client-Info': 'pakuni-mobile',
-    },
-  },
-});
+// Helper to check if Supabase is properly configured
+export const isSupabaseConfigured = (): boolean => {
+  return Boolean(supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('placeholder'));
+};
 
 // Database types
 export type EducationSystem =

@@ -1,6 +1,6 @@
 /**
  * Gestures Components Index
- * Modern gesture-based UI components with react-native-reanimated
+ * Modern gesture-based UI components
  */
 
 // Swipeable Components
@@ -22,10 +22,8 @@ export {default as PullToRefreshView} from './PullToRefreshView';
 // Re-export hooks
 export {
   useScalePress,
-  useDragAnimation,
   useEntranceAnimation,
-  useStaggeredAnimation,
-  useParallaxScroll,
   SPRING_CONFIGS,
   TIMING_CONFIGS,
 } from '../../hooks/useGestureAnimation';
+

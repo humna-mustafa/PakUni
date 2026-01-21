@@ -59,6 +59,12 @@
 # React Native Haptic Feedback
 -keep class com.mkuczera.RNReactNativeHapticFeedbackPackage { *; }
 
+# React Native Reanimated
+-keep class com.swmansion.reanimated.** { *; }
+-keep interface com.swmansion.reanimated.** { *; }
+-keep class com.facebook.react.turbomodule.core.** { *; }
+-dontwarn com.swmansion.reanimated.**
+
 # Google Sign In
 -keep class com.google.android.gms.** { *; }
 -keep class com.reactnativegooglesignin.** { *; }

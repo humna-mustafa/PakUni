@@ -5,15 +5,14 @@ import {createNativeStackNavigator, NativeStackNavigationOptions} from '@react-n
 import {createBottomTabNavigator, type BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {Icon} from '../components';
 import {
-  ScaleFadeTransition,
-  SlideFromBottomTransition,
-  FadeTransition,
-  NAVIGATION_SPRINGS,
+  DefaultScreenOptions,
+  ModalScreenOptions,
+  FadeScreenOptions,
 } from './transitions';
 
 // Auth & Onboarding Screens
 import AuthScreen from '../screens/AuthScreen';
-import OnboardingScreen from '../screens/OnboardingScreen';
+import UltraOnboardingScreen from '../screens/UltraOnboardingScreen';
 
 // Premium Screens - Main
 import PremiumHomeScreen from '../screens/PremiumHomeScreen';
@@ -328,10 +327,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           />
           <Stack.Screen
             name="Onboarding"
-            component={OnboardingScreen}
+            component={UltraOnboardingScreen}
             options={{
               headerShown: false,
-              animation: 'slide_from_bottom',
+              animation: 'fade',
+              gestureEnabled: false,
             }}
           />
           {/* Main App */}

@@ -210,3 +210,25 @@ export type {
   FeeRangeOptions,
   FeeDisplaySettings,
 } from './feeRange';
+
+// ============================================================================
+// SCREEN UTILITIES
+// ============================================================================
+
+export {
+  useScreenEntrance,
+  useStaggeredEntrance,
+  useHeaderAnimation,
+  getScreenPadding,
+  getContentWidth,
+  getSafeAreaInsets,
+  createKeyExtractor,
+  createGetItemLayout,
+  debounce,
+  throttle,
+  createFilterOptions,
+  screenStyles,
+  DIMENSIONS,
+  a11y as screenA11y,
+} from './screenUtils';
+export {default as ScreenUtils} from './screenUtils';

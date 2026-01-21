@@ -1,94 +1,24 @@
 /**
  * AnimatedList Component
- * High-performance animated FlatList with parallax, staggered items, and smooth scrolling
- * 
- * Features:
- * - Staggered entrance animations
- * - Header parallax effects
- * - Smooth scroll-linked animations
- * - Pull-to-refresh with custom animation
- * - Item press animations
+ * Simple FlatList with entrance animations
  */
 
 import React, {useCallback, useRef, useMemo, memo} from 'react';
 import {
   View,
   StyleSheet,
-  Dimensions,
   FlatList,
   FlatListProps,
   Platform,
   RefreshControl,
+  Animated,
 } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  useAnimatedScrollHandler,
-  withSpring,
-  withTiming,
-  interpolate,
-  Extrapolate,
-  runOnJS,
-} from 'react-native-reanimated';
 import {useTheme} from '../../contexts/ThemeContext';
-import {SPRING_CONFIGS} from '../../hooks/useGestureAnimation';
 import {Haptics} from '../../utils/haptics';
-
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
-interface ParallaxHeaderProps {
-  height: number;
-  children: React.ReactNode;
-  scrollY: Animated.SharedValue<number>;
-}
-
-export const ParallaxHeader: React.FC<ParallaxHeaderProps> = memo(({
-  height,
-  children,
-  scrollY,
-}) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [-height, 0, height],
-      [-height / 2, 0, height * 0.4],
-      Extrapolate.CLAMP
-    );
-    
-    const scale = interpolate(
-      scrollY.value,
-      [-height, 0, height],
-      [1.5, 1, 0.9],
-      Extrapolate.CLAMP
-    );
-    
-    const opacity = interpolate(
-      scrollY.value,
-      [0, height * 0.5, height],
-      [1, 0.8, 0],
-      Extrapolate.CLAMP
-    );
-
-    return {
-      height,
-      transform: [{translateY}, {scale}],
-      opacity,
-    };
-  });
-
-  return (
-    <Animated.View style={[styles.parallaxHeader, animatedStyle]}>
-      {children}
-    </Animated.View>
-  );
-});
 
 interface AnimatedListItemProps {
   index: number;
   children: React.ReactNode;
-  scrollY: Animated.SharedValue<number>;
   enableEntrance?: boolean;
   staggerDelay?: number;
 }
@@ -96,45 +26,63 @@ interface AnimatedListItemProps {
 export const AnimatedListItem: React.FC<AnimatedListItemProps> = memo(({
   index,
   children,
-  scrollY,
   enableEntrance = true,
   staggerDelay = 50,
 }) => {
-  const entranceProgress = useSharedValue(enableEntrance ? 0 : 1);
+  const fadeAnim = useRef(new Animated.Value(enableEntrance ? 0 : 1)).current;
+  const translateAnim = useRef(new Animated.Value(enableEntrance ? 30 : 0)).current;
   const hasAnimated = useRef(false);
 
-  // Trigger entrance animation
   if (enableEntrance && !hasAnimated.current) {
     hasAnimated.current = true;
     setTimeout(() => {
-      entranceProgress.value = withSpring(1, SPRING_CONFIGS.gentle);
-    }, index * staggerDelay);
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(translateAnim, {
+          toValue: 0,
+          useNativeDriver: true,
+          speed: 12,
+          bounciness: 6,
+        }),
+      ]).start();
+    }, Math.min(index * staggerDelay, 500));
   }
 
-  const animatedStyle = useAnimatedStyle(() => {
-    const baseOpacity = entranceProgress.value;
-    const baseTranslateY = (1 - entranceProgress.value) * 30;
-    const baseScale = 0.95 + entranceProgress.value * 0.05;
-
-    return {
-      opacity: baseOpacity,
-      transform: [
-        {translateY: baseTranslateY},
-        {scale: baseScale},
-      ],
-    };
-  });
-
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [{translateY: translateAnim}],
+      }}>
       {children}
     </Animated.View>
   );
 });
 
+interface ParallaxHeaderProps {
+  height: number;
+  children: React.ReactNode;
+  scrollY?: any;
+}
+
+export const ParallaxHeader: React.FC<ParallaxHeaderProps> = memo(({
+  height,
+  children,
+}) => {
+  return (
+    <View style={[styles.parallaxHeader, {height}]}>
+      {children}
+    </View>
+  );
+});
+
 interface AnimatedListProps<T> extends Omit<FlatListProps<T>, 'data' | 'renderItem'> {
   data: T[];
-  renderItem: (info: {item: T; index: number; scrollY: Animated.SharedValue<number>}) => React.ReactElement | null;
+  renderItem: (info: {item: T; index: number; scrollY?: any}) => React.ReactElement | null;
   headerComponent?: React.ReactNode;
   headerHeight?: number;
   enableParallaxHeader?: boolean;
@@ -162,30 +110,17 @@ function AnimatedListInner<T>(
   ref: React.Ref<FlatList<T>>
 ) {
   const {colors} = useTheme();
-  const scrollY = useSharedValue(0);
-  const isRefreshing = useSharedValue(false);
 
   const handleRefresh = useCallback(async () => {
     if (!onRefresh) return;
-    
-    isRefreshing.value = true;
-    Haptics.refreshThreshold();
-    
+    Haptics.medium();
     try {
       await onRefresh();
       Haptics.success();
     } catch (error) {
       Haptics.error();
-    } finally {
-      isRefreshing.value = false;
     }
   }, [onRefresh]);
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
 
   const keyExtractor = useCallback((item: T, index: number) => {
     if (typeof item === 'object' && item !== null) {
@@ -197,41 +132,31 @@ function AnimatedListInner<T>(
 
   const renderItemWrapper = useCallback(
     ({item, index}: {item: T; index: number}) => {
-      const element = renderItem({item, index, scrollY});
-      
+      const element = renderItem({item, index});
       if (!element) return null;
 
       if (enableStaggeredAnimation) {
         return (
           <AnimatedListItem
             index={index}
-            scrollY={scrollY}
             staggerDelay={staggerDelay}
-            enableEntrance={index < 15} // Only animate first 15 items
-          >
+            enableEntrance={index < 15}>
             {element}
           </AnimatedListItem>
         );
       }
-
       return element;
     },
-    [renderItem, scrollY, enableStaggeredAnimation, staggerDelay]
+    [renderItem, enableStaggeredAnimation, staggerDelay]
   );
 
   const ListHeaderComponent = useMemo(() => {
     if (!headerComponent) return null;
-
     if (enableParallaxHeader) {
-      return (
-        <ParallaxHeader height={headerHeight} scrollY={scrollY}>
-          {headerComponent}
-        </ParallaxHeader>
-      );
+      return <ParallaxHeader height={headerHeight}>{headerComponent}</ParallaxHeader>;
     }
-
     return <View style={{height: headerHeight}}>{headerComponent}</View>;
-  }, [headerComponent, enableParallaxHeader, headerHeight, scrollY]);
+  }, [headerComponent, enableParallaxHeader, headerHeight]);
 
   const ListEmptyComponent = useMemo(() => {
     if (!emptyComponent) return null;
@@ -240,7 +165,6 @@ function AnimatedListInner<T>(
 
   const refreshControl = useMemo(() => {
     if (!onRefresh) return undefined;
-
     return (
       <RefreshControl
         refreshing={refreshing}
@@ -253,26 +177,24 @@ function AnimatedListInner<T>(
   }, [onRefresh, refreshing, handleRefresh, colors]);
 
   return (
-    <AnimatedFlatList
-      data={data as any}
-      renderItem={renderItemWrapper as any}
-      keyExtractor={keyExtractor as any}
+    <FlatList
+      ref={ref}
+      data={data}
+      renderItem={renderItemWrapper}
+      keyExtractor={keyExtractor}
       ListHeaderComponent={ListHeaderComponent}
       ListEmptyComponent={ListEmptyComponent}
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       refreshControl={refreshControl}
       removeClippedSubviews={Platform.OS === 'android'}
       maxToRenderPerBatch={10}
       windowSize={10}
       initialNumToRender={10}
-      {...(flatListProps as any)}
+      {...flatListProps}
     />
   );
 }
 
-// Forward ref with generic type support
 const AnimatedList = React.forwardRef(AnimatedListInner) as <T>(
   props: AnimatedListProps<T> & {ref?: React.Ref<FlatList<T>>}
 ) => React.ReactElement | null;

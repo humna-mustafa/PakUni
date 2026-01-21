@@ -96,8 +96,12 @@ const getLibsqlClient = async () => {
  * - v1: Initial release
  * - v2: Added job_market_stats table
  * - v3: Updated university logo URLs
+ * - v4: Fixed logo URLs - converted Wikipedia page URLs to direct image URLs
+ * - v5: Imported all 265 universities from CSV with corrected province mapping
+ * - v6: Fixed all 17 broken Wikipedia article links + 2 missing logos (all 265 universities complete)
+ * - v7: Fixed logo mapping - now uses direct logo_url from database instead of ID-based lookup
  */
-const CACHE_VERSION = 3;
+const CACHE_VERSION = 7;
 
 // Cache keys (version-prefixed for cache invalidation)
 const CACHE_KEYS = {
@@ -418,7 +422,10 @@ async function fetchWithCache<T>(
 export async function fetchUniversities(forceRefresh: boolean = false): Promise<TursoUniversity[]> {
   return fetchWithCache<TursoUniversity>(
     CACHE_KEYS.UNIVERSITIES,
-    'SELECT * FROM universities ORDER BY ranking_national ASC NULLS LAST, name ASC',
+    `SELECT * FROM universities 
+     WHERE name IS NOT NULL AND name != '' AND TRIM(name) != ''
+       AND short_name IS NOT NULL AND short_name != '' AND TRIM(short_name) != ''
+     ORDER BY ranking_national ASC NULLS LAST, name ASC`,
     (rows) => rows.map(row => ({
       id: row.id,
       name: row.name,

@@ -12,8 +12,7 @@
 
 import React, {useRef, useCallback, useEffect, memo} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
-import LottieView from 'lottie-react-native';
-import type {AnimatedLottieViewProps} from 'lottie-react-native';
+import LottieView, {LottieViewProps} from 'lottie-react-native';
 import {useReducedMotion} from '../../hooks/useAccessibility';
 
 // Note: Add your Lottie JSON files to src/assets/lottie/
@@ -76,7 +75,7 @@ interface LottieAnimationProps {
   /** Animation name from LOTTIE_ANIMATIONS or custom source */
   name?: LottieAnimationName;
   /** Custom animation source (JSON file) */
-  source?: AnimatedLottieViewProps['source'];
+  source?: LottieViewProps['source'];
   /** Animation size */
   size?: number;
   /** Width override */

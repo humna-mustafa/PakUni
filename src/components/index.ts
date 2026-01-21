@@ -168,6 +168,48 @@ export { default as FloatingToolsButton } from './FloatingToolsButton';
 export { ContributionSuccessAnimation, QuickSuccessNotification } from './ContributionSuccessAnimation';
 export type { ContributionSuccessProps } from './ContributionSuccessAnimation';
 
+// =============================================================================
+// ONBOARDING ANIMATIONS & ILLUSTRATIONS
+// =============================================================================
+
+export {
+  ParticleSystem,
+  GradientOrb,
+  FloatingShapes,
+  AnimatedIconContainer,
+  WaveAnimation,
+  SparkleSystem,
+  UniversityIllustration,
+  CalculatorIllustration,
+  ScholarshipIllustration,
+  GuidesIllustration,
+  ToolsIllustration,
+  DeadlineIllustration,
+  AchievementIllustration,
+  AIIllustration,
+} from './onboarding';
+
+// =============================================================================
+// SCREEN DECORATIONS & ANIMATIONS
+// =============================================================================
+
+export {
+  SubtleFloatingShapes,
+  AmbientGlow,
+  SparkleDecoration,
+  CelebrationParticles,
+  AnimatedHeaderBg,
+  PulseRing,
+  FloatingIcon,
+  Shimmer as AnimatedShimmer,
+} from './animations';
+
+// Profile Screen Decorations
+export {
+  ProfileHeaderDecorations,
+  AvatarPulseRing,
+} from './ProfileDecorations';
+
 // Admin Settings
 export { AutoApprovalSettings } from './AutoApprovalSettings';
 export type { AutoApprovalSettingsProps } from './AutoApprovalSettings';
@@ -259,10 +301,7 @@ export {
   AnimatedListItem,
   PullToRefreshView,
   useScalePress,
-  useDragAnimation,
   useEntranceAnimation,
-  useStaggeredAnimation,
-  useParallaxScroll,
   SPRING_CONFIGS,
   TIMING_CONFIGS,
 } from './gestures';

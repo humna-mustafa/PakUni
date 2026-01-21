@@ -229,6 +229,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const initializeAuth = async () => {
     try {
+      // Check for local onboarding flag first
+      const localOnboarding = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING);
+      const isActuallyOnboarded = localOnboarding === 'true';
+
       // FREE TIER OPTIMIZATION: First try to use cached profile to avoid API call
       const storedProfile = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
       
@@ -242,7 +246,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           isLoading: false,
           isAuthenticated: true,
           isGuest: profile.isGuest,
-          hasCompletedOnboarding: profile.onboardingCompleted,
+          hasCompletedOnboarding: profile.onboardingCompleted || isActuallyOnboarded,
         }));
         
         // For non-guest users, verify session is still valid (but don't block UI)
@@ -428,6 +432,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         logger.info('Profile created successfully', {email: profile.email}, 'Auth');
       }
 
+      const localOnboarding = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING);
+      const isActuallyOnboarded = localOnboarding === 'true';
+
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
       
       setState(prev => ({
@@ -436,7 +443,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         isLoading: false,
         isAuthenticated: true,
         isGuest: false,
-        hasCompletedOnboarding: profile.onboardingCompleted,
+        hasCompletedOnboarding: profile.onboardingCompleted || isActuallyOnboarded,
       }));
 
       logger.info('Profile loaded', {email: profile.email, role: profile.role}, 'Auth');
@@ -503,7 +510,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       } else if (error.code === '10' || error.code === 10 || 
                  (error.message && error.message.toLowerCase().includes('developer_error'))) {
         // DEVELOPER_ERROR - usually SHA-1 fingerprint mismatch
-        errorMessage = 'Google Sign-In configuration issue. Please use email login or guest mode.';
+        errorMessage = '⚠️ Google Sign-In Configuration Issue\n\nTry:\n1. Use Email/Password Login\n2. Continue as Guest\n3. Update app from Play Store';
         logger.warn('DEVELOPER_ERROR: Check SHA-1 fingerprint in Google Cloud Console', {
           debugSHA1: '5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25',
           releaseSHA1: '2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66',
@@ -619,6 +626,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           lastLoginAt: now,
         };
         
+        const localOnboarding = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING);
+        const isActuallyOnboarded = localOnboarding === 'true';
+
         await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
 
         setState(prev => ({
@@ -627,6 +637,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           isLoading: false,
           isAuthenticated: true,
           isGuest: false,
+          hasCompletedOnboarding: isActuallyOnboarded,
         }));
 
         return true;
@@ -664,6 +675,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         lastLoginAt: new Date().toISOString(),
       };
 
+      const localOnboarding = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING);
+      const isActuallyOnboarded = localOnboarding === 'true';
+
       await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
 
       setState(prev => ({
@@ -672,7 +686,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         isLoading: false,
         isAuthenticated: true,
         isGuest: true,
-        hasCompletedOnboarding: false,
+        hasCompletedOnboarding: isActuallyOnboarded,
       }));
 
       return true;
@@ -821,10 +835,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, [state.user, state.isGuest]);
 
   const completeOnboarding = useCallback(async (): Promise<void> => {
-    await updateProfile({onboardingCompleted: true});
-    await AsyncStorage.setItem(STORAGE_KEYS.ONBOARDING, 'true');
-    setState(prev => ({...prev, hasCompletedOnboarding: true}));
-  }, [updateProfile]);
+    try {
+      // 1. Update local state and flag
+      await AsyncStorage.setItem(STORAGE_KEYS.ONBOARDING, 'true');
+      
+      if (state.user) {
+        const updatedProfile = {...state.user, onboardingCompleted: true};
+        await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(updatedProfile));
+        
+        setState(prev => ({
+          ...prev,
+          user: updatedProfile,
+          hasCompletedOnboarding: true,
+        }));
+
+        // 2. Sync to Supabase IMMEDIATELY (no debounce for this critical flag)
+        if (!state.isGuest) {
+          await supabase
+            .from('profiles')
+            .update({
+              onboarding_completed: true,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', state.user.id);
+          logger.info('Onboarding status synced to Supabase', null, 'Auth');
+        }
+      } else {
+        setState(prev => ({...prev, hasCompletedOnboarding: true}));
+      }
+    } catch (error) {
+      logger.error('Error completing onboarding', error, 'Auth');
+      // Still set local state to true so user isn't stuck
+      setState(prev => ({...prev, hasCompletedOnboarding: true}));
+    }
+  }, [state.user, state.isGuest]);
 
   // =========================================================================
   // FAVORITES

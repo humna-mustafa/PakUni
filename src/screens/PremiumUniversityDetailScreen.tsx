@@ -1051,15 +1051,19 @@ const PremiumUniversityDetailScreen = () => {
 
         {/* Hero Content */}
         <Animated.View style={[styles.heroContent, {opacity: heroOpacity}]}>
-          <View style={styles.logoContainer}>
-            <UniversityLogo
-              shortName={university.short_name}
-              universityName={university.name}
-              size={72}
-              borderRadius={16}
-              showLoader={false}
-            />
-          </View>
+          {/* Only show logo container if university has a logo_url */}
+          {university.logo_url ? (
+            <View style={styles.logoContainer}>
+              <UniversityLogo
+                shortName={university.short_name}
+                universityName={university.name}
+                logoUrl={university.logo_url}
+                size={72}
+                borderRadius={16}
+                showLoader={false}
+              />
+            </View>
+          ) : null}
           <Text style={styles.universityName}>{university.name}</Text>
           <View style={styles.locationRow}>
             <Icon name="location" family="Ionicons" size={16} color="#FFFFFF" />

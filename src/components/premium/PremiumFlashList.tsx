@@ -13,23 +13,17 @@
 import React, {useCallback, useMemo, memo} from 'react';
 import {View, StyleSheet, RefreshControl, Platform} from 'react-native';
 import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
-import Animated, {
-  useSharedValue,
-  useAnimatedScrollHandler,
-} from 'react-native-reanimated';
 import {useTheme} from '../../contexts/ThemeContext';
 import {Haptics} from '../../utils/haptics';
 
-// Create animated version of FlashList
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
+// Use regular FlashList instead of animated version
+const AnimatedFlashList = FlashList;
 
 interface PremiumFlashListProps<T> extends Omit<FlashListProps<T>, 'renderItem'> {
   /** Data array */
   data: T[];
   /** Render function for each item */
   renderItem: ListRenderItem<T>;
-  /** Estimated item size (improves performance) */
-  estimatedItemSize?: number;
   /** Pull to refresh handler */
   onRefresh?: () => Promise<void>;
   /** Is currently refreshing */
@@ -43,13 +37,12 @@ interface PremiumFlashListProps<T> extends Omit<FlashListProps<T>, 'renderItem'>
   /** Item separator */
   itemSeparator?: React.ReactNode;
   /** Enable scroll animation tracking */
-  onScrollY?: (y: Animated.SharedValue<number>) => void;
+  onScrollY?: (scrollY: number) => void;
 }
 
 function PremiumFlashListInner<T>({
   data,
   renderItem,
-  estimatedItemSize = 100,
   onRefresh,
   refreshing = false,
   emptyComponent,
@@ -60,21 +53,6 @@ function PremiumFlashListInner<T>({
   ...props
 }: PremiumFlashListProps<T>) {
   const {colors} = useTheme();
-  const scrollY = useSharedValue(0);
-
-  // Scroll handler for animations
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
-
-  // Expose scrollY if requested
-  React.useEffect(() => {
-    if (onScrollY) {
-      onScrollY(scrollY);
-    }
-  }, [scrollY, onScrollY]);
 
   // Handle refresh with haptic
   const handleRefresh = useCallback(async () => {
@@ -136,22 +114,19 @@ function PremiumFlashListInner<T>({
   }, [onRefresh, refreshing, handleRefresh, colors]);
 
   return (
-    <AnimatedFlashList
+    <FlashList
       data={data}
       renderItem={renderItem}
-      estimatedItemSize={estimatedItemSize}
       keyExtractor={keyExtractor}
       ListEmptyComponent={ListEmptyComponent}
       ListHeaderComponent={ListHeaderComponent}
       ListFooterComponent={ListFooterComponent}
       ItemSeparatorComponent={ItemSeparatorComponent}
       refreshControl={refreshControl}
-      onScroll={scrollHandler}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       // Performance optimizations
       drawDistance={500}
-      overrideItemLayout={undefined}
       {...props}
     />
   );

@@ -1,37 +1,16 @@
 /**
  * AnimatedPressable Component
- * Modern pressable with spring animations, haptic feedback, and scale effects
- * 
- * Features:
- * - Smooth scale animation on press
- * - Haptic feedback support
- * - Long press detection with visual feedback
- * - Disabled state handling
+ * Simple pressable with scale animation and haptic feedback
  */
 
-import React, {useCallback, memo} from 'react';
-import {StyleSheet, ViewStyle, Platform} from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated';
+import React, {useCallback, memo, useRef} from 'react';
 import {
-  TapGestureHandler,
-  TapGestureHandlerGestureEvent,
-  LongPressGestureHandler,
-  LongPressGestureHandlerGestureEvent,
-  State,
-} from 'react-native-gesture-handler';
+  Pressable,
+  Animated,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import {Haptics} from '../../utils/haptics';
-
-const SPRING_CONFIG = {
-  damping: 15,
-  stiffness: 400,
-  mass: 0.3,
-};
 
 interface AnimatedPressableProps {
   children: React.ReactNode;
@@ -58,114 +37,70 @@ const AnimatedPressable: React.FC<AnimatedPressableProps> = memo(({
   accessibilityHint,
   testID,
 }) => {
-  const scale = useSharedValue(1);
-  const opacity = useSharedValue(1);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  const triggerHaptic = useCallback(() => {
+  const handlePressIn = useCallback(() => {
+    Animated.spring(scaleAnim, {
+      toValue: scaleOnPress,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 4,
+    }).start();
+  }, [scaleAnim, scaleOnPress]);
+
+  const handlePressOut = useCallback(() => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 4,
+    }).start();
+  }, [scaleAnim]);
+
+  const handlePress = useCallback(() => {
     if (hapticFeedback) {
-      Haptics.impact('light');
+      Haptics.light();
     }
-  }, [hapticFeedback]);
+    onPress?.();
+  }, [hapticFeedback, onPress]);
 
-  const triggerPress = useCallback(() => {
-    if (onPress && !disabled) {
-      onPress();
+  const handleLongPress = useCallback(() => {
+    if (hapticFeedback) {
+      Haptics.heavy();
     }
-  }, [onPress, disabled]);
+    onLongPress?.();
+  }, [hapticFeedback, onLongPress]);
 
-  const triggerLongPress = useCallback(() => {
-    if (onLongPress && !disabled) {
-      Haptics.impact('heavy');
-      onLongPress();
-    }
-  }, [onLongPress, disabled]);
-
-  const onTapHandlerStateChange = useCallback(
-    ({nativeEvent}: TapGestureHandlerGestureEvent) => {
-      if (disabled) return;
-
-      if (nativeEvent.state === State.BEGAN) {
-        scale.value = withSpring(scaleOnPress, SPRING_CONFIG);
-        opacity.value = withTiming(0.9, {duration: 50});
-      } else if (nativeEvent.state === State.END) {
-        scale.value = withSpring(1, SPRING_CONFIG);
-        opacity.value = withTiming(1, {duration: 100});
-        runOnJS(triggerHaptic)();
-        runOnJS(triggerPress)();
-      } else if (
-        nativeEvent.state === State.CANCELLED ||
-        nativeEvent.state === State.FAILED
-      ) {
-        scale.value = withSpring(1, SPRING_CONFIG);
-        opacity.value = withTiming(1, {duration: 100});
-      }
-    },
-    [disabled, scaleOnPress, triggerHaptic, triggerPress]
-  );
-
-  const onLongPressHandlerStateChange = useCallback(
-    ({nativeEvent}: LongPressGestureHandlerGestureEvent) => {
-      if (disabled || !onLongPress) return;
-
-      if (nativeEvent.state === State.ACTIVE) {
-        runOnJS(triggerLongPress)();
-      }
-      if (
-        nativeEvent.state === State.END ||
-        nativeEvent.state === State.CANCELLED
-      ) {
-        scale.value = withSpring(1, SPRING_CONFIG);
-        opacity.value = withTiming(1, {duration: 100});
-      }
-    },
-    [disabled, onLongPress, triggerLongPress]
-  );
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
-    opacity: disabled ? 0.5 : opacity.value,
-  }));
-
-  const content = (
-    <Animated.View
-      style={[styles.container, style, animatedStyle]}
+  return (
+    <Pressable
+      onPress={handlePress}
+      onLongPress={onLongPress ? handleLongPress : undefined}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled}
       accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityState={{disabled}}
       testID={testID}>
-      {children}
-    </Animated.View>
-  );
-
-  if (onLongPress) {
-    return (
-      <LongPressGestureHandler
-        onHandlerStateChange={onLongPressHandlerStateChange}
-        minDurationMs={500}>
-        <TapGestureHandler
-          onHandlerStateChange={onTapHandlerStateChange}
-          enabled={!disabled}>
-          {content}
-        </TapGestureHandler>
-      </LongPressGestureHandler>
-    );
-  }
-
-  return (
-    <TapGestureHandler
-      onHandlerStateChange={onTapHandlerStateChange}
-      enabled={!disabled}>
-      {content}
-    </TapGestureHandler>
+      <Animated.View
+        style={[
+          styles.container,
+          style,
+          {
+            transform: [{scale: scaleAnim}],
+            opacity: disabled ? 0.5 : 1,
+          },
+        ]}>
+        {children}
+      </Animated.View>
+    </Pressable>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {
-    // Base container
-  },
+  container: {},
 });
 
 export default AnimatedPressable;

@@ -5,6 +5,7 @@
  * @format
  */
 
+
 import React, {useEffect} from 'react';
 import {StatusBar, Linking} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';

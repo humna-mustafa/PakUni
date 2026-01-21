@@ -24,7 +24,7 @@ import FastImage, {
 import {useTheme} from '../../contexts/ThemeContext';
 
 // Re-export types and constants
-export {ResizeMode, Priority};
+export type {ResizeMode, Priority};
 export type {Source, OnLoadEvent, OnProgressEvent};
 
 // Preload images utility
@@ -55,6 +55,8 @@ interface PremiumFastImageProps extends Omit<FastImageProps, 'source'> {
   borderRadius?: number;
   /** Aspect ratio (width/height) */
   aspectRatio?: number;
+  /** Image loading priority */
+  priority?: typeof FastImage.priority.low | typeof FastImage.priority.normal | typeof FastImage.priority.high;
   /** On load callback */
   onLoad?: (event: OnLoadEvent) => void;
   /** On error callback */
@@ -139,7 +141,7 @@ const PremiumFastImage: React.FC<PremiumFastImageProps> = memo(({
     <View style={containerStyles}>
       <FastImage
         source={activeSource}
-        style={[styles.image, {borderRadius}, imageStyle]}
+        style={[styles.image, {borderRadius}, imageStyle as any]}
         resizeMode={resizeMode}
         onLoadStart={handleLoadStart}
         onLoad={handleLoad}
@@ -168,8 +170,8 @@ export const AvatarImage: React.FC<
   <PremiumFastImage
     {...props}
     borderRadius={size / 2}
-    containerStyle={[{width: size, height: size}, containerStyle]}
-    imageStyle={[{width: size, height: size}, imageStyle]}
+    containerStyle={{width: size, height: size, ...containerStyle}}
+    imageStyle={{width: size, height: size, ...(imageStyle as object)}}
   />
 ));
 
@@ -181,7 +183,7 @@ export const ThumbnailImage: React.FC<
     {...props}
     aspectRatio={16 / 9}
     borderRadius={8}
-    containerStyle={[{width}, containerStyle]}
+    containerStyle={{width, ...containerStyle}}
   />
 ));
 
@@ -193,7 +195,7 @@ export const HeroImage: React.FC<
     {...props}
     aspectRatio={undefined}
     priority={FastImage.priority.high}
-    containerStyle={[{width: '100%', height}, containerStyle]}
+    containerStyle={{width: '100%', height, ...containerStyle}}
   />
 ));
 

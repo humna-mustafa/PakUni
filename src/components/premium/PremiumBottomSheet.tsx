@@ -1,287 +1,168 @@
 /**
  * Premium Bottom Sheet Component
- * Uses @gorhom/bottom-sheet - The #1 industry-standard bottom sheet for React Native
- * 
- * Features:
- * - Native performance with react-native-reanimated
- * - Gesture-based interactions
- * - Multiple snap points
- * - Backdrop support
- * - Keyboard handling
- * - Fully accessible
+ * Simple wrapper around GestureBottomSheet for compatibility
+ * Uses React Native's built-in Animated API (no external dependencies)
  */
 
-import React, {forwardRef, useCallback, useMemo, memo} from 'react';
-import {View, Text, StyleSheet, Platform, Keyboard} from 'react-native';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetView,
-  BottomSheetScrollView,
-  BottomSheetFlatList,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  useBottomSheet,
-  useBottomSheetModal,
-} from '@gorhom/bottom-sheet';
-import type {BottomSheetBackdropProps, BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet';
-import {useTheme} from '../../contexts/ThemeContext';
-import {Haptics} from '../../utils/haptics';
+import React, {forwardRef, useImperativeHandle, useRef, memo} from 'react';
+import {View, ScrollView, StyleSheet} from 'react-native';
+import GestureBottomSheet, {GestureBottomSheetRef} from '../gestures/GestureBottomSheet';
 
-// Re-export provider for app setup
-export {BottomSheetModalProvider};
-
-// Re-export useful types
-export type {BottomSheetModal};
-
-// Re-export inner components for flexibility
-export {
-  BottomSheetView,
-  BottomSheetScrollView,
-  BottomSheetFlatList,
-  useBottomSheet,
-  useBottomSheetModal,
+// Stub provider - no-op since we don't use @gorhom/bottom-sheet
+export const BottomSheetModalProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+  return <>{children}</>;
 };
+
+// Re-export type for compatibility
+export type BottomSheetModal = GestureBottomSheetRef;
+
+// Simple view wrappers for compatibility
+export const BottomSheetView: React.FC<{children: React.ReactNode; style?: object}> = ({children, style}) => (
+  <View style={style}>{children}</View>
+);
+
+export const BottomSheetScrollView: React.FC<{children: React.ReactNode; style?: object}> = ({children, style}) => (
+  <ScrollView style={style} showsVerticalScrollIndicator={false}>{children}</ScrollView>
+);
+
+export const BottomSheetFlatList = View; // Placeholder
+
+// Stub hooks
+export const useBottomSheet = () => ({
+  expand: () => {},
+  collapse: () => {},
+  close: () => {},
+  snapToIndex: () => {},
+});
+
+export const useBottomSheetModal = () => ({
+  dismiss: () => {},
+  present: () => {},
+});
 
 interface PremiumBottomSheetProps {
   children: React.ReactNode;
-  /** Snap points as percentages or pixel values */
   snapPoints?: (string | number)[];
-  /** Initial snap point index */
   initialIndex?: number;
-  /** Called when sheet changes position */
   onChange?: (index: number) => void;
-  /** Called when sheet is closed */
   onClose?: () => void;
-  /** Enable backdrop */
   enableBackdrop?: boolean;
-  /** Close on backdrop press */
   backdropPressToClose?: boolean;
-  /** Show drag handle indicator */
   handleIndicator?: boolean;
-  /** Enable pan down to close */
   enablePanDownToClose?: boolean;
-  /** Enable keyboard handling */
   keyboardBehavior?: 'extend' | 'fillParent' | 'interactive';
-  /** Header component */
   headerComponent?: React.ReactNode;
-  /** Use scrollable content */
   scrollable?: boolean;
 }
 
-const PremiumBottomSheet = forwardRef<BottomSheet, PremiumBottomSheetProps>(({
+export interface PremiumBottomSheetRef {
+  expand: () => void;
+  collapse: () => void;
+  close: () => void;
+  snapToIndex: (index: number) => void;
+}
+
+const PremiumBottomSheet = forwardRef<PremiumBottomSheetRef, PremiumBottomSheetProps>(({
   children,
-  snapPoints: customSnapPoints,
+  snapPoints,
   initialIndex = 0,
   onChange,
   onClose,
   enableBackdrop = true,
   backdropPressToClose = true,
   handleIndicator = true,
-  enablePanDownToClose = true,
-  keyboardBehavior = 'interactive',
   headerComponent,
   scrollable = false,
 }, ref) => {
-  const {colors, isDark} = useTheme();
+  const sheetRef = useRef<GestureBottomSheetRef>(null);
 
-  // Default snap points
-  const snapPoints = useMemo(
-    () => customSnapPoints || ['25%', '50%', '90%'],
-    [customSnapPoints]
-  );
+  // Map snap points to height values
+  const getInitialSnap = (): 'collapsed' | 'half' | 'expanded' => {
+    if (!snapPoints || snapPoints.length === 0) return 'half';
+    if (initialIndex === 0) return 'collapsed';
+    if (initialIndex === 2 || (snapPoints.length === 2 && initialIndex === 1)) return 'expanded';
+    return 'half';
+  };
 
-  // Handle sheet changes with haptic feedback
-  const handleSheetChange = useCallback((index: number) => {
-    Haptics.light();
-    onChange?.(index);
-    
-    if (index === -1) {
-      Keyboard.dismiss();
-      onClose?.();
-    }
-  }, [onChange, onClose]);
-
-  // Custom backdrop component
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior={backdropPressToClose ? 'close' : 'none'}
-        opacity={0.5}
-      />
-    ),
-    [backdropPressToClose]
-  );
-
-  // Custom handle component
-  const renderHandle = useCallback(() => {
-    if (!handleIndicator) return null;
-    
-    return (
-      <View style={styles.handleContainer}>
-        <View style={[styles.handle, {backgroundColor: colors.border}]} />
-      </View>
-    );
-  }, [handleIndicator, colors]);
-
-  // Background style
-  const backgroundStyle = useMemo(() => ({
-    backgroundColor: colors.card,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-  }), [colors]);
+  useImperativeHandle(ref, () => ({
+    expand: () => sheetRef.current?.expand(),
+    collapse: () => sheetRef.current?.collapse(),
+    close: () => sheetRef.current?.dismiss(),
+    snapToIndex: (index: number) => {
+      if (index === 0) sheetRef.current?.collapse();
+      else if (index === 1) sheetRef.current?.snapToHalf();
+      else sheetRef.current?.expand();
+    },
+  }));
 
   const ContentWrapper = scrollable ? BottomSheetScrollView : BottomSheetView;
 
   return (
-    <BottomSheet
-      ref={ref}
-      index={initialIndex}
-      snapPoints={snapPoints}
-      onChange={handleSheetChange}
-      enablePanDownToClose={enablePanDownToClose}
-      backdropComponent={enableBackdrop ? renderBackdrop : undefined}
-      handleComponent={renderHandle}
-      backgroundStyle={backgroundStyle}
-      keyboardBehavior={keyboardBehavior}
-      keyboardBlurBehavior="restore"
-      android_keyboardInputMode="adjustResize"
-      style={styles.sheet}
+    <GestureBottomSheet
+      ref={sheetRef}
+      onClose={onClose}
+      initialSnap={getInitialSnap()}
+      enableBackdrop={enableBackdrop}
+      backdropPressToClose={backdropPressToClose}
+      handleIndicator={handleIndicator}
+      headerComponent={headerComponent}
     >
-      {headerComponent && (
-        <View style={[styles.header, {borderBottomColor: colors.border}]}>
-          {headerComponent}
-        </View>
-      )}
       <ContentWrapper style={styles.content}>
         {children}
       </ContentWrapper>
-    </BottomSheet>
+    </GestureBottomSheet>
   );
 });
 
-// Modal variant for overlaying content
+// Modal variant - same implementation
 interface PremiumBottomSheetModalProps extends PremiumBottomSheetProps {
-  /** Unique name for the modal */
   name?: string;
 }
 
-export const PremiumBottomSheetModal = forwardRef<BottomSheetModal, PremiumBottomSheetModalProps>(({
+export const PremiumBottomSheetModal = forwardRef<PremiumBottomSheetRef, PremiumBottomSheetModalProps>(({
   children,
-  snapPoints: customSnapPoints,
-  onChange,
   onClose,
   enableBackdrop = true,
   backdropPressToClose = true,
   handleIndicator = true,
-  enablePanDownToClose = true,
-  keyboardBehavior = 'interactive',
   headerComponent,
   scrollable = false,
-  name,
 }, ref) => {
-  const {colors} = useTheme();
+  const sheetRef = useRef<GestureBottomSheetRef>(null);
 
-  const snapPoints = useMemo(
-    () => customSnapPoints || ['25%', '50%', '90%'],
-    [customSnapPoints]
-  );
-
-  const handleDismiss = useCallback(() => {
-    Haptics.light();
-    Keyboard.dismiss();
-    onClose?.();
-  }, [onClose]);
-
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior={backdropPressToClose ? 'close' : 'none'}
-        opacity={0.5}
-      />
-    ),
-    [backdropPressToClose]
-  );
-
-  const renderHandle = useCallback(() => {
-    if (!handleIndicator) return null;
-    return (
-      <View style={styles.handleContainer}>
-        <View style={[styles.handle, {backgroundColor: colors.border}]} />
-      </View>
-    );
-  }, [handleIndicator, colors]);
-
-  const backgroundStyle = useMemo(() => ({
-    backgroundColor: colors.card,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-  }), [colors]);
+  useImperativeHandle(ref, () => ({
+    expand: () => sheetRef.current?.expand(),
+    collapse: () => sheetRef.current?.collapse(),
+    close: () => sheetRef.current?.dismiss(),
+    snapToIndex: (index: number) => {
+      if (index === 0) sheetRef.current?.collapse();
+      else if (index === 1) sheetRef.current?.snapToHalf();
+      else sheetRef.current?.expand();
+    },
+    present: () => sheetRef.current?.expand(),
+    dismiss: () => sheetRef.current?.dismiss(),
+  }));
 
   const ContentWrapper = scrollable ? BottomSheetScrollView : BottomSheetView;
 
   return (
-    <BottomSheetModal
-      ref={ref}
-      name={name}
-      snapPoints={snapPoints}
-      onChange={onChange}
-      onDismiss={handleDismiss}
-      enablePanDownToClose={enablePanDownToClose}
-      backdropComponent={enableBackdrop ? renderBackdrop : undefined}
-      handleComponent={renderHandle}
-      backgroundStyle={backgroundStyle}
-      keyboardBehavior={keyboardBehavior}
-      keyboardBlurBehavior="restore"
-      android_keyboardInputMode="adjustResize"
-      style={styles.sheet}
+    <GestureBottomSheet
+      ref={sheetRef}
+      onClose={onClose}
+      initialSnap="collapsed"
+      enableBackdrop={enableBackdrop}
+      backdropPressToClose={backdropPressToClose}
+      handleIndicator={handleIndicator}
+      headerComponent={headerComponent}
     >
-      {headerComponent && (
-        <View style={[styles.header, {borderBottomColor: colors.border}]}>
-          {headerComponent}
-        </View>
-      )}
       <ContentWrapper style={styles.content}>
         {children}
       </ContentWrapper>
-    </BottomSheetModal>
+    </GestureBottomSheet>
   );
 });
 
 const styles = StyleSheet.create({
-  sheet: {
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: -4},
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-      },
-      android: {
-        elevation: 16,
-      },
-    }),
-  },
-  handleContainer: {
-    paddingTop: 12,
-    paddingBottom: 8,
-    alignItems: 'center',
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 16,

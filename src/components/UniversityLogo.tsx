@@ -1,6 +1,6 @@
 /**
  * UniversityLogo Component
- * Displays university logos with proper fallbacks and brand colors
+ * Displays university logos with premium fallbacks and brand colors
  * Uses direct URLs from Wikipedia/university websites (no Supabase storage costs)
  */
 
@@ -8,22 +8,22 @@ import React, {useState, useCallback, memo, useMemo, useEffect} from 'react';
 import {
   View,
   Image,
-  Text,
   StyleSheet,
   ViewStyle,
   Animated,
   ActivityIndicator,
-  Platform,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {getUniversityLogoUrl, getUniversityBrandColor, hasStaticLogo} from '../utils/universityLogos';
+import {getLogo, getUniversityBrandColor} from '../utils/universityLogos';
+import {UNIVERSITIES} from '../data/universities';
 
 interface UniversityLogoProps {
-  /** University short name (e.g., 'NUST', 'LUMS') */
+  /** University ID (Preferred for accurate logo lookup) */
+  universityId?: number;
+  /** University short name (e.g., 'NUST', 'LUMS') - Fallback lookup */
   shortName?: string;
   /** Full university name (for fallback display) */
   universityName?: string;
-  /** Direct logo URL (optional - overrides shortName lookup) */
+  /** Direct logo URL (optional - overrides lookup) */
   logoUrl?: string;
   /** Size of the logo container */
   size?: number;
@@ -33,9 +33,12 @@ interface UniversityLogoProps {
   style?: ViewStyle;
   /** Show loading indicator */
   showLoader?: boolean;
+  /** Theme mode for fallback styling */
+  isDark?: boolean;
 }
 
 const UniversityLogo = memo(({
+  universityId,
   shortName,
   universityName,
   logoUrl: directLogoUrl,
@@ -43,17 +46,24 @@ const UniversityLogo = memo(({
   borderRadius = 12,
   style,
   showLoader = true,
+  isDark = false,
 }: UniversityLogoProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [imageReady, setImageReady] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const [reloadKey, setReloadKey] = useState(0);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const retryTimeoutRef = React.useRef<number | null>(null);
 
-  // External logos are now enabled with verified URLs from official sources
-  // URLs validated from universities DATA.csv - January 2026
+  // External logos ENABLED - with timeout fallback for slow URLs
   const ENABLE_EXTERNAL_LOGOS = true;
+  const LOAD_TIMEOUT_MS = 20000; // 20 seconds before showing fallback (increased for slow networks)
+  const MAX_RETRIES = 2;
+  const RETRY_DELAY_MS = 2000; // base retry delay
 
-  // Get logo URL - prefer direct URL, then lookup by shortName
+  // Get logo URL - prefer direct URL, then lookup by ID, then shortName
   const logoUrl = useMemo(() => {
     if (!ENABLE_EXTERNAL_LOGOS) {
       return null; // Always show initials fallback
@@ -61,38 +71,45 @@ const UniversityLogo = memo(({
     if (directLogoUrl) {
       return directLogoUrl;
     }
-    return getUniversityLogoUrl(shortName || '');
-  }, [shortName, directLogoUrl]);
-  
-  // Get brand color for fallback
-  const brandColor = useMemo(
-    () => getUniversityBrandColor(shortName || ''),
-    [shortName]
-  );
+    
+    // 1. Try ID if provided
+    if (universityId) {
+      return getLogo(universityId);
+    }
 
-  // Get initials for fallback
-  const initials = useMemo(() => {
-    if (shortName && shortName.length <= 4) {
-      return shortName;
+    // 2. Try lookup by shortName if ID missing
+    if (shortName) {
+      const uni = UNIVERSITIES.find(u => u.short_name === shortName);
+      if (uni?.id) {
+        return getLogo(uni.id);
+      }
     }
-    if (universityName) {
-      return universityName
-        .split(' ')
-        .filter(word => !['of', 'the', 'and', 'for'].includes(word.toLowerCase()))
-        .slice(0, 2)
-        .map(word => word[0])
-        .join('')
-        .toUpperCase();
-    }
-    return shortName?.[0] || '?';
-  }, [shortName, universityName]);
+
+    return '';
+  }, [universityId, shortName, directLogoUrl]);
+  
+  // Get brand color for loader indicator
+  const brandColor = useMemo(
+    () => getUniversityBrandColor(shortName || universityName || ''),
+    [shortName, universityName]
+  );
 
   // Reset states when URL changes
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
     setImageReady(false);
+    setTimedOut(false);
     fadeAnim.setValue(0);
+    
+    // Set timeout - if image doesn't load in time, show fallback
+    const timeoutId = setTimeout(() => {
+      if (!imageReady && !hasError) {
+        setTimedOut(true);
+      }
+    }, LOAD_TIMEOUT_MS);
+    
+    return () => clearTimeout(timeoutId);
   }, [logoUrl, fadeAnim]);
 
   const handleLoad = useCallback(() => {
@@ -106,11 +123,24 @@ const UniversityLogo = memo(({
     }).start();
   }, [fadeAnim]);
 
-  const handleError = useCallback(() => {
+  const handleError = useCallback((error: any) => {
+    console.log(`[UniversityLogo] Error loading: ${logoUrl}`, error?.nativeEvent?.error || 'Unknown error');
     setIsLoading(false);
     setHasError(true);
     setImageReady(false);
-  }, []);
+
+    // Retry logic: attempt to reload with small backoff
+    if (retryCount < MAX_RETRIES) {
+      const nextRetry = retryCount + 1;
+      setRetryCount(nextRetry);
+      const delay = RETRY_DELAY_MS * nextRetry;
+      retryTimeoutRef.current = (setTimeout(() => {
+        setHasError(false);
+        setIsLoading(true);
+        setReloadKey(prev => prev + 1);
+      }, delay) as unknown) as number;
+    }
+  }, [logoUrl, retryCount]);
 
   const containerStyle = useMemo(
     () => [
@@ -125,20 +155,30 @@ const UniversityLogo = memo(({
     [size, borderRadius, style]
   );
 
-  // Show fallback if no URL or if there's an error
-  const showFallback = !logoUrl || hasError;
+  // If no logo URL at all, return null immediately (no loading spinner for empty URLs)
+  if (!logoUrl || logoUrl === '') {
+    return null;
+  }
+
+  // No logo available = don't render anything (no distracting fallbacks)
+  const hasNoLogo = hasError || timedOut;
+
+  // If logo failed to load or timed out, render nothing (clean UI - no placeholders)
+  if (hasNoLogo && !isLoading) {
+    return null;
+  }
 
   return (
     <View style={containerStyle}>
-      {/* Loading indicator - show while loading and not showing fallback */}
-      {isLoading && !showFallback && showLoader && (
+      {/* Loading indicator - show while loading */}
+      {isLoading && showLoader && (
         <View style={[styles.loader, {borderRadius}]}>
           <ActivityIndicator size="small" color={brandColor} />
         </View>
       )}
 
-      {/* Actual logo image - only render if we have a URL and no error */}
-      {logoUrl && !hasError && (
+      {/* Actual logo image - only render if we have a URL and no error/timeout */}
+      {logoUrl && !hasError && !timedOut && (
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
@@ -147,10 +187,7 @@ const UniversityLogo = memo(({
           <Image
             source={{
               uri: logoUrl,
-              // Add cache headers
-              headers: {
-                'Cache-Control': 'max-age=31536000',
-              },
+              cache: 'force-cache',
             }}
             style={[
               styles.logo,
@@ -160,70 +197,17 @@ const UniversityLogo = memo(({
                 borderRadius,
               },
             ]}
-            resizeMode="cover"
+            resizeMode="contain"
             onLoad={handleLoad}
             onError={handleError}
-            // Ensure image is rendered
-            fadeDuration={0}
+            fadeDuration={300}
+            progressiveRenderingEnabled={true}
           />
         </Animated.View>
-      )}
-
-      {/* Fallback with gradient and initials - show when no URL or error */}
-      {showFallback && (
-        <LinearGradient
-          colors={[brandColor, adjustBrightness(brandColor, -25)]}
-          style={[
-            styles.fallback,
-            {
-              width: size,
-              height: size,
-              borderRadius,
-            },
-          ]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}>
-          <Text
-            style={[
-              styles.initials,
-              {
-                fontSize: initials.length <= 2 ? size * 0.4 : initials.length <= 3 ? size * 0.32 : size * 0.26,
-              },
-            ]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.5}>
-            {initials}
-          </Text>
-        </LinearGradient>
       )}
     </View>
   );
 });
-
-/**
- * Adjust brightness of a color
- */
-function adjustBrightness(color: string, percent: number): string {
-  // Handle HSL colors
-  if (color.startsWith('hsl')) {
-    const match = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-    if (match) {
-      const h = parseInt(match[1], 10);
-      const s = parseInt(match[2], 10);
-      const l = Math.max(0, Math.min(100, parseInt(match[3], 10) + percent));
-      return `hsl(${h}, ${s}%, ${l}%)`;
-    }
-  }
-
-  // Handle hex colors
-  const hex = color.replace('#', '');
-  const r = Math.max(0, Math.min(255, parseInt(hex.slice(0, 2), 16) + percent * 2.55));
-  const g = Math.max(0, Math.min(255, parseInt(hex.slice(2, 4), 16) + percent * 2.55));
-  const b = Math.max(0, Math.min(255, parseInt(hex.slice(4, 6), 16) + percent * 2.55));
-
-  return `#${Math.round(r).toString(16).padStart(2, '0')}${Math.round(g).toString(16).padStart(2, '0')}${Math.round(b).toString(16).padStart(2, '0')}`;
-}
 
 UniversityLogo.displayName = 'UniversityLogo';
 
@@ -231,6 +215,12 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
     backgroundColor: '#F8FAFC',
+    // Subtle shadow for depth
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   loader: {
     ...StyleSheet.absoluteFillObject,
@@ -240,24 +230,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     backgroundColor: '#FFFFFF',
-  },
-  fallback: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  initials: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    letterSpacing: 0.3,
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.15)',
-    textShadowOffset: {width: 0, height: 1},
-    textShadowRadius: 2,
   },
 });
 

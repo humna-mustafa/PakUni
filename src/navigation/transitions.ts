@@ -1,267 +1,110 @@
 /**
  * Page Transitions Configuration
- * Modern page transition animations using react-native-reanimated
+ * Modern page transition animations for React Navigation Native Stack
  * 
  * Features:
- * - Shared element transitions
- * - Custom screen transitions
+ * - Native stack animations
  * - Modal presentations
  * - iOS-style interactive dismiss
  */
 
-import {Animated, Easing} from 'react-native';
-import {
-  TransitionPresets,
-  StackCardStyleInterpolator,
-  StackCardInterpolationProps,
-} from '@react-navigation/stack';
+import type {
+  NativeStackNavigationOptions,
+} from '@react-navigation/native-stack';
+import {Platform} from 'react-native';
 
 // ============================================================================
-// CUSTOM TRANSITION PRESETS
+// NAVIGATION CONFIG PRESETS FOR NATIVE STACK
 // ============================================================================
 
 /**
- * Smooth fade transition for overlays and modals
+ * Default screen options with native transitions
  */
-export const FadeTransition: StackCardStyleInterpolator = ({
-  current,
-}: StackCardInterpolationProps) => ({
-  cardStyle: {
-    opacity: current.progress,
-  },
-});
-
-/**
- * Scale and fade for detail screens
- */
-export const ScaleFadeTransition: StackCardStyleInterpolator = ({
-  current,
-  next,
-  layouts,
-}: StackCardInterpolationProps) => ({
-  cardStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-    }),
-    transform: [
-      {
-        scale: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.95, 1],
-        }),
-      },
-      {
-        translateY: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [20, 0],
-        }),
-      },
-    ],
-  },
-  overlayStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 0.3],
-    }),
-  },
-});
-
-/**
- * Slide from bottom for bottom sheets and modals
- */
-export const SlideFromBottomTransition: StackCardStyleInterpolator = ({
-  current,
-  layouts,
-}: StackCardInterpolationProps) => ({
-  cardStyle: {
-    transform: [
-      {
-        translateY: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [layouts.screen.height, 0],
-        }),
-      },
-    ],
-  },
-  overlayStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 0.5],
-    }),
-  },
-});
-
-/**
- * iOS-style slide with parallax
- */
-export const iOSSlideTransition: StackCardStyleInterpolator = ({
-  current,
-  next,
-  layouts,
-}: StackCardInterpolationProps) => ({
-  cardStyle: {
-    transform: [
-      {
-        translateX: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [layouts.screen.width, 0],
-        }),
-      },
-      {
-        scale: next
-          ? next.progress.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 0.95],
-            })
-          : 1,
-      },
-    ],
-    borderRadius: next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 12],
-        })
-      : 0,
-  },
-  overlayStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 0.15],
-    }),
-  },
-});
-
-/**
- * Material Design shared axis (forward)
- */
-export const MaterialSharedAxisTransition: StackCardStyleInterpolator = ({
-  current,
-  next,
-  layouts,
-}: StackCardInterpolationProps) => ({
-  cardStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 0.5, 1],
-      outputRange: [0, 0.5, 1],
-    }),
-    transform: [
-      {
-        translateX: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [layouts.screen.width * 0.3, 0],
-        }),
-      },
-    ],
-  },
-  overlayStyle: {
-    opacity: current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 0.1],
-    }),
-  },
-});
-
-// ============================================================================
-// NAVIGATION CONFIG PRESETS
-// ============================================================================
-
-/**
- * Default screen options with smooth transitions
- */
-export const DefaultScreenOptions = {
+export const DefaultScreenOptions: NativeStackNavigationOptions = {
   headerShown: false,
   gestureEnabled: true,
-  gestureDirection: 'horizontal' as const,
-  cardStyleInterpolator: iOSSlideTransition,
-  transitionSpec: {
-    open: {
-      animation: 'spring' as const,
-      config: {
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-        overshootClamping: true,
-        restDisplacementThreshold: 10,
-        restSpeedThreshold: 10,
-      },
-    },
-    close: {
-      animation: 'spring' as const,
-      config: {
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-        overshootClamping: true,
-        restDisplacementThreshold: 10,
-        restSpeedThreshold: 10,
-      },
-    },
-  },
+  animation: 'slide_from_right',
+  animationDuration: 250,
 };
 
 /**
  * Modal screen options
  */
-export const ModalScreenOptions = {
+export const ModalScreenOptions: NativeStackNavigationOptions = {
   headerShown: false,
   gestureEnabled: true,
-  gestureDirection: 'vertical' as const,
-  cardStyleInterpolator: SlideFromBottomTransition,
-  presentation: 'modal' as const,
+  presentation: 'modal',
+  animation: 'slide_from_bottom',
 };
 
 /**
- * Detail screen options (scale + fade)
+ * Fade transition options
  */
-export const DetailScreenOptions = {
+export const FadeScreenOptions: NativeStackNavigationOptions = {
   headerShown: false,
-  gestureEnabled: true,
-  cardStyleInterpolator: ScaleFadeTransition,
+  animation: 'fade',
+  animationDuration: 200,
 };
 
 /**
- * Fade overlay options
+ * iOS-style card presentation
  */
-export const FadeOverlayOptions = {
+export const CardScreenOptions: NativeStackNavigationOptions = {
   headerShown: false,
-  gestureEnabled: false,
-  cardStyleInterpolator: FadeTransition,
-  cardOverlayEnabled: true,
+  presentation: 'card',
+  animation: Platform.OS === 'ios' ? 'default' : 'slide_from_right',
+};
+
+/**
+ * Transparent modal (for overlays)
+ */
+export const TransparentModalOptions: NativeStackNavigationOptions = {
+  headerShown: false,
+  presentation: 'transparentModal',
+  animation: 'fade',
+};
+
+/**
+ * Full screen modal
+ */
+export const FullScreenModalOptions: NativeStackNavigationOptions = {
+  headerShown: false,
+  presentation: 'fullScreenModal',
+  animation: 'slide_from_bottom',
+};
+
+/**
+ * Contained modal (iOS 13+ style)
+ */
+export const ContainedModalOptions: NativeStackNavigationOptions = {
+  headerShown: false,
+  presentation: 'containedModal',
+  animation: 'slide_from_bottom',
 };
 
 // ============================================================================
-// SPRING ANIMATION CONFIGS
+// ANIMATION PRESETS
 // ============================================================================
 
-export const NAVIGATION_SPRINGS = {
-  /** Fast, snappy navigation */
-  snappy: {
-    stiffness: 1000,
-    damping: 500,
-    mass: 3,
-    overshootClamping: true,
-    restDisplacementThreshold: 10,
-    restSpeedThreshold: 10,
-  },
-  /** Smooth, natural feeling */
-  smooth: {
-    stiffness: 800,
-    damping: 350,
-    mass: 4,
-    overshootClamping: false,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01,
-  },
-  /** Bouncy, playful */
-  bouncy: {
-    stiffness: 600,
-    damping: 200,
-    mass: 3,
-    overshootClamping: false,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01,
-  },
+export const ANIMATIONS = {
+  /** Slide from right (default) */
+  slideFromRight: 'slide_from_right' as const,
+  /** Slide from left */
+  slideFromLeft: 'slide_from_left' as const,
+  /** Slide from bottom */
+  slideFromBottom: 'slide_from_bottom' as const,
+  /** Fade in/out */
+  fade: 'fade' as const,
+  /** Fade from bottom (iOS-style) */
+  fadeFromBottom: 'fade_from_bottom' as const,
+  /** Native default animation */
+  default: 'default' as const,
+  /** Flip animation */
+  flip: 'flip' as const,
+  /** Simple push animation */
+  simplePush: 'simple_push' as const,
+  /** No animation */
+  none: 'none' as const,
 };
 
 // ============================================================================
@@ -269,39 +112,29 @@ export const NAVIGATION_SPRINGS = {
 // ============================================================================
 
 /**
- * Create custom transition with spring config
+ * Create screen options with custom animation
  */
-export const createCustomTransition = (
-  interpolator: StackCardStyleInterpolator,
-  springConfig = NAVIGATION_SPRINGS.snappy
-) => ({
-  cardStyleInterpolator: interpolator,
-  transitionSpec: {
-    open: {
-      animation: 'spring' as const,
-      config: springConfig,
-    },
-    close: {
-      animation: 'spring' as const,
-      config: springConfig,
-    },
-  },
+export const createScreenOptions = (
+  animation: keyof typeof ANIMATIONS,
+  options?: Partial<NativeStackNavigationOptions>
+): NativeStackNavigationOptions => ({
+  headerShown: false,
+  animation: ANIMATIONS[animation],
+  ...options,
 });
 
 export default {
-  // Transitions
-  FadeTransition,
-  ScaleFadeTransition,
-  SlideFromBottomTransition,
-  iOSSlideTransition,
-  MaterialSharedAxisTransition,
   // Presets
   DefaultScreenOptions,
   ModalScreenOptions,
-  DetailScreenOptions,
-  FadeOverlayOptions,
-  // Springs
-  NAVIGATION_SPRINGS,
+  FadeScreenOptions,
+  CardScreenOptions,
+  TransparentModalOptions,
+  FullScreenModalOptions,
+  ContainedModalOptions,
+  // Animations
+  ANIMATIONS,
   // Utility
-  createCustomTransition,
+  createScreenOptions,
 };
+

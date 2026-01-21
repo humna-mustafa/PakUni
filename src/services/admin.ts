@@ -1393,13 +1393,23 @@ class AdminService {
         .from('app_settings')
         .select('value')
         .eq('key', key)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      // PGRST116 means no rows found - this is expected for missing settings
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Setting doesn't exist, return null silently
+          return null;
+        }
+        throw error;
+      }
 
-      return data?.value;
-    } catch (error) {
-      logger.error(`Error getting setting ${key}`, error, 'Admin');
+      return data?.value ?? null;
+    } catch (error: any) {
+      // Only log actual errors, not "setting not found"
+      if (error?.code !== 'PGRST116') {
+        logger.error(`Error getting setting ${key}`, error, 'Admin');
+      }
       return null;
     }
   }
