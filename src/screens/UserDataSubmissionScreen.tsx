@@ -8,7 +8,7 @@
  * - Track status of submissions
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  Animated,
+  Easing,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../contexts/ThemeContext';
@@ -31,6 +33,51 @@ import {
   SubmissionPriority,
 } from '../services/dataSubmissions';
 import { STATUS, PRIORITY, PROVIDERS, SEMANTIC, DARK_BG, LIGHT_BG } from '../constants/brand';
+
+// Animated Type Card Component
+const AnimatedTypeCard: React.FC<{
+  children: React.ReactNode;
+  index: number;
+  style?: any;
+  onPress?: () => void;
+}> = ({children, index, style, onPress}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+
+  useEffect(() => {
+    const delay = index * 50;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{scale: scaleAnim}],
+        },
+      ]}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+        {children}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 type TabType = 'submit' | 'history';
 
@@ -81,6 +128,60 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
   // History
   const [submissions, setSubmissions] = useState<DataSubmission[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-20)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const infoBoxAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Info box animation
+    Animated.timing(infoBoxAnim, {
+      toValue: 1,
+      duration: 500,
+      delay: 200,
+      useNativeDriver: true,
+    }).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -6],
+  });
 
   // Pre-fill from navigation params
   useEffect(() => {
@@ -257,19 +358,28 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
         </View>
       )}
       
-      <View style={[styles.infoBox, { backgroundColor: isDark ? DARK_BG.cardElevated : colors.primaryLight }]}>
-        <Icon name="information-circle" size={20} color={colors.primary} />
+      <Animated.View 
+        style={[
+          styles.infoBox, 
+          { backgroundColor: isDark ? DARK_BG.cardElevated : colors.primaryLight },
+          { opacity: infoBoxAnim, transform: [{translateY: headerSlideAnim}] }
+        ]}>
+        <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+          <Icon name="information-circle" size={20} color={colors.primary} />
+        </Animated.View>
         <Text style={[styles.infoText, { color: isDark ? colors.primaryLight : colors.primaryDark }]}>
           Found incorrect data? Help us improve by submitting a correction. 
           Accurate information helps all students!
         </Text>
-      </View>
+      </Animated.View>
       
       <Text style={[styles.sectionTitle, { color: colors.text }]}>What type of data?</Text>
       <View style={styles.typeGrid}>
-        {SUBMISSION_TYPES.map(type => (
-          <TouchableOpacity
+        {SUBMISSION_TYPES.map((type, index) => (
+          <AnimatedTypeCard
             key={type.value}
+            index={index}
+            onPress={() => setSubmissionType(type.value)}
             style={[
               styles.typeCard,
               {
@@ -277,16 +387,17 @@ export const UserDataSubmissionScreen: React.FC<{ navigation: any; route?: any }
                 borderColor: submissionType === type.value ? colors.primary : 'transparent',
               }
             ]}
-            onPress={() => setSubmissionType(type.value)}
           >
-            <Icon 
-              name={type.icon as any} 
-              size={24} 
-              color={submissionType === type.value ? colors.primary : colors.textSecondary} 
-            />
-            <Text style={[styles.typeLabel, { color: colors.text }]}>{type.label}</Text>
-            <Text style={[styles.typeDescription, { color: colors.textSecondary }]}>{type.description}</Text>
-          </TouchableOpacity>
+            <View>
+              <Icon 
+                name={type.icon as any} 
+                size={24} 
+                color={submissionType === type.value ? colors.primary : colors.textSecondary} 
+              />
+              <Text style={[styles.typeLabel, { color: colors.text }]}>{type.label}</Text>
+              <Text style={[styles.typeDescription, { color: colors.textSecondary }]}>{type.description}</Text>
+            </View>
+          </AnimatedTypeCard>
         ))}
       </View>
       

@@ -1,8 +1,9 @@
 /**
  * SettingsScreen - App settings and preferences
+ * Enhanced with premium animations and polished UI
  */
 
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -14,6 +15,8 @@ import {
   Platform,
   Alert,
   Linking,
+  Animated,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -21,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
+import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
 import {useTheme} from '../contexts/ThemeContext';
@@ -45,16 +49,19 @@ interface SettingItemProps {
   colors: any;
   showArrow?: boolean;
   destructive?: boolean;
+  index?: number;
+  disabled?: boolean;
 }
 
 interface SectionProps {
   title: string;
   children: React.ReactNode;
   colors: any;
+  index?: number;
 }
 
 // ============================================================================
-// SETTING ITEM COMPONENT
+// SETTING ITEM COMPONENT - With Entrance Animation
 // ============================================================================
 
 const SettingItem: React.FC<SettingItemProps> = ({
@@ -67,55 +74,144 @@ const SettingItem: React.FC<SettingItemProps> = ({
   colors,
   showArrow = true,
   destructive = false,
-}) => (
-  <TouchableOpacity
-    style={[styles.settingItem, {backgroundColor: colors.card}]}
-    onPress={onPress}
-    disabled={!onPress}
-    activeOpacity={onPress ? 0.7 : 1}>
-    <View style={[styles.settingIcon, {backgroundColor: `${iconColor}15`}]}>
-      <Icon name={icon} family="Ionicons" size={20} color={iconColor} />
-    </View>
-    <View style={styles.settingContent}>
-      <Text
-        style={[
-          styles.settingTitle,
-          {color: destructive ? colors.error : colors.text},
-        ]}>
+  index = 0,
+  disabled = false,
+}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const delay = index * 30;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    if (disabled) return;
+    Animated.spring(scaleAnim, {
+      toValue: 0.98,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    if (disabled) return;
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <Animated.View
+      style={{
+        opacity: fadeAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, disabled ? 0.5 : 1],
+        }),
+        transform: [{translateX: slideAnim}, {scale: scaleAnim}],
+      }}>
+      <TouchableOpacity
+        style={[styles.settingItem, {backgroundColor: colors.card}]}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={!onPress}
+        activeOpacity={onPress ? 0.7 : 1}>
+        <View style={[styles.settingIcon, {backgroundColor: `${iconColor}15`}]}>
+          <Icon name={icon} family="Ionicons" size={20} color={iconColor} />
+        </View>
+        <View style={styles.settingContent}>
+          <Text
+            style={[
+              styles.settingTitle,
+              {color: destructive ? colors.error : colors.text},
+            ]}>
+            {title}
+          </Text>
+          {subtitle && (
+            <Text style={[styles.settingSubtitle, {color: colors.textSecondary}]}>
+              {subtitle}
+            </Text>
+          )}
+        </View>
+        {rightComponent}
+        {showArrow && onPress && !rightComponent && (
+          <Icon
+            name="chevron-forward"
+            family="Ionicons"
+            size={20}
+            color={colors.textSecondary}
+          />
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+// ============================================================================
+// SECTION COMPONENT - With Entrance Animation
+// ============================================================================
+
+const Section: React.FC<SectionProps> = ({title, children, colors, index = 0}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    const delay = index * 80;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 40,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  return (
+    <Animated.View 
+      style={[
+        styles.section,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}],
+        },
+      ]}>
+      <Text style={[styles.sectionTitle, {color: colors.textSecondary}]}>
         {title}
       </Text>
-      {subtitle && (
-        <Text style={[styles.settingSubtitle, {color: colors.textSecondary}]}>
-          {subtitle}
-        </Text>
-      )}
-    </View>
-    {rightComponent}
-    {showArrow && onPress && !rightComponent && (
-      <Icon
-        name="chevron-forward"
-        family="Ionicons"
-        size={20}
-        color={colors.textSecondary}
-      />
-    )}
-  </TouchableOpacity>
-);
-
-// ============================================================================
-// SECTION COMPONENT
-// ============================================================================
-
-const Section: React.FC<SectionProps> = ({title, children, colors}) => (
-  <View style={styles.section}>
-    <Text style={[styles.sectionTitle, {color: colors.textSecondary}]}>
-      {title}
-    </Text>
-    <View style={[styles.sectionContent, {backgroundColor: colors.card}]}>
-      {children}
-    </View>
-  </View>
-);
+      <View style={[styles.sectionContent, {backgroundColor: colors.card}]}>
+        {children}
+      </View>
+    </Animated.View>
+  );
+};
 
 // ============================================================================
 // MAIN COMPONENT
@@ -124,16 +220,75 @@ const Section: React.FC<SectionProps> = ({title, children, colors}) => (
 const SettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const {colors, isDark, toggleTheme} = useTheme();
-  const {user, signOut} = useAuth();
+  const {user, signOut, deleteAccount} = useAuth();
   const {preferences: notificationPrefs, updatePreferences, clearAll: clearAllNotifications} = useNotifications();
   const [cacheSize, setCacheSize] = useState<string>('Calculating...');
   const [isGoogleLinked, setIsGoogleLinked] = useState<boolean>(false);
   const [isLinkingGoogle, setIsLinkingGoogle] = useState<boolean>(false);
 
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const gearRotateAnim = useRef(new Animated.Value(0)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     calculateCacheSize();
     checkGoogleLinkStatus();
+    
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating gear rotation
+    Animated.loop(
+      Animated.timing(gearRotateAnim, {
+        toValue: 1,
+        duration: 8000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+
+    // Floating decorations
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
   }, []);
+
+  const gearRotateZ = gearRotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
 
   const checkGoogleLinkStatus = async () => {
     try {
@@ -296,14 +451,16 @@ const SettingsScreen: React.FC = () => {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            // In production, implement actual account deletion
-            Alert.alert('Contact Support', 'Please use the Contact Support option in Settings to delete your account.');
+          onPress: async () => {
+            const success = await deleteAccount();
+            if (success) {
+              // Navigation will be handled by auth state change
+            }
           },
         },
       ],
     );
-  }, []);
+  }, [deleteAccount]);
 
   const handleRateApp = () => {
     // Open app store for rating
@@ -333,22 +490,60 @@ const SettingsScreen: React.FC = () => {
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Floating Decorative Elements */}
+        <Animated.View
+          style={[
+            styles.floatingGear1,
+            {
+              transform: [{rotate: gearRotateZ}, {translateY: floatTranslateY}],
+              opacity: 0.08,
+            },
+          ]}>
+          <Icon name="settings" family="Ionicons" size={60} color={colors.primary} />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.floatingGear2,
+            {
+              transform: [{rotate: gearRotateZ}],
+              opacity: 0.05,
+            },
+          ]}>
+          <Icon name="cog" family="Ionicons" size={40} color={colors.primary} />
+        </Animated.View>
+
+        {/* Header with Animation */}
+        <Animated.View
+          style={[
+            styles.header,
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}],
+            },
+          ]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {color: colors.text}]}>Settings</Text>
+          <View style={styles.headerCenter}>
+            <Animated.View style={[styles.headerIcon, {transform: [{translateY: floatTranslateY}]}]}>
+              <LinearGradient
+                colors={[colors.primary, colors.secondary || '#6366F1']}
+                style={styles.headerIconGradient}>
+                <Icon name="settings-outline" family="Ionicons" size={18} color="#FFFFFF" />
+              </LinearGradient>
+            </Animated.View>
+            <Text style={[styles.headerTitle, {color: colors.text}]}>Settings</Text>
+          </View>
           <View style={styles.headerSpacer} />
-        </View>
+        </Animated.View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}>
           {/* My Account - Favorites & Notifications */}
-          <Section title="MY ACCOUNT" colors={colors}>
+          <Section title="MY ACCOUNT" colors={colors} index={0}>
             <SettingItem
               icon="heart-outline"
               iconColor="#EF4444"
@@ -356,6 +551,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Saved universities, scholarships & programs"
               colors={colors}
               onPress={() => navigation.navigate('Favorites' as never)}
+              index={0}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -365,11 +561,12 @@ const SettingsScreen: React.FC = () => {
               subtitle="View all your alerts & updates"
               colors={colors}
               onPress={() => navigation.navigate('Notifications' as never)}
+              index={1}
             />
           </Section>
 
           {/* Linked Accounts */}
-          <Section title="LINKED ACCOUNTS" colors={colors}>
+          <Section title="LINKED ACCOUNTS" colors={colors} index={1}>
             <SettingItem
               icon="logo-google"
               iconColor="#4285F4"
@@ -379,6 +576,7 @@ const SettingsScreen: React.FC = () => {
                 : 'Not connected'}
               colors={colors}
               onPress={isGoogleLinked ? handleUnlinkGoogleAccount : handleLinkGoogleAccount}
+              index={2}
               rightComponent={
                 isLinkingGoogle ? (
                   <View style={styles.loadingIndicator}>
@@ -410,7 +608,7 @@ const SettingsScreen: React.FC = () => {
           </Section>
 
           {/* Appearance */}
-          <Section title="APPEARANCE" colors={colors}>
+          <Section title="APPEARANCE" colors={colors} index={2}>
             <SettingItem
               icon="moon-outline"
               iconColor="#4573DF"
@@ -418,6 +616,7 @@ const SettingsScreen: React.FC = () => {
               subtitle={isDark ? 'On' : 'Off'}
               colors={colors}
               showArrow={false}
+              index={3}
               rightComponent={
                 <Switch
                   value={isDark}
@@ -430,7 +629,7 @@ const SettingsScreen: React.FC = () => {
           </Section>
 
           {/* Notifications */}
-          <Section title="NOTIFICATIONS" colors={colors}>
+          <Section title="NOTIFICATIONS" colors={colors} index={3}>
             <SettingItem
               icon="notifications-outline"
               iconColor="#F59E0B"
@@ -438,6 +637,7 @@ const SettingsScreen: React.FC = () => {
               subtitle={notificationPrefs.enabled ? 'Enabled' : 'Disabled'}
               colors={colors}
               showArrow={false}
+              index={4}
               rightComponent={
                 <Switch
                   value={notificationPrefs.enabled}
@@ -451,16 +651,18 @@ const SettingsScreen: React.FC = () => {
             
             <SettingItem
               icon="school-outline"
-              iconColor="#10B981"
+              iconColor={notificationPrefs.enabled ? "#10B981" : colors.textSecondary}
               title="Scholarship Alerts"
               colors={colors}
               showArrow={false}
+              index={5}
+              disabled={!notificationPrefs.enabled}
               rightComponent={
                 <Switch
-                  value={notificationPrefs.scholarships}
+                  value={notificationPrefs.enabled && notificationPrefs.scholarships}
                   onValueChange={(v) => handleToggleNotification('scholarships', v)}
                   trackColor={{false: colors.border, true: colors.primaryLight}}
-                  thumbColor={notificationPrefs.scholarships ? colors.primary : '#FFFFFF'}
+                  thumbColor={notificationPrefs.enabled && notificationPrefs.scholarships ? colors.primary : '#FFFFFF'}
                   disabled={!notificationPrefs.enabled}
                 />
               }
@@ -469,16 +671,18 @@ const SettingsScreen: React.FC = () => {
             
             <SettingItem
               icon="calendar-outline"
-              iconColor="#EF4444"
+              iconColor={notificationPrefs.enabled ? "#EF4444" : colors.textSecondary}
               title="Admission Deadlines"
               colors={colors}
               showArrow={false}
+              index={6}
+              disabled={!notificationPrefs.enabled}
               rightComponent={
                 <Switch
-                  value={notificationPrefs.admissions}
+                  value={notificationPrefs.enabled && notificationPrefs.admissions}
                   onValueChange={(v) => handleToggleNotification('admissions', v)}
                   trackColor={{false: colors.border, true: colors.primaryLight}}
-                  thumbColor={notificationPrefs.admissions ? colors.primary : '#FFFFFF'}
+                  thumbColor={notificationPrefs.enabled && notificationPrefs.admissions ? colors.primary : '#FFFFFF'}
                   disabled={!notificationPrefs.enabled}
                 />
               }
@@ -487,16 +691,18 @@ const SettingsScreen: React.FC = () => {
             
             <SettingItem
               icon="document-text-outline"
-              iconColor="#4573DF"
+              iconColor={notificationPrefs.enabled ? "#4573DF" : colors.textSecondary}
               title="Test Date Reminders"
               colors={colors}
               showArrow={false}
+              index={7}
+              disabled={!notificationPrefs.enabled}
               rightComponent={
                 <Switch
-                  value={notificationPrefs.entryTests}
+                  value={notificationPrefs.enabled && notificationPrefs.entryTests}
                   onValueChange={(v) => handleToggleNotification('entryTests', v)}
                   trackColor={{false: colors.border, true: colors.primaryLight}}
-                  thumbColor={notificationPrefs.entryTests ? colors.primary : '#FFFFFF'}
+                  thumbColor={notificationPrefs.enabled && notificationPrefs.entryTests ? colors.primary : '#FFFFFF'}
                   disabled={!notificationPrefs.enabled}
                 />
               }
@@ -505,16 +711,18 @@ const SettingsScreen: React.FC = () => {
             
             <SettingItem
               icon="bulb-outline"
-              iconColor="#F97316"
+              iconColor={notificationPrefs.enabled ? "#F97316" : colors.textSecondary}
               title="Daily Tips"
               colors={colors}
               showArrow={false}
+              index={8}
+              disabled={!notificationPrefs.enabled}
               rightComponent={
                 <Switch
-                  value={notificationPrefs.tips}
+                  value={notificationPrefs.enabled && notificationPrefs.tips}
                   onValueChange={(v) => handleToggleNotification('tips', v)}
                   trackColor={{false: colors.border, true: colors.primaryLight}}
-                  thumbColor={notificationPrefs.tips ? colors.primary : '#FFFFFF'}
+                  thumbColor={notificationPrefs.enabled && notificationPrefs.tips ? colors.primary : '#FFFFFF'}
                   disabled={!notificationPrefs.enabled}
                 />
               }
@@ -522,7 +730,7 @@ const SettingsScreen: React.FC = () => {
           </Section>
 
           {/* Data & Storage */}
-          <Section title="DATA & STORAGE" colors={colors}>
+          <Section title="DATA & STORAGE" colors={colors} index={4}>
             <SettingItem
               icon="folder-outline"
               iconColor="#06B6D4"
@@ -530,6 +738,7 @@ const SettingsScreen: React.FC = () => {
               subtitle={cacheSize}
               colors={colors}
               onPress={handleClearCache}
+              index={9}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -538,11 +747,12 @@ const SettingsScreen: React.FC = () => {
               title="Clear Notifications"
               colors={colors}
               onPress={handleClearNotifications}
+              index={10}
             />
           </Section>
 
           {/* Help & Support - Prominent Section */}
-          <Section title="HELP & SUPPORT" colors={colors}>
+          <Section title="HELP & SUPPORT" colors={colors} index={5}>
             <SettingItem
               icon="chatbubbles-outline"
               iconColor="#4573DF"
@@ -550,6 +760,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Report issues, suggest features, share resources"
               colors={colors}
               onPress={() => navigation.navigate('ContactSupport' as never)}
+              index={11}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -559,6 +770,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Found a bug? Let us know"
               colors={colors}
               onPress={() => navigation.navigate('ContactSupport' as never)}
+              index={12}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -568,6 +780,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Help us improve the app"
               colors={colors}
               onPress={() => navigation.navigate('ContactSupport' as never)}
+              index={13}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -577,11 +790,12 @@ const SettingsScreen: React.FC = () => {
               subtitle="Share merit lists, past papers & more"
               colors={colors}
               onPress={() => navigation.navigate('ContactSupport' as never)}
+              index={14}
             />
           </Section>
 
           {/* Support */}
-          <Section title="MORE" colors={colors}>
+          <Section title="MORE" colors={colors} index={6}>
             <SettingItem
               icon="star-outline"
               iconColor="#F59E0B"
@@ -589,6 +803,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Help us improve"
               colors={colors}
               onPress={handleRateApp}
+              index={15}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -598,6 +813,7 @@ const SettingsScreen: React.FC = () => {
               subtitle="Tell your friends"
               colors={colors}
               onPress={handleShareApp}
+              index={16}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -606,6 +822,7 @@ const SettingsScreen: React.FC = () => {
               title="Help & FAQ"
               colors={colors}
               onPress={() => navigation.navigate('FAQ' as never)}
+              index={17}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -614,6 +831,7 @@ const SettingsScreen: React.FC = () => {
               title="Privacy Policy"
               colors={colors}
               onPress={() => navigation.navigate('PrivacyPolicy' as never)}
+              index={18}
             />
             <View style={[styles.divider, {backgroundColor: colors.border}]} />
             <SettingItem
@@ -622,18 +840,20 @@ const SettingsScreen: React.FC = () => {
               title="Terms of Service"
               colors={colors}
               onPress={() => navigation.navigate('TermsOfService' as never)}
+              index={19}
             />
           </Section>
 
           {/* Account */}
           {user && !user.isGuest && (
-            <Section title="ACCOUNT" colors={colors}>
+            <Section title="ACCOUNT" colors={colors} index={7}>
               <SettingItem
                 icon="log-out-outline"
                 iconColor="#F59E0B"
                 title="Sign Out"
                 colors={colors}
                 onPress={handleSignOut}
+                index={20}
               />
               <View style={[styles.divider, {backgroundColor: colors.border}]} />
               <SettingItem
@@ -643,21 +863,34 @@ const SettingsScreen: React.FC = () => {
                 colors={colors}
                 onPress={handleDeleteAccount}
                 destructive
+                index={21}
               />
             </Section>
           )}
 
-          {/* Version */}
-          <View style={styles.versionContainer}>
-            <Text style={[styles.versionText, {color: colors.textSecondary}]}>
-              PakUni v1.0.0
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-              <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>Made with</Text>
-              <Icon name="heart" family="Ionicons" size={14} color="#EF4444" />
-              <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>in Pakistan</Text>
-            </View>
-          </View>
+          {/* Version - Enhanced with animation */}
+          <Animated.View 
+            style={[
+              styles.versionContainer,
+              {
+                opacity: headerFadeAnim,
+              },
+            ]}>
+            <LinearGradient
+              colors={[`${colors.primary}10`, 'transparent']}
+              style={styles.versionGradient}>
+              <Text style={[styles.versionText, {color: colors.textSecondary}]}>
+                PakUni v1.0.0
+              </Text>
+              <View style={styles.madeWithRow}>
+                <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>Made with</Text>
+                <Animated.View style={{transform: [{scale: floatAnim.interpolate({inputRange: [0, 1], outputRange: [1, 1.2]})}]}}>
+                  <Icon name="heart" family="Ionicons" size={14} color="#EF4444" />
+                </Animated.View>
+                <Text style={[styles.copyrightText, {color: colors.textSecondary}]}>in Pakistan</Text>
+              </View>
+            </LinearGradient>
+          </Animated.View>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -675,11 +908,42 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  // Floating decorations
+  floatingGear1: {
+    position: 'absolute',
+    top: 80,
+    right: -20,
+    zIndex: 0,
+  },
+  floatingGear2: {
+    position: 'absolute',
+    top: 200,
+    left: -15,
+    zIndex: 0,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
+    zIndex: 1,
+  },
+  headerCenter: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  headerIcon: {
+    marginRight: 4,
+  },
+  headerIconGradient: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backButton: {
     width: 36,
@@ -688,10 +952,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    flex: 1,
     fontSize: 18,
     fontWeight: '600',
-    textAlign: 'center',
   },
   headerSpacer: {
     width: 36,
@@ -716,12 +978,12 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.03,
-        shadowRadius: 4,
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 1,
+        elevation: 2,
       },
     }),
   },
@@ -779,13 +1041,24 @@ const styles = StyleSheet.create({
   },
   versionContainer: {
     alignItems: 'center',
-    paddingVertical: 20,
     marginTop: 12,
+    marginHorizontal: 16,
+  },
+  versionGradient: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 24,
+    borderRadius: 16,
+  },
+  madeWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   versionText: {
     fontSize: 13,
     fontWeight: '500',
-    marginBottom: 4,
+    marginBottom: 8,
   },
   copyrightText: {
     fontSize: 11,

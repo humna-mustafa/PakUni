@@ -9,9 +9,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Share, Image} from 'react-native';
-import RNFS from 'react-native-fs';
-import {generateAchievementCardSVG, svgToDataUrl} from './achievementCards';
+import {Share} from 'react-native';
 import {logger} from '../utils/logger';
 
 // ============================================================================
@@ -269,37 +267,19 @@ export const generateCardShareLink = (cardType: string, cardId: string): string 
 };
 
 /**
- * Share achievement with generated image card
- * Falls back to text-only sharing if image generation fails
+ * Share achievement with text message
+ * Creates a celebratory message based on achievement type and details
  */
 export const shareAchievement = async (achievement: MyAchievement): Promise<boolean> => {
   try {
-    // Try to generate SVG card
-    const cardSVG = generateAchievementCardSVG(achievement);
-    const dataUrl = svgToDataUrl(cardSVG);
+    const message = buildShareMessage(achievement);
     
-    // Try to save SVG as image and share it
-    try {
-      const fileName = `achievement_${achievement.id}.png`;
-      const filePath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
-      
-      // For now, share text with the card description
-      // In a production app, you'd convert SVG to PNG using a library
-      const message = buildShareMessage(achievement);
-      
-      const result = await Share.share({
-        message: `${message}\n\n✨ Visual achievement card generated! Share this card in your story!`,
-        title: `${achievement.title} - PakUni`,
-      });
-      
-      return result.action === Share.sharedAction;
-    } catch (imageError) {
-      logger.warn('Could not generate image card, falling back to text', imageError, 'Achievements');
-      // Fall back to text-only sharing
-      const message = buildShareMessage(achievement);
-      const result = await Share.share({message});
-      return result.action === Share.sharedAction;
-    }
+    const result = await Share.share({
+      message,
+      title: `${achievement.title} - PakUni`,
+    });
+    
+    return result.action === Share.sharedAction;
   } catch (error) {
     logger.error('Failed to share achievement', error, 'Achievements');
     return false;

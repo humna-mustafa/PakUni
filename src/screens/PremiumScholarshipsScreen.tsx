@@ -17,7 +17,7 @@ import {
   Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
@@ -43,9 +43,10 @@ import FloatingToolsButton from '../components/FloatingToolsButton';
 import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
 import {hybridDataService} from '../services/hybridData';
-import type {RootStackParamList} from '../navigation/AppNavigator';
+import type {RootStackParamList, TabParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type ScholarshipsRouteProp = RouteProp<TabParamList, 'Scholarships'>;
 
 // Fallback LinearGradient
 let LinearGradient: React.ComponentType<any>;
@@ -150,20 +151,32 @@ const ScholarshipCard = ({
 }) => {
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const pressAnim = useRef(new Animated.Value(1)).current;
+  const slideAnim = useRef(new Animated.Value(40)).current;
 
   useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      delay: index * 50,
-      ...ANIMATION.spring.gentle,
-      useNativeDriver: true,
-    }).start();
+    const delay = index * 60;
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        delay,
+        tension: 65,
+        friction: 9,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }, []);
 
   const handlePressIn = () => {
     Animated.spring(pressAnim, {
-      toValue: ANIMATION_SCALES.BUTTON_PRESS,
-      ...ANIMATION.spring.snappy,
+      toValue: 0.97,
+      tension: 100,
+      friction: 10,
       useNativeDriver: true,
     }).start();
   };
@@ -171,7 +184,8 @@ const ScholarshipCard = ({
   const handlePressOut = () => {
     Animated.spring(pressAnim, {
       toValue: 1,
-      ...ANIMATION.spring.snappy,
+      tension: 80,
+      friction: 8,
       useNativeDriver: true,
     }).start();
   };
@@ -202,7 +216,7 @@ const ScholarshipCard = ({
   };
 
   // Get scholarship brand colors for accent
-  const brandColors = getScholarshipBrandColors(item.name);
+  const brandColors = getScholarshipBrandColors(item.type);
   const accentColor = brandColors?.primary || colors.primary;
 
   // Get availability info
@@ -212,11 +226,12 @@ const ScholarshipCard = ({
   const universityCount = specificUniversities.length;
 
   // Get application method info
-  const applicationMethod = item.application_method || 'online_portal';
-  const methodInfo = APPLICATION_METHOD_LABELS[applicationMethod];
+  const applicationMethod = item.applicationMethod || 'online';
+  const methodLabel = APPLICATION_METHOD_LABELS[applicationMethod] || 'Online Application';
 
-  // Check if active
-  const isActive = item.is_active !== false;
+  // Check if active based on status (status: 'open' | 'upcoming' | 'closed')
+  const isActive = item.status !== 'closed';
+  const coveragePercentage = item.tuitionCoverage || 0;
 
   return (
     <Animated.View
@@ -225,23 +240,18 @@ const ScholarshipCard = ({
         {
           opacity: scaleAnim,
           transform: [
-            {scale: Animated.multiply(scaleAnim, pressAnim)},
-            {
-              translateY: scaleAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [30, 0],
-              }),
-            },
+            {scale: pressAnim},
+            {translateY: slideAnim},
           ],
         },
       ]}>
       <TouchableOpacity
-        activeOpacity={0.85}
+        activeOpacity={0.9}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         accessibilityRole="button"
-        accessibilityLabel={`${item.name} by ${item.provider}, ${item.coverage_percentage}% coverage${!isActive ? ', currently inactive' : ''}`}
+        accessibilityLabel={`${item.name} by ${item.provider}, ${coveragePercentage}% coverage${!isActive ? ', currently inactive' : ''}`}
         accessibilityHint="Double tap to view scholarship details">
         <View style={[styles.card, {backgroundColor: colors.card, borderLeftColor: accentColor, borderLeftWidth: 4}]}>
           {/* Top Badges Row */}
@@ -262,10 +272,10 @@ const ScholarshipCard = ({
             <View
               style={[
                 styles.coverageBadge,
-                {backgroundColor: getCoverageColor(item.coverage_percentage) + '20'},
+                {backgroundColor: getCoverageColor(coveragePercentage) + '20'},
               ]}>
-              <Text style={[styles.coverageText, {color: getCoverageColor(item.coverage_percentage)}]}>
-                {item.coverage_percentage}% Coverage
+              <Text style={[styles.coverageText, {color: getCoverageColor(coveragePercentage)}]}>
+                {coveragePercentage}% Coverage
               </Text>
             </View>
             
@@ -334,32 +344,21 @@ const ScholarshipCard = ({
 
           {/* Application Method Badge */}
           <View style={[styles.applicationMethodBadge, {backgroundColor: colors.background}]}>
-            <Icon name={methodInfo.icon} family="Ionicons" size={14} color={accentColor} />
+            <Icon name="document-text-outline" family="Ionicons" size={14} color={accentColor} />
             <Text style={[styles.applicationMethodText, {color: colors.textSecondary}]}>
-              {methodInfo.label}
+              {methodLabel}
             </Text>
           </View>
 
           {/* Stats Row */}
           <View style={styles.statsRow}>
-            {item.monthly_stipend && (
+            {item.monthlyStipend && (
               <View style={[styles.statBox, {backgroundColor: colors.successLight}]}>
                 <Icon name="cash-outline" family="Ionicons" size={18} color={colors.success} />
                 <View>
                   <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Stipend</Text>
                   <Text style={[styles.statValue, {color: colors.success}]}>
-                    {formatCurrency(item.monthly_stipend)}
-                  </Text>
-                </View>
-              </View>
-            )}
-            {item.max_family_income && (
-              <View style={[styles.statBox, {backgroundColor: colors.warningLight}]}>
-                <Icon name="analytics-outline" family="Ionicons" size={16} color={colors.warning} />
-                <View>
-                  <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Max Income</Text>
-                  <Text style={[styles.statValue, {color: colors.warning}]}>
-                    {formatCurrency(item.max_family_income)}
+                    {formatCurrency(item.monthlyStipend)}
                   </Text>
                 </View>
               </View>
@@ -390,10 +389,14 @@ const ITEM_HEIGHT = 240; // Optimized from 280px - better space usage
 
 const PremiumScholarshipsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute<ScholarshipsRouteProp>();
   const {colors, isDark} = useTheme();
   const {user, addFavorite, removeFavorite, isFavorite, isGuest} = useAuth();
   const [scholarships, setScholarships] = useState<ScholarshipData[]>(SCHOLARSHIPS);
-  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Initialize search query from route params if provided (e.g., from Home search)
+  const initialSearchQuery = route.params?.searchQuery || '';
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<FilterType>('all');
   const [selectedUniversity, setSelectedUniversity] = useState<string | null>(null);
@@ -403,6 +406,13 @@ const PremiumScholarshipsScreen = () => {
   const [isFav, setIsFav] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
   const searchFocusAnim = useRef(new Animated.Value(0)).current;
+
+  // Update search query when route params change (e.g., from Home page search)
+  useEffect(() => {
+    if (route.params?.searchQuery) {
+      setSearchQuery(route.params.searchQuery);
+    }
+  }, [route.params?.searchQuery]);
 
   // Load scholarships on mount (uses cached data by default)
   useEffect(() => {
@@ -654,7 +664,7 @@ const PremiumScholarshipsScreen = () => {
               {/* Coverage Hero */}
               <LinearGradient
                 colors={
-                  selectedScholarship.coverage_percentage === 100
+                  (selectedScholarship.tuitionCoverage || 0) === 100
                     ? ['#10B981', '#059669']
                     : ['#F59E0B', '#D97706']
                 }
@@ -662,17 +672,17 @@ const PremiumScholarshipsScreen = () => {
                 end={{x: 1, y: 1}}
                 style={styles.coverageHero}>
                 <Text style={styles.coverageHeroPercent}>
-                  {selectedScholarship.coverage_percentage}%
+                  {selectedScholarship.tuitionCoverage || 0}%
                 </Text>
                 <Text style={styles.coverageHeroText}>
-                  {selectedScholarship.coverage_percentage === 100
+                  {(selectedScholarship.tuitionCoverage || 0) === 100
                     ? 'Full Tuition Coverage'
                     : 'Partial Tuition Support'}
                 </Text>
               </LinearGradient>
 
-              {/* Status Note */}
-              {selectedScholarship.status_notes && (
+              {/* Status Note - show deadline info if available */}
+              {selectedScholarship.deadline && (
                 <View style={[
                   styles.statusNoteCard, 
                   {
@@ -680,113 +690,113 @@ const PremiumScholarshipsScreen = () => {
                     borderColor: colors.primary + '30'
                   }
                 ]}>
-                  <Icon name="notifications-outline" family="Ionicons" size={20} color={colors.primary} />
+                  <Icon name="calendar-outline" family="Ionicons" size={20} color={colors.primary} />
                   <Text style={[styles.statusNoteText, {color: colors.text}]}>
-                    {selectedScholarship.status_notes}
+                    Deadline: {selectedScholarship.deadline}
                   </Text>
                 </View>
               )}
 
-              {/* Coverage Details */}
-              <View style={styles.coverageGrid}>
-                <View
-                  style={[
-                    styles.coverageItem,
-                    {
-                      backgroundColor: selectedScholarship.covers_tuition
-                        ? colors.successLight
-                        : colors.background,
-                    },
-                  ]}>
-                  <Icon name="book-outline" family="Ionicons" size={20} color={selectedScholarship.covers_tuition ? colors.success : colors.textSecondary} />
-                  <Text
-                    style={[
-                      styles.coverageItemText,
-                      {
-                        color: selectedScholarship.covers_tuition
-                          ? colors.success
-                          : colors.textSecondary,
-                      },
-                    ]}>
-                    Tuition
-                  </Text>
-                  {selectedScholarship.covers_tuition && (
-                    <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
-                  )}
-                </View>
-                <View
-                  style={[
-                    styles.coverageItem,
-                    {
-                      backgroundColor: selectedScholarship.covers_hostel
-                        ? colors.successLight
-                        : colors.background,
-                    },
-                  ]}>
-                  <Icon name="home-outline" family="Ionicons" size={20} color={selectedScholarship.covers_hostel ? colors.success : colors.textSecondary} />
-                  <Text
-                    style={[
-                      styles.coverageItemText,
-                      {
-                        color: selectedScholarship.covers_hostel
-                          ? colors.success
-                          : colors.textSecondary,
-                      },
-                    ]}>
-                    Hostel
-                  </Text>
-                  {selectedScholarship.covers_hostel && (
-                    <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
-                  )}
-                </View>
-                <View
-                  style={[
-                    styles.coverageItem,
-                    {
-                      backgroundColor: selectedScholarship.covers_books
-                        ? colors.successLight
-                        : colors.background,
-                    },
-                  ]}>
-                  <Icon name="reader-outline" family="Ionicons" size={20} color={selectedScholarship.covers_books ? colors.success : colors.textSecondary} />
-                  <Text
-                    style={[
-                      styles.coverageItemText,
-                      {
-                        color: selectedScholarship.covers_books
-                          ? colors.success
-                          : colors.textSecondary,
-                      },
-                    ]}>
-                    Books
-                  </Text>
-                  {selectedScholarship.covers_books && (
-                    <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
-                  )}
-                </View>
-              </View>
+              {/* Coverage Details - computed from coverageType and tuitionCoverage */}
+              {(() => {
+                const coversTuition = selectedScholarship.coverageType === 'full' || 
+                                     selectedScholarship.coverageType === 'tuition' || 
+                                     (selectedScholarship.tuitionCoverage && selectedScholarship.tuitionCoverage > 0);
+                const coversHostel = selectedScholarship.coverageType === 'full' || 
+                                    selectedScholarship.otherBenefits?.some(b => b.toLowerCase().includes('hostel') || b.toLowerCase().includes('accommodation'));
+                const coversBooks = selectedScholarship.otherBenefits?.some(b => b.toLowerCase().includes('book'));
+                
+                return (
+                  <View style={styles.coverageGrid}>
+                    <View
+                      style={[
+                        styles.coverageItem,
+                        {
+                          backgroundColor: coversTuition
+                            ? colors.successLight
+                            : colors.background,
+                        },
+                      ]}>
+                      <Icon name="book-outline" family="Ionicons" size={20} color={coversTuition ? colors.success : colors.textSecondary} />
+                      <Text
+                        style={[
+                          styles.coverageItemText,
+                          {
+                            color: coversTuition
+                              ? colors.success
+                              : colors.textSecondary,
+                          },
+                        ]}>
+                        Tuition
+                      </Text>
+                      {coversTuition && (
+                        <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
+                      )}
+                    </View>
+                    <View
+                      style={[
+                        styles.coverageItem,
+                        {
+                          backgroundColor: coversHostel
+                            ? colors.successLight
+                            : colors.background,
+                        },
+                      ]}>
+                      <Icon name="home-outline" family="Ionicons" size={20} color={coversHostel ? colors.success : colors.textSecondary} />
+                      <Text
+                        style={[
+                          styles.coverageItemText,
+                          {
+                            color: coversHostel
+                              ? colors.success
+                              : colors.textSecondary,
+                          },
+                        ]}>
+                        Hostel
+                      </Text>
+                      {coversHostel && (
+                        <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
+                      )}
+                    </View>
+                    <View
+                      style={[
+                        styles.coverageItem,
+                        {
+                          backgroundColor: coversBooks
+                            ? colors.successLight
+                            : colors.background,
+                        },
+                      ]}>
+                      <Icon name="reader-outline" family="Ionicons" size={20} color={coversBooks ? colors.success : colors.textSecondary} />
+                      <Text
+                        style={[
+                          styles.coverageItemText,
+                          {
+                            color: coversBooks
+                              ? colors.success
+                              : colors.textSecondary,
+                          },
+                        ]}>
+                        Books
+                      </Text>
+                      {coversBooks && (
+                        <Icon name="checkmark-circle" family="Ionicons" size={16} color={colors.success} />
+                      )}
+                    </View>
+                  </View>
+                );
+              })()}
 
               {/* Amount Cards */}
               <View style={styles.amountRow}>
-                {selectedScholarship.monthly_stipend && (
+                {selectedScholarship.monthlyStipend && (
                   <View style={[styles.amountCard, {backgroundColor: colors.successLight}]}>
                     <Icon name="cash-outline" family="Ionicons" size={22} color={colors.success} />
                     <Text style={[styles.amountLabel, {color: colors.textSecondary}]}>
                       Monthly Stipend
                     </Text>
                     <Text style={[styles.amountValue, {color: colors.success}]}>
-                      PKR {selectedScholarship.monthly_stipend.toLocaleString()}
-                    </Text>
-                  </View>
-                )}
-                {selectedScholarship.max_family_income && (
-                  <View style={[styles.amountCard, {backgroundColor: colors.warningLight}]}>
-                    <Icon name="bar-chart-outline" family="Ionicons" size={22} color={colors.warning} />
-                    <Text style={[styles.amountLabel, {color: colors.textSecondary}]}>
-                      Income Limit
-                    </Text>
-                    <Text style={[styles.amountValue, {color: colors.warning}]}>
-                      PKR {selectedScholarship.max_family_income.toLocaleString()}
+                      PKR {selectedScholarship.monthlyStipend.toLocaleString()}
                     </Text>
                   </View>
                 )}
@@ -805,7 +815,7 @@ const PremiumScholarshipsScreen = () => {
                 const availabilityText = getScholarshipAvailabilityText(selectedScholarship);
                 const specificUniversities = getScholarshipSpecificUniversities(selectedScholarship);
                 const isBroadlyAvailable = hasBroadAvailability(selectedScholarship);
-                const brandColors = getScholarshipBrandColors(selectedScholarship.name);
+                const brandColors = getScholarshipBrandColors(selectedScholarship.type);
                 const accentColor = brandColors?.primary || colors.primary;
 
                 return (
@@ -846,9 +856,9 @@ const PremiumScholarshipsScreen = () => {
 
               {/* NEW: Application Method Section */}
               {(() => {
-                const applicationMethod = selectedScholarship.application_method || 'online_portal';
-                const methodInfo = APPLICATION_METHOD_LABELS[applicationMethod];
-                const brandColors = getScholarshipBrandColors(selectedScholarship.name);
+                const applicationMethod = selectedScholarship.applicationMethod || 'online';
+                const methodLabel = APPLICATION_METHOD_LABELS[applicationMethod] || 'Online Application';
+                const brandColors = getScholarshipBrandColors(selectedScholarship.type);
                 const accentColor = brandColors?.primary || colors.primary;
 
                 return (
@@ -860,22 +870,22 @@ const PremiumScholarshipsScreen = () => {
                     <View style={[styles.applicationMethodCard, {backgroundColor: accentColor + '15'}]}>
                       <View style={styles.methodHeaderRow}>
                         <View style={[styles.methodIconBg, {backgroundColor: accentColor + '30'}]}>
-                          <Icon name={methodInfo.icon} family="Ionicons" size={24} color={accentColor} />
+                          <Icon name="document-text-outline" family="Ionicons" size={24} color={accentColor} />
                         </View>
                         <View style={styles.methodInfo}>
-                          <Text style={[styles.methodLabel, {color: accentColor}]}>{methodInfo.label}</Text>
+                          <Text style={[styles.methodLabel, {color: accentColor}]}>{methodLabel}</Text>
                           <Text style={[styles.methodDescription, {color: colors.textSecondary}]}>
-                            {methodInfo.description}
+                            Apply via {applicationMethod.replace('-', ' ')}
                           </Text>
                         </View>
                       </View>
                     </View>
                     
                     {/* Application Steps */}
-                    {selectedScholarship.application_steps && selectedScholarship.application_steps.length > 0 && (
+                    {selectedScholarship.applicationProcess && selectedScholarship.applicationProcess.length > 0 && (
                       <View style={styles.applicationStepsContainer}>
                         <Text style={[styles.stepsTitle, {color: colors.text}]}>Application Steps:</Text>
-                        {selectedScholarship.application_steps.map((step: string, index: number) => (
+                        {selectedScholarship.applicationProcess.map((step: string, index: number) => (
                           <View key={index} style={[styles.stepItem, {backgroundColor: colors.background}]}>
                             <View style={[styles.stepNumber, {backgroundColor: accentColor}]}>
                               <Text style={styles.stepNumberText}>{index + 1}</Text>
@@ -906,7 +916,7 @@ const PremiumScholarshipsScreen = () => {
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, {color: colors.text}]}>Required Documents</Text>
                 <View style={styles.docsGrid}>
-                  {selectedScholarship.required_documents.map((doc: string, index: number) => (
+                  {selectedScholarship.requiredDocuments.map((doc: string, index: number) => (
                     <View key={index} style={[styles.docItem, {backgroundColor: colors.background}]}>
                       <Icon name="document-text-outline" family="Ionicons" size={16} color={colors.primary} />
                       <Text style={[styles.docText, {color: colors.text}]}>{doc}</Text>
@@ -916,7 +926,7 @@ const PremiumScholarshipsScreen = () => {
               </View>
 
               {/* Deadline */}
-              {selectedScholarship.application_deadline && (
+              {selectedScholarship.deadline && (
                 <View style={[styles.deadlineCard, {backgroundColor: colors.warningLight}]}>
                   <Icon name="calendar-outline" family="Ionicons" size={24} color={colors.warning} />
                   <View style={styles.deadlineInfo}>
@@ -924,7 +934,7 @@ const PremiumScholarshipsScreen = () => {
                       Application Deadline
                     </Text>
                     <Text style={[styles.deadlineValue, {color: colors.warning}]}>
-                      {selectedScholarship.application_deadline}
+                      {selectedScholarship.deadline}
                     </Text>
                   </View>
                 </View>

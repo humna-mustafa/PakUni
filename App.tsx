@@ -12,13 +12,21 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import AppNavigator from './src/navigation/AppNavigator';
 import {ThemeProvider, useTheme, AuthProvider} from './src/contexts';
-import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast} from './src/components';
+import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast, preloadUniversityLogos} from './src/components';
 import {analytics} from './src/services/analytics';
 import {supabase} from './src/services/supabase';
 import {errorReportingService} from './src/services/errorReporting';
 import {offlineSyncService} from './src/services/offlineSync';
 import {contributionAutomationService} from './src/services/contributionAutomation';
 import {logger} from './src/utils/logger';
+
+// Top 30 university IDs to preload logos for instant display
+// These are the most popular universities that users frequently browse
+const TOP_UNIVERSITY_IDS = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, // Top 10 ranked
+  11, 12, 13, 14, 15, 16, 17, 18, 19, 20, // Next 10
+  21, 22, 23, 24, 25, 26, 27, 28, 29, 30, // Top 30
+];
 
 // Deep linking configuration for OAuth callbacks and shared content
 const linking = {
@@ -74,6 +82,10 @@ function AppContent(): React.JSX.Element {
         
         // Initialize contribution automation service
         await contributionAutomationService.initialize();
+        
+        // Preload top university logos for instant display
+        // This runs in background and caches logos locally via FastImage
+        preloadUniversityLogos(TOP_UNIVERSITY_IDS);
         
         logger.info('All services initialized successfully', undefined, 'App');
       } catch (error) {

@@ -1,20 +1,44 @@
 /**
  * UniversityLogo Component
  * Displays university logos with premium fallbacks and brand colors
- * Uses direct URLs from Wikipedia/university websites (no Supabase storage costs)
+ * Uses FastImage for aggressive caching - logos load once and cached locally
+ * No more re-loading on every scroll or view change
  */
 
 import React, {useState, useCallback, memo, useMemo, useEffect} from 'react';
 import {
   View,
-  Image,
   StyleSheet,
   ViewStyle,
   Animated,
   ActivityIndicator,
+  Text,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
 import {getLogo, getUniversityBrandColor} from '../utils/universityLogos';
 import {UNIVERSITIES} from '../data/universities';
+import {Icon} from './icons';
+
+// Preload logos utility - call this at app startup for common universities
+export const preloadUniversityLogos = (universityIds: number[]) => {
+  const sources = universityIds
+    .map(id => {
+      const url = getLogo(id);
+      return url ? {uri: url, priority: 'low'} : null;
+    })
+    .filter(Boolean) as {uri: string; priority: 'low' | 'normal' | 'high'}[];
+  
+  if (sources.length > 0) {
+    FastImage.preload(sources as any);
+  }
+};
+
+// Clear logo cache utility (for debugging/testing)
+export const clearLogoCache = () => {
+  FastImage.clearMemoryCache();
+  FastImage.clearDiskCache();
+};
 
 interface UniversityLogoProps {
   /** University ID (Preferred for accurate logo lookup) */
@@ -50,24 +74,10 @@ const UniversityLogo = memo(({
 }: UniversityLogoProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [imageReady, setImageReady] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const [reloadKey, setReloadKey] = useState(0);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
-  const retryTimeoutRef = React.useRef<number | null>(null);
-
-  // External logos ENABLED - with timeout fallback for slow URLs
-  const ENABLE_EXTERNAL_LOGOS = true;
-  const LOAD_TIMEOUT_MS = 20000; // 20 seconds before showing fallback (increased for slow networks)
-  const MAX_RETRIES = 2;
-  const RETRY_DELAY_MS = 2000; // base retry delay
 
   // Get logo URL - prefer direct URL, then lookup by ID, then shortName
   const logoUrl = useMemo(() => {
-    if (!ENABLE_EXTERNAL_LOGOS) {
-      return null; // Always show initials fallback
-    }
     if (directLogoUrl) {
       return directLogoUrl;
     }
@@ -94,28 +104,16 @@ const UniversityLogo = memo(({
     [shortName, universityName]
   );
 
-  // Reset states when URL changes
+  // Reset animation when URL changes
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
-    setImageReady(false);
-    setTimedOut(false);
     fadeAnim.setValue(0);
-    
-    // Set timeout - if image doesn't load in time, show fallback
-    const timeoutId = setTimeout(() => {
-      if (!imageReady && !hasError) {
-        setTimedOut(true);
-      }
-    }, LOAD_TIMEOUT_MS);
-    
-    return () => clearTimeout(timeoutId);
   }, [logoUrl, fadeAnim]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
     setHasError(false);
-    setImageReady(true);
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 200,
@@ -123,24 +121,11 @@ const UniversityLogo = memo(({
     }).start();
   }, [fadeAnim]);
 
-  const handleError = useCallback((error: any) => {
-    console.log(`[UniversityLogo] Error loading: ${logoUrl}`, error?.nativeEvent?.error || 'Unknown error');
+  const handleError = useCallback(() => {
+    console.log(`[UniversityLogo] Cache failed for: ${logoUrl}`);
     setIsLoading(false);
     setHasError(true);
-    setImageReady(false);
-
-    // Retry logic: attempt to reload with small backoff
-    if (retryCount < MAX_RETRIES) {
-      const nextRetry = retryCount + 1;
-      setRetryCount(nextRetry);
-      const delay = RETRY_DELAY_MS * nextRetry;
-      retryTimeoutRef.current = (setTimeout(() => {
-        setHasError(false);
-        setIsLoading(true);
-        setReloadKey(prev => prev + 1);
-      }, delay) as unknown) as number;
-    }
-  }, [logoUrl, retryCount]);
+  }, [logoUrl]);
 
   const containerStyle = useMemo(
     () => [
@@ -155,17 +140,14 @@ const UniversityLogo = memo(({
     [size, borderRadius, style]
   );
 
-  // If no logo URL at all, return null immediately (no loading spinner for empty URLs)
+  // If no logo URL at all, return fallback with initials (better UX than null)
   if (!logoUrl || logoUrl === '') {
-    return null;
+    return <LogoFallback universityName={universityName || shortName || 'University'} size={size} borderRadius={borderRadius} style={style} />;
   }
 
-  // No logo available = don't render anything (no distracting fallbacks)
-  const hasNoLogo = hasError || timedOut;
-
-  // If logo failed to load or timed out, render nothing (clean UI - no placeholders)
-  if (hasNoLogo && !isLoading) {
-    return null;
+  // If logo failed to load, render fallback with initials
+  if (hasError && !isLoading) {
+    return <LogoFallback universityName={universityName || shortName || 'University'} size={size} borderRadius={borderRadius} style={style} />;
   }
 
   return (
@@ -177,17 +159,18 @@ const UniversityLogo = memo(({
         </View>
       )}
 
-      {/* Actual logo image - only render if we have a URL and no error/timeout */}
-      {logoUrl && !hasError && !timedOut && (
+      {/* Actual logo image - FastImage with aggressive caching */}
+      {logoUrl && !hasError && (
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
             {opacity: fadeAnim},
           ]}>
-          <Image
+          <FastImage
             source={{
               uri: logoUrl,
-              cache: 'force-cache',
+              priority: FastImage.priority.normal,
+              cache: FastImage.cacheControl.immutable, // Permanent cache - never re-download
             }}
             style={[
               styles.logo,
@@ -197,11 +180,9 @@ const UniversityLogo = memo(({
                 borderRadius,
               },
             ]}
-            resizeMode="contain"
+            resizeMode={FastImage.resizeMode.contain}
             onLoad={handleLoad}
             onError={handleError}
-            fadeDuration={300}
-            progressiveRenderingEnabled={true}
           />
         </Animated.View>
       )}
@@ -231,6 +212,69 @@ const styles = StyleSheet.create({
   logo: {
     backgroundColor: '#FFFFFF',
   },
+  fallback: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  initialsText: {
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
 });
+
+// Fallback component when logo is not available
+const LogoFallback = memo(({
+  universityName,
+  size = 56,
+  borderRadius = 12,
+  style,
+}: {
+  universityName: string;
+  size?: number;
+  borderRadius?: number;
+  style?: ViewStyle;
+}) => {
+  const brandColor = useMemo(
+    () => getUniversityBrandColor(universityName),
+    [universityName]
+  );
+
+  // Get initials from university name (first 2 letters)
+  const initials = useMemo(() => {
+    const parts = universityName.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return universityName.substring(0, 2).toUpperCase();
+  }, [universityName]);
+
+  // Calculate font size based on logo size
+  const fontSize = Math.floor(size * 0.35);
+
+  return (
+    <LinearGradient
+      colors={[brandColor, `${brandColor}CC`]}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}
+      style={[
+        styles.container,
+        styles.fallback,
+        {
+          width: size,
+          height: size,
+          borderRadius,
+        },
+        style,
+      ]}>
+      <Text style={[styles.initialsText, {fontSize}]}>
+        {initials}
+      </Text>
+    </LinearGradient>
+  );
+});
+
+LogoFallback.displayName = 'LogoFallback';
 
 export default UniversityLogo;

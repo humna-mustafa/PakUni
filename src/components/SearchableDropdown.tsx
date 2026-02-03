@@ -946,8 +946,8 @@ export function createScholarshipOptions(): DropdownOption<string>[] {
     metadata: {
       type: scholarship.type,
       provider: scholarship.provider,
-      coverage: scholarship.coverage_percentage,
-      isActive: scholarship.is_active,
+      coverage: scholarship.tuitionCoverage,
+      isActive: scholarship.status !== 'closed',
     },
   }));
 }

@@ -13,7 +13,7 @@ export interface PollOption {
 export interface Poll {
   id: string;
   question: string;
-  category: 'campus' | 'academics' | 'facilities' | 'career' | 'overall';
+  category: 'campus' | 'academics' | 'facilities' | 'career' | 'overall' | 'student-life' | 'admissions';
   description: string;
   options: PollOption[];
   totalVotes: number;
@@ -28,6 +28,8 @@ export const POLL_CATEGORIES = [
   {id: 'facilities', name: 'Facilities', iconName: 'business-outline'},
   {id: 'career', name: 'Career', iconName: 'briefcase-outline'},
   {id: 'overall', name: 'Overall', iconName: 'trophy-outline'},
+  {id: 'student-life', name: 'Student Life', iconName: 'heart-outline'},
+  {id: 'admissions', name: 'Admissions', iconName: 'clipboard-outline'},
 ];
 
 // Sample polls - In production, these would come from Supabase
@@ -191,6 +193,165 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 27694,
     isActive: true,
     createdAt: '2024-04-15',
+  },
+  // Student Life & Admissions Polls
+  {
+    id: 'poll-11',
+    question: 'Hardest Entry Test in Pakistan?',
+    category: 'admissions',
+    description: 'Which university entrance exam is the most difficult?',
+    options: [
+      {id: 'opt-1', name: 'NUST NET', shortName: 'NET', votes: 5234},
+      {id: 'opt-2', name: 'LUMS SAT/LCAT', shortName: 'LCAT', votes: 3892},
+      {id: 'opt-3', name: 'GIKI Test', shortName: 'GIKI', votes: 4156},
+      {id: 'opt-4', name: 'MDCAT', shortName: 'MDCAT', votes: 6789},
+      {id: 'opt-5', name: 'IBA Test', shortName: 'IBA', votes: 2987},
+    ],
+    totalVotes: 23058,
+    isActive: true,
+    createdAt: '2024-05-01',
+  },
+  {
+    id: 'poll-12',
+    question: 'Best Career After FSc Pre-Engineering?',
+    category: 'career',
+    description: 'If you are in FSc Pre-Engineering, which career path is best?',
+    options: [
+      {id: 'opt-1', name: 'Software Engineering', shortName: 'SE', votes: 8567},
+      {id: 'opt-2', name: 'Electrical Engineering', shortName: 'EE', votes: 3234},
+      {id: 'opt-3', name: 'Civil Engineering', shortName: 'Civil', votes: 2156},
+      {id: 'opt-4', name: 'Mechanical Engineering', shortName: 'ME', votes: 1987},
+      {id: 'opt-5', name: 'Data Science / AI', shortName: 'DS/AI', votes: 5678},
+    ],
+    totalVotes: 21622,
+    isActive: true,
+    createdAt: '2024-05-10',
+  },
+  {
+    id: 'poll-13',
+    question: 'Best Career After FSc Pre-Medical?',
+    category: 'career',
+    description: 'If you are in FSc Pre-Medical, which career path is best?',
+    options: [
+      {id: 'opt-1', name: 'MBBS Doctor', shortName: 'MBBS', votes: 9234},
+      {id: 'opt-2', name: 'BDS Dentist', shortName: 'BDS', votes: 2156},
+      {id: 'opt-3', name: 'Pharm-D Pharmacist', shortName: 'Pharm-D', votes: 3456},
+      {id: 'opt-4', name: 'Veterinary Doctor', shortName: 'DVM', votes: 1234},
+      {id: 'opt-5', name: 'Biotechnology / Research', shortName: 'Biotech', votes: 2678},
+    ],
+    totalVotes: 18758,
+    isActive: true,
+    createdAt: '2024-05-15',
+  },
+  {
+    id: 'poll-14',
+    question: 'Most Stressful Study Period?',
+    category: 'student-life',
+    description: 'Which phase of education is the most stressful for Pakistani students?',
+    options: [
+      {id: 'opt-1', name: 'Matric Board Exams', shortName: 'Matric', votes: 4567},
+      {id: 'opt-2', name: 'FSc / Intermediate', shortName: 'FSc', votes: 7234},
+      {id: 'opt-3', name: 'Entry Test Prep', shortName: 'Entry Test', votes: 8912},
+      {id: 'opt-4', name: 'University Finals', shortName: 'Finals', votes: 3456},
+      {id: 'opt-5', name: 'CSS / Job Prep', shortName: 'CSS', votes: 2345},
+    ],
+    totalVotes: 26514,
+    isActive: true,
+    createdAt: '2024-05-20',
+  },
+  {
+    id: 'poll-15',
+    question: 'Best City to Study In?',
+    category: 'campus',
+    description: 'Which Pakistani city offers the best student experience?',
+    options: [
+      {id: 'opt-1', name: 'Lahore', shortName: 'LHR', votes: 8567},
+      {id: 'opt-2', name: 'Islamabad', shortName: 'ISB', votes: 7234},
+      {id: 'opt-3', name: 'Karachi', shortName: 'KHI', votes: 5678},
+      {id: 'opt-4', name: 'Peshawar', shortName: 'PEW', votes: 1234},
+      {id: 'opt-5', name: 'Multan', shortName: 'MUL', votes: 987},
+    ],
+    totalVotes: 23700,
+    isActive: true,
+    createdAt: '2024-06-01',
+  },
+  {
+    id: 'poll-16',
+    question: 'Worth Taking Gap Year for Entry Tests?',
+    category: 'admissions',
+    description: 'Is it worth taking a gap year to prepare for entry tests?',
+    options: [
+      {id: 'opt-1', name: 'Yes, definitely worth it', shortName: 'Yes', votes: 6789},
+      {id: 'opt-2', name: 'Only for top unis', shortName: 'Top Unis Only', votes: 4567},
+      {id: 'opt-3', name: 'No, waste of time', shortName: 'No', votes: 2345},
+      {id: 'opt-4', name: 'Depends on situation', shortName: 'Depends', votes: 5678},
+    ],
+    totalVotes: 19379,
+    isActive: true,
+    createdAt: '2024-06-10',
+  },
+  {
+    id: 'poll-17',
+    question: 'Most Useful Skill for Students?',
+    category: 'student-life',
+    description: 'Which skill should every Pakistani student learn?',
+    options: [
+      {id: 'opt-1', name: 'Programming / Coding', shortName: 'Coding', votes: 7890},
+      {id: 'opt-2', name: 'English Communication', shortName: 'English', votes: 6234},
+      {id: 'opt-3', name: 'Freelancing Skills', shortName: 'Freelance', votes: 5678},
+      {id: 'opt-4', name: 'Digital Marketing', shortName: 'Marketing', votes: 2345},
+      {id: 'opt-5', name: 'Graphic Design', shortName: 'Design', votes: 3456},
+    ],
+    totalVotes: 25603,
+    isActive: true,
+    createdAt: '2024-06-15',
+  },
+  {
+    id: 'poll-18',
+    question: 'Best Side Income for Students?',
+    category: 'student-life',
+    description: 'What is the best way for students to earn while studying?',
+    options: [
+      {id: 'opt-1', name: 'Freelancing', shortName: 'Freelance', votes: 8234},
+      {id: 'opt-2', name: 'Tutoring / Teaching', shortName: 'Tutoring', votes: 5678},
+      {id: 'opt-3', name: 'Content Creation', shortName: 'Content', votes: 3456},
+      {id: 'opt-4', name: 'Part-time Job', shortName: 'Job', votes: 2345},
+      {id: 'opt-5', name: 'Dropshipping / E-commerce', shortName: 'E-com', votes: 1987},
+    ],
+    totalVotes: 21700,
+    isActive: true,
+    createdAt: '2024-06-20',
+  },
+  {
+    id: 'poll-19',
+    question: 'Should Parents Choose Career?',
+    category: 'career',
+    description: 'Should Pakistani parents decide their children\'s career?',
+    options: [
+      {id: 'opt-1', name: 'No, student should choose', shortName: 'Student', votes: 12345},
+      {id: 'opt-2', name: 'Yes, parents know best', shortName: 'Parents', votes: 3456},
+      {id: 'opt-3', name: 'Both should decide together', shortName: 'Together', votes: 8765},
+      {id: 'opt-4', name: 'Depends on maturity', shortName: 'Depends', votes: 4567},
+    ],
+    totalVotes: 29133,
+    isActive: true,
+    createdAt: '2024-06-25',
+  },
+  {
+    id: 'poll-20',
+    question: 'Best Entry Test Prep Academy?',
+    category: 'admissions',
+    description: 'Which academy is best for entry test preparation?',
+    options: [
+      {id: 'opt-1', name: 'KIPS', shortName: 'KIPS', votes: 6789},
+      {id: 'opt-2', name: 'Punjab College', shortName: 'Punjab', votes: 4567},
+      {id: 'opt-3', name: 'STEP', shortName: 'STEP', votes: 3456},
+      {id: 'opt-4', name: 'Online Self-Study', shortName: 'Self-Study', votes: 5678},
+      {id: 'opt-5', name: 'Edvanced / Nearpeer', shortName: 'Online', votes: 4234},
+    ],
+    totalVotes: 24724,
+    isActive: true,
+    createdAt: '2024-07-01',
   },
 ];
 

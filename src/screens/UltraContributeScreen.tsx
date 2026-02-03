@@ -569,7 +569,7 @@ const EntitySelectionStep: React.FC<{
     setTimeout(() => searchInputRef.current?.focus(), 300);
   }, []);
 
-  // Debounced search
+  // Debounced search - searches based on selected category
   useEffect(() => {
     if (searchQuery.length < 2) {
       setSuggestions([]);
@@ -579,22 +579,63 @@ const EntitySelectionStep: React.FC<{
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const universities = await hybridDataService.getUniversities();
         const query = searchQuery.toLowerCase();
-        const matched = universities
-          .filter(u => 
-            u.name.toLowerCase().includes(query) || 
-            u.short_name.toLowerCase().includes(query) ||
-            ((u as any).city && (u as any).city.toLowerCase().includes(query))
-          )
-          .slice(0, 8)
-          .map(u => ({
-            id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
-            name: u.name,
-            type: u.type || 'University',
-            location: (u as any).city || (u as any).location || '',
-            verified: true,
-          }));
+        let matched: EntityData[] = [];
+
+        // Search different data sources based on category
+        if (category?.id === 'scholarship_info') {
+          // Search scholarships for scholarship-related categories
+          const scholarships = await hybridDataService.getScholarships();
+          matched = scholarships
+            .filter(s => 
+              s.name.toLowerCase().includes(query) || 
+              (s.provider && s.provider.toLowerCase().includes(query)) ||
+              (s.eligibility && s.eligibility.some(e => e.toLowerCase().includes(query)))
+            )
+            .slice(0, 8)
+            .map(s => ({
+              id: s.id || s.name.toLowerCase().replace(/\s+/g, '_'),
+              name: s.name,
+              type: s.type || 'Scholarship',
+              location: s.provider || '',
+              verified: true,
+            }));
+        } else if (category?.id === 'entry_test_update') {
+          // Search entry tests for entry test categories
+          const entryTests = await hybridDataService.getEntryTests();
+          matched = entryTests
+            .filter(t => 
+              t.name.toLowerCase().includes(query) || 
+              (t.conducting_body && t.conducting_body.toLowerCase().includes(query)) ||
+              (t.full_name && t.full_name.toLowerCase().includes(query))
+            )
+            .slice(0, 8)
+            .map(t => ({
+              id: t.id || t.name.toLowerCase().replace(/\s+/g, '_'),
+              name: t.name,
+              type: 'Entry Test',
+              location: t.conducting_body || '',
+              verified: true,
+            }));
+        } else {
+          // Default: Search universities (for merit_update, fee_update, date_correction, university_info)
+          const universities = await hybridDataService.getUniversities();
+          matched = universities
+            .filter(u => 
+              u.name.toLowerCase().includes(query) || 
+              u.short_name.toLowerCase().includes(query) ||
+              ((u as any).city && (u as any).city.toLowerCase().includes(query))
+            )
+            .slice(0, 8)
+            .map(u => ({
+              id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
+              name: u.name,
+              type: u.type || 'University',
+              location: (u as any).city || (u as any).location || '',
+              verified: true,
+            }));
+        }
+        
         setSuggestions(matched);
       } catch (error) {
         console.error('Search error:', error);
@@ -604,7 +645,7 @@ const EntitySelectionStep: React.FC<{
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, category]);
 
   const handleSelectEntity = (entity: EntityData) => {
     Vibration.vibrate(10);
@@ -1638,7 +1679,7 @@ export const UltraContributeScreen: React.FC<{ navigation: any; route?: any }> =
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       
       <UniversalHeader
@@ -1766,7 +1807,7 @@ export const UltraContributeScreen: React.FC<{ navigation: any; route?: any }> =
         }}
         colors={colors}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

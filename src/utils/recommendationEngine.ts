@@ -1,5 +1,6 @@
 import { UNIVERSITIES, UniversityData } from '../data/universities';
 import { PROGRAMS, ProgramData } from '../data/programs';
+import { findUniversitiesByAlias, normalizeSearchTerm, PROGRAM_TO_UNIVERSITY_MAP } from './universityAliases';
 
 export interface RecommendationCriteria {
   matricMarks: number;
@@ -101,13 +102,35 @@ export const getRecommendations = (
     score: number;
   }>();
 
-  // Helper to find university by short name or name
+  // Helper to find university by short name, name, or alias
   const findUniversity = (shortName: string) => {
-    return UNIVERSITIES.find(
+    const normalized = normalize(shortName);
+    
+    // First check the program-to-university mapping (for programs.ts compatibility)
+    const mappedShortName = PROGRAM_TO_UNIVERSITY_MAP[shortName];
+    if (mappedShortName) {
+      const found = UNIVERSITIES.find(u => normalize(u.short_name) === normalize(mappedShortName));
+      if (found) return found;
+    }
+    
+    // Then try direct match
+    let found = UNIVERSITIES.find(
       (u) =>
-        normalize(u.short_name) === normalize(shortName) ||
-        normalize(u.name) === normalize(shortName) // Fallback
+        normalize(u.short_name) === normalized ||
+        normalize(u.name) === normalized
     );
+    
+    // If not found, try alias lookup (e.g., "NUST" -> "NST")
+    if (!found) {
+      const possibleShortNames = findUniversitiesByAlias(shortName);
+      if (possibleShortNames.length > 0) {
+        found = UNIVERSITIES.find(u => 
+          possibleShortNames.includes(u.short_name)
+        );
+      }
+    }
+    
+    return found;
   };
 
   relevantPrograms.forEach((program) => {

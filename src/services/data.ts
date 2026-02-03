@@ -154,7 +154,7 @@ class DataService {
    * Get all scholarships - from bundled data
    */
   getScholarships(): ScholarshipData[] {
-    return SCHOLARSHIPS.filter(s => s.is_active);
+    return SCHOLARSHIPS.filter(s => s.status !== 'closed');
   }
 
   /**
@@ -172,7 +172,7 @@ class DataService {
     minCoverage?: number;
     hasStipend?: boolean;
   }): ScholarshipData[] {
-    let results = SCHOLARSHIPS.filter(s => s.is_active);
+    let results = SCHOLARSHIPS.filter(s => s.status !== 'closed');
 
     if (query.trim()) {
       const lowerQuery = query.toLowerCase();
@@ -187,10 +187,10 @@ class DataService {
       results = results.filter(s => s.type === filters.type);
     }
     if (filters?.minCoverage !== undefined) {
-      results = results.filter(s => s.coverage_percentage >= filters.minCoverage!);
+      results = results.filter(s => (s.tuitionCoverage || 0) >= filters.minCoverage!);
     }
     if (filters?.hasStipend) {
-      results = results.filter(s => s.monthly_stipend !== null && s.monthly_stipend > 0);
+      results = results.filter(s => s.monthlyStipend !== null && s.monthlyStipend > 0);
     }
 
     return results;

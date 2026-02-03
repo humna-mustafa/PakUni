@@ -14,64 +14,150 @@ import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../navigation/AppNavigator';
 
 const {width, height} = Dimensions.get('window');
 
-// Quiz questions
+// Career ID to display name mapping (matches careers.ts IDs)
+const CAREER_DISPLAY_NAMES: {[key: string]: string} = {
+  'medicine': 'Medicine (MBBS/Doctor)',
+  'dentistry': 'Dentistry (BDS)',
+  'software-engineering': 'Software Engineering',
+  'electrical-engineering': 'Electrical Engineering',
+  'civil-engineering': 'Civil Engineering',
+  'business-finance': 'Business & Finance',
+  'chartered-accountant': 'Chartered Accountant',
+  'law': 'Law (LLB)',
+  'graphic-design': 'Graphic Design',
+  'teaching': 'Teaching & Education',
+  'journalism': 'Journalism & Media',
+  'civil-services': 'Civil Services (CSS)',
+  'aviation-pilot': 'Aviation Pilot',
+  'data-science-ai': 'Data Science & AI',
+  'psychology': 'Psychology',
+};
+
+// Quiz questions - Comprehensive career aptitude test using career IDs from careers.ts
 const QUIZ_QUESTIONS = [
   {
     id: 1,
+    category: 'interests',
     question: 'What do you enjoy doing in your free time?',
     iconName: 'color-palette-outline',
     options: [
-      {text: 'Building or fixing things', iconName: 'construct-outline', careers: ['Engineering', 'Architecture']},
-      {text: 'Reading or writing', iconName: 'book-outline', careers: ['Law', 'Journalism', 'Teaching']},
-      {text: 'Playing with computers', iconName: 'laptop-outline', careers: ['IT', 'Software Development']},
-      {text: 'Helping people', iconName: 'heart-outline', careers: ['Medicine', 'Psychology', 'Social Work']},
+      {text: 'Building or fixing things', iconName: 'construct-outline', careers: ['electrical-engineering', 'civil-engineering', 'software-engineering']},
+      {text: 'Reading or writing', iconName: 'book-outline', careers: ['law', 'journalism', 'teaching']},
+      {text: 'Playing with computers/gadgets', iconName: 'laptop-outline', careers: ['software-engineering', 'data-science-ai', 'electrical-engineering']},
+      {text: 'Helping people with problems', iconName: 'heart-outline', careers: ['medicine', 'psychology', 'teaching']},
     ],
   },
   {
     id: 2,
+    category: 'subjects',
     question: 'Which subject do you enjoy most?',
     iconName: 'book-outline',
     options: [
-      {text: 'Mathematics', iconName: 'calculator-outline', careers: ['Engineering', 'Finance', 'Data Science']},
-      {text: 'Biology', iconName: 'flask-outline', careers: ['Medicine', 'Biotechnology']},
-      {text: 'English / Languages', iconName: 'document-text-outline', careers: ['Law', 'Media', 'Translation']},
-      {text: 'Computer Science', iconName: 'desktop-outline', careers: ['IT', 'Cybersecurity']},
+      {text: 'Mathematics & Physics', iconName: 'calculator-outline', careers: ['electrical-engineering', 'civil-engineering', 'data-science-ai', 'chartered-accountant']},
+      {text: 'Biology & Chemistry', iconName: 'flask-outline', careers: ['medicine', 'dentistry', 'psychology']},
+      {text: 'English & Languages', iconName: 'document-text-outline', careers: ['law', 'journalism', 'teaching']},
+      {text: 'Computer & IT', iconName: 'desktop-outline', careers: ['software-engineering', 'data-science-ai']},
     ],
   },
   {
     id: 3,
+    category: 'workstyle',
     question: 'How do you prefer to work?',
     iconName: 'briefcase-outline',
     options: [
-      {text: 'Alone, focused', iconName: 'flag-outline', careers: ['Research', 'Writing', 'Programming']},
-      {text: 'In a team', iconName: 'people-outline', careers: ['Management', 'Marketing', 'HR']},
-      {text: 'Outdoors / Active', iconName: 'leaf-outline', careers: ['Civil Engineering', 'Agriculture']},
-      {text: 'With patients/clients', iconName: 'medkit-outline', careers: ['Medicine', 'Counseling']},
+      {text: 'Alone, focused on deep work', iconName: 'flag-outline', careers: ['software-engineering', 'data-science-ai', 'graphic-design', 'journalism']},
+      {text: 'In a collaborative team', iconName: 'people-outline', careers: ['business-finance', 'civil-engineering', 'teaching']},
+      {text: 'Outdoors or in the field', iconName: 'leaf-outline', careers: ['civil-engineering', 'journalism', 'civil-services', 'aviation-pilot']},
+      {text: 'Directly with clients/patients', iconName: 'medkit-outline', careers: ['medicine', 'dentistry', 'psychology', 'teaching']},
     ],
   },
   {
     id: 4,
+    category: 'motivation',
     question: 'What motivates you the most?',
     iconName: 'star-outline',
     options: [
-      {text: 'Making money', iconName: 'wallet-outline', careers: ['Business', 'Finance', 'Entrepreneurship']},
-      {text: 'Helping society', iconName: 'globe-outline', careers: ['Medicine', 'Social Work', 'NGO']},
-      {text: 'Creating new things', iconName: 'bulb-outline', careers: ['Design', 'Engineering', 'Art']},
-      {text: 'Gaining knowledge', iconName: 'school-outline', careers: ['Research', 'Academia', 'Science']},
+      {text: 'Earning well & financial security', iconName: 'wallet-outline', careers: ['business-finance', 'chartered-accountant', 'software-engineering', 'medicine']},
+      {text: 'Helping society & making impact', iconName: 'globe-outline', careers: ['medicine', 'psychology', 'civil-services', 'teaching']},
+      {text: 'Creating & innovating new things', iconName: 'bulb-outline', careers: ['graphic-design', 'software-engineering', 'data-science-ai', 'electrical-engineering']},
+      {text: 'Learning & gaining knowledge', iconName: 'school-outline', careers: ['data-science-ai', 'teaching', 'law', 'psychology']},
     ],
   },
   {
     id: 5,
-    question: 'How do you handle stress?',
+    category: 'stress',
+    question: 'How do you handle pressure?',
     iconName: 'pulse-outline',
     options: [
-      {text: 'Stay calm and plan', iconName: 'clipboard-outline', careers: ['Management', 'Medicine', 'Law']},
-      {text: 'Get creative', iconName: 'color-palette-outline', careers: ['Design', 'Marketing', 'Arts']},
-      {text: 'Solve problems quickly', iconName: 'flash-outline', careers: ['IT', 'Emergency Services']},
-      {text: 'Talk to others', iconName: 'chatbubble-outline', careers: ['HR', 'Counseling', 'Sales']},
+      {text: 'Stay calm, make a plan', iconName: 'clipboard-outline', careers: ['medicine', 'law', 'civil-services', 'aviation-pilot']},
+      {text: 'Get creative with solutions', iconName: 'color-palette-outline', careers: ['graphic-design', 'journalism', 'software-engineering']},
+      {text: 'Solve problems quickly & move on', iconName: 'flash-outline', careers: ['software-engineering', 'journalism', 'electrical-engineering']},
+      {text: 'Discuss with others for ideas', iconName: 'chatbubble-outline', careers: ['psychology', 'teaching', 'business-finance']},
+    ],
+  },
+  {
+    id: 6,
+    category: 'skills',
+    question: 'What are you naturally good at?',
+    iconName: 'sparkles-outline',
+    options: [
+      {text: 'Analyzing data & finding patterns', iconName: 'analytics-outline', careers: ['data-science-ai', 'chartered-accountant', 'business-finance', 'software-engineering']},
+      {text: 'Communicating & persuading others', iconName: 'megaphone-outline', careers: ['law', 'journalism', 'business-finance', 'civil-services']},
+      {text: 'Understanding & helping people', iconName: 'heart-outline', careers: ['psychology', 'medicine', 'teaching', 'dentistry']},
+      {text: 'Designing & creating visuals', iconName: 'brush-outline', careers: ['graphic-design', 'civil-engineering', 'software-engineering']},
+    ],
+  },
+  {
+    id: 7,
+    category: 'environment',
+    question: 'What work environment appeals to you?',
+    iconName: 'business-outline',
+    options: [
+      {text: 'Corporate office with structure', iconName: 'business-outline', careers: ['business-finance', 'chartered-accountant', 'civil-services', 'law']},
+      {text: 'Hospital or healthcare setting', iconName: 'medkit-outline', careers: ['medicine', 'dentistry', 'psychology']},
+      {text: 'Startup or creative agency', iconName: 'rocket-outline', careers: ['software-engineering', 'graphic-design', 'data-science-ai', 'journalism']},
+      {text: 'Remote or freelance work', iconName: 'home-outline', careers: ['software-engineering', 'graphic-design', 'data-science-ai', 'journalism']},
+    ],
+  },
+  {
+    id: 8,
+    category: 'leadership',
+    question: 'How do you see yourself in a team?',
+    iconName: 'people-outline',
+    options: [
+      {text: 'Leading & making decisions', iconName: 'ribbon-outline', careers: ['business-finance', 'civil-services', 'law', 'medicine']},
+      {text: 'Expert who provides solutions', iconName: 'bulb-outline', careers: ['software-engineering', 'electrical-engineering', 'medicine', 'data-science-ai']},
+      {text: 'Supporting & helping team succeed', iconName: 'hand-left-outline', careers: ['teaching', 'psychology', 'journalism']},
+      {text: 'Working independently on tasks', iconName: 'person-outline', careers: ['software-engineering', 'graphic-design', 'chartered-accountant', 'data-science-ai']},
+    ],
+  },
+  {
+    id: 9,
+    category: 'risk',
+    question: 'How do you feel about taking risks?',
+    iconName: 'shield-outline',
+    options: [
+      {text: 'Love taking calculated risks', iconName: 'trending-up-outline', careers: ['business-finance', 'aviation-pilot', 'software-engineering']},
+      {text: 'Prefer stable, secure career', iconName: 'shield-checkmark-outline', careers: ['civil-services', 'teaching', 'medicine', 'chartered-accountant']},
+      {text: 'Okay with moderate risks', iconName: 'swap-horizontal-outline', careers: ['software-engineering', 'journalism', 'graphic-design', 'data-science-ai']},
+      {text: 'Risk depends on the reward', iconName: 'scale-outline', careers: ['law', 'business-finance', 'chartered-accountant']},
+    ],
+  },
+  {
+    id: 10,
+    category: 'future',
+    question: 'What\'s most important for your future career?',
+    iconName: 'rocket-outline',
+    options: [
+      {text: 'High salary & benefits', iconName: 'cash-outline', careers: ['medicine', 'software-engineering', 'chartered-accountant', 'law']},
+      {text: 'Work-life balance', iconName: 'heart-circle-outline', careers: ['teaching', 'civil-services', 'psychology', 'graphic-design']},
+      {text: 'Growth & learning opportunities', iconName: 'trending-up-outline', careers: ['software-engineering', 'data-science-ai', 'business-finance', 'journalism']},
+      {text: 'Job security & stability', iconName: 'shield-outline', careers: ['civil-services', 'medicine', 'teaching', 'chartered-accountant']},
     ],
   },
 ];
@@ -278,7 +364,7 @@ const CareerResultCard = ({
 
 const PremiumInterestQuizScreen = () => {
   const {colors, isDark} = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{[key: number]: number}>({});
   const [showResults, setShowResults] = useState(false);
@@ -328,20 +414,25 @@ const PremiumInterestQuizScreen = () => {
     Object.entries(answers).forEach(([questionIdx, optionIdx]) => {
       const question = QUIZ_QUESTIONS[parseInt(questionIdx)];
       const selectedOption = question.options[optionIdx];
-      selectedOption.careers.forEach(career => {
-        careerScores[career] = (careerScores[career] || 0) + 1;
+      selectedOption.careers.forEach(careerId => {
+        careerScores[careerId] = (careerScores[careerId] || 0) + 1;
       });
     });
 
     const sortedCareers = Object.entries(careerScores)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
-      .map(([career, score]) => ({
-        career,
+      .map(([careerId, score]) => ({
+        careerId,
+        displayName: CAREER_DISPLAY_NAMES[careerId] || careerId,
         percentage: Math.round((score / QUIZ_QUESTIONS.length) * 100),
       }));
 
     return sortedCareers;
+  };
+
+  const navigateToCareer = (careerId: string) => {
+    navigation.navigate('CareerDetail', { careerId });
   };
 
   const restartQuiz = () => {
@@ -393,13 +484,17 @@ const PremiumInterestQuizScreen = () => {
           {/* Career Results */}
           <View style={styles.resultsCards}>
             {results.map((result, index) => (
-              <CareerResultCard
-                key={result.career}
-                career={result.career}
-                percentage={result.percentage}
-                index={index}
-                colors={colors}
-              />
+              <TouchableOpacity
+                key={result.careerId}
+                onPress={() => navigateToCareer(result.careerId)}
+                activeOpacity={0.8}>
+                <CareerResultCard
+                  career={result.displayName}
+                  percentage={result.percentage}
+                  index={index}
+                  colors={colors}
+                />
+              </TouchableOpacity>
             ))}
           </View>
 
@@ -410,7 +505,7 @@ const PremiumInterestQuizScreen = () => {
               What's Next?
             </Text>
             <Text style={[styles.adviceText, {color: isDark ? '#FFCC80' : '#BF360C'}]}>
-              Explore these career paths in detail. Research the required education, skills, and job opportunities in Pakistan!
+              Tap any career above to explore details including education requirements, salaries, and top employers in Pakistan!
             </Text>
           </View>
 

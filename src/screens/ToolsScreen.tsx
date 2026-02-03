@@ -2,9 +2,10 @@
  * ToolsScreen - Comprehensive Tools & Calculators Hub
  * All tools for merit calculation, grade conversion, projections, and simulations
  * Offline-first - no Supabase dependency
+ * Enhanced with premium animations and polished UI
  */
 
-import React, {useState, useRef, useCallback} from 'react';
+import React, {useState, useRef, useCallback, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,10 +18,12 @@ import {
   Alert,
   TextInput,
   Platform,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
@@ -83,7 +86,7 @@ const TOOLS: Tool[] = [
     title: 'What-If Simulator',
     description: 'Explore different scenarios and see how changes affect your merit',
     icon: 'git-branch-outline',
-    color: '#4573DF',
+    color: '#8B5CF6',
     component: 'whatIf',
   },
   {
@@ -91,27 +94,50 @@ const TOOLS: Tool[] = [
     title: 'Custom Formula Builder',
     description: 'Create custom merit formulas for specific universities',
     icon: 'code-slash-outline',
-    color: '#4573DF',
+    color: '#EC4899',
     component: 'customFormula',
   },
 ];
 
 // ============================================================================
-// TOOL CARD COMPONENT
+// ENHANCED TOOL CARD COMPONENT
 // ============================================================================
 
 interface ToolCardProps {
   tool: Tool;
+  index: number;
   onPress: () => void;
   colors: any;
 }
 
-const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
+const ToolCard: React.FC<ToolCardProps> = ({tool, index, onPress, colors}) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    const delay = 100 + index * 80;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        delay,
+        tension: 65,
+        friction: 9,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.CARD_PRESS,
+      toValue: 0.97,
       useNativeDriver: true,
       ...SPRING_CONFIGS.snappy,
     }).start();
@@ -126,7 +152,10 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
   };
 
   return (
-    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+    <Animated.View style={{
+      transform: [{scale: scaleAnim}, {translateY: slideAnim}],
+      opacity: fadeAnim,
+    }}>
       <TouchableOpacity
         style={[styles.toolCard, {backgroundColor: colors.card}]}
         onPress={onPress}
@@ -134,7 +163,9 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
         onPressOut={handlePressOut}
         activeOpacity={1}>
         <LinearGradient
-          colors={[tool.color, tool.color + 'CC']}
+          colors={[tool.color, `${tool.color}CC`]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
           style={styles.toolIconContainer}>
           <Icon name={tool.icon} family="Ionicons" size={28} color="#FFF" />
         </LinearGradient>
@@ -144,8 +175,8 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
             {tool.description}
           </Text>
         </View>
-        <View style={[styles.toolArrow, {backgroundColor: tool.color + '15'}]}>
-          <Icon name="chevron-forward" family="Ionicons" size={20} color={tool.color} />
+        <View style={[styles.toolArrow, {backgroundColor: `${tool.color}15`}]}>
+          <Icon name="chevron-forward" family="Ionicons" size={22} color={tool.color} />
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -155,6 +186,33 @@ const ToolCard: React.FC<ToolCardProps> = ({tool, onPress, colors}) => {
 // ============================================================================
 // SIMPLE MERIT CALCULATOR
 // ============================================================================
+
+// Custom formula interface (matches CustomFormulaBuilder)
+interface CustomFormula {
+  id: string;
+  name: string;
+  shortName: string;
+  matricWeight: number;
+  interWeight: number;
+  testWeight: number;
+  testName: string;
+  color: string;
+}
+
+// Default formula
+const DEFAULT_FORMULA: CustomFormula = {
+  id: 'default',
+  name: 'Standard Formula',
+  shortName: 'STD',
+  matricWeight: 10,
+  interWeight: 50,
+  testWeight: 40,
+  testName: 'Entry Test',
+  color: '#4573DF',
+};
+
+// Storage key (same as CustomFormulaBuilder)
+const FORMULAS_STORAGE_KEY = '@pakuni_custom_formulas';
 
 interface MeritCalculatorProps {
   onClose: () => void;
@@ -169,6 +227,26 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
   const [testMarks, setTestMarks] = useState('');
   const [testTotal, setTestTotal] = useState('200');
   const [result, setResult] = useState<number | null>(null);
+  
+  // Custom formula state
+  const [customFormulas, setCustomFormulas] = useState<CustomFormula[]>([]);
+  const [selectedFormula, setSelectedFormula] = useState<CustomFormula>(DEFAULT_FORMULA);
+  const [showFormulaSelector, setShowFormulaSelector] = useState(false);
+
+  // Load custom formulas on mount
+  useEffect(() => {
+    const loadFormulas = async () => {
+      try {
+        const data = await AsyncStorage.getItem(FORMULAS_STORAGE_KEY);
+        if (data) {
+          setCustomFormulas(JSON.parse(data));
+        }
+      } catch (error) {
+        console.error('Error loading custom formulas:', error);
+      }
+    };
+    loadFormulas();
+  }, []);
 
   const calculateMerit = () => {
     const matric = parseFloat(matricMarks) || 0;
@@ -183,13 +261,20 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
     const interPercent = (inter / iTotal) * 100;
     const testPercent = (test / tTotal) * 100;
 
-    // Common merit formula: 10% matric + 50% inter + 40% test
-    const merit = (matricPercent * 0.1) + (interPercent * 0.5) + (testPercent * 0.4);
+    // Use selected formula weights
+    const matricWeight = selectedFormula.matricWeight / 100;
+    const interWeight = selectedFormula.interWeight / 100;
+    const testWeight = selectedFormula.testWeight / 100;
+
+    const merit = (matricPercent * matricWeight) + (interPercent * interWeight) + (testPercent * testWeight);
     setResult(Math.min(100, Math.max(0, merit)));
   };
 
+  // All available formulas (default + custom)
+  const allFormulas = [DEFAULT_FORMULA, ...customFormulas];
+
   return (
-    <View style={[styles.calculatorContainer, {backgroundColor: colors.background}]}>
+    <SafeAreaView style={[styles.calculatorContainer, {backgroundColor: colors.background}]} edges={['top']}>
       <View style={styles.calculatorHeader}>
         <TouchableOpacity
           style={[styles.closeButton, {backgroundColor: colors.card}]}
@@ -200,6 +285,63 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.calculatorContent}>
+        {/* Formula Selector */}
+        <TouchableOpacity
+          style={[styles.formulaSelectorBtn, {backgroundColor: colors.card, borderColor: selectedFormula.color}]}
+          onPress={() => setShowFormulaSelector(!showFormulaSelector)}>
+          <View style={[styles.formulaSelectorIcon, {backgroundColor: selectedFormula.color}]}>
+            <Icon name="flask-outline" family="Ionicons" size={18} color="#FFF" />
+          </View>
+          <View style={styles.formulaSelectorContent}>
+            <Text style={[styles.formulaSelectorLabel, {color: colors.textSecondary}]}>Using Formula</Text>
+            <Text style={[styles.formulaSelectorName, {color: colors.text}]}>{selectedFormula.name}</Text>
+          </View>
+          <Icon 
+            name={showFormulaSelector ? "chevron-up" : "chevron-down"} 
+            family="Ionicons" 
+            size={20} 
+            color={colors.textSecondary} 
+          />
+        </TouchableOpacity>
+
+        {/* Formula Dropdown */}
+        {showFormulaSelector && (
+          <View style={[styles.formulaDropdown, {backgroundColor: colors.card}]}>
+            {allFormulas.map((formula) => (
+              <TouchableOpacity
+                key={formula.id}
+                style={[
+                  styles.formulaOption,
+                  selectedFormula.id === formula.id && {backgroundColor: formula.color + '20'},
+                ]}
+                onPress={() => {
+                  setSelectedFormula(formula);
+                  setShowFormulaSelector(false);
+                  setResult(null); // Reset result when formula changes
+                }}>
+                <View style={[styles.formulaOptionDot, {backgroundColor: formula.color}]} />
+                <View style={styles.formulaOptionInfo}>
+                  <Text style={[styles.formulaOptionName, {color: colors.text}]}>{formula.name}</Text>
+                  <Text style={[styles.formulaOptionWeights, {color: colors.textSecondary}]}>
+                    {formula.matricWeight}% Matric + {formula.interWeight}% Inter + {formula.testWeight}% {formula.testName}
+                  </Text>
+                </View>
+                {selectedFormula.id === formula.id && (
+                  <Icon name="checkmark-circle" family="Ionicons" size={20} color={formula.color} />
+                )}
+              </TouchableOpacity>
+            ))}
+            {customFormulas.length === 0 && (
+              <View style={styles.noCustomFormulas}>
+                <Icon name="information-circle-outline" family="Ionicons" size={16} color={colors.textMuted} />
+                <Text style={[styles.noCustomFormulasText, {color: colors.textMuted}]}>
+                  Create custom formulas in the Custom Formula Builder tool
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
         {/* Input Cards */}
         <View style={[styles.inputCard, {backgroundColor: colors.card}]}>
           <View style={styles.inputRow}>
@@ -310,10 +452,10 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
         </View>
 
         {/* Formula Info */}
-        <View style={[styles.formulaCard, {backgroundColor: '#4573DF' + '15'}]}>
-          <Icon name="information-circle-outline" family="Ionicons" size={20} color="#4573DF" />
-          <Text style={[styles.formulaText, {color: '#4573DF'}]}>
-            Formula: 10% Matric + 50% Inter + 40% Entry Test
+        <View style={[styles.formulaCard, {backgroundColor: selectedFormula.color + '15'}]}>
+          <Icon name="information-circle-outline" family="Ionicons" size={20} color={selectedFormula.color} />
+          <Text style={[styles.formulaText, {color: selectedFormula.color}]}>
+            Formula: {selectedFormula.matricWeight}% Matric + {selectedFormula.interWeight}% Inter + {selectedFormula.testWeight}% {selectedFormula.testName}
           </Text>
         </View>
 
@@ -376,7 +518,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
 
         <View style={{height: 100}} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -401,7 +543,7 @@ const ToolsScreen: React.FC = () => {
         );
       case 'gradeConverter':
         return (
-          <View style={[styles.toolScreen, {backgroundColor: colors.background}]}>
+          <SafeAreaView style={[styles.toolScreen, {backgroundColor: colors.background}]} edges={['top']}>
             <View style={styles.toolScreenHeader}>
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
@@ -414,11 +556,11 @@ const ToolsScreen: React.FC = () => {
               <GradeConverterCard />
               <View style={{height: 100}} />
             </ScrollView>
-          </View>
+          </SafeAreaView>
         );
       case 'targetCalculator':
         return (
-          <View style={[styles.toolScreen, {backgroundColor: colors.background}]}>
+          <SafeAreaView style={[styles.toolScreen, {backgroundColor: colors.background}]} edges={['top']}>
             <View style={styles.toolScreenHeader}>
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
@@ -431,11 +573,11 @@ const ToolsScreen: React.FC = () => {
               <TargetCalculator />
               <View style={{height: 100}} />
             </ScrollView>
-          </View>
+          </SafeAreaView>
         );
       case 'whatIf':
         return (
-          <View style={[styles.toolScreen, {backgroundColor: colors.background}]}>
+          <SafeAreaView style={[styles.toolScreen, {backgroundColor: colors.background}]} edges={['top']}>
             <View style={styles.toolScreenHeader}>
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
@@ -448,11 +590,11 @@ const ToolsScreen: React.FC = () => {
               <WhatIfSimulator />
               <View style={{height: 100}} />
             </ScrollView>
-          </View>
+          </SafeAreaView>
         );
       case 'customFormula':
         return (
-          <View style={[styles.toolScreen, {backgroundColor: colors.background}]}>
+          <SafeAreaView style={[styles.toolScreen, {backgroundColor: colors.background}]} edges={['top']}>
             <View style={styles.toolScreenHeader}>
               <TouchableOpacity
                 style={[styles.closeButton, {backgroundColor: colors.card}]}
@@ -465,7 +607,7 @@ const ToolsScreen: React.FC = () => {
               <CustomFormulaBuilder />
               <View style={{height: 100}} />
             </ScrollView>
-          </View>
+          </SafeAreaView>
         );
       default:
         return null;
@@ -529,14 +671,15 @@ const ToolsScreen: React.FC = () => {
 
           {/* Tools List */}
           <View style={styles.section}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4}}>
               <Icon name="construct-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text}]}>Available Tools</Text>
             </View>
-            {TOOLS.map(tool => (
+            {TOOLS.map((tool, index) => (
               <ToolCard
                 key={tool.id}
                 tool={tool}
+                index={index}
                 onPress={() => setActiveTool(tool.component)}
                 colors={colors}
               />
@@ -804,8 +947,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
+    paddingTop: Platform.OS === 'android' ? SPACING.lg : SPACING.md,
     paddingBottom: SPACING.sm,
+    minHeight: 56,
   },
   closeButton: {
     width: 44,
@@ -881,6 +1025,73 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     flex: 1,
   },
+  // Formula Selector Styles
+  formulaSelectorBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    borderWidth: 2,
+  },
+  formulaSelectorIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  formulaSelectorContent: {
+    flex: 1,
+    marginLeft: SPACING.md,
+  },
+  formulaSelectorLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+  },
+  formulaSelectorName: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+  },
+  formulaDropdown: {
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.md,
+    overflow: 'hidden',
+  },
+  formulaOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  formulaOptionDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: SPACING.md,
+  },
+  formulaOptionInfo: {
+    flex: 1,
+  },
+  formulaOptionName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  formulaOptionWeights: {
+    fontSize: 11,
+  },
+  noCustomFormulas: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    gap: SPACING.sm,
+  },
+  noCustomFormulasText: {
+    fontSize: 11,
+    flex: 1,
+  },
   calculateButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -948,8 +1159,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
+    paddingTop: Platform.OS === 'android' ? SPACING.lg : SPACING.md,
     paddingBottom: SPACING.sm,
+    minHeight: 56,
   },
 });
 

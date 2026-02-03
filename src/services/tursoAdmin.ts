@@ -590,7 +590,7 @@ class TursoAdminService {
       // Use fetched data if available, otherwise use bundled data counts
       // This ensures admin panel always shows accurate stats
       const uniCount = universities.length > 0 ? universities.length : UNIVERSITIES.length;
-      const scholarshipCount = scholarships.length > 0 ? scholarships.length : SCHOLARSHIPS.filter(s => s.is_active).length;
+      const scholarshipCount = scholarships.length > 0 ? scholarships.length : SCHOLARSHIPS.filter(s => s.status !== 'closed').length;
       const testCount = entryTests.length > 0 ? entryTests.length : ENTRY_TESTS_DATA.length;
       const deadlineCount = deadlines.length > 0 ? deadlines.length : ADMISSION_DEADLINES.length;
       const programCount = programs.length > 0 ? programs.length : PROGRAMS.length;
@@ -889,7 +889,7 @@ class TursoAdminService {
     try {
       // In React Native, use bundled data since SQL doesn't work
       if (IS_REACT_NATIVE) {
-        let filteredData = SCHOLARSHIPS.filter(s => s.is_active) as unknown as Scholarship[];
+        let filteredData = SCHOLARSHIPS.filter(s => s.status !== 'closed') as unknown as Scholarship[];
         
         if (options?.search) {
           const searchLower = options.search.toLowerCase();

@@ -55,8 +55,11 @@ interface UserProfile {
   board: string;
   school: string;
   matricMarks: number | null;
+  matricTotal: number;
   interMarks: number | null;
+  interTotal: number;
   entryTestScore: number | null;
+  entryTestTotal: number;
   targetField: string;
   targetUniversity: string;
   interests: string[];
@@ -98,8 +101,11 @@ const INITIAL_PROFILE: UserProfile = {
   board: 'Punjab Board',
   school: '',
   matricMarks: null,
+  matricTotal: 1100,
   interMarks: null,
+  interTotal: 1100,
   entryTestScore: null,
+  entryTestTotal: 200,
   targetField: 'Not Decided',
   targetUniversity: '',
   interests: [],
@@ -156,6 +162,7 @@ const PremiumProfileScreen = () => {
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [editField, setEditField] = useState<{key: string; label: string; type: string; options?: string[]}>({key: '', label: '', type: 'text'});
   const [userRole, setUserRole] = useState<UserRole>('user');
+  const [marksSaved, setMarksSaved] = useState(false);
   const headerAnim = useRef(new Animated.Value(0)).current;
 
   // Build real saved items from user favorites
@@ -267,8 +274,11 @@ const PremiumProfileScreen = () => {
       board: 'board',
       school: 'school',
       matricMarks: 'matricMarks',
+      matricTotal: 'matricTotal',
       interMarks: 'interMarks',
+      interTotal: 'interTotal',
       entryTestScore: 'entryTestScore',
+      entryTestTotal: 'entryTestTotal',
       targetField: 'targetField',
       targetUniversity: 'targetUniversity',
       interests: 'interests',
@@ -515,13 +525,18 @@ const PremiumProfileScreen = () => {
             <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
             <View style={styles.marksInputGroup}>
               <Text style={[styles.marksLabel, {color: colors.textSecondary}]}>Total</Text>
-              <View style={[styles.marksFixed, {backgroundColor: colors.background}]}>
-                <Text style={[styles.marksFixedText, {color: colors.textSecondary}]}>1100</Text>
-              </View>
+              <TextInput
+                style={[styles.marksInput, {backgroundColor: colors.background, color: colors.text}]}
+                placeholder="1100"
+                placeholderTextColor={colors.placeholder}
+                keyboardType="numeric"
+                value={profile.matricTotal?.toString() || '1100'}
+                onChangeText={text => updateProfile('matricTotal', parseInt(text) || 1100)}
+              />
             </View>
             <View style={[styles.percentBadge, {backgroundColor: colors.primaryLight}]}>
               <Text style={[styles.percentText, {color: colors.primary}]}>
-                {profile.matricMarks ? ((profile.matricMarks / 1100) * 100).toFixed(1) : '0'}%
+                {profile.matricMarks ? ((profile.matricMarks / (profile.matricTotal || 1100)) * 100).toFixed(1) : '0'}%
               </Text>
             </View>
           </View>
@@ -550,13 +565,18 @@ const PremiumProfileScreen = () => {
             <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
             <View style={styles.marksInputGroup}>
               <Text style={[styles.marksLabel, {color: colors.textSecondary}]}>Total</Text>
-              <View style={[styles.marksFixed, {backgroundColor: colors.background}]}>
-                <Text style={[styles.marksFixedText, {color: colors.textSecondary}]}>1100</Text>
-              </View>
+              <TextInput
+                style={[styles.marksInput, {backgroundColor: colors.background, color: colors.text}]}
+                placeholder="1100"
+                placeholderTextColor={colors.placeholder}
+                keyboardType="numeric"
+                value={profile.interTotal?.toString() || '1100'}
+                onChangeText={text => updateProfile('interTotal', parseInt(text) || 1100)}
+              />
             </View>
             <View style={[styles.percentBadge, {backgroundColor: colors.successLight}]}>
               <Text style={[styles.percentText, {color: colors.success}]}>
-                {profile.interMarks ? ((profile.interMarks / 1100) * 100).toFixed(1) : '0'}%
+                {profile.interMarks ? ((profile.interMarks / (profile.interTotal || 1100)) * 100).toFixed(1) : '0'}%
               </Text>
             </View>
           </View>
@@ -565,9 +585,12 @@ const PremiumProfileScreen = () => {
 
       {/* Entry Test */}
       <View style={styles.section}>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
-          <Icon name="create-outline" family="Ionicons" size={18} color={colors.primary} />
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>Entry Test</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+            <Icon name="create-outline" family="Ionicons" size={18} color={colors.primary} />
+            <Text style={[styles.sectionTitle, {color: colors.text}]}>Entry Test</Text>
+          </View>
+          <Text style={{fontSize: 12, color: colors.textSecondary, fontStyle: 'italic'}}>(Optional)</Text>
         </View>
         <View style={[styles.marksCard, {backgroundColor: colors.card}]}>
           <View style={styles.marksInputRow}>
@@ -585,41 +608,66 @@ const PremiumProfileScreen = () => {
             <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
             <View style={styles.marksInputGroup}>
               <Text style={[styles.marksLabel, {color: colors.textSecondary}]}>Out of</Text>
-              <View style={[styles.marksFixed, {backgroundColor: colors.background}]}>
-                <Text style={[styles.marksFixedText, {color: colors.textSecondary}]}>200</Text>
-              </View>
+              <TextInput
+                style={[styles.marksInput, {backgroundColor: colors.background, color: colors.text}]}
+                placeholder="200"
+                placeholderTextColor={colors.placeholder}
+                keyboardType="numeric"
+                value={profile.entryTestTotal?.toString() || '200'}
+                onChangeText={text => updateProfile('entryTestTotal', parseInt(text) || 200)}
+              />
             </View>
             <View style={[styles.percentBadge, {backgroundColor: colors.warningLight}]}>
               <Text style={[styles.percentText, {color: colors.warning}]}>
-                {profile.entryTestScore ? ((profile.entryTestScore / 200) * 100).toFixed(1) : '0'}%
+                {profile.entryTestScore ? ((profile.entryTestScore / (profile.entryTestTotal || 200)) * 100).toFixed(1) : '0'}%
               </Text>
             </View>
           </View>
         </View>
       </View>
 
-      {/* Action Buttons */}
+      {/* Primary Action: Save Marks */}
       <TouchableOpacity 
         style={styles.actionBtnWrapper} 
-        onPress={() => navigation.navigate('Calculator')}
+        onPress={() => {
+          setMarksSaved(true);
+          setTimeout(() => setMarksSaved(false), 2500);
+        }}
         accessibilityRole="button"
-        accessibilityLabel="Calculate my merit"
-        accessibilityHint="Opens the merit calculator to estimate your admission chances">
-        <LinearGradient colors={[colors.primary, colors.primaryDark || '#3660C9']} start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.actionBtn}>
-          <Icon name="analytics-outline" family="Ionicons" size={22} color="#FFFFFF" />
-          <Text style={styles.actionBtnText}>Calculate My Merit</Text>
+        accessibilityLabel="Save marks to profile"
+        accessibilityHint="Saves your academic marks to your profile">
+        <LinearGradient 
+          colors={marksSaved ? ['#27ae60', '#2ecc71'] : [colors.primary, colors.primaryDark || '#3660C9']} 
+          start={{x: 0, y: 0}} 
+          end={{x: 1, y: 1}} 
+          style={styles.actionBtn}>
+          <Icon name={marksSaved ? "checkmark-circle" : "save-outline"} family="Ionicons" size={22} color="#FFFFFF" />
+          <Text style={styles.actionBtnText}>{marksSaved ? 'Marks Saved!' : 'Save Marks'}</Text>
         </LinearGradient>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.secondaryBtn, {backgroundColor: colors.card, borderColor: colors.primary}]} 
-        onPress={() => navigation.navigate('Recommendations')}
-        accessibilityRole="button"
-        accessibilityLabel="Find matching universities"
-        accessibilityHint="Opens personalized university recommendations based on your profile">
-        <Icon name="school-outline" family="Ionicons" size={22} color={colors.primary} />
-        <Text style={[styles.secondaryBtnText, {color: colors.primary}]}>Find Matching Universities</Text>
-      </TouchableOpacity>
+      {/* Optional Secondary Actions */}
+      <View style={styles.optionalActionsRow}>
+        <TouchableOpacity 
+          style={[styles.optionalActionBtn, {backgroundColor: colors.card, borderColor: colors.border}]} 
+          onPress={() => navigation.navigate('Calculator')}
+          accessibilityRole="button"
+          accessibilityLabel="Calculate merit"
+          accessibilityHint="Opens the merit calculator">
+          <Icon name="calculator-outline" family="Ionicons" size={18} color={colors.textSecondary} />
+          <Text style={[styles.optionalActionText, {color: colors.textSecondary}]}>Calculate Merit</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.optionalActionBtn, {backgroundColor: colors.card, borderColor: colors.border}]} 
+          onPress={() => navigation.navigate('Recommendations')}
+          accessibilityRole="button"
+          accessibilityLabel="Find universities"
+          accessibilityHint="Opens university recommendations">
+          <Icon name="school-outline" family="Ionicons" size={18} color={colors.textSecondary} />
+          <Text style={[styles.optionalActionText, {color: colors.textSecondary}]}>Find Universities</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 
@@ -1109,6 +1157,9 @@ const styles = StyleSheet.create({
   secondaryBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginHorizontal: SPACING.lg, marginTop: SPACING.sm, paddingVertical: SPACING.md, borderRadius: RADIUS.lg, borderWidth: 2 },
   secondaryBtnIcon: { fontSize: 18, marginRight: SPACING.sm },
   secondaryBtnText: { fontSize: TYPOGRAPHY.sizes.md, fontWeight: '600' },
+  optionalActionsRow: { flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: SPACING.lg, marginTop: SPACING.md, gap: SPACING.sm },
+  optionalActionBtn: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: SPACING.sm, paddingHorizontal: SPACING.md, borderRadius: RADIUS.md, borderWidth: 1, gap: SPACING.xs },
+  optionalActionText: { fontSize: TYPOGRAPHY.sizes.sm, fontWeight: '500' },
   savedHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: SPACING.lg, marginBottom: SPACING.md, padding: SPACING.md, borderRadius: RADIUS.xl },
   savedTitle: { fontSize: TYPOGRAPHY.sizes.md, fontWeight: '700' },
   savedCount: { paddingHorizontal: SPACING.md, paddingVertical: SPACING.xs, borderRadius: RADIUS.full },

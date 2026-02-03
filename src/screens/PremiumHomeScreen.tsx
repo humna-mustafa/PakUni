@@ -50,8 +50,8 @@ type NavigationProp = CompositeNavigationProp<
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 // ============================================================================
-// PREMIUM HERO CARD - Refined "Discover Your University" Design
-// Crafted with attention to visual hierarchy, spacing, and modern aesthetics
+// PREMIUM HERO CARD - Clean, Modern Design (2025)
+// Minimalist approach with clear visual hierarchy
 // ============================================================================
 
 interface HeroCardProps {
@@ -67,102 +67,67 @@ const HeroCard = memo<HeroCardProps>(({
   colors,
   isDark,
 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(12)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 350,
-        useNativeDriver: true,
-      }),
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        tension: 80,
-        friction: 12,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  // Clean, refined styling
-  const accentLight = isDark ? 'rgba(107, 147, 240, 0.15)' : 'rgba(69, 115, 223, 0.08)';
-  const cardBg = isDark ? '#272C34' : '#FFFFFF';
+  const cardBg = isDark ? '#1E2228' : '#FFFFFF';
+  const subtleBg = isDark ? 'rgba(69, 115, 223, 0.08)' : 'rgba(69, 115, 223, 0.04)';
 
   return (
-    <Animated.View 
-      style={[
-        heroStyles.heroWrapper,
-        {
-          opacity: fadeAnim,
-          transform: [{translateY: slideAnim}],
-        }
-      ]}
-    >
+    <View style={heroStyles.heroWrapper}>
       <View style={[heroStyles.heroCard, {backgroundColor: cardBg}]}>
-        {/* Subtle background accent */}
-        <View style={[heroStyles.heroAccentBg, {backgroundColor: accentLight}]} />
+        {/* Subtle gradient accent */}
+        <LinearGradient
+          colors={[subtleBg, 'transparent']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={heroStyles.heroGradient}
+        />
 
-        {/* Main Content */}
+        {/* Content */}
         <View style={heroStyles.heroContent}>
-          {/* Compact status row */}
-          <View style={heroStyles.heroTopRow}>
-            <View style={[heroStyles.heroBadge, {backgroundColor: accentLight}]}>
-              <View style={[heroStyles.heroBadgeDot, {backgroundColor: colors.primary}]} />
-              <Text style={[heroStyles.heroBadgeText, {color: colors.primary}]}>
-                AI-Powered Matching
-              </Text>
-            </View>
-          </View>
-
-          {/* Title Section - Clean typography */}
-          <View style={heroStyles.heroTitleSection}>
-            <Text style={[heroStyles.heroTitle, {color: colors.textSecondary}]}>
-              Find Your Ideal
+          <Text style={[heroStyles.heroLabel, {color: colors.textTertiary}]}>
+            200+ Universities
+          </Text>
+          
+          <View style={heroStyles.heroTitleGroup}>
+            <Text style={[heroStyles.heroTitle, {color: colors.text}]}>
+              Find Your Perfect
             </Text>
-            <Text style={[heroStyles.heroTitleAccent, {color: colors.text}]}>
-              University Match
+            <Text style={[heroStyles.heroTitleAccent, {color: colors.primary}]}>
+              University
             </Text>
           </View>
 
-          {/* Description - Concise */}
-          <Text style={[heroStyles.heroDescription, {color: colors.textSecondary}]}>
-            Explore 200+ Pakistani universities with personalized recommendations
+          <Text style={[heroStyles.heroDesc, {color: colors.textSecondary}]}>
+            Personalized recommendations based on your marks and interests
           </Text>
 
-          {/* Action Row - Clean buttons */}
-          <View style={heroStyles.heroActionRow}>
+          {/* Actions */}
+          <View style={heroStyles.heroActions}>
             <TouchableOpacity
-              style={[heroStyles.heroPrimaryAction, {backgroundColor: colors.primary}]}
+              style={[heroStyles.heroPrimary, {backgroundColor: colors.primary}]}
               onPress={onExplorePress}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
             >
-              <Text style={heroStyles.heroPrimaryText}>Browse Universities</Text>
+              <Text style={heroStyles.heroPrimaryText}>Explore All</Text>
               <Icon name="arrow-forward" family="Ionicons" size={16} color="#FFFFFF" />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[
-                heroStyles.heroSecondaryAction,
-                {
-                  backgroundColor: accentLight,
-                }
-              ]}
+              style={[heroStyles.heroSecondary, {borderColor: colors.border}]}
               onPress={onAIMatchPress}
               activeOpacity={0.7}
             >
               <Icon name="sparkles" family="Ionicons" size={18} color={colors.primary} />
+              <Text style={[heroStyles.heroSecondaryText, {color: colors.primary}]}>AI Match</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </Animated.View>
+    </View>
   );
 });
 
 // ============================================================================
-// PREMIUM CTA CARD - "Start Your Journey" with Refined Aesthetics
+// JOURNEY CTA CARD - Clean, Focused Design
 // ============================================================================
 
 interface JourneyCTACardProps {
@@ -174,76 +139,34 @@ interface JourneyCTACardProps {
 const JourneyCTACard = memo<JourneyCTACardProps>(({
   onPress,
   colors,
-  isDark,
 }) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.PRESS,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
-    }).start();
-  };
-
   return (
-    <Animated.View style={[journeyStyles.ctaWrapper, {transform: [{scale: scaleAnim}]}]}>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
+    <View style={journeyStyles.ctaWrapper}>
+      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
         <LinearGradient
-          colors={[colors.primary, colors.primaryDark]}
+          colors={[colors.primary, colors.primaryDark || '#3660C9']}
           start={{x: 0, y: 0}}
-          end={{x: 1, y: 0.5}}
+          end={{x: 1, y: 0}}
           style={journeyStyles.ctaCard}
         >
-          {/* Subtle decorative element */}
-          <View style={journeyStyles.ctaDecoCircle} />
-
-          {/* Content Layout */}
           <View style={journeyStyles.ctaLayout}>
-            {/* Left: Icon */}
-            <View style={journeyStyles.ctaIconSection}>
-              <View style={journeyStyles.ctaIconCircle}>
-                <Icon name="calculator" family="Ionicons" size={22} color="#FFFFFF" />
-              </View>
+            <View style={journeyStyles.ctaIcon}>
+              <Icon name="calculator" family="Ionicons" size={22} color="#FFFFFF" />
             </View>
-
-            {/* Center: Text */}
-            <View style={journeyStyles.ctaTextSection}>
-              <Text style={journeyStyles.ctaEyebrow}>Merit Calculator</Text>
-              <Text style={journeyStyles.ctaHeadline}>Calculate Your Score</Text>
-              <Text style={journeyStyles.ctaCaption}>
-                Find matching universities
-              </Text>
+            <View style={journeyStyles.ctaText}>
+              <Text style={journeyStyles.ctaTitle}>Calculate Your Merit</Text>
+              <Text style={journeyStyles.ctaSubtitle}>Find matching universities</Text>
             </View>
-
-            {/* Right: Arrow */}
-            <View style={journeyStyles.ctaArrowSection}>
-              <View style={journeyStyles.ctaArrowCircle}>
-                <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.primary} />
-              </View>
-            </View>
+            <Icon name="chevron-forward" family="Ionicons" size={20} color="rgba(255,255,255,0.8)" />
           </View>
         </LinearGradient>
       </TouchableOpacity>
-    </Animated.View>
+    </View>
   );
 });
 
 // ============================================================================
-// ANIMATED DEADLINE WIDGET - Compact & Informative
+// DEADLINE WIDGET - Clean, Professional Design
 // ============================================================================
 
 interface DeadlineWidgetProps {
@@ -253,158 +176,102 @@ interface DeadlineWidgetProps {
 }
 
 const DeadlineWidget = memo<DeadlineWidgetProps>(({colors, isDark, onNavigate}) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(20)).current;
-  
   const upcomingDeadlines = getUpcomingDeadlines(3);
   
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        delay: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 500,
-        delay: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
   if (upcomingDeadlines.length === 0) return null;
 
-  const widgetBg = isDark ? 'rgba(39, 44, 52, 0.95)' : '#FFFFFF';
+  const cardBg = isDark ? '#1E2228' : '#FFFFFF';
 
   return (
-    <Animated.View
-      style={[
-        deadlineWidgetStyles.container,
-        {
-          opacity: fadeAnim,
-          transform: [{translateY: slideAnim}],
-        },
-      ]}>
+    <View style={deadlineWidgetStyles.container}>
       <TouchableOpacity
-        style={[deadlineWidgetStyles.widget, {backgroundColor: widgetBg}]}
+        style={[deadlineWidgetStyles.widget, {backgroundColor: cardBg}]}
         onPress={() => onNavigate('Deadlines')}
-        activeOpacity={0.8}>
+        activeOpacity={0.7}>
+        
+        {/* Header */}
         <View style={deadlineWidgetStyles.header}>
-          <View style={[deadlineWidgetStyles.iconBg, {backgroundColor: '#F59E0B15'}]}>
-            <Icon name="time" family="Ionicons" size={18} color="#F59E0B" />
-          </View>
-          <View style={deadlineWidgetStyles.headerText}>
-            <Text style={[deadlineWidgetStyles.title, {color: colors.text}]}>
-              Upcoming Deadlines
-            </Text>
-            <Text style={[deadlineWidgetStyles.subtitle, {color: colors.textSecondary}]}>
-              {upcomingDeadlines.length} applications closing soon
-            </Text>
-          </View>
-          <View style={[deadlineWidgetStyles.arrow, {backgroundColor: colors.primaryLight}]}>
-            <Icon name="chevron-forward" family="Ionicons" size={16} color={colors.primary} />
-          </View>
+          <Icon name="calendar-outline" family="Ionicons" size={18} color="#F59E0B" />
+          <Text style={[deadlineWidgetStyles.title, {color: colors.text}]}>
+            Upcoming Deadlines
+          </Text>
+          <Text style={[deadlineWidgetStyles.count, {color: colors.textTertiary}]}>
+            {upcomingDeadlines.length}
+          </Text>
         </View>
         
+        {/* List */}
         <View style={deadlineWidgetStyles.list}>
-          {upcomingDeadlines.slice(0, 2).map((deadline, index) => (
+          {upcomingDeadlines.slice(0, 2).map((deadline: any, index: number) => (
             <View 
               key={deadline.id} 
               style={[
-                deadlineWidgetStyles.item, 
-                index > 0 && deadlineWidgetStyles.itemBorder,
-                {borderTopColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}
+                deadlineWidgetStyles.item,
+                index > 0 && {borderTopWidth: 1, borderTopColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'}
               ]}>
-              <View style={[
-                deadlineWidgetStyles.dot, 
-                {backgroundColor: deadline.status === 'closing-soon' ? '#EF4444' : '#10B981'}
-              ]} />
-              <View style={deadlineWidgetStyles.itemContent}>
-                <Text style={[deadlineWidgetStyles.itemName, {color: colors.text}]} numberOfLines={1}>
+              <View style={deadlineWidgetStyles.itemLeft}>
+                <Text style={[deadlineWidgetStyles.itemTitle, {color: colors.text}]} numberOfLines={1}>
                   {deadline.universityShortName}
                 </Text>
-                <Text style={[deadlineWidgetStyles.itemDesc, {color: colors.textSecondary}]} numberOfLines={1}>
+                <Text style={[deadlineWidgetStyles.itemSub, {color: colors.textSecondary}]} numberOfLines={1}>
                   {deadline.title}
                 </Text>
               </View>
-              <View style={[
-                deadlineWidgetStyles.dateBadge,
-                {backgroundColor: deadline.status === 'closing-soon' ? '#FEF2F2' : '#ECFDF5'}
+              <Text style={[
+                deadlineWidgetStyles.itemDate,
+                {color: deadline.status === 'closing-soon' ? '#DC2626' : colors.textSecondary}
               ]}>
-                <Text style={[
-                  deadlineWidgetStyles.dateText,
-                  {color: deadline.status === 'closing-soon' ? '#DC2626' : '#059669'}
-                ]}>
-                  {new Date(deadline.applicationDeadline).toLocaleDateString('en-PK', {month: 'short', day: 'numeric'})}
-                </Text>
-              </View>
+                {new Date(deadline.applicationDeadline).toLocaleDateString('en-PK', {month: 'short', day: 'numeric'})}
+              </Text>
             </View>
           ))}
         </View>
+        
+        {/* Footer */}
+        <View style={deadlineWidgetStyles.footer}>
+          <Text style={[deadlineWidgetStyles.footerText, {color: colors.primary}]}>View all</Text>
+          <Icon name="chevron-forward" family="Ionicons" size={14} color={colors.primary} />
+        </View>
       </TouchableOpacity>
-    </Animated.View>
+    </View>
   );
 });
 
 const deadlineWidgetStyles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   widget: {
-    borderRadius: 16,
+    borderRadius: 14,
     padding: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.05)',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: {width: 0, height: 1},
         shadowOpacity: 0.04,
-        shadowRadius: 8,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 2,
+        elevation: 1,
       },
     }),
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
-  },
-  iconBg: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: {
-    flex: 1,
-    marginLeft: 12,
+    marginBottom: 12,
+    gap: 8,
   },
   title: {
+    flex: 1,
     fontSize: 15,
     fontWeight: '600',
     letterSpacing: -0.2,
   },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: '400',
-    marginTop: 2,
-  },
-  arrow: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+  count: {
+    fontSize: 13,
+    fontWeight: '500',
   },
   list: {},
   item: {
@@ -412,36 +279,139 @@ const deadlineWidgetStyles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
-  itemBorder: {
-    borderTopWidth: 1,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  itemContent: {
+  itemLeft: {
     flex: 1,
-    marginLeft: 10,
   },
-  itemName: {
+  itemTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    letterSpacing: -0.1,
+    fontWeight: '500',
   },
-  itemDesc: {
+  itemSub: {
     fontSize: 12,
-    fontWeight: '400',
-    marginTop: 1,
+    marginTop: 2,
   },
-  dateBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  dateText: {
-    fontSize: 11,
+  itemDate: {
+    fontSize: 13,
     fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.04)',
+    gap: 4,
+  },
+  footerText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+});
+
+// ============================================================================
+// STATS WIDGET - Clean, Modern Design
+// ============================================================================
+
+interface StudyProgressWidgetProps {
+  colors: any;
+  isDark: boolean;
+  onNavigate: (screen: string) => void;
+  universitiesCount: number;
+  scholarshipsCount: number;
+}
+
+const StudyProgressWidget = memo<StudyProgressWidgetProps>(({colors, isDark, onNavigate, universitiesCount, scholarshipsCount}) => {
+  const cardBg = isDark ? '#1E2228' : '#FFFFFF';
+  const total = universitiesCount + scholarshipsCount;
+
+  const stats = [
+    {label: 'Universities', value: universitiesCount, color: colors.primary, screen: 'Universities'},
+    {label: 'Scholarships', value: scholarshipsCount, color: '#10B981', screen: 'Scholarships'},
+    {label: 'Total Saved', value: total, color: '#F59E0B', screen: 'Favorites'},
+  ];
+
+  return (
+    <View style={statsWidgetStyles.container}>
+      <View style={[statsWidgetStyles.widget, {backgroundColor: cardBg}]}>
+        <View style={statsWidgetStyles.header}>
+          <Icon name="heart-outline" family="Ionicons" size={18} color={colors.primary} />
+          <Text style={[statsWidgetStyles.title, {color: colors.text}]}>Your Saved Items</Text>
+        </View>
+        
+        <View style={statsWidgetStyles.statsRow}>
+          {stats.map((stat, index) => (
+            <TouchableOpacity
+              key={stat.label}
+              style={[
+                statsWidgetStyles.statItem,
+                index < stats.length - 1 && {
+                  borderRightWidth: 1,
+                  borderRightColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'
+                }
+              ]}
+              onPress={() => onNavigate(stat.screen)}
+              activeOpacity={0.6}
+            >
+              <Text style={[statsWidgetStyles.statValue, {color: stat.color}]}>{stat.value}</Text>
+              <Text style={[statsWidgetStyles.statLabel, {color: colors.textSecondary}]}>{stat.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+});
+
+const statsWidgetStyles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  widget: {
+    borderRadius: 14,
+    padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.04,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+    gap: 8,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: '600',
+    letterSpacing: -0.2,
+  },
+  statsRow: {
+    flexDirection: 'row',
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+  },
+  statLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
   },
 });
 
@@ -465,55 +435,46 @@ const QuickActionCard = memo<QuickActionCardProps>(({
   onPress,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(30)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const delay = 100 + index * 60; // Staggered entrance
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
-        delay,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 400,
-        delay,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [index]);
+    // Simple fade-in, no stagger - feels more intentional
+    Animated.timing(opacityAnim, {
+      toValue: 1,
+      duration: 300,
+      delay: 100,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.ICON_PRESS,
+    // Subtle, professional press feedback
+    Animated.timing(scaleAnim, {
+      toValue: 0.97,
+      duration: 100,
       useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
+      tension: 300,
+      friction: 20,
       useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
-  const cardBg = isDark ? 'rgba(39, 44, 52, 0.95)' : '#FFFFFF';
-  const iconBg = isDark ? `${action.color}25` : `${action.color}12`;
+  const cardBg = isDark ? 'rgba(39, 44, 52, 0.98)' : '#FFFFFF';
+  const iconBg = isDark ? `${action.color}22` : `${action.color}10`;
 
   return (
     <Animated.View
       style={[
         quickActionStyles.wrapper,
         {
-          opacity: fadeAnim,
-          transform: [{scale: scaleAnim}, {translateY}],
+          opacity: opacityAnim,
+          transform: [{scale: scaleAnim}],
         },
       ]}>
       <TouchableOpacity
@@ -527,7 +488,7 @@ const QuickActionCard = memo<QuickActionCardProps>(({
         <View style={[quickActionStyles.iconContainer, {backgroundColor: iconBg}]}>
           <Icon name={action.iconName} family="Ionicons" size={24} color={action.color} />
         </View>
-        <Text style={[quickActionStyles.title, {color: colors.text}]} numberOfLines={2}>
+        <Text style={[quickActionStyles.title, {color: colors.text}]} numberOfLines={1}>
           {action.title}
         </Text>
       </TouchableOpacity>
@@ -541,18 +502,18 @@ const quickActionStyles = StyleSheet.create({
     marginBottom: 12,
   },
   card: {
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
     alignItems: 'center',
-    height: 100,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.04)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(0,0,0,0.06)',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.03,
+        shadowOpacity: 0.04,
         shadowRadius: 4,
       },
       android: {
@@ -561,18 +522,17 @@ const quickActionStyles = StyleSheet.create({
     }),
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   title: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 11,
+    fontWeight: '500',
     textAlign: 'center',
-    lineHeight: 16,
     letterSpacing: -0.1,
   },
 });
@@ -678,14 +638,36 @@ const PremiumHomeScreen = () => {
   // Real notifications from notification service
   const {notifications: localNotifications, markAsRead, clearAll} = useNotifications();
 
-  // Handle search submission - navigate to Universities with search query
+  // Scholarship-related keywords for intelligent search routing
+  const SCHOLARSHIP_KEYWORDS = [
+    'scholarship', 'scholarships', 'hec', 'ehsaas', 'peef', 'need-based', 'need based',
+    'merit-based', 'merit based', 'stipend', 'financial aid', 'funding', 'grant',
+    'fulbright', 'chevening', 'usaid', 'daad', 'commonwealth'
+  ];
+
+  // Handle search submission - intelligently routes to Universities or Scholarships
   const handleSearch = useCallback(() => {
     if (searchQuery.trim()) {
-      // Navigate to Universities tab with search query
-      navigation.navigate('MainTabs', {
-        screen: 'Universities',
-        params: {searchQuery: searchQuery.trim()},
-      });
+      const query = searchQuery.trim().toLowerCase();
+      
+      // Check if search is scholarship-related
+      const isScholarshipSearch = SCHOLARSHIP_KEYWORDS.some(keyword => 
+        query.includes(keyword)
+      );
+      
+      if (isScholarshipSearch) {
+        // Navigate to Scholarships tab with search query
+        navigation.navigate('MainTabs', {
+          screen: 'Scholarships',
+          params: {searchQuery: searchQuery.trim()},
+        });
+      } else {
+        // Navigate to Universities tab with search query
+        navigation.navigate('MainTabs', {
+          screen: 'Universities',
+          params: {searchQuery: searchQuery.trim()},
+        });
+      }
     }
   }, [searchQuery, navigation]);
   
@@ -866,6 +848,15 @@ const PremiumHomeScreen = () => {
             onNavigate={handleNavigate}
           />
 
+          {/* Study Progress Widget */}
+          <StudyProgressWidget
+            colors={colors}
+            isDark={isDark}
+            onNavigate={handleNavigate}
+            universitiesCount={user?.favoriteUniversities?.length || 0}
+            scholarshipsCount={user?.favoriteScholarships?.length || 0}
+          />
+
           {/* Quick Actions - Streamlined Grid */}
           <AnimatedSectionHeader
             title="Quick Actions"
@@ -993,64 +984,24 @@ const heroStyles = StyleSheet.create({
       },
     }),
   },
-  heroGradientOverlay: {
+  heroGradient: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 100,
-  },
-  heroIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  heroArrowWrap: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heroAccentBg: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 200,
-    height: 200,
-    borderBottomLeftRadius: 200,
+    bottom: 0,
   },
   heroContent: {
     padding: 20,
   },
-  heroTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  heroBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
-    gap: 6,
-  },
-  heroBadgeDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-  },
-  heroBadgeText: {
-    fontSize: 11,
+  heroLabel: {
+    fontSize: 12,
     fontWeight: '600',
-    letterSpacing: 0.2,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+    marginBottom: 8,
   },
-  heroTitleSection: {
+  heroTitleGroup: {
     marginBottom: 8,
   },
   heroTitle: {
@@ -1065,18 +1016,18 @@ const heroStyles = StyleSheet.create({
     letterSpacing: -0.5,
     lineHeight: 30,
   },
-  heroDescription: {
+  heroDesc: {
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 20,
     marginBottom: 16,
   },
-  heroActionRow: {
+  heroActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
-  heroPrimaryAction: {
+  heroPrimary: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -1091,88 +1042,63 @@ const heroStyles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.1,
   },
-  heroSecondaryAction: {
-    width: 48,
+  heroSecondary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
     height: 48,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderWidth: 1,
+    gap: 6,
+  },
+  heroSecondaryText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
 
 // ============================================================================
-// REFINED JOURNEY CTA STYLES - Professional, Minimal Design
+// REFINED JOURNEY CTA STYLES - Clean, Professional Design
 // ============================================================================
 
 const journeyStyles = StyleSheet.create({
   ctaWrapper: {
     paddingHorizontal: 20,
-    marginTop: 8,
+    marginTop: 4,
     marginBottom: 24,
   },
   ctaCard: {
     borderRadius: 14,
-    padding: 18,
-    overflow: 'hidden',
-  },
-  ctaDecoCircle: {
-    position: 'absolute',
-    top: -60,
-    right: -60,
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
   },
   ctaLayout: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  ctaIconSection: {
-    marginRight: 14,
-  },
-  ctaIconCircle: {
-    width: 48,
-    height: 48,
+  ctaIcon: {
+    width: 44,
+    height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+    backgroundColor: 'rgba(255,255,255,0.15)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 12,
   },
-  ctaTextSection: {
+  ctaText: {
     flex: 1,
   },
-  ctaEyebrow: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: 'rgba(255,255,255,0.65)',
-    letterSpacing: 0.8,
-    marginBottom: 2,
-    textTransform: 'uppercase',
-  },
-  ctaHeadline: {
-    fontSize: 16,
+  ctaTitle: {
+    fontSize: 15,
     fontWeight: '600',
     color: '#FFFFFF',
     letterSpacing: -0.2,
-    marginBottom: 2,
   },
-  ctaCaption: {
+  ctaSubtitle: {
     fontSize: 12,
     fontWeight: '400',
     color: 'rgba(255,255,255,0.75)',
-    lineHeight: 16,
-  },
-  ctaArrowSection: {
-    marginLeft: 10,
-  },
-  ctaArrowCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 2,
   },
 });
 

@@ -51,7 +51,7 @@ export const useScholarships = (
   ];
 
   const filteredScholarships = useMemo(() => {
-    let result = [...SCHOLARSHIPS].filter(s => s.is_active);
+    let result = [...SCHOLARSHIPS].filter(s => s.status !== 'closed');
 
     // Apply search filter
     if (searchQuery.trim()) {

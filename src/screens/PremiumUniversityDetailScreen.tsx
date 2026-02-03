@@ -21,6 +21,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {UNIVERSITIES, PROGRAMS, MERIT_FORMULAS, getScholarshipsForUniversity, MERIT_RECORDS} from '../data';
 import {getUniversityMeritSummaryByShortName} from '../services/meritLists';
+import {findUniversitiesByAlias} from '../utils/universityAliases';
 import type {ScholarshipData} from '../data';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 import {Icon, FeatureIcon} from '../components/icons';
@@ -292,9 +293,16 @@ const PremiumUniversityDetailScreen = () => {
 
   // Track university view for analytics
   useEffect(() => {
-    const university = UNIVERSITIES.find(u => u.short_name === universityId);
-    if (university) {
-      analytics.trackUniversityView(university.short_name, university.name);
+    // Use same lookup logic as main university useMemo
+    let found = UNIVERSITIES.find(u => u.short_name === universityId);
+    if (!found && universityId) {
+      const aliasMatches = findUniversitiesByAlias(universityId);
+      if (aliasMatches.length > 0) {
+        found = UNIVERSITIES.find(u => aliasMatches.includes(u.short_name));
+      }
+    }
+    if (found) {
+      analytics.trackUniversityView(found.short_name, found.name);
     }
   }, [universityId]);
 
@@ -306,10 +314,28 @@ const PremiumUniversityDetailScreen = () => {
     }).start();
   }, []);
 
-  const university = useMemo(() => 
-    UNIVERSITIES.find(u => u.short_name === universityId),
-    [universityId]
-  );
+  const university = useMemo(() => {
+    // First try direct short_name match
+    let found = UNIVERSITIES.find(u => u.short_name === universityId);
+    
+    // If not found, try alias lookup (e.g., "NUST" -> "NST")
+    if (!found && universityId) {
+      const aliasMatches = findUniversitiesByAlias(universityId);
+      if (aliasMatches.length > 0) {
+        found = UNIVERSITIES.find(u => aliasMatches.includes(u.short_name));
+      }
+    }
+    
+    // Also try case-insensitive match
+    if (!found && universityId) {
+      found = UNIVERSITIES.find(u => 
+        u.short_name.toLowerCase() === universityId.toLowerCase() ||
+        u.name.toLowerCase().includes(universityId.toLowerCase())
+      );
+    }
+    
+    return found;
+  }, [universityId]);
 
   const universityPrograms = useMemo(() => 
     PROGRAMS.slice(0, 10),
@@ -318,7 +344,7 @@ const PremiumUniversityDetailScreen = () => {
 
   const universityScholarships = useMemo(() => {
     if (!university) return [];
-    return getScholarshipsForUniversity(university.short_name, university.type);
+    return getScholarshipsForUniversity(university.short_name);
   }, [university]);
 
   const meritFormulas = useMemo(() => 
@@ -423,7 +449,7 @@ const PremiumUniversityDetailScreen = () => {
         </View>
         <View style={[styles.aboutCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
           <Text style={[styles.description, {color: colors.textSecondary}]}>
-            {university.description || `${university.name} is a prestigious ${university.type} university located in ${university.city}, ${university.province}. Established in ${university.established_year}, it offers various undergraduate and postgraduate programs with a commitment to excellence in education and research.`}
+            {university.description || `${university.name || 'This university'} is a prestigious ${university.type || 'higher education'} university located in ${university.city || 'Pakistan'}, ${university.province || ''}. Established in ${university.established_year || 'N/A'}, it offers various undergraduate and postgraduate programs with a commitment to excellence in education and research.`}
           </Text>
         </View>
       </View>
@@ -438,7 +464,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="location-outline"
             label="Location"
-            value={university.city}
+            value={university.city || 'N/A'}
             index={0}
             colors={colors}
             isDark={isDark}
@@ -446,7 +472,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="calendar-outline"
             label="Established"
-            value={String(university.established_year)}
+            value={String(university.established_year || 'N/A')}
             index={1}
             colors={colors}
             isDark={isDark}
@@ -462,7 +488,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="business-outline"
             label="Type"
-            value={university.type.toUpperCase()}
+            value={(university.type || 'N/A').toUpperCase()}
             index={3}
             colors={colors}
             isDark={isDark}
@@ -567,7 +593,7 @@ const PremiumUniversityDetailScreen = () => {
   const renderProgramsTab = () => (
     <View style={styles.tabContent}>
       <Text style={[styles.programsNote, {color: colors.textSecondary}]}>
-        {universityPrograms.length} Programs at {university.short_name || university.name}
+        {universityPrograms.length} Programs at {university?.short_name || university?.name || 'University'}
       </Text>
       {universityPrograms.map((program, index) => (
         <Animated.View
@@ -607,13 +633,13 @@ const PremiumUniversityDetailScreen = () => {
           <View style={[styles.programDetails, {backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'}]}>
             <View style={styles.programDetail}>
               <Icon name="time-outline" family="Ionicons" size={16} color={colors.textSecondary} />
-              <Text style={[styles.detailValue, {color: colors.text}]}>{program.duration_years} Years</Text>
+              <Text style={[styles.detailValue, {color: colors.text}]}>{program.duration_years || '-'} Years</Text>
             </View>
             <View style={[styles.programDetailDivider, {backgroundColor: colors.border}]} />
             <View style={styles.programDetail}>
               <Icon name="cash-outline" family="Ionicons" size={16} color={colors.textSecondary} />
               <Text style={[styles.detailValue, {color: colors.text}]}>
-                PKR {(program.avg_fee_per_semester / 1000).toFixed(0)}K/sem
+                PKR {((program.avg_fee_per_semester || 0) / 1000).toFixed(0)}K/sem
               </Text>
             </View>
           </View>
@@ -622,7 +648,7 @@ const PremiumUniversityDetailScreen = () => {
             <View style={[styles.eligibilityChip, {backgroundColor: `${colors.success}15`}]}>
               <View style={styles.eligibilityContent}>
                 <Icon name="checkmark" family="Ionicons" size={14} color={colors.success} />
-                <Text style={[styles.eligibilityText, {color: colors.success}]}>{program.eligibility}</Text>
+                <Text style={[styles.eligibilityText, {color: colors.success}]}>{program.eligibility || 'Contact university'}</Text>
               </View>
             </View>
             {program.entry_test && (
@@ -708,31 +734,31 @@ const PremiumUniversityDetailScreen = () => {
           <View
             key={formula.id}
             style={[styles.formulaCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
-            <Text style={[styles.formulaName, {color: colors.text}]}>{formula.name}</Text>
-            <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>{formula.university}</Text>
+            <Text style={[styles.formulaName, {color: colors.text}]}>{formula.name || 'Merit Formula'}</Text>
+            <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>{formula.university || 'General'}</Text>
 
             <View style={styles.formulaWeights}>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.matric_weightage}%</Text>
+                  <Text style={styles.weightValue}>{formula.matric_weightage || 0}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Matric</Text>
               </View>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.inter_weightage}%</Text>
+                  <Text style={styles.weightValue}>{formula.inter_weightage || 0}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Inter</Text>
               </View>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#10B981', '#059669']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.entry_test_weightage}%</Text>
+                  <Text style={styles.weightValue}>{formula.entry_test_weightage || 0}%</Text>
                 </LinearGradient>
-                <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>{formula.entry_test_name}</Text>
+                <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>{formula.entry_test_name || 'Test'}</Text>
               </View>
             </View>
 
-            {formula.hafiz_bonus > 0 && (
+            {formula.hafiz_bonus != null && formula.hafiz_bonus > 0 && (
               <View style={styles.bonusBadge}>
                 <LinearGradient
                   colors={['#F59E0B', '#D97706']}
@@ -846,15 +872,15 @@ const PremiumUniversityDetailScreen = () => {
                       <View style={styles.meritValuesRow}>
                         <View style={styles.meritValueItem}>
                           <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 1</Text>
-                          <Text style={[styles.meritValue, {color: colors.text}]}>{yearData.closingMerit.toFixed(1)}%</Text>
+                          <Text style={[styles.meritValue, {color: colors.text}]}>{(yearData.closingMerit || 0).toFixed(1)}%</Text>
                         </View>
-                        {yearData.list2Merit && (
+                        {yearData.list2Merit != null && (
                           <View style={styles.meritValueItem}>
                             <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 2</Text>
                             <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list2Merit.toFixed(1)}%</Text>
                           </View>
                         )}
-                        {yearData.list3Merit && (
+                        {yearData.list3Merit != null && (
                           <View style={styles.meritValueItem}>
                             <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 3</Text>
                             <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list3Merit.toFixed(1)}%</Text>
@@ -910,64 +936,65 @@ const PremiumUniversityDetailScreen = () => {
                 />
               </View>
               <View style={styles.scholarshipInfo}>
-                <Text style={[styles.scholarshipName, {color: colors.text}]}>{scholarship.name}</Text>
-                <Text style={[styles.scholarshipProvider, {color: colors.textSecondary}]}>{scholarship.provider}</Text>
+                <Text style={[styles.scholarshipName, {color: colors.text}]}>{scholarship.name || 'Scholarship'}</Text>
+                <Text style={[styles.scholarshipProvider, {color: colors.textSecondary}]}>{scholarship.provider || 'Unknown Provider'}</Text>
               </View>
               <LinearGradient
                 colors={
-                  scholarship.coverage_percentage === 100 ? ['#10B981', '#059669'] :
-                  scholarship.coverage_percentage >= 75 ? ['#F59E0B', '#D97706'] :
+                  (scholarship.tuitionCoverage || 0) === 100 ? ['#10B981', '#059669'] :
+                  (scholarship.tuitionCoverage || 0) >= 75 ? ['#F59E0B', '#D97706'] :
                   GRADIENTS.primary
                 }
                 style={styles.coverageBadge}>
-                <Text style={styles.coverageText}>{scholarship.coverage_percentage}%</Text>
+                <Text style={styles.coverageText}>{scholarship.tuitionCoverage || 0}%</Text>
               </LinearGradient>
             </View>
 
             <Text style={[styles.scholarshipDesc, {color: colors.textSecondary}]}>
-              {scholarship.description}
+              {scholarship.description || 'No description available'}
             </Text>
 
-            {/* Coverage Details */}
-            <View style={styles.coverageDetails}>
-              {scholarship.covers_tuition && (
-                <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
-                  <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
-                  <Text style={[styles.coverageChipText, {color: colors.success}]}>Tuition</Text>
+            {/* Coverage Details - computed from coverageType and otherBenefits */}
+            {(() => {
+              const coversTuition = scholarship.coverageType === 'full' || 
+                                   scholarship.coverageType === 'tuition' || 
+                                   (scholarship.tuitionCoverage && scholarship.tuitionCoverage > 0);
+              const coversHostel = scholarship.coverageType === 'full' || 
+                                  scholarship.otherBenefits?.some((b: string) => b.toLowerCase().includes('hostel') || b.toLowerCase().includes('accommodation'));
+              const coversBooks = scholarship.otherBenefits?.some((b: string) => b.toLowerCase().includes('book'));
+              
+              return (
+                <View style={styles.coverageDetails}>
+                  {coversTuition && (
+                    <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
+                      <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
+                      <Text style={[styles.coverageChipText, {color: colors.success}]}>Tuition</Text>
+                    </View>
+                  )}
+                  {coversHostel && (
+                    <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
+                      <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
+                      <Text style={[styles.coverageChipText, {color: colors.success}]}>Hostel</Text>
+                    </View>
+                  )}
+                  {coversBooks && (
+                    <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
+                      <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
+                      <Text style={[styles.coverageChipText, {color: colors.success}]}>Books</Text>
+                    </View>
+                  )}
                 </View>
-              )}
-              {scholarship.covers_hostel && (
-                <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
-                  <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
-                  <Text style={[styles.coverageChipText, {color: colors.success}]}>Hostel</Text>
-                </View>
-              )}
-              {scholarship.covers_books && (
-                <View style={[styles.coverageChip, {backgroundColor: `${colors.success}10`, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
-                  <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
-                  <Text style={[styles.coverageChipText, {color: colors.success}]}>Books</Text>
-                </View>
-              )}
-            </View>
+              );
+            })()}
 
-            {(scholarship.monthly_stipend || scholarship.max_family_income) && (
+            {scholarship.monthlyStipend && (
               <View style={[styles.scholarshipStats, {backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'}]}>
-                {scholarship.monthly_stipend && (
-                  <View style={styles.statItem}>
-                    <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Monthly Stipend</Text>
-                    <Text style={[styles.statValue, {color: colors.success}]}>
-                      PKR {scholarship.monthly_stipend.toLocaleString()}
-                    </Text>
-                  </View>
-                )}
-                {scholarship.max_family_income && (
-                  <View style={styles.statItem}>
-                    <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Max Income</Text>
-                    <Text style={[styles.statValue, {color: colors.text}]}>
-                      PKR {scholarship.max_family_income.toLocaleString()}/mo
-                    </Text>
-                  </View>
-                )}
+                <View style={styles.statItem}>
+                  <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Monthly Stipend</Text>
+                  <Text style={[styles.statValue, {color: colors.success}]}>
+                    PKR {scholarship.monthlyStipend.toLocaleString()}
+                  </Text>
+                </View>
               </View>
             )}
 
@@ -976,7 +1003,7 @@ const PremiumUniversityDetailScreen = () => {
                 <View style={styles.deadlineRow}>
                   <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.warning} />
                   <Text style={[styles.deadlineText, {color: colors.warning}]}>
-                    {scholarship.application_deadline}
+                    {scholarship.deadline || 'Check website'}
                   </Text>
                 </View>
               </View>
@@ -1064,14 +1091,14 @@ const PremiumUniversityDetailScreen = () => {
               />
             </View>
           ) : null}
-          <Text style={styles.universityName}>{university.name}</Text>
+          <Text style={styles.universityName}>{university.name || 'Unknown University'}</Text>
           <View style={styles.locationRow}>
             <Icon name="location" family="Ionicons" size={16} color="#FFFFFF" />
-            <Text style={styles.universityLocation}>{university.city}, {university.province}</Text>
+            <Text style={styles.universityLocation}>{university.city || 'Unknown'}, {university.province || 'Pakistan'}</Text>
           </View>
           <View style={styles.badgeRow}>
             <View style={styles.typeBadge}>
-              <Text style={styles.typeBadgeText}>{university.type.toUpperCase()}</Text>
+              <Text style={styles.typeBadgeText}>{(university.type || 'N/A').toUpperCase()}</Text>
             </View>
             {(university.ranking_national || university.ranking_hec) && (
               <View style={styles.rankBadge}>

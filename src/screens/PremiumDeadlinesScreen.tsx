@@ -528,7 +528,7 @@ const PremiumDeadlinesScreen = () => {
                             : colors.text,
                       },
                     ]}>
-                    {category.name}
+                    {category.label}
                   </Text>
                 </TouchableOpacity>
               ))}

@@ -1,6 +1,6 @@
 /**
  * Grade Converter Card Component
- * CGPA ↔ Percentage, O/A Level Equivalence
+ * Multi-Subject Aggregate, O/A Level Equivalence
  */
 
 import React, {useState, useCallback} from 'react';
@@ -16,12 +16,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {
-  cgpaToPercentage,
-  percentageToCGPA,
   convertOLevelToMatric,
   convertALevelToInter,
-  CGPAScale,
-  CGPA_REFERENCE_TABLE,
   O_LEVEL_REFERENCE,
   A_LEVEL_REFERENCE,
 } from '../../utils/gradeConversion';
@@ -31,7 +27,13 @@ import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
 // TYPES
 // ============================================================================
 
-type ConversionMode = 'cgpa-to-percent' | 'percent-to-cgpa' | 'o-level' | 'a-level';
+type ConversionMode = 'o-level' | 'a-level';
+
+interface SubjectGrade {
+  id: number;
+  subjectName: string;
+  grade: string;
+}
 
 interface GradeConverterProps {
   onConvert?: (result: any) => void;
@@ -107,31 +109,37 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
 // ============================================================================
 
 export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) => {
+  // Default O-Level subjects (8 subjects standard)
+  const defaultOLevelSubjects: SubjectGrade[] = [
+    {id: 1, subjectName: 'English Language', grade: ''},
+    {id: 2, subjectName: 'Urdu', grade: ''},
+    {id: 3, subjectName: 'Mathematics', grade: ''},
+    {id: 4, subjectName: 'Physics', grade: ''},
+    {id: 5, subjectName: 'Chemistry', grade: ''},
+    {id: 6, subjectName: 'Biology', grade: ''},
+    {id: 7, subjectName: 'Islamiat', grade: ''},
+    {id: 8, subjectName: 'Pakistan Studies', grade: ''},
+  ];
+
+  // Default A-Level subjects (3 principal subjects)
+  const defaultALevelSubjects: SubjectGrade[] = [
+    {id: 1, subjectName: 'Subject 1', grade: ''},
+    {id: 2, subjectName: 'Subject 2', grade: ''},
+    {id: 3, subjectName: 'Subject 3', grade: ''},
+  ];
+
   // State
-  const [mode, setMode] = useState<ConversionMode>('cgpa-to-percent');
-  const [cgpaInput, setCgpaInput] = useState('');
-  const [percentInput, setPercentInput] = useState('');
-  const [cgpaScale, setCgpaScale] = useState<CGPAScale>('4.0');
-  const [selectedOGrades, setSelectedOGrades] = useState<string[]>([]);
-  const [selectedAGrades, setSelectedAGrades] = useState<string[]>([]);
+  const [mode, setMode] = useState<ConversionMode>('o-level');
+  const [oLevelSubjects, setOLevelSubjects] = useState<SubjectGrade[]>(defaultOLevelSubjects);
+  const [aLevelSubjects, setALevelSubjects] = useState<SubjectGrade[]>(defaultALevelSubjects);
   const [result, setResult] = useState<any>(null);
   const [showReference, setShowReference] = useState(false);
 
   // Animation
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
-  // Mode configuration
+  // Mode configuration - removed multi-subject, kept only O-Level and A-Level
   const modeConfig = {
-    'cgpa-to-percent': {
-      title: 'CGPA → Percentage',
-      icon: 'calculator-outline',
-      colors: ['#4573DF', '#3660C9'],
-    },
-    'percent-to-cgpa': {
-      title: 'Percentage → CGPA',
-      icon: 'trending-up-outline',
-      colors: ['#10B981', '#059669'],
-    },
     'o-level': {
       title: 'O-Level → Matric',
       icon: 'school-outline',
@@ -140,75 +148,24 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     'a-level': {
       title: 'A-Level → Inter',
       icon: 'ribbon-outline',
-      colors: ['#4573DF', '#3660C9'],
+      colors: ['#10B981', '#059669'],
     },
   };
 
-  // Handle CGPA to Percentage conversion
-  const handleCGPAConvert = useCallback(() => {
-    const cgpa = parseFloat(cgpaInput);
-    if (isNaN(cgpa) || cgpa < 0 || cgpa > 4) {
-      setResult({error: 'Please enter a valid CGPA (0-4)'});
-      return;
-    }
-
-    try {
-      const conversion = cgpaToPercentage(cgpa, cgpaScale);
-      setResult({
-        type: 'cgpa-to-percent',
-        input: cgpa,
-        ...conversion,
-      });
-
-      Animated.spring(fadeAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-      }).start();
-
-      onConvert?.(conversion);
-    } catch (error: any) {
-      setResult({error: error.message});
-    }
-  }, [cgpaInput, cgpaScale, fadeAnim, onConvert]);
-
-  // Handle Percentage to CGPA conversion
-  const handlePercentConvert = useCallback(() => {
-    const percent = parseFloat(percentInput);
-    if (isNaN(percent) || percent < 0 || percent > 100) {
-      setResult({error: 'Please enter a valid percentage (0-100)'});
-      return;
-    }
-
-    try {
-      const conversion = percentageToCGPA(percent, cgpaScale);
-      setResult({
-        type: 'percent-to-cgpa',
-        input: percent,
-        ...conversion,
-      });
-
-      Animated.spring(fadeAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-      }).start();
-
-      onConvert?.(conversion);
-    } catch (error: any) {
-      setResult({error: error.message});
-    }
-  }, [percentInput, cgpaScale, fadeAnim, onConvert]);
-
-  // Handle O-Level conversion
+  // Handle O-Level conversion with per-subject grades
   const handleOLevelConvert = useCallback(() => {
-    if (selectedOGrades.length === 0) {
-      setResult({error: 'Please select at least one grade'});
+    const subjectsWithGrades = oLevelSubjects.filter(s => s.grade !== '');
+    if (subjectsWithGrades.length === 0) {
+      setResult({error: 'Please select grades for at least one subject'});
       return;
     }
 
-    const conversion = convertOLevelToMatric(selectedOGrades);
+    const grades = subjectsWithGrades.map(s => s.grade);
+    const conversion = convertOLevelToMatric(grades);
     setResult({
       type: 'o-level',
-      grades: selectedOGrades,
+      grades: grades,
+      subjects: subjectsWithGrades,
       ...conversion,
     });
 
@@ -218,19 +175,22 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     }).start();
 
     onConvert?.(conversion);
-  }, [selectedOGrades, fadeAnim, onConvert]);
+  }, [oLevelSubjects, fadeAnim, onConvert]);
 
-  // Handle A-Level conversion
+  // Handle A-Level conversion with per-subject grades
   const handleALevelConvert = useCallback(() => {
-    if (selectedAGrades.length === 0) {
-      setResult({error: 'Please select at least one grade'});
+    const subjectsWithGrades = aLevelSubjects.filter(s => s.grade !== '');
+    if (subjectsWithGrades.length === 0) {
+      setResult({error: 'Please select grades for at least one subject'});
       return;
     }
 
-    const conversion = convertALevelToInter(selectedAGrades);
+    const grades = subjectsWithGrades.map(s => s.grade);
+    const conversion = convertALevelToInter(grades);
     setResult({
       type: 'a-level',
-      grades: selectedAGrades,
+      grades: grades,
+      subjects: subjectsWithGrades,
       ...conversion,
     });
 
@@ -240,36 +200,50 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     }).start();
 
     onConvert?.(conversion);
-  }, [selectedAGrades, fadeAnim, onConvert]);
+  }, [aLevelSubjects, fadeAnim, onConvert]);
 
-  // Toggle grade selection
-  const toggleGrade = (grade: string, isOLevel: boolean) => {
+  // Update subject grade
+  const updateSubjectGrade = (id: number, grade: string, isOLevel: boolean) => {
     if (isOLevel) {
-      setSelectedOGrades(prev =>
-        prev.includes(grade)
-          ? prev.filter(g => g !== grade)
-          : [...prev, grade]
-      );
+      setOLevelSubjects(prev => prev.map(s => s.id === id ? {...s, grade} : s));
     } else {
-      setSelectedAGrades(prev =>
-        prev.includes(grade)
-          ? prev.filter(g => g !== grade)
-          : [...prev, grade]
-      );
+      setALevelSubjects(prev => prev.map(s => s.id === id ? {...s, grade} : s));
+    }
+  };
+
+  // Add new subject
+  const addSubject = (isOLevel: boolean) => {
+    if (isOLevel) {
+      const newId = Math.max(...oLevelSubjects.map(s => s.id)) + 1;
+      setOLevelSubjects(prev => [...prev, {id: newId, subjectName: `Subject ${newId}`, grade: ''}]);
+    } else {
+      const newId = Math.max(...aLevelSubjects.map(s => s.id)) + 1;
+      setALevelSubjects(prev => [...prev, {id: newId, subjectName: `Subject ${newId}`, grade: ''}]);
+    }
+  };
+
+  // Remove subject
+  const removeSubject = (id: number, isOLevel: boolean) => {
+    if (isOLevel) {
+      if (oLevelSubjects.length > 1) {
+        setOLevelSubjects(prev => prev.filter(s => s.id !== id));
+      }
+    } else {
+      if (aLevelSubjects.length > 1) {
+        setALevelSubjects(prev => prev.filter(s => s.id !== id));
+      }
     }
   };
 
   // Clear all
   const handleClear = () => {
-    setCgpaInput('');
-    setPercentInput('');
-    setSelectedOGrades([]);
-    setSelectedAGrades([]);
+    setOLevelSubjects(defaultOLevelSubjects);
+    setALevelSubjects(defaultALevelSubjects);
     setResult(null);
     fadeAnim.setValue(0);
   };
 
-  // Render mode tabs
+  // Render mode tabs - only O-Level and A-Level
   const renderModeTabs = () => (
     <ScrollView
       horizontal
@@ -298,146 +272,71 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     </ScrollView>
   );
 
-  // Render CGPA input
-  const renderCGPAInput = () => (
-    <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Enter CGPA</Text>
-      <View style={styles.inputRow}>
-        <TextInput
-          style={styles.textInput}
-          value={cgpaInput}
-          onChangeText={setCgpaInput}
-          placeholder="e.g., 3.50"
-          placeholderTextColor="#94A3B8"
-          keyboardType="decimal-pad"
-          maxLength={4}
-        />
-        <Text style={styles.inputSuffix}>/ 4.00</Text>
-      </View>
-
-      {/* Scale Selector */}
-      <View style={styles.scaleContainer}>
-        <Text style={styles.scaleLabel}>Conversion Formula:</Text>
-        <View style={styles.scaleButtons}>
-          {(['4.0', 'hec'] as CGPAScale[]).map(scale => (
-            <TouchableOpacity
-              key={scale}
-              onPress={() => setCgpaScale(scale)}
-              style={[
-                styles.scaleButton,
-                cgpaScale === scale && styles.scaleButtonActive,
-              ]}>
-              <Text
-                style={[
-                  styles.scaleButtonText,
-                  cgpaScale === scale && styles.scaleButtonTextActive,
-                ]}>
-                {scale === '4.0' ? 'Standard' : 'HEC Pakistan'}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={styles.convertButton}
-        onPress={handleCGPAConvert}
-        activeOpacity={0.8}>
-        <LinearGradient
-          colors={modeConfig['cgpa-to-percent'].colors}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.convertButtonGradient}>
-          <Icon name="calculator-outline" size={20} color="#FFF" />
-          <Text style={styles.convertButtonText}>Convert</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </View>
-  );
-
-  // Render Percentage input
-  const renderPercentInput = () => (
-    <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Enter Percentage</Text>
-      <View style={styles.inputRow}>
-        <TextInput
-          style={styles.textInput}
-          value={percentInput}
-          onChangeText={setPercentInput}
-          placeholder="e.g., 85"
-          placeholderTextColor="#94A3B8"
-          keyboardType="decimal-pad"
-          maxLength={5}
-        />
-        <Text style={styles.inputSuffix}>%</Text>
-      </View>
-
-      {/* Scale Selector */}
-      <View style={styles.scaleContainer}>
-        <Text style={styles.scaleLabel}>Target Scale:</Text>
-        <View style={styles.scaleButtons}>
-          {(['4.0', 'hec'] as CGPAScale[]).map(scale => (
-            <TouchableOpacity
-              key={scale}
-              onPress={() => setCgpaScale(scale)}
-              style={[
-                styles.scaleButton,
-                cgpaScale === scale && styles.scaleButtonActive,
-              ]}>
-              <Text
-                style={[
-                  styles.scaleButtonText,
-                  cgpaScale === scale && styles.scaleButtonTextActive,
-                ]}>
-                {scale === '4.0' ? 'Standard 4.0' : 'HEC Scale'}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={styles.convertButton}
-        onPress={handlePercentConvert}
-        activeOpacity={0.8}>
-        <LinearGradient
-          colors={modeConfig['percent-to-cgpa'].colors}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.convertButtonGradient}>
-          <Icon name="trending-up-outline" size={20} color="#FFF" />
-          <Text style={styles.convertButtonText}>Convert</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </View>
-  );
-
-  // Render O-Level input
+  // Render O-Level input with per-subject grade selection
   const renderOLevelInput = () => (
     <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Select Your O-Level Grades</Text>
+      <Text style={styles.inputLabel}>Enter Your O-Level Grades</Text>
       <Text style={styles.inputHint}>
-        Tap grades for each subject (best 8 counted)
+        Select a grade for each subject (best 8 counted by IBCC)
       </Text>
 
-      <View style={styles.gradeGrid}>
-        {O_LEVEL_REFERENCE.map(({grade}) => (
-          <GradeButton
-            key={grade}
-            grade={grade}
-            selected={selectedOGrades.includes(grade)}
-            onPress={() => toggleGrade(grade, true)}
-            color="#F59E0B"
-          />
+      <View style={styles.subjectsList}>
+        {oLevelSubjects.map((subject, index) => (
+          <View key={subject.id} style={styles.subjectGradeRow}>
+            <Text style={styles.subjectNumber}>{index + 1}.</Text>
+            <TextInput
+              style={styles.subjectNameInput}
+              value={subject.subjectName}
+              onChangeText={(text) => setOLevelSubjects(prev => 
+                prev.map(s => s.id === subject.id ? {...s, subjectName: text} : s)
+              )}
+              placeholder="Subject name"
+              placeholderTextColor="#94A3B8"
+            />
+            <View style={styles.gradePickerContainer}>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                style={styles.gradePickerScroll}>
+                {O_LEVEL_REFERENCE.map(({grade}) => (
+                  <TouchableOpacity
+                    key={grade}
+                    onPress={() => updateSubjectGrade(subject.id, grade, true)}
+                    style={[
+                      styles.gradeChip,
+                      subject.grade === grade && styles.gradeChipSelected,
+                    ]}>
+                    <Text style={[
+                      styles.gradeChipText,
+                      subject.grade === grade && styles.gradeChipTextSelected,
+                    ]}>
+                      {grade}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+            {oLevelSubjects.length > 1 && (
+              <TouchableOpacity
+                style={styles.removeSubjectBtn}
+                onPress={() => removeSubject(subject.id, true)}>
+                <Icon name="close-circle" size={20} color="#EF4444" />
+              </TouchableOpacity>
+            )}
+          </View>
         ))}
       </View>
 
-      <View style={styles.selectedGradesContainer}>
-        <Text style={styles.selectedGradesLabel}>
-          Selected: {selectedOGrades.length} subjects
-        </Text>
-        <Text style={styles.selectedGradesText}>
-          {selectedOGrades.join(', ') || 'None'}
+      <TouchableOpacity
+        style={styles.addSubjectButton}
+        onPress={() => addSubject(true)}>
+        <Icon name="add-circle-outline" size={20} color="#4573DF" />
+        <Text style={styles.addSubjectText}>Add Another Subject</Text>
+      </TouchableOpacity>
+
+      <View style={styles.selectedSummary}>
+        <Text style={styles.selectedSummaryLabel}>
+          Subjects with grades: {oLevelSubjects.filter(s => s.grade !== '').length} / {oLevelSubjects.length}
         </Text>
       </View>
 
@@ -451,38 +350,77 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
           end={{x: 1, y: 0}}
           style={styles.convertButtonGradient}>
           <Icon name="school-outline" size={20} color="#FFF" />
-          <Text style={styles.convertButtonText}>Calculate Equivalence</Text>
+          <Text style={styles.convertButtonText}>Calculate Matric Equivalent</Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>
   );
 
-  // Render A-Level input
+  // Render A-Level input with per-subject grade selection
   const renderALevelInput = () => (
     <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Select Your A-Level Grades</Text>
+      <Text style={styles.inputLabel}>Enter Your A-Level Grades</Text>
       <Text style={styles.inputHint}>
-        Tap grades for each subject (3 principal subjects)
+        Select a grade for each principal subject (typically 3 subjects)
       </Text>
 
-      <View style={styles.gradeGrid}>
-        {A_LEVEL_REFERENCE.map(({grade}) => (
-          <GradeButton
-            key={grade}
-            grade={grade}
-            selected={selectedAGrades.includes(grade)}
-            onPress={() => toggleGrade(grade, false)}
-            color="#4573DF"
-          />
+      <View style={styles.subjectsList}>
+        {aLevelSubjects.map((subject, index) => (
+          <View key={subject.id} style={styles.subjectGradeRow}>
+            <Text style={styles.subjectNumber}>{index + 1}.</Text>
+            <TextInput
+              style={styles.subjectNameInput}
+              value={subject.subjectName}
+              onChangeText={(text) => setALevelSubjects(prev => 
+                prev.map(s => s.id === subject.id ? {...s, subjectName: text} : s)
+              )}
+              placeholder="Subject name"
+              placeholderTextColor="#94A3B8"
+            />
+            <View style={styles.gradePickerContainer}>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                style={styles.gradePickerScroll}>
+                {A_LEVEL_REFERENCE.map(({grade}) => (
+                  <TouchableOpacity
+                    key={grade}
+                    onPress={() => updateSubjectGrade(subject.id, grade, false)}
+                    style={[
+                      styles.gradeChip,
+                      subject.grade === grade && styles.gradeChipSelectedALevel,
+                    ]}>
+                    <Text style={[
+                      styles.gradeChipText,
+                      subject.grade === grade && styles.gradeChipTextSelected,
+                    ]}>
+                      {grade}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+            {aLevelSubjects.length > 1 && (
+              <TouchableOpacity
+                style={styles.removeSubjectBtn}
+                onPress={() => removeSubject(subject.id, false)}>
+                <Icon name="close-circle" size={20} color="#EF4444" />
+              </TouchableOpacity>
+            )}
+          </View>
         ))}
       </View>
 
-      <View style={styles.selectedGradesContainer}>
-        <Text style={styles.selectedGradesLabel}>
-          Selected: {selectedAGrades.length} subjects
-        </Text>
-        <Text style={styles.selectedGradesText}>
-          {selectedAGrades.join(', ') || 'None'}
+      <TouchableOpacity
+        style={styles.addSubjectButton}
+        onPress={() => addSubject(false)}>
+        <Icon name="add-circle-outline" size={20} color="#10B981" />
+        <Text style={[styles.addSubjectText, {color: '#10B981'}]}>Add Another Subject</Text>
+      </TouchableOpacity>
+
+      <View style={styles.selectedSummary}>
+        <Text style={styles.selectedSummaryLabel}>
+          Subjects with grades: {aLevelSubjects.filter(s => s.grade !== '').length} / {aLevelSubjects.length}
         </Text>
       </View>
 
@@ -496,7 +434,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
           end={{x: 1, y: 0}}
           style={styles.convertButtonGradient}>
           <Icon name="ribbon-outline" size={20} color="#FFF" />
-          <Text style={styles.convertButtonText}>Calculate Equivalence</Text>
+          <Text style={styles.convertButtonText}>Calculate Inter Equivalent</Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>
@@ -517,46 +455,6 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
 
     return (
       <Animated.View style={[styles.resultSection, {opacity: fadeAnim}]}>
-        {result.type === 'cgpa-to-percent' && (
-          <>
-            <ResultDisplay
-              title="Equivalent Percentage"
-              value={`${result.value}%`}
-              subtitle={`Grade: ${result.grade} • ${result.remarks}`}
-              icon="trending-up-outline"
-              colors={modeConfig['cgpa-to-percent'].colors}
-            />
-            <View style={styles.formulaNote}>
-              <Icon name="information-circle-outline" size={16} color="#64748B" />
-              <Text style={styles.formulaNoteText}>
-                {cgpaScale === 'hec'
-                  ? 'HEC Formula: (CGPA × 20) + 10'
-                  : 'Standard: (CGPA / 4.0) × 100'}
-              </Text>
-            </View>
-          </>
-        )}
-
-        {result.type === 'percent-to-cgpa' && (
-          <>
-            <ResultDisplay
-              title="Equivalent CGPA"
-              value={result.value.toFixed(2)}
-              subtitle={`Grade: ${result.grade} • ${result.remarks}`}
-              icon="calculator-outline"
-              colors={modeConfig['percent-to-cgpa'].colors}
-            />
-            <View style={styles.formulaNote}>
-              <Icon name="information-circle-outline" size={16} color="#64748B" />
-              <Text style={styles.formulaNoteText}>
-                {cgpaScale === 'hec'
-                  ? 'HEC Formula: (Percentage - 10) / 20'
-                  : 'Standard: (Percentage / 100) × 4.0'}
-              </Text>
-            </View>
-          </>
-        )}
-
         {result.type === 'o-level' && (
           <>
             <ResultDisplay
@@ -578,6 +476,17 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
                 <Text style={styles.breakdownLabel}>Subjects:</Text>
                 <Text style={styles.breakdownValue}>{result.grades.length}</Text>
               </View>
+              {result.subjects && (
+                <View style={styles.subjectsBreakdown}>
+                  <Text style={styles.breakdownSubtitle}>Subject Grades:</Text>
+                  {result.subjects.map((s: SubjectGrade, i: number) => (
+                    <View key={i} style={styles.breakdownRow}>
+                      <Text style={styles.breakdownLabel}>{s.subjectName}:</Text>
+                      <Text style={styles.breakdownValue}>{s.grade}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
           </>
         )}
@@ -603,6 +512,17 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
                 <Text style={styles.breakdownLabel}>Subjects:</Text>
                 <Text style={styles.breakdownValue}>{result.grades.length}</Text>
               </View>
+              {result.subjects && (
+                <View style={styles.subjectsBreakdown}>
+                  <Text style={styles.breakdownSubtitle}>Subject Grades:</Text>
+                  {result.subjects.map((s: SubjectGrade, i: number) => (
+                    <View key={i} style={styles.breakdownRow}>
+                      <Text style={styles.breakdownLabel}>{s.subjectName}:</Text>
+                      <Text style={styles.breakdownValue}>{s.grade}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
           </>
         )}
@@ -618,59 +538,6 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
     );
   };
 
-  // Render reference table
-  const renderReferenceTable = () => (
-    <View style={styles.referenceSection}>
-      <TouchableOpacity
-        style={styles.referenceToggle}
-        onPress={() => setShowReference(!showReference)}
-        activeOpacity={0.7}>
-        <Icon
-          name={showReference ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color="#4573DF"
-        />
-        <Text style={styles.referenceToggleText}>
-          {showReference ? 'Hide' : 'Show'} Reference Table
-        </Text>
-      </TouchableOpacity>
-
-      {showReference && (
-        <View style={styles.referenceTable}>
-          <View style={styles.referenceHeader}>
-            <Text style={[styles.referenceCell, styles.referenceHeaderText]}>
-              CGPA
-            </Text>
-            <Text style={[styles.referenceCell, styles.referenceHeaderText]}>
-              Standard %
-            </Text>
-            <Text style={[styles.referenceCell, styles.referenceHeaderText]}>
-              HEC %
-            </Text>
-            <Text style={[styles.referenceCell, styles.referenceHeaderText]}>
-              Grade
-            </Text>
-          </View>
-          {CGPA_REFERENCE_TABLE.map((row, index) => (
-            <View
-              key={index}
-              style={[
-                styles.referenceRow,
-                index % 2 === 0 && styles.referenceRowEven,
-              ]}>
-              <Text style={styles.referenceCell}>{row.cgpa}</Text>
-              <Text style={styles.referenceCell}>{row.percentage4}</Text>
-              <Text style={styles.referenceCell}>{row.percentageHEC}</Text>
-              <Text style={[styles.referenceCell, styles.referenceCellGrade]}>
-                {row.grade}
-              </Text>
-            </View>
-          ))}
-        </View>
-      )}
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -682,18 +549,12 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
       {/* Mode Tabs */}
       {renderModeTabs()}
 
-      {/* Input Section */}
-      {mode === 'cgpa-to-percent' && renderCGPAInput()}
-      {mode === 'percent-to-cgpa' && renderPercentInput()}
+      {/* Input Section - Only O-Level and A-Level */}
       {mode === 'o-level' && renderOLevelInput()}
       {mode === 'a-level' && renderALevelInput()}
 
       {/* Result Section */}
       {renderResult()}
-
-      {/* Reference Table */}
-      {(mode === 'cgpa-to-percent' || mode === 'percent-to-cgpa') &&
-        renderReferenceTable()}
     </View>
   );
 };
@@ -703,33 +564,28 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
 // ============================================================================
 
 interface CompactConverterProps {
-  mode?: 'cgpa' | 'percent';
+  placeholder?: string;
 }
 
 export const CompactGradeConverter: React.FC<CompactConverterProps> = ({
-  mode = 'cgpa',
+  placeholder = 'Enter marks',
 }) => {
-  const [input, setInput] = useState('');
+  const [obtained, setObtained] = useState('');
+  const [total, setTotal] = useState('100');
   const [result, setResult] = useState<string>('');
 
   const handleConvert = () => {
-    const value = parseFloat(input);
-    if (isNaN(value)) {
+    const obtainedNum = parseFloat(obtained);
+    const totalNum = parseFloat(total);
+    
+    if (isNaN(obtainedNum) || isNaN(totalNum) || totalNum <= 0) {
       setResult('Invalid input');
       return;
     }
 
-    try {
-      if (mode === 'cgpa') {
-        const conv = cgpaToPercentage(value, 'hec');
-        setResult(`${conv.value}% (${conv.grade})`);
-      } else {
-        const conv = percentageToCGPA(value, 'hec');
-        setResult(`${conv.value} CGPA (${conv.grade})`);
-      }
-    } catch {
-      setResult('Error');
-    }
+    const percentage = Math.round((obtainedNum / totalNum) * 100 * 10) / 10;
+    const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 50 ? 'D' : 'F';
+    setResult(`${percentage}% (${grade})`);
   };
 
   return (
@@ -737,11 +593,20 @@ export const CompactGradeConverter: React.FC<CompactConverterProps> = ({
       <View style={styles.compactInputRow}>
         <TextInput
           style={styles.compactInput}
-          value={input}
-          onChangeText={setInput}
-          placeholder={mode === 'cgpa' ? 'CGPA' : '%'}
+          value={obtained}
+          onChangeText={setObtained}
+          placeholder="Marks"
           placeholderTextColor="#94A3B8"
-          keyboardType="decimal-pad"
+          keyboardType="numeric"
+        />
+        <Text style={styles.compactDivider}>/</Text>
+        <TextInput
+          style={styles.compactInput}
+          value={total}
+          onChangeText={setTotal}
+          placeholder="Total"
+          placeholderTextColor="#94A3B8"
+          keyboardType="numeric"
         />
         <TouchableOpacity
           style={styles.compactButton}
@@ -1085,6 +950,47 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#4573DF',
   },
+  // Multi-subject styles
+  subjectsList: {
+    marginBottom: SPACING.md,
+  },
+  subjectRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
+  },
+  subjectName: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+    color: '#475569',
+  },
+  subjectMarksRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  subjectInput: {
+    width: 55,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 6,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#1E293B',
+    textAlign: 'center',
+  },
+  subjectDivider: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: '#94A3B8',
+    marginHorizontal: 4,
+    fontWeight: '600',
+  },
   // Compact styles
   compactContainer: {
     padding: SPACING.sm,
@@ -1102,6 +1008,12 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#1E293B',
   },
+  compactDivider: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: '#94A3B8',
+    marginHorizontal: 6,
+    fontWeight: '600',
+  },
   compactButton: {
     width: 32,
     height: 32,
@@ -1117,6 +1029,108 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 6,
     textAlign: 'center',
+  },
+  // Per-subject grade selection styles
+  subjectGradeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
+  },
+  subjectNumber: {
+    width: 24,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#64748B',
+  },
+  subjectNameInput: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 6,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: '#1E293B',
+    marginRight: SPACING.sm,
+  },
+  gradePickerContainer: {
+    width: 180,
+  },
+  gradePickerScroll: {
+    flexGrow: 0,
+  },
+  gradeChip: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 6,
+    borderRadius: RADIUS.sm,
+    backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginRight: 4,
+  },
+  gradeChipSelected: {
+    backgroundColor: '#F59E0B',
+    borderColor: '#F59E0B',
+  },
+  gradeChipSelectedALevel: {
+    backgroundColor: '#10B981',
+    borderColor: '#10B981',
+  },
+  gradeChipText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+    color: '#64748B',
+  },
+  gradeChipTextSelected: {
+    color: '#FFF',
+  },
+  removeSubjectBtn: {
+    marginLeft: SPACING.sm,
+    padding: 4,
+  },
+  addSubjectButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    borderStyle: 'dashed',
+    borderRadius: RADIUS.md,
+    marginTop: SPACING.sm,
+  },
+  addSubjectText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: '#4573DF',
+    marginLeft: SPACING.xs,
+  },
+  selectedSummary: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: RADIUS.md,
+    padding: SPACING.sm,
+    marginTop: SPACING.md,
+    alignItems: 'center',
+  },
+  selectedSummaryLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: '#64748B',
+    fontWeight: '500',
+  },
+  subjectsBreakdown: {
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+  },
+  breakdownSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+    color: '#475569',
+    marginBottom: 4,
   },
 });
 

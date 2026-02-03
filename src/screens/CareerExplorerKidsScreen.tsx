@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect, useMemo} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Modal,
   Alert,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, FONTS, BORDER_RADIUS} from '../constants/theme';
@@ -32,7 +33,107 @@ interface Career {
   coolTools: string[];
   salary: string;
   difficulty: 'Easy' | 'Medium' | 'Hard' | 'Super Hard';
+  category: 'science' | 'creative' | 'tech' | 'business' | 'service' | 'sports';
+  famousPakistanis?: string[];
 }
+
+// Animated Career Card Component
+const AnimatedCareerCard: React.FC<{
+  career: Career;
+  index: number;
+  colors: any;
+  isDark: boolean;
+  getDifficultyColor: (d: string) => string;
+  onPress: (career: Career) => void;
+}> = ({career, index, colors, isDark, getDifficultyColor, onPress}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const bounceAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const delay = index * 60;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    Animated.spring(bounceAnim, {
+      toValue: 0.96,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 10,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(bounceAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 10,
+    }).start();
+  };
+
+  return (
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [
+          {translateY: slideAnim},
+          {scale: Animated.multiply(scaleAnim, bounceAnim)},
+        ],
+      }}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={() => onPress(career)}
+        style={[styles.careerCard, {backgroundColor: colors.card, borderColor: colors.border, borderLeftColor: career.color}]}>
+        <View style={[styles.emojiCircle, {backgroundColor: career.color + '20'}]}>
+          <Icon name={career.iconName} family="Ionicons" size={28} color={career.color} />
+        </View>
+        <View style={styles.cardContent}>
+          <Text style={[styles.careerTitle, {color: colors.text}]}>{career.title}</Text>
+          <Text style={[styles.tagline, {color: colors.textSecondary}]}>{career.tagline}</Text>
+          <View style={styles.difficultyRow}>
+            <View style={[styles.difficultyBadge, {backgroundColor: getDifficultyColor(career.difficulty) + '20'}]}>
+              <Text style={[styles.difficultyText, {color: getDifficultyColor(career.difficulty)}]}>
+                {career.difficulty}
+              </Text>
+            </View>
+            <View style={[styles.categoryBadge, {backgroundColor: colors.primaryLight}]}>
+              <Text style={[styles.categoryChipText, {color: colors.primary}]}>
+                {career.category}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <Icon name="arrow-forward" family="Ionicons" size={24} color={colors.textMuted} />
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 const KIDS_CAREERS: Career[] = [
   {
@@ -54,6 +155,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Stethoscope', 'X-Ray Machine', 'Medicine', 'Surgical Tools'],
     salary: 'PKR 100,000 - 800,000/month',
     difficulty: 'Super Hard',
+    category: 'science',
+    famousPakistanis: ['Dr. Nergis Mavalvala (Astrophysicist)', 'Dr. Ruth Pfau (Leprosy Fighter)'],
   },
   {
     id: 'engineer',
@@ -74,6 +177,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Computer', 'Calculator', 'Drawing Tools', 'Measuring Tape'],
     salary: 'PKR 60,000 - 500,000/month',
     difficulty: 'Hard',
+    category: 'tech',
+    famousPakistanis: ['Dr. Atta-ur-Rahman (Scientist)', 'Munir Ahmad Khan (Nuclear Engineer)'],
   },
   {
     id: 'programmer',
@@ -94,6 +199,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Computer', 'Coding Languages', 'Coffee', 'Internet'],
     salary: 'PKR 80,000 - 1,000,000/month (can earn in $$ too!)',
     difficulty: 'Medium',
+    category: 'tech',
+    famousPakistanis: ['Arfa Karim (Youngest MCP)', 'Maria Umar (Founder, Women\'s Digital League)'],
   },
   {
     id: 'pilot',
@@ -114,6 +221,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Airplane', 'Flight Computer', 'Radio', 'Maps'],
     salary: 'PKR 300,000 - 1,500,000/month',
     difficulty: 'Hard',
+    category: 'service',
+    famousPakistanis: ['Ayesha Farooq (First Female Fighter Pilot)', 'Maryam Mujtaba (First Female PAF Pilot)'],
   },
   {
     id: 'teacher',
@@ -134,6 +243,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Books', 'Whiteboard', 'Computer', 'Creative Ideas'],
     salary: 'PKR 35,000 - 200,000/month',
     difficulty: 'Medium',
+    category: 'service',
+    famousPakistanis: ['Malala Yousafzai (Education Activist)', 'Sir Syed Ahmad Khan (Education Pioneer)'],
   },
   {
     id: 'artist',
@@ -154,6 +265,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Pencils & Brushes', 'Computer/Tablet', 'Photoshop', 'Colors'],
     salary: 'PKR 50,000 - 400,000/month (can earn $$ freelancing!)',
     difficulty: 'Medium',
+    category: 'creative',
+    famousPakistanis: ['Sadequain (Painter)', 'Salima Hashmi (Artist)'],
   },
   {
     id: 'scientist',
@@ -174,6 +287,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Microscope', 'Lab Equipment', 'Computer', 'Research Papers'],
     salary: 'PKR 80,000 - 500,000/month',
     difficulty: 'Super Hard',
+    category: 'science',
+    famousPakistanis: ['Dr. Abdus Salam (Nobel Laureate)', 'Dr. Atta-ur-Rahman (Organic Chemist)'],
   },
   {
     id: 'chef',
@@ -194,6 +309,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Knives', 'Pots & Pans', 'Spices', 'Oven'],
     salary: 'PKR 40,000 - 300,000/month',
     difficulty: 'Medium',
+    category: 'creative',
+    famousPakistanis: ['Zubaida Tariq (Cooking Expert)', 'Naheed Ansari (Celebrity Chef)'],
   },
   {
     id: 'athlete',
@@ -214,6 +331,8 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Sports Equipment', 'Training Gear', 'Healthy Food', 'Coach'],
     salary: 'PKR 100,000 - Millions/month for top players',
     difficulty: 'Hard',
+    category: 'sports',
+    famousPakistanis: ['Jahangir Khan (Squash Legend)', 'Babar Azam (Cricket Captain)', 'Naseem Shah (Fast Bowler)'],
   },
   {
     id: 'youtuber',
@@ -234,6 +353,206 @@ const KIDS_CAREERS: Career[] = [
     coolTools: ['Phone/Camera', 'Microphone', 'Editing Software', 'Internet'],
     salary: 'PKR 0 - Millions/month (depends on views!)',
     difficulty: 'Easy',
+    category: 'creative',
+    famousPakistanis: ['Irfan Junejo (Vlogger)', 'Mooroo (Content Creator)', 'Ducky Bhai (Gaming)'],
+  },
+  {
+    id: 'lawyer',
+    title: 'Lawyer / Advocate',
+    iconName: 'briefcase',
+    color: '#8D6E63',
+    tagline: 'Fight for Justice!',
+    description: 'Lawyers are the defenders of justice! They help people solve problems and make sure everyone is treated fairly.',
+    whatTheyDo: [
+      'Help people in court cases',
+      'Write legal documents',
+      'Protect innocent people',
+      'Advise companies and families',
+    ],
+    funFact: 'Quaid-e-Azam Muhammad Ali Jinnah was a brilliant lawyer before becoming the founder of Pakistan!',
+    becomeOne: 'Study law (LLB degree), pass bar exam, practice in courts',
+    superpowers: ['Public Speaking', 'Critical Thinking', 'Research Skills', 'Persuasion'],
+    coolTools: ['Law Books', 'Legal Documents', 'Laptop', 'Black Coat'],
+    salary: 'PKR 50,000 - 1,000,000/month',
+    difficulty: 'Hard',
+    category: 'service',
+    famousPakistanis: ['Quaid-e-Azam M.A. Jinnah', 'Asma Jahangir (Human Rights)'],
+  },
+  {
+    id: 'architect',
+    title: 'Architect',
+    iconName: 'home',
+    color: '#78909C',
+    tagline: 'Design Amazing Buildings!',
+    description: 'Architects design the buildings we live in! They create beautiful houses, schools, malls, and skyscrapers.',
+    whatTheyDo: [
+      'Design homes and buildings',
+      'Create 3D models of structures',
+      'Make buildings safe and beautiful',
+      'Plan entire cities',
+    ],
+    funFact: 'The Faisal Mosque in Islamabad was designed by Turkish architect and is shaped like a desert tent!',
+    becomeOne: 'Love drawing and design, study architecture (5 years), get licensed',
+    superpowers: ['Creativity', 'Spatial Thinking', 'Technical Drawing', 'Problem Solving'],
+    coolTools: ['Drawing Board', 'CAD Software', '3D Printer', 'Models'],
+    salary: 'PKR 60,000 - 400,000/month',
+    difficulty: 'Hard',
+    category: 'creative',
+    famousPakistanis: ['Nayyar Ali Dada (Architect)', 'Habib Fida Ali (Urban Designer)'],
+  },
+  {
+    id: 'nurse',
+    title: 'Nurse',
+    iconName: 'heart',
+    color: '#F48FB1',
+    tagline: 'Care for Patients with Love!',
+    description: 'Nurses are the heart of hospitals! They take care of patients day and night with love and dedication.',
+    whatTheyDo: [
+      'Take care of sick patients',
+      'Give medicines and injections',
+      'Monitor patient health',
+      'Comfort patients and families',
+    ],
+    funFact: 'During COVID-19, Pakistani nurses worked 24/7 as frontline heroes saving lives!',
+    becomeOne: 'Complete nursing diploma or BSN degree, pass nursing council exam',
+    superpowers: ['Caring Heart', 'Attention to Detail', 'Staying Calm', 'Physical Stamina'],
+    coolTools: ['Stethoscope', 'Thermometer', 'Medicine Tray', 'Patient Charts'],
+    salary: 'PKR 40,000 - 150,000/month',
+    difficulty: 'Medium',
+    category: 'science',
+    famousPakistanis: ['Florence Nightingale inspired many Pakistani nurses!'],
+  },
+  {
+    id: 'police',
+    title: 'Police Officer',
+    iconName: 'shield-checkmark',
+    color: '#1E88E5',
+    tagline: 'Protect & Serve!',
+    description: 'Police officers are the guardians of safety! They protect people and catch bad guys to keep everyone safe.',
+    whatTheyDo: [
+      'Catch criminals and solve crimes',
+      'Help people in emergencies',
+      'Direct traffic safely',
+      'Protect important places',
+    ],
+    funFact: 'Pakistan has the first all-women police station in Karachi to help female citizens!',
+    becomeOne: 'Pass police exam, complete training at police academy, stay physically fit',
+    superpowers: ['Bravery', 'Quick Thinking', 'Physical Strength', 'Helping Others'],
+    coolTools: ['Uniform', 'Radio', 'Vehicle', 'First Aid Kit'],
+    salary: 'PKR 40,000 - 200,000/month',
+    difficulty: 'Hard',
+    category: 'service',
+    famousPakistanis: ['SSP Shehla Qureshi (Crime Fighter)', 'SP Tahir Dawar (Bravery Award)'],
+  },
+  {
+    id: 'banker',
+    title: 'Banker / Finance',
+    iconName: 'cash',
+    color: '#4CAF50',
+    tagline: 'Master of Money!',
+    description: 'Bankers are the money wizards! They help people save money, grow wealth, and make smart financial decisions.',
+    whatTheyDo: [
+      'Help people save and invest money',
+      'Give loans for businesses',
+      'Manage bank operations',
+      'Advise on financial planning',
+    ],
+    funFact: 'Pakistan has digital banking apps now! JazzCash and Easypaisa changed how Pakistanis use money.',
+    becomeOne: 'Study business/finance, get MBA or banking certification, work in banks',
+    superpowers: ['Math Skills', 'Trustworthiness', 'Analysis', 'Communication'],
+    coolTools: ['Computer', 'Calculator', 'Financial Software', 'Reports'],
+    salary: 'PKR 60,000 - 500,000/month',
+    difficulty: 'Medium',
+    category: 'business',
+    famousPakistanis: ['Mian Muhammad Mansha (Business Tycoon)', 'Shamshad Akhtar (Central Bank Governor)'],
+  },
+  {
+    id: 'journalist',
+    title: 'Journalist / Reporter',
+    iconName: 'newspaper',
+    color: '#607D8B',
+    tagline: 'Tell the Truth to the World!',
+    description: 'Journalists are the truth seekers! They report news, uncover stories, and inform people about what\'s happening.',
+    whatTheyDo: [
+      'Report news on TV and newspapers',
+      'Interview important people',
+      'Investigate important stories',
+      'Write articles and make videos',
+    ],
+    funFact: 'Pakistan has hundreds of TV channels and newspapers! Journalists keep people informed every day.',
+    becomeOne: 'Study journalism or mass communication, work at news organizations, build your portfolio',
+    superpowers: ['Curiosity', 'Writing Skills', 'Communication', 'Bravery'],
+    coolTools: ['Camera', 'Microphone', 'Notebook', 'Computer'],
+    salary: 'PKR 40,000 - 300,000/month',
+    difficulty: 'Medium',
+    category: 'creative',
+    famousPakistanis: ['Hamid Mir (Senior Journalist)', 'Gharidah Farooqi (News Anchor)'],
+  },
+  {
+    id: 'fashion',
+    title: 'Fashion Designer',
+    iconName: 'shirt',
+    color: '#9C27B0',
+    tagline: 'Create Stunning Styles!',
+    description: 'Fashion designers create the clothes we wear! They design beautiful dresses, suits, and accessories.',
+    whatTheyDo: [
+      'Design clothes and accessories',
+      'Create fashion collections',
+      'Run fashion shows',
+      'Dress celebrities and brides',
+    ],
+    funFact: 'Pakistani fashion designers are famous worldwide! HSY, Maria B, and Sana Safinaz dresses are loved globally.',
+    becomeOne: 'Study fashion design, learn sketching and sewing, build your brand',
+    superpowers: ['Creativity', 'Color Sense', 'Trend Awareness', 'Sewing Skills'],
+    coolTools: ['Fabric', 'Sewing Machine', 'Sketch Pad', 'Mannequin'],
+    salary: 'PKR 50,000 - 500,000/month',
+    difficulty: 'Medium',
+    category: 'creative',
+    famousPakistanis: ['HSY (Fashion Icon)', 'Maria B (Designer)', 'Khaadi Founders'],
+  },
+  {
+    id: 'musician',
+    title: 'Musician / Singer',
+    iconName: 'musical-notes',
+    color: '#E91E63',
+    tagline: 'Create Beautiful Music!',
+    description: 'Musicians bring joy through music! They sing songs, play instruments, and create music that touches hearts.',
+    whatTheyDo: [
+      'Sing songs and perform concerts',
+      'Play musical instruments',
+      'Compose and write songs',
+      'Record music in studios',
+    ],
+    funFact: 'Nusrat Fateh Ali Khan is known worldwide as the "King of Qawwali"! Pakistani music is loved globally.',
+    becomeOne: 'Learn to sing or play instruments, practice daily, share your music',
+    superpowers: ['Musical Talent', 'Creativity', 'Performance Skills', 'Discipline'],
+    coolTools: ['Instruments', 'Microphone', 'Music Software', 'Recording Studio'],
+    salary: 'PKR 20,000 - Millions/month (top artists)',
+    difficulty: 'Medium',
+    category: 'creative',
+    famousPakistanis: ['Nusrat Fateh Ali Khan', 'Atif Aslam', 'Rahat Fateh Ali Khan', 'Ali Zafar'],
+  },
+  {
+    id: 'vet',
+    title: 'Veterinarian',
+    iconName: 'paw',
+    color: '#8BC34A',
+    tagline: 'Heal Animals with Love!',
+    description: 'Vets are animal doctors! They help pets, farm animals, and even zoo animals stay healthy and happy.',
+    whatTheyDo: [
+      'Treat sick animals',
+      'Give vaccinations to pets',
+      'Do surgeries on animals',
+      'Advise on animal care',
+    ],
+    funFact: 'Pakistan has rescue organizations that save street animals! Vets help thousands of animals every year.',
+    becomeOne: 'Study veterinary medicine (5 years), love animals, get licensed',
+    superpowers: ['Animal Lover', 'Patience', 'Gentle Hands', 'Problem Solving'],
+    coolTools: ['Stethoscope', 'Medicine', 'X-Ray', 'Surgical Tools'],
+    salary: 'PKR 50,000 - 200,000/month',
+    difficulty: 'Hard',
+    category: 'science',
+    famousPakistanis: ['Many animal rescue heroes in Pakistan!'],
   },
 ];
 
@@ -269,6 +588,11 @@ const CAREER_QUIZ_QUESTIONS: Record<string, {question: string; options: string[]
     {question: "Do you enjoy experiments?", options: ["Yes!", "Sometimes", "No"], correctIndex: 0, explanation: "Experiments help scientists discover new things!"},
     {question: "Are you patient enough to try again if something fails?", options: ["Yes!", "Sometimes", "I give up easily"], correctIndex: 0, explanation: "Scientists learn from failures!"},
   ],
+  chef: [
+    {question: "Do you enjoy cooking and trying new recipes?", options: ["Yes! I love cooking!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Chefs create amazing dishes every day!"},
+    {question: "Can you work in a busy kitchen?", options: ["Yes, I can handle it!", "Maybe", "That's too stressful"], correctIndex: 0, explanation: "Professional kitchens are fast-paced and exciting!"},
+    {question: "Do you like making people happy with food?", options: ["Yes! Seeing smiles makes me happy!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Chefs bring joy through delicious food!"},
+  ],
   athlete: [
     {question: "Do you love playing sports?", options: ["Yes! Every day!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Athletes play sports professionally!"},
     {question: "Can you handle losing sometimes?", options: ["Yes, I learn from it!", "It's hard but okay", "No, I hate losing"], correctIndex: 0, explanation: "Even champions lose sometimes!"},
@@ -279,18 +603,267 @@ const CAREER_QUIZ_QUESTIONS: Record<string, {question: string; options: string[]
     {question: "Are you comfortable being on camera?", options: ["Yes!", "A little nervous", "No way!"], correctIndex: 0, explanation: "Being on camera gets easier with practice!"},
     {question: "Can you be consistent and post regularly?", options: ["Yes!", "I'll try", "That's hard"], correctIndex: 0, explanation: "Success needs consistency!"},
   ],
+  lawyer: [
+    {question: "Do you like debating and arguing points?", options: ["Yes! I love debates!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Lawyers argue cases in court!"},
+    {question: "Are you good at reading and understanding rules?", options: ["Yes, I'm detail-oriented!", "Kind of", "Not really"], correctIndex: 0, explanation: "Lawyers need to understand many laws and rules."},
+    {question: "Do you want to help people get justice?", options: ["Yes! Justice is important!", "Maybe", "Not sure"], correctIndex: 0, explanation: "Lawyers fight for what's right!"},
+  ],
+  architect: [
+    {question: "Do you like drawing buildings and structures?", options: ["Yes! I love it!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Architects draw amazing building designs!"},
+    {question: "Can you imagine buildings before they exist?", options: ["Yes, I can visualize!", "Kind of", "That's hard"], correctIndex: 0, explanation: "Architects need great imagination!"},
+    {question: "Are you patient enough for detailed work?", options: ["Yes!", "Sometimes", "I prefer quick work"], correctIndex: 0, explanation: "Architecture requires careful, detailed planning."},
+  ],
+  nurse: [
+    {question: "Do you like taking care of others?", options: ["Yes! I love helping!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Nurses care for patients every day!"},
+    {question: "Can you stay calm around sick people?", options: ["Yes, I can!", "I try to", "It makes me nervous"], correctIndex: 0, explanation: "Nurses need to stay calm and reassuring."},
+    {question: "Are you okay with working long hours?", options: ["Yes, for helping others!", "Maybe", "No"], correctIndex: 0, explanation: "Nurses sometimes work long shifts to help patients."},
+  ],
+  police: [
+    {question: "Are you brave?", options: ["Yes, very brave!", "Kind of", "I scare easily"], correctIndex: 0, explanation: "Police officers need courage!"},
+    {question: "Do you want to protect people?", options: ["Yes! I want to help!", "Maybe", "Not sure"], correctIndex: 0, explanation: "Protecting others is a police officer's duty!"},
+    {question: "Can you follow rules strictly?", options: ["Yes!", "Sometimes", "Rules are boring"], correctIndex: 0, explanation: "Police must follow and enforce rules fairly."},
+  ],
+  banker: [
+    {question: "Do you like math and numbers?", options: ["Yes! I love math!", "It's okay", "Not really"], correctIndex: 0, explanation: "Bankers work with numbers every day!"},
+    {question: "Are you trustworthy?", options: ["Yes, people trust me!", "I think so", "I'm not sure"], correctIndex: 0, explanation: "Bankers handle people's money - trust is essential!"},
+    {question: "Do you like planning and organizing?", options: ["Yes!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Financial planning requires organization skills."},
+  ],
+  journalist: [
+    {question: "Are you curious about what's happening?", options: ["Yes! I want to know everything!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Journalists are always curious about news!"},
+    {question: "Do you like writing or speaking?", options: ["Yes! Both!", "One of them", "Neither"], correctIndex: 0, explanation: "Journalists write articles and speak on TV!"},
+    {question: "Can you ask tough questions?", options: ["Yes!", "Sometimes", "I'm shy"], correctIndex: 0, explanation: "Good journalists ask important questions."},
+  ],
+  fashion: [
+    {question: "Do you love clothes and styles?", options: ["Yes! Fashion is everything!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Fashion designers live and breathe style!"},
+    {question: "Are you creative with colors?", options: ["Yes! I love colors!", "Kind of", "Not really"], correctIndex: 0, explanation: "Fashion needs amazing color combinations!"},
+    {question: "Do you notice what people wear?", options: ["Yes, always!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Fashion designers observe trends everywhere!"},
+  ],
+  musician: [
+    {question: "Do you love listening to music?", options: ["Yes! Music is life!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Musicians are passionate about music!"},
+    {question: "Can you keep a rhythm or beat?", options: ["Yes! I'm rhythmic!", "Kind of", "Not really"], correctIndex: 0, explanation: "Rhythm is the heartbeat of music!"},
+    {question: "Are you willing to practice every day?", options: ["Yes!", "Maybe", "That's too much"], correctIndex: 0, explanation: "Musicians practice for hours to perfect their craft!"},
+  ],
+  vet: [
+    {question: "Do you love animals?", options: ["Yes! I love all animals!", "Some animals", "Not really"], correctIndex: 0, explanation: "Vets need to love animals!"},
+    {question: "Can you stay calm if an animal is scared?", options: ["Yes, I'm gentle!", "I'll try", "I get nervous too"], correctIndex: 0, explanation: "Vets need to calm scared animals."},
+    {question: "Are you okay with studying for many years?", options: ["Yes!", "Maybe", "That's too long"], correctIndex: 0, explanation: "Veterinary school takes about 5 years!"},
+  ],
+  programmer: [
+    {question: "Do you like solving puzzles and problems?", options: ["Yes! I love puzzles!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Programmers solve problems every day with code!"},
+    {question: "Are you patient when things don't work the first time?", options: ["Yes, I keep trying!", "Kind of", "I give up easily"], correctIndex: 0, explanation: "Coding often requires debugging and trying again!"},
+    {question: "Do you like creating things?", options: ["Yes! I love building things!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Programmers create apps, games, and websites!"},
+  ],
+  cricketer: [
+    {question: "Do you love playing cricket?", options: ["Yes! I practice daily!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Cricketers are passionate about the sport!"},
+    {question: "Can you handle pressure in big matches?", options: ["Yes, I stay focused!", "I try to", "I get nervous"], correctIndex: 0, explanation: "Cricketers need to perform under pressure!"},
+    {question: "Are you willing to train hard every day?", options: ["Yes!", "Maybe", "That's too much"], correctIndex: 0, explanation: "Top cricketers train for hours daily!"},
+  ],
+  entrepreneur: [
+    {question: "Do you have lots of ideas?", options: ["Yes! Ideas everywhere!", "Sometimes", "Not really"], correctIndex: 0, explanation: "Entrepreneurs turn ideas into businesses!"},
+    {question: "Are you okay with taking risks?", options: ["Yes, calculated risks!", "Sometimes", "I avoid risks"], correctIndex: 0, explanation: "Starting a business involves risks!"},
+    {question: "Do you want to be your own boss?", options: ["Yes!", "Maybe", "I prefer job security"], correctIndex: 0, explanation: "Entrepreneurs run their own businesses!"},
+  ],
+};
+
+// Category definitions with emojis
+const CAREER_CATEGORIES = [
+  { id: 'all', label: 'All', emoji: '🌟' },
+  { id: 'science', label: 'Science', emoji: '🔬' },
+  { id: 'tech', label: 'Tech', emoji: '💻' },
+  { id: 'creative', label: 'Creative', emoji: '🎨' },
+  { id: 'service', label: 'Service', emoji: '🤝' },
+  { id: 'sports', label: 'Sports', emoji: '⚽' },
+  { id: 'business', label: 'Business', emoji: '💼' },
+];
+
+// Floating decoration component
+const FloatingDecoration = ({ emoji, delay, startX, startY }: { emoji: string; delay: number; startX: number; startY: number }) => {
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const startAnimation = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(floatAnim, {
+            toValue: 1,
+            duration: 3000,
+            easing: Easing.inOut(Easing.sin),
+            useNativeDriver: true,
+          }),
+          Animated.timing(floatAnim, {
+            toValue: 0,
+            duration: 3000,
+            easing: Easing.inOut(Easing.sin),
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    };
+
+    setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+      startAnimation();
+    }, delay);
+  }, [delay, floatAnim, fadeAnim]);
+
+  const translateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -15],
+  });
+
+  const rotate = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '10deg'],
+  });
+
+  return (
+    <Animated.Text
+      style={{
+        position: 'absolute',
+        left: startX,
+        top: startY,
+        fontSize: 20,
+        opacity: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 0.4] }),
+        transform: [{ translateY }, { rotate }],
+      }}>
+      {emoji}
+    </Animated.Text>
+  );
+};
+
+// Animated category chip component
+const AnimatedCategoryChip = ({ 
+  category, 
+  isSelected, 
+  index, 
+  onPress, 
+  colors 
+}: { 
+  category: typeof CAREER_CATEGORIES[0]; 
+  isSelected: boolean; 
+  index: number; 
+  onPress: () => void; 
+  colors: any 
+}) => {
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const bounceAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      delay: index * 50,
+      tension: 100,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [index, scaleAnim]);
+
+  const handlePressIn = () => {
+    Animated.spring(bounceAnim, {
+      toValue: 0.9,
+      tension: 150,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(bounceAnim, {
+      toValue: 1,
+      tension: 150,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+    onPress();
+  };
+
+  return (
+    <Animated.View style={{ transform: [{ scale: Animated.multiply(scaleAnim, bounceAnim) }] }}>
+      <TouchableOpacity
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={1}
+        style={[
+          styles.categoryChip,
+          {
+            backgroundColor: isSelected ? colors.primary : colors.card,
+            borderColor: isSelected ? colors.primary : colors.border,
+          },
+        ]}>
+        <Text style={{ fontSize: 14, marginRight: 4 }}>{category.emoji}</Text>
+        <Text
+          style={[
+            styles.categoryChipText,
+            { color: isSelected ? colors.white : colors.text },
+          ]}>
+          {category.label}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
 };
 
 const CareerExplorerKidsScreen = () => {
   const {colors, isDark} = useTheme();
   const [selectedCareer, setSelectedCareer] = useState<Career | null>(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
+  // Header animations
+  const headerScaleAnim = useRef(new Animated.Value(0.9)).current;
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const sparkleRotateAnim = useRef(new Animated.Value(0)).current;
+
   // Quiz state
   const [showQuiz, setShowQuiz] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
+  const [showAnswerFeedback, setShowAnswerFeedback] = useState(false);
+
+  // Header entrance animation
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(headerScaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Sparkle rotation loop
+    Animated.loop(
+      Animated.timing(sparkleRotateAnim, {
+        toValue: 1,
+        duration: 4000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, [headerScaleAnim, headerFadeAnim, sparkleRotateAnim]);
+
+  // Filter careers by category
+  const filteredCareers = useMemo(() => {
+    if (selectedCategory === 'all') return KIDS_CAREERS;
+    return KIDS_CAREERS.filter(career => career.category === selectedCategory);
+  }, [selectedCategory]);
+
+  const sparkleRotation = sparkleRotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -307,15 +880,20 @@ const CareerExplorerKidsScreen = () => {
     setCurrentQuestion(0);
     setScore(0);
     setQuizCompleted(false);
+    setSelectedAnswerIndex(null);
+    setShowAnswerFeedback(false);
     setShowQuiz(true);
     Haptics.light();
   };
 
   // Handle quiz answer
   const handleAnswer = (answerIndex: number) => {
-    if (!selectedCareer) return;
+    if (!selectedCareer || showAnswerFeedback) return; // Prevent multiple selections
     const questions = CAREER_QUIZ_QUESTIONS[selectedCareer.id] || [];
     const currentQ = questions[currentQuestion];
+    
+    setSelectedAnswerIndex(answerIndex);
+    setShowAnswerFeedback(true);
     
     if (answerIndex === currentQ.correctIndex) {
       setScore(prev => prev + 1);
@@ -324,11 +902,17 @@ const CareerExplorerKidsScreen = () => {
       Haptics.light();
     }
     
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
-    } else {
-      setQuizCompleted(true);
-    }
+    // Move to next question after a short delay to show feedback
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(prev => prev + 1);
+        setSelectedAnswerIndex(null);
+        setShowAnswerFeedback(false);
+      } else {
+        setQuizCompleted(true);
+        setShowAnswerFeedback(false);
+      }
+    }, 800);
   };
 
   // Get quiz result message
@@ -358,31 +942,10 @@ const CareerExplorerKidsScreen = () => {
     }
   };
 
-  const renderCareerCard = (career: Career) => (
-    <TouchableOpacity
-      key={career.id}
-      style={[styles.careerCard, {backgroundColor: colors.card, borderColor: colors.border, borderLeftColor: career.color}]}
-      onPress={() => {
-        setSelectedCareer(career);
-        setShowDetail(true);
-      }}>
-      <View style={[styles.emojiCircle, {backgroundColor: career.color + '20'}]}>
-        <Icon name={career.iconName} family="Ionicons" size={28} color={career.color} />
-      </View>
-      <View style={styles.cardContent}>
-        <Text style={[styles.careerTitle, {color: colors.text}]}>{career.title}</Text>
-        <Text style={[styles.tagline, {color: colors.textSecondary}]}>{career.tagline}</Text>
-        <View style={styles.difficultyRow}>
-          <View style={[styles.difficultyBadge, {backgroundColor: getDifficultyColor(career.difficulty) + '20'}]}>
-            <Text style={[styles.difficultyText, {color: getDifficultyColor(career.difficulty)}]}>
-              {career.difficulty}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <Icon name="arrow-forward" family="Ionicons" size={24} color={colors.textMuted} />
-    </TouchableOpacity>
-  );
+  const handleCareerPress = (career: Career) => {
+    setSelectedCareer(career);
+    setShowDetail(true);
+  };
 
   const renderDetailView = () => {
     if (!selectedCareer) return null;
@@ -508,6 +1071,29 @@ const CareerExplorerKidsScreen = () => {
           </View>
         </View>
 
+        {/* Famous Pakistanis Role Models */}
+        {selectedCareer.famousPakistanis && selectedCareer.famousPakistanis.length > 0 && (
+          <View style={[styles.section, {backgroundColor: colors.card}]}>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.sm}}>
+              <Icon name="people-outline" family="Ionicons" size={18} color={colors.text} />
+              <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0, marginLeft: 6}]}>Pakistani Role Models 🇵🇰</Text>
+            </View>
+            <View style={styles.roleModelsContainer}>
+              {selectedCareer.famousPakistanis.map((person, idx) => (
+                <View key={idx} style={[styles.roleModelCard, {backgroundColor: selectedCareer.color + '15', borderColor: selectedCareer.color + '30'}]}>
+                  <View style={[styles.roleModelIcon, {backgroundColor: selectedCareer.color + '20'}]}>
+                    <Icon name="star" family="Ionicons" size={16} color={selectedCareer.color} />
+                  </View>
+                  <Text style={[styles.roleModelText, {color: colors.text}]}>{person}</Text>
+                </View>
+              ))}
+            </View>
+            <Text style={[styles.inspirationText, {color: colors.textSecondary}]}>
+              🌟 You can be like them too! Dream big!
+            </Text>
+          </View>
+        )}
+
         {/* Quiz Button */}
         <TouchableOpacity 
           style={[styles.quizBtn, {backgroundColor: selectedCareer.color}]}
@@ -587,25 +1173,51 @@ const CareerExplorerKidsScreen = () => {
                     {currentQ?.question}
                   </Text>
                   <View style={styles.quizOptions}>
-                    {currentQ?.options.map((option, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={[
-                          styles.quizOption,
-                          {
-                            backgroundColor: index === 0 ? selectedCareer.color + '15' : colors.background,
-                            borderColor: index === 0 ? selectedCareer.color : colors.border,
-                          },
-                        ]}
-                        onPress={() => handleAnswer(index)}>
-                        <Text style={[
-                          styles.quizOptionText,
-                          {color: index === 0 ? selectedCareer.color : colors.text}
-                        ]}>
-                          {option}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
+                    {currentQ?.options.map((option, index) => {
+                      const isSelected = selectedAnswerIndex === index;
+                      const isCorrect = currentQ.correctIndex === index;
+                      const showCorrectHighlight = showAnswerFeedback && isCorrect;
+                      const showWrongHighlight = showAnswerFeedback && isSelected && !isCorrect;
+                      
+                      let backgroundColor = colors.background;
+                      let borderColor = colors.border;
+                      let textColor = colors.text;
+                      
+                      if (showCorrectHighlight) {
+                        backgroundColor = '#10B98120';
+                        borderColor = '#10B981';
+                        textColor = '#10B981';
+                      } else if (showWrongHighlight) {
+                        backgroundColor = '#EF444420';
+                        borderColor = '#EF4444';
+                        textColor = '#EF4444';
+                      } else if (isSelected) {
+                        backgroundColor = selectedCareer.color + '15';
+                        borderColor = selectedCareer.color;
+                        textColor = selectedCareer.color;
+                      }
+                      
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          style={[
+                            styles.quizOption,
+                            {backgroundColor, borderColor},
+                          ]}
+                          disabled={showAnswerFeedback}
+                          onPress={() => handleAnswer(index)}>
+                          <Text style={[styles.quizOptionText, {color: textColor}]}>
+                            {option}
+                          </Text>
+                          {showCorrectHighlight && (
+                            <Icon name="checkmark-circle" family="Ionicons" size={20} color="#10B981" />
+                          )}
+                          {showWrongHighlight && (
+                            <Icon name="close-circle" family="Ionicons" size={20} color="#EF4444" />
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
                   </View>
                 </>
               )}
@@ -620,15 +1232,58 @@ const CareerExplorerKidsScreen = () => {
     <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]} edges={['bottom']}>
       {!showDetail ? (
         <>
-          {/* Fun Header */}
-          <View style={[styles.header, {backgroundColor: colors.primary}]}>
+          {/* Fun Header with Floating Decorations */}
+          <Animated.View 
+            style={[
+              styles.header, 
+              {
+                backgroundColor: colors.primary,
+                opacity: headerFadeAnim,
+                transform: [{ scale: headerScaleAnim }],
+              }
+            ]}>
+            {/* Floating Career Emojis */}
+            <FloatingDecoration emoji="👨‍⚕️" delay={0} startX={20} startY={5} />
+            <FloatingDecoration emoji="👩‍💻" delay={200} startX={width - 60} startY={10} />
+            <FloatingDecoration emoji="🎨" delay={400} startX={50} startY={60} />
+            <FloatingDecoration emoji="🚀" delay={600} startX={width - 90} startY={55} />
+            <FloatingDecoration emoji="⭐" delay={800} startX={width / 2 - 80} startY={8} />
+            <FloatingDecoration emoji="🌟" delay={1000} startX={width / 2 + 40} startY={65} />
+
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <View style={{marginRight: 8}}>
+              <Animated.View style={{ marginRight: 8, transform: [{ rotate: sparkleRotation }] }}>
                 <Icon name="sparkles-outline" family="Ionicons" size={24} color={colors.white} />
-              </View>
+              </Animated.View>
               <Text style={[styles.headerTitle, {color: colors.white}]}>Career Explorer for Kids</Text>
             </View>
-            <Text style={[styles.headerSubtitle, {color: colors.white}]}>Tap on any career to discover your dream job!</Text>
+            <Text style={[styles.headerSubtitle, {color: colors.white}]}>
+              Discover {KIDS_CAREERS.length} amazing careers! 🎯
+            </Text>
+          </Animated.View>
+
+          {/* Category Filter */}
+          <View style={styles.categoryContainer}>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoryScroll}>
+              {CAREER_CATEGORIES.map((category, index) => (
+                <AnimatedCategoryChip
+                  key={category.id}
+                  category={category}
+                  isSelected={selectedCategory === category.id}
+                  index={index}
+                  onPress={() => {
+                    setSelectedCategory(category.id);
+                    Haptics.light();
+                  }}
+                  colors={colors}
+                />
+              ))}
+            </ScrollView>
+            <Text style={[styles.careerCount, { color: colors.textSecondary }]}>
+              Showing {filteredCareers.length} career{filteredCareers.length !== 1 ? 's' : ''}
+            </Text>
           </View>
 
           {/* Career Cards */}
@@ -636,7 +1291,17 @@ const CareerExplorerKidsScreen = () => {
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}>
-            {KIDS_CAREERS.map(career => renderCareerCard(career))}
+            {filteredCareers.map((career, index) => (
+              <AnimatedCareerCard
+                key={career.id}
+                career={career}
+                index={index}
+                colors={colors}
+                isDark={isDark}
+                getDifficultyColor={getDifficultyColor}
+                onPress={() => handleCareerPress(career)}
+              />
+            ))}
           </ScrollView>
         </>
       ) : (
@@ -655,8 +1320,11 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: SPACING.lg,
+    paddingTop: SPACING.xl,
     borderBottomLeftRadius: BORDER_RADIUS.xl,
     borderBottomRightRadius: BORDER_RADIUS.xl,
+    overflow: 'hidden',
+    minHeight: 100,
   },
   headerTitle: {
     fontSize: FONTS.sizes.xl,
@@ -669,11 +1337,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 4,
   },
+  // Category Filter
+  categoryContainer: {
+    paddingVertical: SPACING.sm,
+  },
+  categoryScroll: {
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.sm,
+    flexDirection: 'row',
+  },
+  categoryChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: BORDER_RADIUS.full,
+    borderWidth: 1,
+    marginRight: SPACING.xs,
+  },
+  categoryChipText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: '600',
+  },
+  careerCount: {
+    fontSize: FONTS.sizes.xs,
+    textAlign: 'center',
+    marginTop: SPACING.xs,
+  },
+  // Career Cards
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     padding: SPACING.md,
+    paddingBottom: SPACING.xl,
   },
   careerCard: {
     flexDirection: 'row',
@@ -683,6 +1380,11 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
     borderLeftWidth: 4,
     borderWidth: 1,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   emojiCircle: {
     width: 56,
@@ -705,6 +1407,19 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: FONTS.sizes.sm,
     marginTop: 2,
+  },
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: BORDER_RADIUS.sm,
+    marginTop: SPACING.xs,
+    marginBottom: 2,
+  },
+  categoryBadgeText: {
+    fontSize: FONTS.sizes.xs,
+    fontWeight: '500',
+    textTransform: 'capitalize',
   },
   difficultyRow: {
     marginTop: SPACING.xs,
@@ -861,6 +1576,36 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.sm,
     fontWeight: 'bold',
   },
+  // Role Models Section
+  roleModelsContainer: {
+    gap: SPACING.sm,
+  },
+  roleModelCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.sm,
+    borderRadius: BORDER_RADIUS.md,
+    borderWidth: 1,
+  },
+  roleModelIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+  },
+  roleModelText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: '500',
+    flex: 1,
+  },
+  inspirationText: {
+    fontSize: FONTS.sizes.xs,
+    textAlign: 'center',
+    marginTop: SPACING.md,
+    fontStyle: 'italic',
+  },
   quizBtn: {
     marginHorizontal: SPACING.md,
     marginTop: SPACING.lg,
@@ -919,11 +1664,14 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
     borderRadius: BORDER_RADIUS.lg,
     borderWidth: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   quizOptionText: {
     fontSize: FONTS.sizes.md,
     fontWeight: '500',
-    textAlign: 'center',
+    flex: 1,
   },
   quizResult: {
     alignItems: 'center',

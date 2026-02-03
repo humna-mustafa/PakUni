@@ -6,6 +6,8 @@
  * - User reports what they achieved
  * - Generate shareable cards for social media
  * - No unlock detection complexity
+ * 
+ * ENHANCED: Premium animations, floating effects, polished UI
  */
 
 import React, {useState, useEffect, useRef, useMemo} from 'react';
@@ -22,6 +24,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -29,6 +32,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
+import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
 import {PremiumAchievementCard} from '../components/PremiumAchievementCard';
@@ -70,33 +74,115 @@ const TYPE_COLORS: Record<string, {primary: string; secondary: string}> = {
 };
 
 // ============================================================================
-// COMPONENTS
+// COMPONENTS (ENHANCED)
 // ============================================================================
 
-// Template Card for adding new achievement
+// Template Card for adding new achievement - ENHANCED with animations
 const TemplateCard = ({
   template,
   onPress,
   colors,
+  index = 0,
 }: {
   template: AchievementTemplate;
   onPress: () => void;
   colors: any;
+  index?: number;
 }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Staggered entrance animation
+    const delay = index * 100;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Subtle shimmer effect
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmerAnim, {
+          toValue: 1,
+          duration: 2000,
+          delay: index * 200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(shimmerAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: ANIMATION_SCALES.CHIP_PRESS,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
+    }).start();
+  };
+
+  const shimmerOpacity = shimmerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.3],
+  });
+
   return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={onPress}
-      style={[styles.templateCard, {backgroundColor: colors.card}]}>
-      <LinearGradient
-        colors={template.gradientColors}
-        style={styles.templateGradient}>
-        <Text style={styles.templateEmoji}>{template.icon}</Text>
-      </LinearGradient>
-      <Text style={[styles.templateTitle, {color: colors.text}]} numberOfLines={2}>
-        {template.title}
-      </Text>
-    </TouchableOpacity>
+    <Animated.View
+      style={{
+        transform: [{scale: scaleAnim}, {translateX: slideAnim}],
+        opacity: fadeAnim,
+      }}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[styles.templateCard, {backgroundColor: colors.card}]}>
+        <LinearGradient
+          colors={template.gradientColors}
+          style={styles.templateGradient}>
+          {/* Shimmer overlay */}
+          <Animated.View 
+            style={[
+              styles.templateShimmer, 
+              {opacity: shimmerOpacity, backgroundColor: '#FFFFFF'}
+            ]} 
+          />
+          <Text style={styles.templateEmoji}>{template.icon}</Text>
+        </LinearGradient>
+        <Text style={[styles.templateTitle, {color: colors.text}]} numberOfLines={2}>
+          {template.title}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
@@ -336,7 +422,7 @@ const AddAchievementModal = ({
 };
 
 // ============================================================================
-// MAIN SCREEN
+// MAIN SCREEN (ENHANCED)
 // ============================================================================
 
 const AchievementsScreen = () => {
@@ -349,16 +435,66 @@ const AchievementsScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const trophyRotate = useRef(new Animated.Value(0)).current;
 
   // Load achievements
   useEffect(() => {
     loadData();
+    
+    // Header entrance animation
     Animated.timing(headerAnim, {
       toValue: 1,
       duration: 600,
       useNativeDriver: true,
     }).start();
-  }, [headerAnim]);
+
+    // Floating animation for decorative elements
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Trophy subtle rotation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(trophyRotate, {
+          toValue: 1,
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(trophyRotate, {
+          toValue: 0,
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
+
+  const trophyRotateZ = trophyRotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-5deg', '5deg'],
+  });
 
   const loadData = async () => {
     try {
@@ -434,7 +570,7 @@ const AchievementsScreen = () => {
         onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
       </TouchableOpacity>
-      {/* Header */}
+      {/* Enhanced Header with floating trophy */}
       <Animated.View
         style={{
           opacity: headerAnim,
@@ -445,11 +581,27 @@ const AchievementsScreen = () => {
           style={styles.header}>
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />
-          <Icon name="ribbon" family="Ionicons" size={50} color="#FFFFFF" />
+          {/* Floating, rotating trophy */}
+          <Animated.View 
+            style={{
+              transform: [
+                {translateY: floatTranslateY},
+                {rotate: trophyRotateZ}
+              ]
+            }}>
+            <Icon name="ribbon" family="Ionicons" size={50} color="#FFFFFF" />
+          </Animated.View>
           <Text style={styles.headerTitle}>My Achievements</Text>
           <Text style={styles.headerSubtitle}>
             Add your milestones & share with friends
           </Text>
+          {/* Floating sparkles */}
+          <Animated.View style={[styles.floatingSparkle1, {transform: [{translateY: floatTranslateY}]}]}>
+            <Text style={{fontSize: 16}}>✨</Text>
+          </Animated.View>
+          <Animated.View style={[styles.floatingSparkle2, {transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]}]}>
+            <Text style={{fontSize: 14}}>⭐</Text>
+          </Animated.View>
         </LinearGradient>
       </Animated.View>
 
@@ -490,12 +642,13 @@ const AchievementsScreen = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.templatesContainer}>
-            {ACHIEVEMENT_TEMPLATES.map(template => (
+            {ACHIEVEMENT_TEMPLATES.map((template, index) => (
               <TemplateCard
                 key={template.type}
                 template={template}
                 onPress={() => handleSelectTemplate(template)}
                 colors={colors}
+                index={index}
               />
             ))}
           </ScrollView>
@@ -671,6 +824,16 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     backgroundColor: 'rgba(255,255,255,0.08)',
   },
+  floatingSparkle1: {
+    position: 'absolute',
+    top: 20,
+    right: 30,
+  },
+  floatingSparkle2: {
+    position: 'absolute',
+    bottom: 30,
+    left: 40,
+  },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
     fontWeight: '700',
@@ -732,6 +895,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.xs,
+    overflow: 'hidden',
+  },
+  templateShimmer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   templateEmoji: {
     fontSize: 24,

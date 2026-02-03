@@ -1,8 +1,9 @@
 /**
  * NotificationsScreen - View and manage notifications
+ * Enhanced with premium animations
  */
 
-import React, {useCallback, memo} from 'react';
+import React, {useCallback, memo, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,6 +13,8 @@ import {
   StatusBar,
   Platform,
   Alert,
+  Animated,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -21,7 +24,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useNotifications, LocalNotification} from '../services/notifications';
 
 // ============================================================================
-// NOTIFICATION ITEM COMPONENT
+// NOTIFICATION ITEM COMPONENT - With Animations
 // ============================================================================
 
 interface NotificationItemProps {
@@ -29,6 +32,7 @@ interface NotificationItemProps {
   onPress: (notification: LocalNotification) => void;
   onDelete: (id: string) => void;
   colors: any;
+  index: number;
 }
 
 const NotificationItem = memo<NotificationItemProps>(({
@@ -36,7 +40,68 @@ const NotificationItem = memo<NotificationItemProps>(({
   onPress,
   onDelete,
   colors,
+  index,
 }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const deleteScaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const delay = index * 60;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.97,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleDeletePressIn = () => {
+    Animated.spring(deleteScaleAnim, {
+      toValue: 1.2,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleDeletePressOut = () => {
+    Animated.spring(deleteScaleAnim, {
+      toValue: 1,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'scholarship': return {name: 'ribbon-outline', color: '#F59E0B'};
@@ -52,53 +117,65 @@ const NotificationItem = memo<NotificationItemProps>(({
   const timeAgo = getTimeAgo(notification.createdAt);
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.notificationItem,
-        {backgroundColor: colors.card},
-        !notification.read && styles.unreadItem,
-      ]}
-      onPress={() => onPress(notification)}
-      activeOpacity={0.8}>
-      {/* Unread indicator */}
-      {!notification.read && (
-        <View style={[styles.unreadDot, {backgroundColor: colors.primary}]} />
-      )}
-
-      {/* Icon */}
-      <View style={[styles.iconContainer, {backgroundColor: `${typeIcon.color}15`}]}>
-        <Icon name={typeIcon.name} family="Ionicons" size={24} color={typeIcon.color} />
-      </View>
-
-      {/* Content */}
-      <View style={styles.contentContainer}>
-        <Text
-          style={[
-            styles.notificationTitle,
-            {color: colors.text},
-            !notification.read && styles.unreadTitle,
-          ]}
-          numberOfLines={1}>
-          {notification.title}
-        </Text>
-        <Text
-          style={[styles.notificationBody, {color: colors.textSecondary}]}
-          numberOfLines={2}>
-          {notification.body}
-        </Text>
-        <Text style={[styles.timeText, {color: colors.textSecondary}]}>
-          {timeAgo}
-        </Text>
-      </View>
-
-      {/* Delete button */}
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [{translateX: slideAnim}, {scale: scaleAnim}],
+      }}>
       <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => onDelete(notification.id)}
-        hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-        <Icon name="close" family="Ionicons" size={18} color={colors.textSecondary} />
+        style={[
+          styles.notificationItem,
+          {backgroundColor: colors.card},
+          !notification.read && [styles.unreadItem, {borderLeftColor: colors.primary}],
+        ]}
+        onPress={() => onPress(notification)}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={0.8}>
+        {/* Unread indicator */}
+        {!notification.read && (
+          <View style={[styles.unreadDot, {backgroundColor: colors.primary}]} />
+        )}
+
+        {/* Icon */}
+        <View style={[styles.iconContainer, {backgroundColor: `${typeIcon.color}15`}]}>
+          <Icon name={typeIcon.name} family="Ionicons" size={24} color={typeIcon.color} />
+        </View>
+
+        {/* Content */}
+        <View style={styles.contentContainer}>
+          <Text
+            style={[
+              styles.notificationTitle,
+              {color: colors.text},
+              !notification.read && styles.unreadTitle,
+            ]}
+            numberOfLines={1}>
+            {notification.title}
+          </Text>
+          <Text
+            style={[styles.notificationBody, {color: colors.textSecondary}]}
+            numberOfLines={2}>
+            {notification.body}
+          </Text>
+          <Text style={[styles.timeText, {color: colors.textSecondary}]}>
+            {timeAgo}
+          </Text>
+        </View>
+
+        {/* Delete button */}
+        <Animated.View style={{transform: [{scale: deleteScaleAnim}]}}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => onDelete(notification.id)}
+            onPressIn={handleDeletePressIn}
+            onPressOut={handleDeletePressOut}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+            <Icon name="close" family="Ionicons" size={18} color={colors.textSecondary} />
+          </TouchableOpacity>
+        </Animated.View>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </Animated.View>
   );
 });
 
@@ -134,6 +211,84 @@ const NotificationsScreen: React.FC = () => {
     clearAll,
   } = useNotifications();
 
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const bellShakeAnim = useRef(new Animated.Value(0)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Bell shake animation when there are unread notifications
+    if (unreadCount > 0) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(bellShakeAnim, {
+            toValue: 1,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(bellShakeAnim, {
+            toValue: -1,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(bellShakeAnim, {
+            toValue: 0,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.delay(3000),
+        ])
+      ).start();
+    }
+
+    // Floating animation for empty state
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [unreadCount]);
+
+  const bellRotateZ = bellShakeAnim.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: ['-15deg', '0deg', '15deg'],
+  });
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -10],
+  });
+
   const handleNotificationPress = useCallback((notification: LocalNotification) => {
     markAsRead(notification.id);
     // Navigate based on notification type
@@ -155,19 +310,24 @@ const NotificationsScreen: React.FC = () => {
     );
   }, [clearAll]);
 
-  const renderItem = useCallback(({item}: {item: LocalNotification}) => (
+  const renderItem = useCallback(({item, index}: {item: LocalNotification; index: number}) => (
     <NotificationItem
       notification={item}
       onPress={handleNotificationPress}
       onDelete={handleDelete}
       colors={colors}
+      index={index}
     />
   ), [colors, handleNotificationPress, handleDelete]);
 
   const keyExtractor = useCallback((item: LocalNotification) => item.id, []);
 
   const renderEmpty = () => (
-    <View style={styles.emptyContainer}>
+    <Animated.View 
+      style={[
+        styles.emptyContainer,
+        {transform: [{translateY: floatTranslateY}]},
+      ]}>
       <View style={[styles.emptyIconContainer, {backgroundColor: colors.card}]}>
         <Icon name="notifications-off-outline" family="Ionicons" size={48} color={colors.textSecondary} />
       </View>
@@ -175,7 +335,7 @@ const NotificationsScreen: React.FC = () => {
       <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
         You're all caught up! New notifications will appear here.
       </Text>
-    </View>
+    </Animated.View>
   );
 
   return (
@@ -187,8 +347,37 @@ const NotificationsScreen: React.FC = () => {
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Header */}
-        <View style={[styles.header, {borderBottomColor: colors.border}]}>
+        {/* Floating Decorations */}
+        <Animated.View
+          style={[
+            styles.floatingBell1,
+            {
+              opacity: 0.06,
+              transform: [{translateY: floatTranslateY}],
+            },
+          ]}>
+          <Icon name="notifications" family="Ionicons" size={60} color={colors.primary} />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.floatingBell2,
+            {
+              opacity: 0.04,
+            },
+          ]}>
+          <Icon name="notifications-outline" family="Ionicons" size={40} color={colors.primary} />
+        </Animated.View>
+
+        {/* Header with Animation */}
+        <Animated.View 
+          style={[
+            styles.header, 
+            {borderBottomColor: colors.border},
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}],
+            },
+          ]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
@@ -196,11 +385,26 @@ const NotificationsScreen: React.FC = () => {
           </TouchableOpacity>
           
           <View style={styles.headerTitleContainer}>
+            <Animated.View style={{transform: [{rotate: bellRotateZ}]}}>
+              <LinearGradient
+                colors={[colors.primary, colors.secondary || '#6366F1']}
+                style={styles.headerIconGradient}>
+                <Icon name="notifications-outline" family="Ionicons" size={16} color="#FFFFFF" />
+              </LinearGradient>
+            </Animated.View>
             <Text style={[styles.headerTitle, {color: colors.text}]}>Notifications</Text>
             {unreadCount > 0 && (
-              <View style={[styles.badge, {backgroundColor: colors.primary}]}>
+              <Animated.View 
+                style={[
+                  styles.badge, 
+                  {backgroundColor: colors.primary},
+                  {transform: [{scale: bellShakeAnim.interpolate({
+                    inputRange: [-1, 0, 1],
+                    outputRange: [1.1, 1, 1.1],
+                  })}]},
+                ]}>
                 <Text style={styles.badgeText}>{unreadCount}</Text>
-              </View>
+              </Animated.View>
             )}
           </View>
 
@@ -220,7 +424,7 @@ const NotificationsScreen: React.FC = () => {
               </TouchableOpacity>
             )}
           </View>
-        </View>
+        </Animated.View>
 
         {/* Notifications List */}
         <FlatList
@@ -250,12 +454,26 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  // Floating decorations
+  floatingBell1: {
+    position: 'absolute',
+    top: 100,
+    right: -15,
+    zIndex: 0,
+  },
+  floatingBell2: {
+    position: 'absolute',
+    top: 250,
+    left: -10,
+    zIndex: 0,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
+    zIndex: 1,
   },
   backButton: {
     width: 40,
@@ -268,13 +486,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 8,
+    gap: 8,
+  },
+  headerIconGradient: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '700',
   },
   badge: {
-    marginLeft: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
@@ -314,11 +539,11 @@ const styles = StyleSheet.create({
       ios: {
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.05,
+        shadowOpacity: 0.06,
         shadowRadius: 8,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },

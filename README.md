@@ -8,6 +8,7 @@
   <strong>Your Ultimate Companion for Pakistan's Higher Education Journey</strong>
 </p>
 
+
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#screenshots">Screenshots</a> •

@@ -2,9 +2,11 @@
  * GuidesScreen - Comprehensive Guides Hub
  * Categories: Admission, Study Tips, Career, Test Prep, University Life, etc.
  * All guides stored locally - no Supabase dependency
+ * 
+ * ENHANCED: Added premium animations, floating effects, staggered entrances
  */
 
-import React, {useState, useRef, useCallback, useMemo} from 'react';
+import React, {useState, useRef, useCallback, useMemo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,6 +18,7 @@ import {
   Dimensions,
   StatusBar,
   Platform,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -737,17 +740,59 @@ const GUIDES_DATA: Guide[] = [
 ];
 
 // ============================================================================
-// CATEGORY CARD COMPONENT
+// CATEGORY CARD COMPONENT (ENHANCED)
 // ============================================================================
 
 interface CategoryCardProps {
   category: GuideCategory;
   onPress: () => void;
   colors: any;
+  index: number;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors}) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors, index}) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Staggered entrance animation
+    const delay = index * 80;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Subtle glow pulse for visual interest
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(glowAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+  }, [index]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -765,14 +810,33 @@ const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors}) 
     }).start();
   };
 
+  const glowOpacity = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 0.15],
+  });
+
   return (
-    <Animated.View style={[categoryStyles.cardWrapper, {transform: [{scale: scaleAnim}]}]}>
+    <Animated.View 
+      style={[
+        categoryStyles.cardWrapper, 
+        {
+          transform: [{scale: scaleAnim}, {translateY: slideAnim}],
+          opacity: fadeAnim,
+        }
+      ]}>
       <TouchableOpacity
         style={[categoryStyles.card, {backgroundColor: colors.card}]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={1}>
+        {/* Animated glow overlay */}
+        <Animated.View 
+          style={[
+            categoryStyles.glowOverlay, 
+            {backgroundColor: category.color, opacity: glowOpacity}
+          ]} 
+        />
         <View style={[categoryStyles.iconContainer, {backgroundColor: category.color + '15'}]}>
           <Icon name={category.icon} size={24} color={category.color} />
         </View>
@@ -781,9 +845,15 @@ const CategoryCard: React.FC<CategoryCardProps> = ({category, onPress, colors}) 
           {category.description}
         </Text>
         <View style={categoryStyles.countBadge}>
-          <Text style={[categoryStyles.countText, {color: category.color}]}>
-            {category.guideCount} Guides
-          </Text>
+          <LinearGradient
+            colors={[category.color + '20', category.color + '10']}
+            style={categoryStyles.countGradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}>
+            <Text style={[categoryStyles.countText, {color: category.color}]}>
+              {category.guideCount} Guides
+            </Text>
+          </LinearGradient>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -804,6 +874,15 @@ const categoryStyles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+    overflow: 'hidden',
+  },
+  glowOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: RADIUS.xl,
   },
   iconContainer: {
     width: 48,
@@ -826,6 +905,12 @@ const categoryStyles = StyleSheet.create({
   countBadge: {
     marginTop: 'auto',
   },
+  countGradient: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    alignSelf: 'flex-start',
+  },
   countText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: '600',
@@ -833,51 +918,98 @@ const categoryStyles = StyleSheet.create({
 });
 
 // ============================================================================
-// GUIDE LIST ITEM
+// GUIDE LIST ITEM (ENHANCED)
 // ============================================================================
 
 interface GuideListItemProps {
   guide: Guide;
   onPress: () => void;
   colors: any;
+  index?: number;
 }
 
-const GuideListItem: React.FC<GuideListItemProps> = ({guide, onPress, colors}) => {
+const GuideListItem: React.FC<GuideListItemProps> = ({guide, onPress, colors, index = 0}) => {
   const category = GUIDE_CATEGORIES.find(c => c.id === guide.categoryId);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(40)).current;
+
+  useEffect(() => {
+    const delay = index * 60;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.97,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.snappy,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      ...SPRING_CONFIGS.responsive,
+    }).start();
+  };
 
   return (
-    <TouchableOpacity
-      style={[guideItemStyles.container, {backgroundColor: colors.card}]}
-      onPress={onPress}
-      activeOpacity={0.7}>
-      <View style={guideItemStyles.content}>
-        <View style={guideItemStyles.header}>
-          <View style={[guideItemStyles.categoryBadge, {backgroundColor: (category?.color || '#4573DF') + '15'}]}>
-            <Text style={[guideItemStyles.categoryText, {color: category?.color || '#4573DF'}]}>
-              {category?.title}
-            </Text>
-          </View>
-          <View style={guideItemStyles.meta}>
-            <Icon name="time-outline" size={12} color={colors.textSecondary} />
-            <Text style={[guideItemStyles.metaText, {color: colors.textSecondary}]}>
-              {calculateReadTime(guide)}
-            </Text>
-          </View>
-        </View>
-        <Text style={[guideItemStyles.title, {color: colors.text}]}>{guide.title}</Text>
-        <Text style={[guideItemStyles.description, {color: colors.textSecondary}]} numberOfLines={2}>
-          {guide.description}
-        </Text>
-        <View style={guideItemStyles.tagsContainer}>
-          {guide.tags.slice(0, 3).map((tag, index) => (
-            <View key={index} style={[guideItemStyles.tag, {backgroundColor: colors.background}]}>
-              <Text style={[guideItemStyles.tagText, {color: colors.textSecondary}]}>{tag}</Text>
+    <Animated.View
+      style={{
+        transform: [{scale: scaleAnim}, {translateY: slideAnim}],
+        opacity: fadeAnim,
+      }}>
+      <TouchableOpacity
+        style={[guideItemStyles.container, {backgroundColor: colors.card}]}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={1}>
+        <View style={guideItemStyles.content}>
+          <View style={guideItemStyles.header}>
+            <View style={[guideItemStyles.categoryBadge, {backgroundColor: (category?.color || '#4573DF') + '15'}]}>
+              <Text style={[guideItemStyles.categoryText, {color: category?.color || '#4573DF'}]}>
+                {category?.title}
+              </Text>
             </View>
-          ))}
+            <View style={guideItemStyles.meta}>
+              <Icon name="time-outline" size={12} color={colors.textSecondary} />
+              <Text style={[guideItemStyles.metaText, {color: colors.textSecondary}]}>
+                {calculateReadTime(guide)}
+              </Text>
+            </View>
+          </View>
+          <Text style={[guideItemStyles.title, {color: colors.text}]}>{guide.title}</Text>
+          <Text style={[guideItemStyles.description, {color: colors.textSecondary}]} numberOfLines={2}>
+            {guide.description}
+          </Text>
+          <View style={guideItemStyles.tagsContainer}>
+            {guide.tags.slice(0, 3).map((tag, idx) => (
+              <View key={idx} style={[guideItemStyles.tag, {backgroundColor: colors.background}]}>
+                <Text style={[guideItemStyles.tagText, {color: colors.textSecondary}]}>{tag}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-      <Icon name="chevron-forward" size={20} color={colors.textSecondary} />
-    </TouchableOpacity>
+        <Icon name="chevron-forward" size={20} color={colors.textSecondary} />
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
@@ -1374,7 +1506,7 @@ const detailStyles = StyleSheet.create({
 });
 
 // ============================================================================
-// MAIN SCREEN COMPONENT
+// MAIN SCREEN COMPONENT (ENHANCED)
 // ============================================================================
 
 const GuidesScreen: React.FC = () => {
@@ -1383,6 +1515,51 @@ const GuidesScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Header animations
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-20)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation for decorative elements
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
 
   // Filter guides based on category and search
   const filteredGuides = useMemo(() => {
@@ -1422,9 +1599,36 @@ const GuidesScreen: React.FC = () => {
         backgroundColor={colors.background}
       />
 
+      {/* Decorative floating circles */}
+      <Animated.View 
+        style={[
+          styles.floatingCircle1, 
+          {
+            backgroundColor: colors.primary + '10',
+            transform: [{translateY: floatTranslateY}]
+          }
+        ]} 
+      />
+      <Animated.View 
+        style={[
+          styles.floatingCircle2, 
+          {
+            backgroundColor: colors.secondary + '08',
+            transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]
+          }
+        ]} 
+      />
+
       <SafeAreaView style={styles.safeArea}>
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Animated Header */}
+        <Animated.View 
+          style={[
+            styles.header,
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}]
+            }
+          ]}>
           <TouchableOpacity
             style={[styles.backButton, {backgroundColor: colors.card}]}
             onPress={() => navigation.goBack()}>
@@ -1436,7 +1640,13 @@ const GuidesScreen: React.FC = () => {
               Learn everything about admissions
             </Text>
           </View>
-        </View>
+          {/* Floating book icon */}
+          <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+            <View style={[styles.headerIcon, {backgroundColor: colors.primary + '15'}]}>
+              <Icon name="book-outline" size={22} color={colors.primary} />
+            </View>
+          </Animated.View>
+        </Animated.View>
 
         {/* Search Bar - Consistent Design */}
         <View style={styles.searchContainer}>
@@ -1459,12 +1669,13 @@ const GuidesScreen: React.FC = () => {
                 <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>Categories</Text>
               </View>
               <View style={styles.categoriesGrid}>
-                {GUIDE_CATEGORIES.map(category => (
+                {GUIDE_CATEGORIES.map((category, index) => (
                   <CategoryCard
                     key={category.id}
                     category={category}
                     onPress={() => setSelectedCategory(category.id)}
                     colors={colors}
+                    index={index}
                   />
                 ))}
               </View>
@@ -1497,12 +1708,13 @@ const GuidesScreen: React.FC = () => {
               </View>
             )}
             {filteredGuides.length > 0 ? (
-              filteredGuides.map(guide => (
+              filteredGuides.map((guide, index) => (
                 <GuideListItem
                   key={guide.id}
                   guide={guide}
                   onPress={() => setSelectedGuide(guide)}
                   colors={colors}
+                  index={index}
                 />
               ))
             ) : (
@@ -1515,10 +1727,19 @@ const GuidesScreen: React.FC = () => {
             )}
           </View>
 
-          {/* Suggest Guide Card */}
-          <View style={[styles.suggestSection, {backgroundColor: colors.card}]}>
+          {/* Suggest Guide Card - Enhanced */}
+          <Animated.View 
+            style={[
+              styles.suggestSection, 
+              {
+                backgroundColor: colors.card,
+                transform: [{translateY: floatTranslateY}]
+              }
+            ]}>
             <LinearGradient
-              colors={['#4573DF', '#4573DF']}
+              colors={['#4573DF', '#6366F1']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
               style={styles.suggestIcon}>
               <Icon name="bulb-outline" size={24} color="#FFF" />
             </LinearGradient>
@@ -1530,7 +1751,7 @@ const GuidesScreen: React.FC = () => {
                 Contact us through the app settings and we'll create it!
               </Text>
             </View>
-          </View>
+          </Animated.View>
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -1546,9 +1767,27 @@ const GuidesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'hidden',
   },
   safeArea: {
     flex: 1,
+  },
+  // Decorative floating circles
+  floatingCircle1: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    top: -50,
+    right: -50,
+  },
+  floatingCircle2: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    bottom: 100,
+    left: -50,
   },
   header: {
     flexDirection: 'row',
@@ -1574,6 +1813,13 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 2,
+  },
+  headerIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   // Unified search container
   searchContainer: {
@@ -1630,6 +1876,11 @@ const styles = StyleSheet.create({
     marginHorizontal: SPACING.lg,
     padding: SPACING.lg,
     borderRadius: RADIUS.xl,
+    shadowColor: '#4573DF',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 3,
   },
   suggestIcon: {
     width: 48,

@@ -1,0 +1,46 @@
+App Data Requirements Document
+1. Merit Calculator – Hafiz-e-Quran Marks
+* Correct Hafiz-e-Quran marks required as per each university. 
+* Need confirmation whether each university adds Hafiz-e-Quran marks or not. 
+2. Merit Calculator – Merit Formulas
+* Correct merit formulas required for ALL universities. 
+3. Homepage ? Quick Actions ? Entry Tests
+* Correct Registration Last Date for all entry tests. 
+* Correct Test Date for all entry tests. 
+* Correct Test Duration required. 
+* Correct Test Fee required. 
+4. Entry Tests Data Requirements
+* Correct registration website links required for ALL entry tests. 
+* Fix “Register Now” buttons – currently redirect to wrong/unofficial pages. 
+* Complete entry tests list required – currently incomplete. 
+5. Careers Section
+* All careers list required with correct duration. 
+6. Universities Page
+* Correct Established Date required for all universities. 
+* Correct Ranking required. 
+* Correct Campuses data required. 
+* Programs list required for each university. 
+* Last year Merit Lists required. 
+* Missing university logos need to be added. 
+7. Scholarships Section
+* Complete Scholarships list for all universities. 
+* Correct Campus availability for each scholarship. 
+* Scholarship Coverage Percent required. 
+* Correct Monthly Stipend required. 
+* Correct Income Limit required. 
+* Correct Application Deadline required. 
+* “Apply Now” buttons directing to wrong pages – fix required with correct official links. 
+8. More ? Dates Section
+* Correct Application Open dates required. 
+* Correct Deadline dates required. 
+* Correct Entry Test dates required. 
+* Fix Apply Now button redirects with correct website links. 
+9. Compare Universities Section
+* Correct Ranking data required. 
+* Correct Programs list required. 
+* Correct Facilities information required. 
+* Correct Fee Range required. 
+* Hostel availability (Yes/No) required. 
+* Scholarship availability data required. 
+10. Merit Data
+* Accurate Last Year University Merits required. 

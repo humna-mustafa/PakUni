@@ -11,7 +11,7 @@
 export { default as AppLogo, LogoBadge, SplashLogo, BRAND_COLORS, LOGO_SIZES, LogoText, Tagline } from './AppLogo';
 export { default as BrandHeader } from './BrandHeader';
 export { default as UniversalHeader } from './UniversalHeader';
-export { default as UniversityLogo } from './UniversityLogo';
+export { default as UniversityLogo, preloadUniversityLogos, clearLogoCache } from './UniversityLogo';
 
 // Typography
 export { default as AppText } from './AppText';

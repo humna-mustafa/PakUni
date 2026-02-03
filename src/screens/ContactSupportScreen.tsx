@@ -174,7 +174,7 @@ const MATERIAL_TYPE_OPTIONS: {value: MaterialType; label: string; icon: string; 
 const QUICK_HELP_ITEMS = [
   {id: '1', title: 'How to calculate merit?', icon: 'calculator-outline', screen: 'Calculator'},
   {id: '2', title: 'University rankings explained', icon: 'trophy-outline', screen: 'UniversityRankingsInfo'},
-  {id: '3', title: 'Scholarship eligibility', icon: 'checkmark-circle-outline', screen: 'Scholarships'},
+  {id: '3', title: 'Scholarship eligibility', icon: 'checkmark-circle-outline', screen: 'ScholarshipEligibility'},
   {id: '4', title: 'Entry test preparation', icon: 'book-outline', screen: 'EntryTests'},
 ];
 
@@ -295,7 +295,8 @@ Additional Details:
         title: formData.title || getTitleFromType(formData.type),
         message: fullMessage,
         contact_email: formData.email?.trim() || null,
-        rating: formData.rating || null,
+        // Rating must be 1-5 or null (0 violates CHECK constraint)
+        rating: formData.rating && formData.rating >= 1 ? formData.rating : null,
         status: 'new',
       };
 
@@ -946,6 +947,29 @@ Additional Details:
                       '🌍 QS World Ranking\nInternational ranking by Quacquarelli Symonds.\n\n' +
                       'Tip: Rankings are just one factor. Consider location, programs, campus culture, and fee structure too!',
                       [{text: 'Got it!', style: 'default'}]
+                    );
+                  } else if (item.screen === 'ScholarshipEligibility') {
+                    // Show scholarship eligibility info
+                    Alert.alert(
+                      '📋 Scholarship Eligibility Guide',
+                      'Common eligibility requirements for Pakistani scholarships:\n\n' +
+                      '📚 Academic Requirements:\n' +
+                      '• Minimum 60-80% marks (varies by scholarship)\n' +
+                      '• HEC-recognized degree/institution\n' +
+                      '• Specific GPA requirements for graduate programs\n\n' +
+                      '💰 Financial Criteria:\n' +
+                      '• Family income below threshold (need-based)\n' +
+                      '• Income certificate from relevant authority\n\n' +
+                      '📄 Common Documents:\n' +
+                      '• CNIC/B-Form\n' +
+                      '• Academic transcripts\n' +
+                      '• Income certificate\n' +
+                      '• Domicile certificate\n\n' +
+                      '🎯 Tip: Apply early and check deadlines! Each scholarship has different requirements.',
+                      [
+                        {text: 'View Scholarships', onPress: () => navigation.navigate('Scholarships' as never)},
+                        {text: 'OK', style: 'cancel'},
+                      ]
                     );
                   } else {
                     navigation.navigate(item.screen as never);

@@ -19,6 +19,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
+import FastImage from 'react-native-fast-image';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../constants/design';
 import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
@@ -35,12 +36,13 @@ import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import FloatingToolsButton from '../components/FloatingToolsButton';
 import {UniversitiesListSkeleton} from '../components/ListSkeletons';
 import {analytics} from '../services/analytics';
+import {findUniversitiesByAlias, normalizeSearchTerm} from '../utils/universityAliases';
 import SearchableDropdown, {
   PROVINCE_OPTIONS,
   createUniversityOptions,
 } from '../components/SearchableDropdown';
 import UniversityLogo from '../components/UniversityLogo';
-import {getUniversityBrandColor} from '../utils/universityLogos';
+import {getUniversityBrandColor, getLogo} from '../utils/universityLogos';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -464,16 +466,27 @@ const PremiumUniversitiesScreen = () => {
   );
 
   // Prefetch visible logo images to reduce flicker / missing images
+  // Using FastImage.preload for better caching
   const prefetchedLogos = useRef<Set<string>>(new Set());
   const onViewableItemsChanged = useRef(({viewableItems}: {viewableItems: Array<{item: UniversityItem}>}) => {
+    // Collect URLs to preload
+    const urlsToPreload: {uri: string; priority: string}[] = [];
+    
     viewableItems.forEach(({item}) => {
-      const url = item?.logo_url;
+      const url = item?.logo_url || (item?.id && typeof item.id === 'string' ? getLogo(parseInt(item.id, 10)) : null);
       if (url && !prefetchedLogos.current.has(url)) {
-        Image.prefetch(url)
-          .then(() => prefetchedLogos.current.add(url))
-          .catch(() => {});
+        prefetchedLogos.current.add(url);
+        urlsToPreload.push({
+          uri: url,
+          priority: 'normal',
+        });
       }
     });
+    
+    // Batch preload all visible logos
+    if (urlsToPreload.length > 0) {
+      FastImage.preload(urlsToPreload as any);
+    }
   });
   const viewabilityConfig = useRef({itemVisiblePercentThreshold: 50});
 
@@ -485,15 +498,25 @@ const PremiumUniversitiesScreen = () => {
     
     let result = [...validUniversities];
 
-    // Search filter - use debounced query
+    // Search filter - use debounced query with alias support
     if (debouncedSearchQuery.trim()) {
-      const query = debouncedSearchQuery.toLowerCase();
-      result = result.filter(
-        u =>
+      const query = normalizeSearchTerm(debouncedSearchQuery);
+      
+      // Find matching short_names via aliases (e.g., "lums" -> ["LMS"])
+      const aliasMatches = findUniversitiesByAlias(query);
+      
+      result = result.filter(u => {
+        // Direct match on name, short_name, or city
+        const directMatch = 
           u.name.toLowerCase().includes(query) ||
           u.short_name.toLowerCase().includes(query) ||
-          u.city.toLowerCase().includes(query),
-      );
+          u.city.toLowerCase().includes(query);
+        
+        // Alias match (e.g., searching "lums" matches university with short_name "LMS")
+        const aliasMatch = aliasMatches.includes(u.short_name);
+        
+        return directMatch || aliasMatch;
+      });
     }
 
     // Province filter
@@ -541,8 +564,23 @@ const PremiumUniversitiesScreen = () => {
     return 'U';
   };
 
-  // Memoize renderHeader to prevent keyboard dismissal during typing
-  // The search bar state changes cause re-renders, so we need useCallback
+  // Ref for search input to maintain focus
+  const searchInputRef = useRef<string>(searchQuery);
+  
+  // Stable search change handler that doesn't cause header re-renders
+  const handleSearchChange = useCallback((text: string) => {
+    searchInputRef.current = text;
+    setSearchQuery(text);
+  }, []);
+  
+  const handleSearchClear = useCallback(() => {
+    searchInputRef.current = '';
+    setSearchQuery('');
+  }, []);
+
+  // Memoize header content to prevent keyboard dismissal during typing
+  // CRITICAL: searchQuery is NOT in dependencies - search bar is moved OUTSIDE this header
+  // This prevents the entire header from re-rendering on each keystroke
   const renderHeader = useCallback(() => (
     <View style={styles.listHeader}>
       {/* Top Header Row with Profile */}
@@ -581,18 +619,6 @@ const PremiumUniversitiesScreen = () => {
             )}
           </TouchableOpacity>
         </View>
-      </View>
-
-      {/* Search Bar - Consistent Design */}
-      <View style={styles.searchContainer}>
-        <PremiumSearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onClear={() => setSearchQuery('')}
-          placeholder="Search universities, cities..."
-          variant="default"
-          size="md"
-        />
       </View>
 
       {/* Collapsible Filters */}
@@ -697,7 +723,7 @@ const PremiumUniversitiesScreen = () => {
         </>
       )}
     </View>
-  ), [colors, showFilters, filteredUniversities.length, sortBy, selectedProvince, selectedType, searchQuery, user?.avatarUrl, navigation, setSearchQuery, setSortBy, setSelectedProvince, setSelectedType, setShowFilters]);
+  ), [colors, showFilters, filteredUniversities.length, sortBy, selectedProvince, selectedType, user?.avatarUrl, navigation]);
 
   // Handle compare action from swipe
   const handleCompare = useCallback((universityId: string) => {
@@ -729,6 +755,18 @@ const PremiumUniversitiesScreen = () => {
       />
       
       <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {/* Search Bar - Positioned outside FlashList to prevent keyboard dismissal */}
+        <View style={styles.searchContainer}>
+          <PremiumSearchBar
+            value={searchQuery}
+            onChangeText={handleSearchChange}
+            onClear={handleSearchClear}
+            placeholder="Search universities, cities..."
+            variant="default"
+            size="md"
+          />
+        </View>
+        
         {loading ? (
           <UniversitiesListSkeleton />
         ) : (
@@ -740,7 +778,8 @@ const PremiumUniversitiesScreen = () => {
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
+          removeClippedSubviews={false}
           onViewableItemsChanged={onViewableItemsChanged.current}
           viewabilityConfig={viewabilityConfig.current}
           refreshControl={

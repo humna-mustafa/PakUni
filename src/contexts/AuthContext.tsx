@@ -86,6 +86,7 @@ export interface AuthContextType extends AuthState {
   signUpWithEmail: (email: string, password: string, name: string) => Promise<boolean>;
   continueAsGuest: () => Promise<boolean>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<boolean>;
   
   // Profile Actions
@@ -701,15 +702,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     try {
       setState(prev => ({...prev, isLoading: true, authError: null}));
 
-      // Generate unique guest ID
+      // Generate unique guest ID (or reuse existing)
       let guestId = await AsyncStorage.getItem(STORAGE_KEYS.GUEST_ID);
       if (!guestId) {
         guestId = `guest_${Date.now()}_${Math.random().toString(36).substring(7)}`;
         await AsyncStorage.setItem(STORAGE_KEYS.GUEST_ID, guestId);
       }
 
+      // PRESERVE EXISTING GUEST DATA: Check if we have a stored profile
+      const storedProfileJson = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+      let existingFavorites = { favoriteUniversities: [] as string[], favoriteScholarships: [] as string[], favoritePrograms: [] as string[], recentlyViewed: [] as any[] };
+      
+      if (storedProfileJson) {
+        try {
+          const stored = JSON.parse(storedProfileJson);
+          // Only use stored data if it's the same guest user
+          if (stored.id === guestId || (stored.isGuest && stored.provider === 'guest')) {
+            existingFavorites = {
+              favoriteUniversities: stored.favoriteUniversities || [],
+              favoriteScholarships: stored.favoriteScholarships || [],
+              favoritePrograms: stored.favoritePrograms || [],
+              recentlyViewed: stored.recentlyViewed || [],
+            };
+          }
+        } catch (e) {
+          // Ignore parsing errors
+        }
+      }
+
       const profile: UserProfile = {
         ...DEFAULT_USER,
+        ...existingFavorites, // Preserve favorites and recently viewed
         id: guestId,
         provider: 'guest',
         isGuest: true,
@@ -760,6 +783,75 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         ...DEFAULT_STATE,
         isLoading: false,
       });
+    }
+  }, [state.isGuest]);
+
+  const deleteAccount = useCallback(async (): Promise<boolean> => {
+    try {
+      setState(prev => ({...prev, isLoading: true}));
+
+      // If guest, just clear local data
+      if (state.isGuest) {
+        await clearLocalData();
+        setState({
+          ...DEFAULT_STATE,
+          isLoading: false,
+        });
+        return true;
+      }
+
+      // Get current user
+      const {data: {user: currentUser}} = await supabase.auth.getUser();
+      
+      if (currentUser) {
+        // Delete user profile from profiles table first
+        const {error: profileError} = await supabase
+          .from('profiles')
+          .delete()
+          .eq('id', currentUser.id);
+
+        if (profileError) {
+          logger.warn('Profile deletion error (may not exist)', profileError, 'Auth');
+        }
+
+        // Delete user favorites
+        const {error: favError} = await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', currentUser.id);
+
+        if (favError) {
+          logger.warn('Favorites deletion error', favError, 'Auth');
+        }
+
+        // Note: Supabase doesn't allow client-side user deletion for security
+        // The user account in auth.users would need server-side deletion via Edge Function
+        // or admin API. For now, we delete all user data and sign out.
+        
+        // Sign out the user
+        await supabase.auth.signOut();
+      }
+
+      // Clear all local data
+      await clearLocalData();
+
+      setState({
+        ...DEFAULT_STATE,
+        isLoading: false,
+      });
+
+      Alert.alert(
+        'Account Deleted',
+        'Your account data has been removed. Thank you for using PakUni.',
+        [{text: 'OK'}]
+      );
+
+      return true;
+    } catch (error: any) {
+      logger.error('Delete account error', error, 'Auth');
+      Alert.alert('Error', error.message || 'Failed to delete account. Please try again.');
+      setState(prev => ({...prev, isLoading: false}));
+      return false;
     }
   }, [state.isGuest]);
 
@@ -1033,6 +1125,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     signUpWithEmail,
     continueAsGuest,
     signOut,
+    deleteAccount,
     resetPassword,
     updateProfile,
     completeOnboarding,
@@ -1050,6 +1143,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     signUpWithEmail,
     continueAsGuest,
     signOut,
+    deleteAccount,
     resetPassword,
     updateProfile,
     completeOnboarding,

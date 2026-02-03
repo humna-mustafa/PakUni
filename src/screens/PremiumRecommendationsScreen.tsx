@@ -436,14 +436,22 @@ const PremiumRecommendationsScreen = () => {
       universityType: preferredType === 'Public' ? 'Public' : preferredType === 'Private' ? 'Private' : 'Both',
     });
     
-    // STRICT CITY FILTERING: Only show universities in selected cities
+    // City filtering: Prioritize preferred cities but don't exclude others
+    // If user selected cities, filter to show those first
     if (preferredCities.length > 0) {
-      return allRecommendations.filter(uni => 
+      const inCityResults = allRecommendations.filter(uni => 
         preferredCities.some(city => 
           uni.city.toLowerCase().includes(city.toLowerCase()) ||
           city.toLowerCase().includes(uni.city.toLowerCase())
         )
       );
+      
+      // If we have matches in preferred cities, show those
+      // Otherwise show ALL results (better than showing "No Matches")
+      if (inCityResults.length > 0) {
+        return inCityResults;
+      }
+      // Fall through to return all recommendations if no city matches
     }
     
     return allRecommendations;

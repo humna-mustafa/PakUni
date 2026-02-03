@@ -28,6 +28,7 @@ import PremiumEntryTestsScreen from '../screens/PremiumEntryTestsScreen';
 import PremiumCareerGuidanceScreen from '../screens/PremiumCareerGuidanceScreen';
 import PremiumRecommendationsScreen from '../screens/PremiumRecommendationsScreen';
 import PremiumCareerCenterScreen from '../screens/PremiumCareerCenterScreen';
+import CareerDetailScreen from '../screens/CareerDetailScreen';
 
 // Premium Screens - Kids Zone
 import PremiumKidsHubScreen from '../screens/PremiumKidsHubScreen';
@@ -107,7 +108,7 @@ import type {NavigatorScreenParams} from '@react-navigation/native';
 export type TabParamList = {
   Home: undefined;
   Universities: {searchQuery?: string} | undefined;
-  Scholarships: undefined;
+  Scholarships: {searchQuery?: string} | undefined;
   More: undefined;
   Profile: undefined;
 };
@@ -119,6 +120,7 @@ export type RootStackParamList = {
   // Main App
   MainTabs: NavigatorScreenParams<TabParamList> | undefined;
   UniversityDetail: {universityId: string};
+  CareerDetail: {careerId: string};
   Calculator: undefined;
   Compare: undefined;
   EntryTests: undefined;
@@ -384,6 +386,11 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
           <Stack.Screen
             name="CareerCenter"
             component={PremiumCareerCenterScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="CareerDetail"
+            component={CareerDetailScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen

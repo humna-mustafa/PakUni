@@ -1,9 +1,10 @@
 /**
  * Privacy Policy Screen
  * Displays the app's privacy policy for store compliance
+ * Enhanced with premium animations
  */
 
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,6 +13,8 @@ import {
   TouchableOpacity,
   Linking,
   StatusBar,
+  Animated,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -19,9 +22,120 @@ import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
 import {Icon} from '../components/icons';
 
+// Animated Section Component
+const AnimatedSection: React.FC<{
+  children: React.ReactNode;
+  index: number;
+  style?: any;
+}> = ({children, index, style}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    const delay = index * 80;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}],
+        },
+      ]}>
+      {children}
+    </Animated.View>
+  );
+};
+
 const PrivacyPolicyScreen: React.FC = () => {
   const navigation = useNavigation();
   const {colors, isDark} = useTheme();
+
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const shieldRotateAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Shield pulse animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(shieldRotateAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(shieldRotateAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
+
+  const shieldScale = shieldRotateAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 1.08, 1],
+  });
 
   const handleContactPress = () => {
     navigation.navigate('ContactSupport' as never);
@@ -36,8 +150,37 @@ const PrivacyPolicyScreen: React.FC = () => {
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {/* Floating Decorations */}
+        <Animated.View
+          style={[
+            styles.floatingShield1,
+            {
+              opacity: 0.06,
+              transform: [{translateY: floatTranslateY}, {scale: shieldScale}],
+            },
+          ]}>
+          <Icon name="shield-checkmark" family="Ionicons" size={80} color={colors.primary} />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.floatingShield2,
+            {
+              opacity: 0.04,
+            },
+          ]}>
+          <Icon name="lock-closed" family="Ionicons" size={50} color={colors.primary} />
+        </Animated.View>
+
         {/* Header */}
-        <View style={[styles.header, {backgroundColor: colors.card, borderBottomColor: colors.border}]}>
+        <Animated.View 
+          style={[
+            styles.header, 
+            {backgroundColor: colors.card, borderBottomColor: colors.border},
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}],
+            },
+          ]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -46,9 +189,12 @@ const PrivacyPolicyScreen: React.FC = () => {
           >
             <Icon name="chevron-back" family="Ionicons" size={24} color={colors.primary} />
           </TouchableOpacity>
+          <Animated.View style={{transform: [{scale: shieldScale}]}}>
+            <Icon name="shield-checkmark-outline" family="Ionicons" size={22} color={colors.primary} />
+          </Animated.View>
           <Text style={[styles.headerTitle, {color: colors.text}]}>Privacy Policy</Text>
           <View style={styles.placeholder} />
-        </View>
+        </Animated.View>
 
         <ScrollView
           style={styles.content}
@@ -56,12 +202,14 @@ const PrivacyPolicyScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Last Updated */}
-          <Text style={[styles.lastUpdated, {color: colors.textSecondary}]}>
-            Last Updated: January 15, 2026
-          </Text>
+          <AnimatedSection index={0}>
+            <Text style={[styles.lastUpdated, {color: colors.textSecondary}]}>
+              Last Updated: January 15, 2026
+            </Text>
+          </AnimatedSection>
 
           {/* Introduction */}
-          <View style={styles.section}>
+          <AnimatedSection index={1} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="shield-checkmark-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Introduction</Text>
@@ -75,10 +223,10 @@ const PrivacyPolicyScreen: React.FC = () => {
               discover scholarships, and plan their educational journey. We are committed to protecting 
               your privacy and ensuring a safe experience for all users, including minors.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Information We Collect */}
-          <View style={styles.section}>
+          <AnimatedSection index={2} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="analytics-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Information We Collect</Text>
@@ -115,10 +263,10 @@ const PrivacyPolicyScreen: React.FC = () => {
                 • Crash reports and error logs
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* How We Use Information */}
-          <View style={styles.section}>
+          <AnimatedSection index={3} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="ribbon-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>How We Use Your Information</Text>
@@ -140,10 +288,10 @@ const PrivacyPolicyScreen: React.FC = () => {
                 • To send relevant educational notifications (if enabled)
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* Data Protection */}
-          <View style={styles.section}>
+          <AnimatedSection index={4} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="lock-closed-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Data Protection</Text>
@@ -165,10 +313,10 @@ const PrivacyPolicyScreen: React.FC = () => {
                 • We do NOT share data with third-party advertisers
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* Children's Privacy */}
-          <View style={[styles.section, styles.importantSection, {backgroundColor: colors.primaryLight}]}>
+          <AnimatedSection index={5} style={[styles.section, styles.importantSection, {backgroundColor: colors.primaryLight}]}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="happy-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.primary, marginBottom: 0}]}>Children's Privacy (COPPA Compliance)</Text>
@@ -191,10 +339,10 @@ const PrivacyPolicyScreen: React.FC = () => {
                 • Parents can request deletion of their child's data at any time
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* Your Rights */}
-          <View style={styles.section}>
+          <AnimatedSection index={6} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="briefcase-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Your Rights</Text>
@@ -219,10 +367,10 @@ const PrivacyPolicyScreen: React.FC = () => {
                 • Request a copy of your data
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* Data Retention */}
-          <View style={styles.section}>
+          <AnimatedSection index={7} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="folder-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Data Retention</Text>
@@ -232,10 +380,10 @@ const PrivacyPolicyScreen: React.FC = () => {
               all local data will be removed. If you create an account, we retain your data 
               until you request its deletion.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Contact Us */}
-          <View style={styles.section}>
+          <AnimatedSection index={8} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="mail-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Contact Us</Text>
@@ -253,19 +401,21 @@ const PrivacyPolicyScreen: React.FC = () => {
                 <Text style={styles.contactButtonText}>Contact Support</Text>
               </View>
             </TouchableOpacity>
-          </View>
+          </AnimatedSection>
 
           {/* Footer */}
-          <View style={styles.footer}>
+          <AnimatedSection index={9} style={styles.footer}>
             <Text style={[styles.footerText, {color: colors.textMuted}]}>
               © 2026 PakUni. All rights reserved.
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4}}>
               <Text style={[styles.footerText, {color: colors.textMuted}]}>Made with</Text>
-              <Icon name="heart" family="Ionicons" size={14} color="#E91E63" />
+              <Animated.View style={{transform: [{scale: shieldScale}]}}>
+                <Icon name="heart" family="Ionicons" size={14} color="#E91E63" />
+              </Animated.View>
               <Text style={[styles.footerText, {color: colors.textMuted}]}>in Pakistan</Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -281,6 +431,19 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  // Floating decorations
+  floatingShield1: {
+    position: 'absolute',
+    top: 120,
+    right: -25,
+    zIndex: 0,
+  },
+  floatingShield2: {
+    position: 'absolute',
+    top: 300,
+    left: -15,
+    zIndex: 0,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -288,6 +451,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
     borderBottomWidth: 1,
+    gap: 8,
+    zIndex: 1,
   },
   backButton: {
     padding: SPACING.sm,

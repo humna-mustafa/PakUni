@@ -1,9 +1,10 @@
 /**
  * OnboardingScreen - Beautiful First-Time User Experience
- * Premium onboarding with animations and smooth transitions
+ * Premium onboarding with enhanced animations, smoother transitions,
+ * and polished UI for a world-class first impression
  */
 
-import React, {useState, useRef, useCallback, memo} from 'react';
+import React, {useState, useRef, useCallback, memo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -53,7 +54,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Discover Universities',
     subtitle: '200+ Universities',
     description: 'Explore all HEC-recognized universities across Pakistan. Filter by location, ranking, and programs to find your perfect match.',
-    gradient: ['#4573DF', '#4573DF'],
+    gradient: ['#4573DF', '#3660C9'],
     bgPattern: 'academic',
   },
   {
@@ -63,7 +64,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Calculate Your Merit',
     subtitle: 'Smart Calculator',
     description: 'Use our intelligent merit calculator with real university formulas. Know your chances of admission instantly.',
-    gradient: ['#10B981', '#059669'],
+    gradient: ['#10B981', '#047857'],
     bgPattern: 'numbers',
   },
   {
@@ -83,7 +84,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Comprehensive Guides',
     subtitle: 'Step-by-Step Help',
     description: 'Admission guides, study tips, career paths, financial planning, mental health support - everything you need!',
-    gradient: ['#0891B2', '#0E7490'],
+    gradient: ['#06B6D4', '#0891B2'],
     bgPattern: 'guides',
   },
   {
@@ -93,7 +94,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Powerful Tools',
     subtitle: 'Calculators & Simulators',
     description: 'Grade converters, target calculators, what-if simulators - all the tools you need to plan your academic journey.',
-    gradient: ['#4573DF', '#3660C9'],
+    gradient: ['#8B5CF6', '#7C3AED'],
     bgPattern: 'tools',
   },
   {
@@ -113,7 +114,7 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'Earn Achievements',
     subtitle: 'Share Your Success',
     description: 'Earn badges for completing entry tests, securing admissions, and more. Share merit success cards with friends!',
-    gradient: ['#F59E0B', '#D97706'],
+    gradient: ['#F59E0B', '#B45309'],
     bgPattern: 'achievements',
   },
   {
@@ -123,13 +124,13 @@ const ONBOARDING_SLIDES: OnboardingSlide[] = [
     title: 'AI Recommendations',
     subtitle: 'Personalized Matches',
     description: 'Get smart university recommendations based on your marks, interests, and career goals. Your future starts here!',
-    gradient: ['#4573DF', '#3660C9'],
+    gradient: ['#EC4899', '#DB2777'],
     bgPattern: 'ai',
   },
 ];
 
 // ============================================================================
-// SLIDE COMPONENT
+// SLIDE COMPONENT - Enhanced with smoother animations
 // ============================================================================
 
 interface SlideProps {
@@ -140,6 +141,50 @@ interface SlideProps {
 
 const Slide = memo<SlideProps>(({item, index, scrollX}) => {
   const {colors} = useTheme();
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  
+  // Floating animation for icon
+  useEffect(() => {
+    const floatAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -8,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    floatAnimation.start();
+    
+    // Subtle pulse effect
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.03,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    pulseAnimation.start();
+    
+    return () => {
+      floatAnimation.stop();
+      pulseAnimation.stop();
+    };
+  }, [floatAnim, pulseAnim]);
+  
   const inputRange = [
     (index - 1) * SCREEN_WIDTH,
     index * SCREEN_WIDTH,
@@ -148,19 +193,25 @@ const Slide = memo<SlideProps>(({item, index, scrollX}) => {
 
   const scale = scrollX.interpolate({
     inputRange,
-    outputRange: [0.8, 1, 0.8],
+    outputRange: [0.75, 1, 0.75],
     extrapolate: 'clamp',
   });
 
   const opacity = scrollX.interpolate({
     inputRange,
-    outputRange: [0.3, 1, 0.3],
+    outputRange: [0.2, 1, 0.2],
     extrapolate: 'clamp',
   });
 
   const translateY = scrollX.interpolate({
     inputRange,
-    outputRange: [50, 0, 50],
+    outputRange: [60, 0, 60],
+    extrapolate: 'clamp',
+  });
+  
+  const rotateZ = scrollX.interpolate({
+    inputRange,
+    outputRange: ['-5deg', '0deg', '5deg'],
     extrapolate: 'clamp',
   });
 
@@ -169,12 +220,32 @@ const Slide = memo<SlideProps>(({item, index, scrollX}) => {
 
   return (
     <View style={styles.slide}>
+      {/* Background decorative elements */}
+      <View style={styles.bgDecoration}>
+        <Animated.View 
+          style={[
+            styles.bgCircle1,
+            {backgroundColor: `${item.gradient[0]}08`}
+          ]}
+        />
+        <Animated.View 
+          style={[
+            styles.bgCircle2,
+            {backgroundColor: `${item.gradient[1]}06`}
+          ]}
+        />
+      </View>
+      
       {/* Animated Icon Container */}
       <Animated.View
         style={[
           styles.iconWrapper,
           {
-            transform: [{scale}, {translateY}],
+            transform: [
+              {scale: Animated.multiply(scale, pulseAnim)}, 
+              {translateY: Animated.add(translateY, floatAnim)},
+              {rotate: rotateZ},
+            ],
             opacity,
           },
         ]}>
@@ -183,10 +254,10 @@ const Slide = memo<SlideProps>(({item, index, scrollX}) => {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={styles.iconGradient}>
-          {/* Decorative circles */}
-          <View style={styles.decoCircle1} />
-          <View style={styles.decoCircle2} />
-          <View style={styles.decoCircle3} />
+          {/* Decorative circles with improved styling */}
+          <Animated.View style={[styles.decoCircle1, {transform: [{translateY: Animated.multiply(floatAnim, -0.5)}]}]} />
+          <Animated.View style={[styles.decoCircle2, {transform: [{translateY: Animated.multiply(floatAnim, 0.5)}]}]} />
+          <Animated.View style={[styles.decoCircle3, {transform: [{translateY: floatAnim}]}]} />
           
           <View style={styles.iconCircle}>
             {isCustomIcon ? (
@@ -200,7 +271,7 @@ const Slide = memo<SlideProps>(({item, index, scrollX}) => {
               <Icon 
                 name={item.iconName} 
                 family="Ionicons" 
-                size={48} 
+                size={52} 
                 color="#FFFFFF" 
               />
             )}
@@ -428,7 +499,7 @@ const OnboardingScreen: React.FC = () => {
 };
 
 // ============================================================================
-// STYLES
+// STYLES - Enhanced for premium look
 // ============================================================================
 
 const styles = StyleSheet.create({
@@ -445,121 +516,148 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight || 20 : 10,
   },
   skipButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.08)',
   },
   skipText: {
     fontSize: 14,
     fontWeight: '600',
+    letterSpacing: 0.3,
   },
   slide: {
     width: SCREEN_WIDTH,
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingTop: 40,
+    paddingTop: 30,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  bgDecoration: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bgCircle1: {
+    position: 'absolute',
+    width: SCREEN_WIDTH * 0.8,
+    height: SCREEN_WIDTH * 0.8,
+    borderRadius: SCREEN_WIDTH * 0.4,
+    top: -50,
+    right: -100,
+  },
+  bgCircle2: {
+    position: 'absolute',
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_WIDTH * 0.6,
+    borderRadius: SCREEN_WIDTH * 0.3,
+    bottom: 100,
+    left: -80,
   },
   iconWrapper: {
-    marginBottom: 40,
+    marginBottom: 36,
   },
   iconGradient: {
-    width: 180,
-    height: 180,
-    borderRadius: 40,
+    width: 190,
+    height: 190,
+    borderRadius: 48,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
     ...Platform.select({
       ios: {
-        shadowColor: '#4573DF',
-        shadowOffset: {width: 0, height: 12},
-        shadowOpacity: 0.4,
-        shadowRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 16},
+        shadowOpacity: 0.35,
+        shadowRadius: 24,
       },
       android: {
-        elevation: 12,
+        elevation: 16,
       },
     }),
   },
   decoCircle1: {
     position: 'absolute',
-    top: -30,
-    right: -30,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    top: -40,
+    right: -40,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255,255,255,0.12)',
   },
   decoCircle2: {
     position: 'absolute',
-    bottom: -20,
-    left: -20,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-  },
-  decoCircle3: {
-    position: 'absolute',
-    top: 20,
-    left: 10,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-  },
-  iconCircle: {
+    bottom: -30,
+    left: -30,
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.10)',
+  },
+  decoCircle3: {
+    position: 'absolute',
+    top: 25,
+    left: 15,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  iconCircle: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: 'rgba(255,255,255,0.22)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   contentContainer: {
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   badgeContainer: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   badge: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 24,
   },
   badgeText: {
     fontSize: 13,
     fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
   },
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '800',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 18,
     letterSpacing: -0.5,
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
-    lineHeight: 24,
-    maxWidth: 320,
+    lineHeight: 26,
+    maxWidth: 340,
+    letterSpacing: 0.2,
   },
   bottomSection: {
     paddingHorizontal: 24,
-    paddingBottom: 32,
+    paddingBottom: 36,
   },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 36,
   },
   dot: {
     height: 8,
     borderRadius: 4,
-    marginHorizontal: 4,
+    marginHorizontal: 5,
   },
   actionsContainer: {
     alignItems: 'center',
@@ -568,16 +666,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 48,
-    borderRadius: 16,
-    gap: 8,
-    minWidth: 180,
+    paddingVertical: 18,
+    paddingHorizontal: 56,
+    borderRadius: 20,
+    gap: 10,
+    minWidth: 200,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#4573DF',
+        shadowOffset: {width: 0, height: 6},
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   nextText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
     color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
   getStartedButton: {
     width: '100%',
@@ -586,32 +696,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    gap: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 36,
+    borderRadius: 20,
+    gap: 14,
     ...Platform.select({
       ios: {
         shadowColor: '#4573DF',
-        shadowOffset: {width: 0, height: 8},
-        shadowOpacity: 0.4,
-        shadowRadius: 16,
+        shadowOffset: {width: 0, height: 10},
+        shadowOpacity: 0.45,
+        shadowRadius: 20,
       },
       android: {
-        elevation: 8,
+        elevation: 12,
       },
     }),
   },
   getStartedText: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '700',
     color: '#FFFFFF',
-    letterSpacing: 0.3,
+    letterSpacing: 0.4,
   },
   arrowCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',

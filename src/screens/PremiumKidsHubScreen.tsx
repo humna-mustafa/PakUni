@@ -94,6 +94,23 @@ const FUN_FACTS = [
   {iconName: 'laptop-outline', text: 'Arfa Karim became MCP at just 9 years old!'},
   {iconName: 'trophy-outline', text: 'Work hard today, shine tomorrow!'},
   {iconName: 'book-outline', text: 'Reading 20 mins daily = 1.8 million words/year!'},
+  {iconName: 'school-outline', text: 'Pakistan produces 445,000+ university graduates yearly!'},
+  {iconName: 'bulb-outline', text: 'Dr. Abdus Salam won Nobel Prize in Physics!'},
+  {iconName: 'globe-outline', text: 'Pakistani engineers built Karakoram Highway!'},
+  {iconName: 'musical-notes-outline', text: 'Learning music improves math skills by 23%!'},
+  {iconName: 'fitness-outline', text: 'Jahangir Khan won 555 squash matches in a row!'},
+  {iconName: 'heart-outline', text: 'Helping others makes you happier & smarter!'},
+  {iconName: 'star-outline', text: 'Malala is the youngest Nobel Peace Prize winner!'},
+];
+
+// Motivational quotes for kids
+const KIDS_QUOTES = [
+  { text: 'Every expert was once a beginner!', emoji: '🌱' },
+  { text: 'Your dreams don\'t have an expiry date!', emoji: '✨' },
+  { text: 'Mistakes help you learn faster!', emoji: '🚀' },
+  { text: 'You are braver than you believe!', emoji: '💪' },
+  { text: 'Big journeys start with small steps!', emoji: '👣' },
+  { text: 'Your only limit is your mind!', emoji: '🧠' },
 ];
 
 // Feature Card Component with animations
@@ -231,8 +248,10 @@ const PremiumKidsHubScreen = () => {
   const welcomeAnim = useRef(new Animated.Value(50)).current;
   const factAnim = useRef(new Animated.Value(0)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
+  const quoteAnim = useRef(new Animated.Value(0)).current;
   
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
   useEffect(() => {
     // Header animation
@@ -273,7 +292,35 @@ const PremiumKidsHubScreen = () => {
       setCurrentFactIndex(prev => (prev + 1) % FUN_FACTS.length);
     }, 5000);
 
-    return () => clearInterval(factInterval);
+    // Cycle through quotes
+    const quoteInterval = setInterval(() => {
+      Animated.sequence([
+        Animated.timing(quoteAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(quoteAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+      setCurrentQuoteIndex(prev => (prev + 1) % KIDS_QUOTES.length);
+    }, 6000);
+
+    // Initial quote animation
+    Animated.timing(quoteAnim, {
+      toValue: 1,
+      duration: 500,
+      delay: 800,
+      useNativeDriver: true,
+    }).start();
+
+    return () => {
+      clearInterval(factInterval);
+      clearInterval(quoteInterval);
+    };
   }, []);
 
   const handleFeaturePress = (screen: string) => {
@@ -298,6 +345,7 @@ const PremiumKidsHubScreen = () => {
   });
 
   const currentFact = FUN_FACTS[currentFactIndex];
+  const currentQuote = KIDS_QUOTES[currentQuoteIndex];
 
   return (
     <SafeAreaView
@@ -464,28 +512,47 @@ const PremiumKidsHubScreen = () => {
         </View>
 
         {/* Motivation Section */}
-        <View
+        <Animated.View
           style={[
             styles.motivationCard,
             {
               backgroundColor: isDark ? '#27ae6020' : '#E8F8F5',
+              opacity: quoteAnim,
+              transform: [{
+                scale: quoteAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.95, 1],
+                }),
+              }],
             },
           ]}>
           <LinearGradient
             colors={['rgba(39,174,96,0.15)', 'transparent']}
             style={StyleSheet.absoluteFillObject}
           />
-          <Icon name="fitness-outline" family="Ionicons" size={40} color={colors.success} />
+          <Text style={styles.quoteEmoji}>{currentQuote.emoji}</Text>
           <Text style={[styles.motivationQuote, {color: colors.text}]}>
-            "Every expert was once a beginner. Keep learning!"
+            "{currentQuote.text}"
           </Text>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
             <Text style={[styles.motivationAuthor, {color: colors.success}]}>
-              — Your Future Self
+              — Believe in yourself!
             </Text>
             <Icon name="star" family="Ionicons" size={16} color={colors.success} />
           </View>
-        </View>
+          {/* Quote dots */}
+          <View style={styles.quoteDots}>
+            {KIDS_QUOTES.map((_, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.quoteDot,
+                  { backgroundColor: i === currentQuoteIndex ? colors.success : colors.border },
+                ]}
+              />
+            ))}
+          </View>
+        </Animated.View>
 
         {/* Age Selector */}
         <View style={styles.ageSection}>
@@ -832,6 +899,10 @@ const styles = StyleSheet.create({
     fontSize: 48,
     marginBottom: SPACING.sm,
   },
+  quoteEmoji: {
+    fontSize: 40,
+    marginBottom: SPACING.xs,
+  },
   motivationQuote: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
@@ -843,6 +914,17 @@ const styles = StyleSheet.create({
   motivationAuthor: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '500',
+  },
+  quoteDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: SPACING.sm,
+    gap: 4,
+  },
+  quoteDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   ageSection: {
     paddingHorizontal: SPACING.md,

@@ -1,6 +1,8 @@
 /**
  * MoreScreen - Central hub for all tools, resources, and features
  * Replaces Profile in bottom navigation for better discoverability
+ * 
+ * ENHANCED: Premium animations, floating effects, staggered entrances
  */
 
 import React, {useRef, useCallback, memo} from 'react';
@@ -24,7 +26,6 @@ import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
-import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -97,7 +98,7 @@ const MENU_SECTIONS: MenuSection[] = [
 ];
 
 // ============================================================================
-// GRID ITEM COMPONENT - Compact 4-column grid
+// GRID ITEM COMPONENT - Compact 4-column grid (ENHANCED)
 // ============================================================================
 
 interface GridItemCardProps {
@@ -111,22 +112,22 @@ const GridItemCard = memo<GridItemCardProps>(({item, colors, isDark, onPress}) =
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.CHIP_PRESS,
+    Animated.timing(scaleAnim, {
+      toValue: 0.96,
+      duration: 100,
       useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
     }).start();
   };
 
   const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
+    Animated.timing(scaleAnim, {
       toValue: 1,
+      duration: 150,
       useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
     }).start();
   };
 
-  const iconBg = isDark ? `${item.color}30` : `${item.color}15`;
+  const iconBg = isDark ? `${item.color}25` : `${item.color}12`;
 
   return (
     <Animated.View style={[styles.gridItemWrapper, {transform: [{scale: scaleAnim}]}]}>
@@ -157,7 +158,7 @@ const GridItemCard = memo<GridItemCardProps>(({item, colors, isDark, onPress}) =
 GridItemCard.displayName = 'GridItemCard';
 
 // ============================================================================
-// MAIN SCREEN
+// MAIN SCREEN (ENHANCED)
 // ============================================================================
 
 const MoreScreen = () => {
@@ -212,7 +213,7 @@ const MoreScreen = () => {
               Tools, resources & features
             </Text>
           </View>
-          {/* Profile Button with User Initials */}
+          {/* Profile Button */}
           <TouchableOpacity
             style={[
               styles.profileButton,
@@ -242,7 +243,7 @@ const MoreScreen = () => {
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
               onPress={() => handleNavigate('Calculator')}
-              activeOpacity={0.8}>
+              activeOpacity={0.7}>
               <LinearGradient
                 colors={['#4573DF', '#3660C9']}
                 style={styles.quickCardGradient}>
@@ -254,7 +255,7 @@ const MoreScreen = () => {
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
               onPress={() => handleNavigate('EntryTests')}
-              activeOpacity={0.8}>
+              activeOpacity={0.7}>
               <LinearGradient
                 colors={['#DC2626', '#EF4444']}
                 style={styles.quickCardGradient}>
@@ -266,7 +267,7 @@ const MoreScreen = () => {
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
               onPress={() => handleNavigate('Deadlines')}
-              activeOpacity={0.8}>
+              activeOpacity={0.7}>
               <LinearGradient
                 colors={['#EF4444', '#F87171']}
                 style={styles.quickCardGradient}>
@@ -278,7 +279,7 @@ const MoreScreen = () => {
             <TouchableOpacity
               style={[styles.quickCard, {backgroundColor: colors.card}]}
               onPress={() => handleNavigate('CareerCenter')}
-              activeOpacity={0.8}>
+              activeOpacity={0.7}>
               <LinearGradient
                 colors={['#059669', '#10B981']}
                 style={styles.quickCardGradient}>

@@ -24,31 +24,46 @@ const {width} = Dimensions.get('window');
 
 // Storage key for goals
 const GOALS_STORAGE_KEY = '@pakuni_user_goals';
+const STREAKS_STORAGE_KEY = '@pakuni_goal_streaks';
 
-// Goal templates
+// Goal templates - Comprehensive for Pakistani students
 const GOAL_TEMPLATES = [
   {
     id: 'university',
     title: 'Get into Dream University',
     iconName: 'school-outline',
     color: '#4573DF',
+    category: 'education',
+    difficulty: 'Hard',
+    estimatedDays: 180,
     milestones: [
-      'Research university requirements',
-      'Achieve required marks in FSc',
-      'Prepare for entry test',
-      'Submit application',
+      'Research university requirements & deadlines',
+      'Check eligibility criteria (marks, domicile)',
+      'Achieve required FSc percentage (80%+)',
+      'Register for entry test (NUST NET/FAST/GIKI)',
+      'Complete 3 months entry test preparation',
+      'Take mock tests weekly',
+      'Apply before deadline',
+      'Prepare for interview (if required)',
     ],
   },
   {
     id: 'marks',
     title: 'Improve My Marks',
-    iconName: 'book-outline',
+    iconName: 'trending-up-outline',
     color: '#27ae60',
+    category: 'academics',
+    difficulty: 'Medium',
+    estimatedDays: 90,
     milestones: [
-      'Create study schedule',
-      'Complete daily homework',
-      'Take weekly practice tests',
-      'Review weak subjects',
+      'Identify weak subjects',
+      'Create daily study schedule',
+      'Complete homework same day',
+      'Take practice tests every weekend',
+      'Review and correct mistakes',
+      'Ask teachers for help on difficult topics',
+      'Join study group for peer learning',
+      'Achieve target marks in monthly test',
     ],
   },
   {
@@ -56,11 +71,18 @@ const GOAL_TEMPLATES = [
     title: 'Get Scholarship',
     iconName: 'trophy-outline',
     color: '#f39c12',
+    category: 'financial',
+    difficulty: 'Hard',
+    estimatedDays: 120,
     milestones: [
-      'Research scholarship options',
-      'Meet eligibility criteria',
-      'Prepare application essays',
-      'Submit before deadline',
+      'Research available scholarships (HEC, Need-based, Merit)',
+      'Check eligibility for each scholarship',
+      'Gather required documents (income certificate, etc.)',
+      'Write compelling personal statement',
+      'Get recommendation letters from teachers',
+      'Submit application before deadline',
+      'Prepare for scholarship interview',
+      'Follow up on application status',
     ],
   },
   {
@@ -68,11 +90,91 @@ const GOAL_TEMPLATES = [
     title: 'Explore Career Options',
     iconName: 'briefcase-outline',
     color: '#9b59b6',
+    category: 'career',
+    difficulty: 'Easy',
+    estimatedDays: 30,
     milestones: [
-      'Take career quiz',
-      'Research 3 career paths',
-      'Talk to professionals',
-      'Create action plan',
+      'Take career aptitude quiz in app',
+      'Research top 5 career paths',
+      'Talk to professionals in each field',
+      'Understand required qualifications',
+      'Create career action plan',
+    ],
+  },
+  {
+    id: 'entry-test',
+    title: 'Ace Entry Test',
+    iconName: 'flask-outline',
+    color: '#E74C3C',
+    category: 'education',
+    difficulty: 'Hard',
+    estimatedDays: 90,
+    milestones: [
+      'Register for entry test',
+      'Get past papers (5+ years)',
+      'Complete Physics syllabus revision',
+      'Complete Chemistry syllabus revision',
+      'Complete Math/Biology syllabus revision',
+      'Complete English/IQ section prep',
+      'Solve 50+ past papers',
+      'Take 10+ full mock tests',
+      'Review weak areas',
+      'Final revision before exam',
+    ],
+  },
+  {
+    id: 'english',
+    title: 'Improve English Skills',
+    iconName: 'language-outline',
+    color: '#3498DB',
+    category: 'skills',
+    difficulty: 'Medium',
+    estimatedDays: 60,
+    milestones: [
+      'Read English newspaper daily (15 mins)',
+      'Learn 10 new words daily',
+      'Watch English content with subtitles',
+      'Practice speaking with someone',
+      'Write one paragraph daily',
+      'Take grammar quiz weekly',
+      'Complete one English book',
+    ],
+  },
+  {
+    id: 'matric-fsc',
+    title: 'Score 90%+ in Board Exams',
+    iconName: 'ribbon-outline',
+    color: '#1ABC9C',
+    category: 'academics',
+    difficulty: 'Hard',
+    estimatedDays: 180,
+    milestones: [
+      'Complete syllabus 2 months early',
+      'Solve past papers (10 years)',
+      'Master important questions',
+      'Create formula/key points sheets',
+      'Daily 6+ hours focused study',
+      'Weekly revision of all subjects',
+      'Mock exam practice',
+      'Final week intensive revision',
+    ],
+  },
+  {
+    id: 'time-management',
+    title: 'Master Time Management',
+    iconName: 'time-outline',
+    color: '#E67E22',
+    category: 'skills',
+    difficulty: 'Easy',
+    estimatedDays: 21,
+    milestones: [
+      'Track current time usage for 3 days',
+      'Identify time-wasting activities',
+      'Create weekly schedule template',
+      'Use Pomodoro technique (25/5 mins)',
+      'Limit social media to 30 mins/day',
+      'Wake up at consistent time',
+      'Maintain schedule for 2 weeks',
     ],
   },
 ];
@@ -81,6 +183,7 @@ const GOAL_TEMPLATES = [
 interface GoalMilestone {
   text: string;
   completed: boolean;
+  completedDate?: string;
 }
 
 interface UserGoal {
@@ -90,8 +193,32 @@ interface UserGoal {
   color: string;
   progress: number;
   deadline: string;
+  createdAt: string;
+  category?: string;
+  difficulty?: string;
+  streak?: number;
+  lastCheckIn?: string;
   milestones: GoalMilestone[];
 }
+
+// Helper to calculate streak
+const calculateStreak = (lastCheckIn: string | undefined): number => {
+  if (!lastCheckIn) return 0;
+  const last = new Date(lastCheckIn);
+  const today = new Date();
+  const diffDays = Math.floor((today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
+  return diffDays <= 1 ? 1 : 0; // Streak continues if checked in within 24hrs
+};
+
+// Get difficulty color
+const getDifficultyColor = (difficulty: string): string => {
+  switch (difficulty) {
+    case 'Easy': return '#27ae60';
+    case 'Medium': return '#f39c12';
+    case 'Hard': return '#E74C3C';
+    default: return '#4573DF';
+  }
+};
 
 // Default empty goals - user needs to create their own
 const DEFAULT_GOALS: UserGoal[] = [];
@@ -297,7 +424,7 @@ const TemplateCard = ({
   onSelect,
   colors,
 }: {
-  template: any;
+  template: typeof GOAL_TEMPLATES[0];
   onSelect: () => void;
   colors: any;
 }) => {
@@ -305,11 +432,23 @@ const TemplateCard = ({
     <TouchableOpacity
       style={[styles.templateCard, {backgroundColor: template.color}]}
       onPress={onSelect}>
+      <View style={styles.templateBadgeRow}>
+        <View style={[styles.difficultyBadge, {backgroundColor: 'rgba(255,255,255,0.2)'}]}>
+          <Text style={styles.difficultyText}>{template.difficulty}</Text>
+        </View>
+      </View>
       <Icon name={template.iconName} family="Ionicons" size={32} color="#FFFFFF" />
       <Text style={styles.templateTitle}>{template.title}</Text>
-      <Text style={styles.templateMilestones}>
-        {template.milestones.length} steps
-      </Text>
+      <View style={styles.templateMeta}>
+        <View style={styles.templateMetaItem}>
+          <Icon name="list-outline" family="Ionicons" size={12} color="rgba(255,255,255,0.8)" />
+          <Text style={styles.templateMilestones}>{template.milestones.length} steps</Text>
+        </View>
+        <View style={styles.templateMetaItem}>
+          <Icon name="time-outline" family="Ionicons" size={12} color="rgba(255,255,255,0.8)" />
+          <Text style={styles.templateMilestones}>{template.estimatedDays}d</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -323,6 +462,10 @@ const PremiumGoalSettingScreen = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<any>(null);
   const [newGoalTitle, setNewGoalTitle] = useState('');
+  const [newGoalDeadline, setNewGoalDeadline] = useState(() => {
+    const defaultDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    return defaultDate.toISOString().split('T')[0];
+  });
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const modalAnim = useRef(new Animated.Value(0)).current;
@@ -397,11 +540,19 @@ const PremiumGoalSettingScreen = () => {
   };
 
   const toggleMilestone = (goalId: string, milestoneIndex: number) => {
+    // Create properly immutable update for milestones
+    const updateMilestones = (milestones: GoalMilestone[]) => {
+      return milestones.map((m, idx) => 
+        idx === milestoneIndex 
+          ? { ...m, completed: !m.completed, completedDate: !m.completed ? new Date().toISOString() : undefined }
+          : m
+      );
+    };
+    
     setGoals(prev =>
       prev.map(g => {
         if (g.id === goalId) {
-          const newMilestones = [...g.milestones];
-          newMilestones[milestoneIndex].completed = !newMilestones[milestoneIndex].completed;
+          const newMilestones = updateMilestones(g.milestones);
           const completedCount = newMilestones.filter(m => m.completed).length;
           const newProgress = Math.round((completedCount / newMilestones.length) * 100);
           return {...g, milestones: newMilestones, progress: newProgress};
@@ -409,10 +560,10 @@ const PremiumGoalSettingScreen = () => {
         return g;
       }),
     );
+    
     if (selectedGoal && selectedGoal.id === goalId) {
-      const newMilestones = [...selectedGoal.milestones];
-      newMilestones[milestoneIndex].completed = !newMilestones[milestoneIndex].completed;
-      const completedCount = newMilestones.filter((m: any) => m.completed).length;
+      const newMilestones = updateMilestones(selectedGoal.milestones);
+      const completedCount = newMilestones.filter(m => m.completed).length;
       const newProgress = Math.round((completedCount / newMilestones.length) * 100);
       setSelectedGoal({...selectedGoal, milestones: newMilestones, progress: newProgress});
     }
@@ -420,13 +571,18 @@ const PremiumGoalSettingScreen = () => {
 
   // Create goal from template
   const handleCreateFromTemplate = (template: typeof GOAL_TEMPLATES[0]) => {
+    const estimatedDays = template.estimatedDays || 30;
     const newGoal: UserGoal = {
       id: `${template.id}-${Date.now()}`,
       title: template.title,
       iconName: template.iconName,
       color: template.color,
       progress: 0,
-      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      createdAt: new Date().toISOString(),
+      category: template.category,
+      difficulty: template.difficulty,
+      streak: 0,
+      deadline: new Date(Date.now() + estimatedDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       milestones: template.milestones.map(m => ({text: m, completed: false})),
     };
     setGoals(prev => [...prev, newGoal]);
@@ -445,15 +601,23 @@ const PremiumGoalSettingScreen = () => {
       iconName: 'flag-outline',
       color: '#e74c3c',
       progress: 0,
-      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      createdAt: new Date().toISOString(),
+      category: 'custom',
+      difficulty: 'Medium',
+      streak: 0,
+      deadline: newGoalDeadline,
       milestones: [
-        {text: 'Start working on this goal', completed: false},
-        {text: 'Make progress', completed: false},
+        {text: 'Define what success looks like', completed: false},
+        {text: 'Break down into smaller tasks', completed: false},
+        {text: 'Start working on first task', completed: false},
+        {text: 'Track progress weekly', completed: false},
         {text: 'Complete the goal', completed: false},
       ],
     };
     setGoals(prev => [...prev, newGoal]);
     setNewGoalTitle('');
+    // Reset deadline to default 30 days from now
+    setNewGoalDeadline(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
     closeAddModal();
   };
 
@@ -646,6 +810,34 @@ const PremiumGoalSettingScreen = () => {
                 onChangeText={setNewGoalTitle}
               />
             </View>
+            
+            {/* Deadline Input */}
+            <View style={{marginTop: SPACING.sm}}>
+              <Text style={[styles.deadlineLabel, {color: colors.textSecondary}]}>
+                Set Deadline
+              </Text>
+              <View
+                style={[
+                  styles.customInput,
+                  {backgroundColor: colors.background, borderColor: colors.border, flexDirection: 'row', alignItems: 'center'},
+                ]}>
+                <View style={{marginRight: 8}}>
+                  <Icon name="calendar-outline" family="Ionicons" size={20} color={colors.textMuted} />
+                </View>
+                <TextInput
+                  style={[styles.input, {color: colors.text, flex: 1}]}
+                  placeholder="YYYY-MM-DD"
+                  placeholderTextColor={colors.textMuted}
+                  value={newGoalDeadline}
+                  onChangeText={setNewGoalDeadline}
+                  keyboardType="default"
+                />
+              </View>
+              <Text style={[styles.deadlineHint, {color: colors.textMuted}]}>
+                Format: YYYY-MM-DD (e.g., 2025-03-15)
+              </Text>
+            </View>
+            
             <TouchableOpacity 
               style={styles.createBtn}
               onPress={handleCreateCustomGoal}>
@@ -761,6 +953,14 @@ const PremiumGoalSettingScreen = () => {
                     </Text>
                   </View>
                 </View>
+
+                {/* Delete Goal Button */}
+                <TouchableOpacity
+                  style={[styles.deleteGoalBtn, {backgroundColor: colors.error + '15', borderColor: colors.error}]}
+                  onPress={() => handleDeleteGoal(selectedGoal.id)}>
+                  <Icon name="trash-outline" family="Ionicons" size={20} color={colors.error} />
+                  <Text style={[styles.deleteGoalText, {color: colors.error}]}>Delete Goal</Text>
+                </TouchableOpacity>
 
                 <View style={{height: SPACING.xxl}} />
               </ScrollView>
@@ -1065,12 +1265,38 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.lg,
     alignItems: 'center',
   },
+  templateBadgeRow: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
+  difficultyBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: RADIUS.sm,
+  },
+  difficultyText: {
+    color: '#fff',
+    fontSize: 9,
+    fontWeight: '700',
+  },
   templateTitle: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: 2,
+    marginTop: SPACING.xs,
+    marginBottom: 4,
+  },
+  templateMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  templateMetaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
   templateMilestones: {
     color: 'rgba(255,255,255,0.8)',
@@ -1090,6 +1316,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.md,
+  },
+  deadlineLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    marginBottom: SPACING.xs,
+  },
+  deadlineHint: {
+    fontSize: 11,
+    marginTop: -SPACING.sm,
+    marginBottom: SPACING.sm,
   },
   createBtn: {
     borderRadius: RADIUS.lg,
@@ -1174,10 +1410,22 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     borderRadius: RADIUS.md,
   },
-  deadlineLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
   deadlineValue: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+  },
+  deleteGoalBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.lg,
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    gap: SPACING.sm,
+  },
+  deleteGoalText: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
   },

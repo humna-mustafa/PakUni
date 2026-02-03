@@ -1,10 +1,10 @@
 /**
- * ResultGameScreen - Interactive Result Prediction Game
- * Fun gamified experience for students waiting for results
- * Offline-first - no Supabase dependency
+ * ResultGameScreen - Admission Chance Calculator
+ * TRANSFORMED: From random prediction game to useful admission probability tool
+ * Features: Real university cutoffs, weighted scoring, actionable recommendations
  */
 
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
   Dimensions,
   StatusBar,
   ScrollView,
-  Easing,
+  TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -22,242 +22,361 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
-import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
+import {ANIMATION_SCALES} from '../constants/ui';
 import {shareResultPrediction} from '../services/share';
 
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 // ============================================================================
-// CONFETTI COMPONENT
+// UNIVERSITY ADMISSION DATA
 // ============================================================================
 
-interface ConfettiPiece {
-  id: number;
-  translateY: Animated.Value;
-  translateX: Animated.Value;
-  rotate: Animated.Value;
-  scale: Animated.Value;
+interface UniversityAdmission {
+  id: string;
+  name: string;
+  shortName: string;
+  programs: ProgramAdmission[];
   color: string;
 }
 
-const Confetti: React.FC<{show: boolean}> = ({show}) => {
-  const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
+interface ProgramAdmission {
+  id: string;
+  name: string;
+  shortName: string;
+  minMarks: number; // Minimum FSc/Matric percentage
+  entryTestWeight: number; // Weight given to entry test (0-100)
+  marksWeight: number; // Weight given to academic marks (0-100)
+  minEntryTest: number; // Minimum entry test score required
+  seats: number; // Approximate seats
+  lastYearCutoff: number; // Last year's aggregate cutoff
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Very Hard';
+}
 
-  useEffect(() => {
-    if (show) {
-      const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
-      const newPieces: ConfettiPiece[] = Array.from({length: 50}, (_, i) => ({
-        id: i,
-        translateY: new Animated.Value(-50),
-        translateX: new Animated.Value(Math.random() * SCREEN_WIDTH),
-        rotate: new Animated.Value(0),
-        scale: new Animated.Value(0.5 + Math.random() * 0.5),
-        color: colors[Math.floor(Math.random() * colors.length)],
-      }));
+const UNIVERSITY_DATA: UniversityAdmission[] = [
+  {
+    id: 'nust',
+    name: 'NUST (National University of Sciences & Technology)',
+    shortName: 'NUST',
+    color: '#1E40AF',
+    programs: [
+      {id: 'nust-cs', name: 'Computer Science', shortName: 'CS', minMarks: 80, entryTestWeight: 75, marksWeight: 25, minEntryTest: 140, seats: 150, lastYearCutoff: 168, difficulty: 'Very Hard'},
+      {id: 'nust-ee', name: 'Electrical Engineering', shortName: 'EE', minMarks: 75, entryTestWeight: 75, marksWeight: 25, minEntryTest: 130, seats: 120, lastYearCutoff: 155, difficulty: 'Very Hard'},
+      {id: 'nust-se', name: 'Software Engineering', shortName: 'SE', minMarks: 78, entryTestWeight: 75, marksWeight: 25, minEntryTest: 135, seats: 100, lastYearCutoff: 162, difficulty: 'Very Hard'},
+      {id: 'nust-me', name: 'Mechanical Engineering', shortName: 'ME', minMarks: 70, entryTestWeight: 75, marksWeight: 25, minEntryTest: 120, seats: 100, lastYearCutoff: 145, difficulty: 'Hard'},
+      {id: 'nust-bba', name: 'Business Administration', shortName: 'BBA', minMarks: 70, entryTestWeight: 70, marksWeight: 30, minEntryTest: 110, seats: 80, lastYearCutoff: 140, difficulty: 'Hard'},
+    ],
+  },
+  {
+    id: 'lums',
+    name: 'LUMS (Lahore University of Management Sciences)',
+    shortName: 'LUMS',
+    color: '#DC2626',
+    programs: [
+      {id: 'lums-cs', name: 'Computer Science', shortName: 'CS', minMarks: 85, entryTestWeight: 50, marksWeight: 50, minEntryTest: 60, seats: 100, lastYearCutoff: 75, difficulty: 'Very Hard'},
+      {id: 'lums-bba', name: 'Business Administration', shortName: 'BSc (Hons)', minMarks: 80, entryTestWeight: 50, marksWeight: 50, minEntryTest: 55, seats: 200, lastYearCutoff: 70, difficulty: 'Hard'},
+      {id: 'lums-eco', name: 'Economics', shortName: 'Eco', minMarks: 75, entryTestWeight: 50, marksWeight: 50, minEntryTest: 50, seats: 80, lastYearCutoff: 65, difficulty: 'Hard'},
+      {id: 'lums-law', name: 'Law (LLB)', shortName: 'LLB', minMarks: 75, entryTestWeight: 50, marksWeight: 50, minEntryTest: 50, seats: 60, lastYearCutoff: 68, difficulty: 'Hard'},
+    ],
+  },
+  {
+    id: 'fast',
+    name: 'FAST-NUCES',
+    shortName: 'FAST',
+    color: '#059669',
+    programs: [
+      {id: 'fast-cs', name: 'Computer Science', shortName: 'CS', minMarks: 70, entryTestWeight: 70, marksWeight: 30, minEntryTest: 55, seats: 300, lastYearCutoff: 72, difficulty: 'Hard'},
+      {id: 'fast-se', name: 'Software Engineering', shortName: 'SE', minMarks: 70, entryTestWeight: 70, marksWeight: 30, minEntryTest: 55, seats: 200, lastYearCutoff: 70, difficulty: 'Hard'},
+      {id: 'fast-ds', name: 'Data Science', shortName: 'DS', minMarks: 65, entryTestWeight: 70, marksWeight: 30, minEntryTest: 50, seats: 100, lastYearCutoff: 65, difficulty: 'Medium'},
+      {id: 'fast-ai', name: 'Artificial Intelligence', shortName: 'AI', minMarks: 68, entryTestWeight: 70, marksWeight: 30, minEntryTest: 52, seats: 80, lastYearCutoff: 68, difficulty: 'Hard'},
+      {id: 'fast-ee', name: 'Electrical Engineering', shortName: 'EE', minMarks: 65, entryTestWeight: 70, marksWeight: 30, minEntryTest: 48, seats: 150, lastYearCutoff: 60, difficulty: 'Medium'},
+    ],
+  },
+  {
+    id: 'giki',
+    name: 'GIKI (Ghulam Ishaq Khan Institute)',
+    shortName: 'GIKI',
+    color: '#7C3AED',
+    programs: [
+      {id: 'giki-cs', name: 'Computer Science', shortName: 'CS', minMarks: 75, entryTestWeight: 70, marksWeight: 30, minEntryTest: 65, seats: 80, lastYearCutoff: 78, difficulty: 'Very Hard'},
+      {id: 'giki-ee', name: 'Electrical Engineering', shortName: 'EE', minMarks: 72, entryTestWeight: 70, marksWeight: 30, minEntryTest: 60, seats: 100, lastYearCutoff: 72, difficulty: 'Hard'},
+      {id: 'giki-me', name: 'Mechanical Engineering', shortName: 'ME', minMarks: 70, entryTestWeight: 70, marksWeight: 30, minEntryTest: 55, seats: 100, lastYearCutoff: 68, difficulty: 'Hard'},
+    ],
+  },
+  {
+    id: 'comsats',
+    name: 'COMSATS University',
+    shortName: 'COMSATS',
+    color: '#0891B2',
+    programs: [
+      {id: 'comsats-cs', name: 'Computer Science', shortName: 'CS', minMarks: 60, entryTestWeight: 50, marksWeight: 50, minEntryTest: 50, seats: 400, lastYearCutoff: 70, difficulty: 'Medium'},
+      {id: 'comsats-se', name: 'Software Engineering', shortName: 'SE', minMarks: 60, entryTestWeight: 50, marksWeight: 50, minEntryTest: 50, seats: 300, lastYearCutoff: 68, difficulty: 'Medium'},
+      {id: 'comsats-ee', name: 'Electrical Engineering', shortName: 'EE', minMarks: 55, entryTestWeight: 50, marksWeight: 50, minEntryTest: 45, seats: 250, lastYearCutoff: 62, difficulty: 'Easy'},
+      {id: 'comsats-bba', name: 'Business Administration', shortName: 'BBA', minMarks: 50, entryTestWeight: 40, marksWeight: 60, minEntryTest: 40, seats: 200, lastYearCutoff: 58, difficulty: 'Easy'},
+    ],
+  },
+  {
+    id: 'uet',
+    name: 'UET Lahore',
+    shortName: 'UET',
+    color: '#B45309',
+    programs: [
+      {id: 'uet-cs', name: 'Computer Science', shortName: 'CS', minMarks: 70, entryTestWeight: 80, marksWeight: 20, minEntryTest: 65, seats: 120, lastYearCutoff: 850, difficulty: 'Hard'},
+      {id: 'uet-ee', name: 'Electrical Engineering', shortName: 'EE', minMarks: 65, entryTestWeight: 80, marksWeight: 20, minEntryTest: 60, seats: 200, lastYearCutoff: 800, difficulty: 'Hard'},
+      {id: 'uet-me', name: 'Mechanical Engineering', shortName: 'ME', minMarks: 60, entryTestWeight: 80, marksWeight: 20, minEntryTest: 55, seats: 200, lastYearCutoff: 750, difficulty: 'Medium'},
+      {id: 'uet-civil', name: 'Civil Engineering', shortName: 'Civil', minMarks: 60, entryTestWeight: 80, marksWeight: 20, minEntryTest: 50, seats: 180, lastYearCutoff: 700, difficulty: 'Medium'},
+    ],
+  },
+  {
+    id: 'pu',
+    name: 'Punjab University',
+    shortName: 'PU',
+    color: '#4F46E5',
+    programs: [
+      {id: 'pu-cs', name: 'Computer Science', shortName: 'CS', minMarks: 55, entryTestWeight: 60, marksWeight: 40, minEntryTest: 50, seats: 300, lastYearCutoff: 65, difficulty: 'Medium'},
+      {id: 'pu-it', name: 'Information Technology', shortName: 'IT', minMarks: 50, entryTestWeight: 60, marksWeight: 40, minEntryTest: 45, seats: 250, lastYearCutoff: 60, difficulty: 'Easy'},
+      {id: 'pu-bba', name: 'Business Administration', shortName: 'BBA', minMarks: 50, entryTestWeight: 50, marksWeight: 50, minEntryTest: 45, seats: 200, lastYearCutoff: 58, difficulty: 'Easy'},
+      {id: 'pu-law', name: 'Law (LLB)', shortName: 'LLB', minMarks: 50, entryTestWeight: 50, marksWeight: 50, minEntryTest: 45, seats: 150, lastYearCutoff: 55, difficulty: 'Easy'},
+    ],
+  },
+  {
+    id: 'iba',
+    name: 'IBA Karachi',
+    shortName: 'IBA',
+    color: '#BE185D',
+    programs: [
+      {id: 'iba-bba', name: 'Business Administration', shortName: 'BBA', minMarks: 75, entryTestWeight: 60, marksWeight: 40, minEntryTest: 70, seats: 200, lastYearCutoff: 75, difficulty: 'Very Hard'},
+      {id: 'iba-cs', name: 'Computer Science', shortName: 'CS', minMarks: 75, entryTestWeight: 60, marksWeight: 40, minEntryTest: 68, seats: 100, lastYearCutoff: 73, difficulty: 'Very Hard'},
+      {id: 'iba-eco', name: 'Economics & Mathematics', shortName: 'Eco', minMarks: 70, entryTestWeight: 60, marksWeight: 40, minEntryTest: 65, seats: 80, lastYearCutoff: 70, difficulty: 'Hard'},
+    ],
+  },
+];
 
-      setPieces(newPieces);
-
-      newPieces.forEach((piece, index) => {
-        const delay = index * 50;
-        Animated.parallel([
-          Animated.timing(piece.translateY, {
-            toValue: SCREEN_HEIGHT + 50,
-            duration: 3000 + Math.random() * 2000,
-            delay,
-            useNativeDriver: true,
-            easing: Easing.linear,
-          }),
-          Animated.timing(piece.rotate, {
-            toValue: 720,
-            duration: 3000,
-            delay,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      });
+// Calculate admission chance percentage
+const calculateAdmissionChance = (
+  marks: number,
+  entryTestScore: number,
+  entryTestMax: number,
+  program: ProgramAdmission
+): {percentage: number; status: string; color: string; recommendations: string[]} => {
+  const recommendations: string[] = [];
+  
+  // Normalize entry test score to percentage
+  const entryTestPercentage = (entryTestScore / entryTestMax) * 100;
+  
+  // Calculate weighted aggregate
+  const aggregate = (marks * program.marksWeight / 100) + (entryTestPercentage * program.entryTestWeight / 100);
+  
+  // Check minimum requirements first
+  const meetsMinMarks = marks >= program.minMarks;
+  const meetsMinEntryTest = entryTestScore >= program.minEntryTest;
+  
+  if (!meetsMinMarks) {
+    recommendations.push(`Minimum ${program.minMarks}% marks required. You have ${marks}%.`);
+  }
+  
+  if (!meetsMinEntryTest) {
+    recommendations.push(`Entry test score needs improvement. Target: ${program.minEntryTest}+`);
+  }
+  
+  // Calculate chance based on how aggregate compares to cutoff
+  let percentage: number;
+  let status: string;
+  let color: string;
+  
+  // For NUST/GIKI style (out of 200), normalize differently
+  const normalizedCutoff = program.lastYearCutoff > 100 ? program.lastYearCutoff / 2 : program.lastYearCutoff;
+  const normalizedAggregate = aggregate;
+  
+  const ratio = normalizedAggregate / normalizedCutoff;
+  
+  // If minimum requirements not met, cap the chance very low
+  if (!meetsMinMarks || !meetsMinEntryTest) {
+    percentage = 5;
+    status = 'Not Eligible';
+    color = '#EF4444';
+    recommendations.push('You do not meet minimum requirements for this program.');
+  } else if (ratio >= 1.15) {
+    percentage = 90;
+    status = 'Excellent Chance';
+    color = '#10B981';
+    recommendations.push('Your profile is very strong! Focus on interview prep.');
+  } else if (ratio >= 1.05) {
+    percentage = 75;
+    status = 'Good Chance';
+    color = '#22C55E';
+    recommendations.push('Strong candidate. Keep documents ready!');
+  } else if (ratio >= 0.98) {
+    percentage = 55;
+    status = 'Fair Chance';
+    color = '#84CC16';
+    recommendations.push('Competitive profile. Consider backup options too.');
+  } else if (ratio >= 0.92) {
+    percentage = 35;
+    status = 'Low Chance';
+    color = '#F59E0B';
+    recommendations.push('Borderline case. Apply to similar-tier universities as backup.');
+  } else if (ratio >= 0.85) {
+    percentage = 20;
+    status = 'Very Low Chance';
+    color = '#EF4444';
+    recommendations.push('Consider easier programs or other universities.');
+  } else {
+    percentage = 10;
+    status = 'Unlikely';
+    color = '#EF4444';
+    recommendations.push('Focus on backup options. Consider improving your marks.');
+  }
+  
+  // Difficulty adjustment
+  if (program.difficulty === 'Very Hard') {
+    percentage = Math.max(5, percentage - 15);
+    if (percentage < 40) {
+      recommendations.push(`${program.shortName} at this university is highly competitive.`);
     }
-  }, [show]);
-
-  if (!show || pieces.length === 0) return null;
-
-  return (
-    <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-      {pieces.map(piece => (
-        <Animated.View
-          key={piece.id}
-          style={[
-            confettiStyles.piece,
-            {
-              backgroundColor: piece.color,
-              transform: [
-                {translateX: piece.translateX},
-                {translateY: piece.translateY},
-                {
-                  rotate: piece.rotate.interpolate({
-                    inputRange: [0, 360],
-                    outputRange: ['0deg', '360deg'],
-                  }),
-                },
-                {scale: piece.scale},
-              ],
-            },
-          ]}
-        />
-      ))}
-    </View>
-  );
+  } else if (program.difficulty === 'Hard') {
+    percentage = Math.max(5, percentage - 5);
+  } else if (program.difficulty === 'Easy') {
+    percentage = Math.min(95, percentage + 10);
+  }
+  
+  // Cap the percentage
+  percentage = Math.max(5, Math.min(95, percentage));
+  const finalColor = color || '#3B82F6';
+  
+  return {percentage, status, color: finalColor, recommendations};
 };
 
-const confettiStyles = StyleSheet.create({
-  piece: {
-    position: 'absolute',
-    width: 10,
-    height: 10,
-    borderRadius: 2,
-  },
-});
 
 // ============================================================================
-// PREDICTION GAME
+// ADMISSION CHANCE CALCULATOR COMPONENT
 // ============================================================================
 
-interface PredictionOption {
-  id: string;
-  label: string;
-  emoji: string;
-  description: string;
+interface CalculationResult {
+  program: ProgramAdmission;
+  university: UniversityAdmission;
+  percentage: number;
+  status: string;
   color: string;
+  recommendations: string[];
 }
-
-const PREDICTION_OPTIONS: PredictionOption[] = [
-  {
-    id: 'flying',
-    label: 'Flying Colors',
-    emoji: '🚀',
-    description: '90%+ - Topper material!',
-    color: '#10B981',
-  },
-  {
-    id: 'excellent',
-    label: 'Excellent',
-    emoji: '🌟',
-    description: '80-90% - Outstanding!',
-    color: '#4573DF',
-  },
-  {
-    id: 'good',
-    label: 'Good',
-    emoji: '👍',
-    description: '70-80% - Well done!',
-    color: '#F59E0B',
-  },
-  {
-    id: 'satisfactory',
-    label: 'Satisfactory',
-    emoji: '✅',
-    description: '60-70% - Passed!',
-    color: '#4573DF',
-  },
-  {
-    id: 'surprise',
-    label: 'Surprise Me!',
-    emoji: '🎁',
-    description: 'Random prediction',
-    color: '#4573DF',
-  },
-];
-
-const REVEAL_MESSAGES = [
-  {emoji: '🎉', message: 'Congratulations! Your hard work paid off!'},
-  {emoji: '🌟', message: 'Amazing! You did it!'},
-  {emoji: '🚀', message: 'To the moon! Great result!'},
-  {emoji: '💪', message: 'Strong effort! Be proud!'},
-  {emoji: '🎊', message: 'Celebration time!'},
-  {emoji: '👏', message: 'Round of applause for you!'},
-];
 
 const ResultGameScreen: React.FC = () => {
   const navigation = useNavigation();
   const {colors, isDark} = useTheme();
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [resultMessage, setResultMessage] = useState<{emoji: string; message: string} | null>(null);
-  const [isRevealing, setIsRevealing] = useState(false);
+  
+  // Form state
+  const [marks, setMarks] = useState<string>('');
+  const [entryTestScore, setEntryTestScore] = useState<string>('');
+  const [entryTestMax, setEntryTestMax] = useState<string>('200');
+  const [selectedUniversity, setSelectedUniversity] = useState<string | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+  const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<CalculationResult[]>([]);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
 
   // Animations
-  const buttonScales = useRef(PREDICTION_OPTIONS.map(() => new Animated.Value(1))).current;
   const resultScale = useRef(new Animated.Value(0)).current;
   const resultOpacity = useRef(new Animated.Value(0)).current;
-  const loadingRotate = useRef(new Animated.Value(0)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
-  const handleOptionPress = (optionId: string, index: number) => {
-    // Animate button press
+  const selectedUniData = UNIVERSITY_DATA.find(u => u.id === selectedUniversity);
+
+  const handleCalculate = useCallback(() => {
+    const marksNum = parseFloat(marks);
+    const testScore = parseFloat(entryTestScore);
+    const testMax = parseFloat(entryTestMax);
+
+    if (isNaN(marksNum) || isNaN(testScore) || isNaN(testMax)) {
+      return;
+    }
+
+    let programsToCalculate: {program: ProgramAdmission; university: UniversityAdmission}[] = [];
+
+    if (selectedUniversity && selectedProgram) {
+      // Calculate for specific program
+      const uni = UNIVERSITY_DATA.find(u => u.id === selectedUniversity);
+      const prog = uni?.programs.find(p => p.id === selectedProgram);
+      if (uni && prog) {
+        programsToCalculate = [{program: prog, university: uni}];
+      }
+    } else if (selectedUniversity) {
+      // Calculate for all programs in selected university
+      const uni = UNIVERSITY_DATA.find(u => u.id === selectedUniversity);
+      if (uni) {
+        programsToCalculate = uni.programs.map(p => ({program: p, university: uni}));
+      }
+    } else {
+      // Calculate for all universities and programs
+      UNIVERSITY_DATA.forEach(uni => {
+        uni.programs.forEach(prog => {
+          programsToCalculate.push({program: prog, university: uni});
+        });
+      });
+    }
+
+    const calculatedResults: CalculationResult[] = programsToCalculate.map(({program, university}) => {
+      const result = calculateAdmissionChance(marksNum, testScore, testMax, program);
+      return {
+        program,
+        university,
+        ...result,
+      };
+    });
+
+    // Sort by percentage (highest first)
+    calculatedResults.sort((a, b) => b.percentage - a.percentage);
+
+    setResults(calculatedResults);
+    setShowResults(true);
+
+    // Animate results appearance
+    Animated.parallel([
+      Animated.spring(resultScale, {
+        toValue: 1,
+        friction: 5,
+        tension: 60,
+        useNativeDriver: true,
+      }),
+      Animated.timing(resultOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [marks, entryTestScore, entryTestMax, selectedUniversity, selectedProgram]);
+
+  const handleReset = () => {
+    setShowResults(false);
+    setResults([]);
+    setStep(1);
+    setSelectedUniversity(null);
+    setSelectedProgram(null);
+    resultScale.setValue(0);
+    resultOpacity.setValue(0);
+  };
+
+  const getChanceColor = (percentage: number) => {
+    if (percentage >= 80) return '#10B981';
+    if (percentage >= 60) return '#22C55E';
+    if (percentage >= 40) return '#F59E0B';
+    if (percentage >= 20) return '#EF4444';
+    return '#DC2626';
+  };
+
+  const handleButtonPress = () => {
     Animated.sequence([
-      Animated.timing(buttonScales[index], {
+      Animated.timing(buttonScale, {
         toValue: ANIMATION_SCALES.ICON_PRESS,
         duration: 100,
         useNativeDriver: true,
       }),
-      Animated.timing(buttonScales[index], {
+      Animated.timing(buttonScale, {
         toValue: 1,
         duration: 100,
         useNativeDriver: true,
       }),
     ]).start();
-
-    setSelectedOption(optionId);
   };
-
-  const handleReveal = () => {
-    setIsRevealing(true);
-
-    // Start loading animation
-    Animated.loop(
-      Animated.timing(loadingRotate, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      })
-    ).start();
-
-    // Simulate suspenseful delay
-    setTimeout(() => {
-      const randomMessage = REVEAL_MESSAGES[Math.floor(Math.random() * REVEAL_MESSAGES.length)];
-      setResultMessage(randomMessage);
-      setShowResult(true);
-      setIsRevealing(false);
-
-      // Animate result appearance
-      Animated.parallel([
-        Animated.spring(resultScale, {
-          toValue: 1,
-          friction: 4,
-          tension: 80,
-          useNativeDriver: true,
-        }),
-        Animated.timing(resultOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, 2500);
-  };
-
-  const handleReset = () => {
-    setSelectedOption(null);
-    setShowResult(false);
-    setResultMessage(null);
-    resultScale.setValue(0);
-    resultOpacity.setValue(0);
-    loadingRotate.setValue(0);
-  };
-
-  const loadingRotation = loadingRotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -265,7 +384,6 @@ const ResultGameScreen: React.FC = () => {
         barStyle={isDark ? 'light-content' : 'dark-content'}
         backgroundColor={colors.background}
       />
-      <Confetti show={showResult} />
 
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
@@ -276,9 +394,9 @@ const ResultGameScreen: React.FC = () => {
             <Icon name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <View style={styles.headerContent}>
-            <Text style={[styles.headerTitle, {color: colors.text}]}>Result Prediction</Text>
+            <Text style={[styles.headerTitle, {color: colors.text}]}>Admission Calculator</Text>
             <Text style={[styles.headerSubtitle, {color: colors.textSecondary}]}>
-              Just for fun! 🎲
+              Check your admission chances 📊
             </Text>
           </View>
         </View>
@@ -287,28 +405,28 @@ const ResultGameScreen: React.FC = () => {
           {/* Hero Section */}
           <View style={styles.heroSection}>
             <LinearGradient
-              colors={['#4573DF', '#4573DF']}
+              colors={['#4573DF', '#6366F1']}
               style={styles.heroCard}>
               <View style={styles.heroEmoji}>
-                <Text style={styles.heroEmojiText}>🎮</Text>
+                <Text style={styles.heroEmojiText}>🎓</Text>
               </View>
-              <Text style={styles.heroTitle}>Result Prediction Game</Text>
+              <Text style={styles.heroTitle}>Admission Chance Calculator</Text>
               <Text style={styles.heroSubtitle}>
-                Waiting for results? Let's have some fun! Make a prediction and see what happens!
+                Enter your marks and entry test score to see your chances at top Pakistani universities!
               </Text>
             </LinearGradient>
           </View>
 
-          {/* Disclaimer */}
-          <View style={[styles.disclaimerCard, {backgroundColor: '#F59E0B' + '15'}]}>
-            <Icon name="warning-outline" size={20} color="#F59E0B" />
-            <Text style={[styles.disclaimerText, {color: '#F59E0B'}]}>
-              This is just for fun! Not actual result prediction. 😄
+          {/* Info Card */}
+          <View style={[styles.disclaimerCard, {backgroundColor: '#4573DF' + '15'}]}>
+            <Icon name="information-circle-outline" size={20} color="#4573DF" />
+            <Text style={[styles.disclaimerText, {color: '#4573DF'}]}>
+              Based on 2024 cutoffs & merit lists. Actual results may vary.
             </Text>
           </View>
 
-          {/* Result Display */}
-          {showResult && resultMessage ? (
+          {showResults ? (
+            /* Results Display */
             <Animated.View
               style={[
                 styles.resultContainer,
@@ -317,144 +435,347 @@ const ResultGameScreen: React.FC = () => {
                   opacity: resultOpacity,
                 },
               ]}>
-              <LinearGradient
-                colors={['#10B981', '#34D399']}
-                style={styles.resultCard}>
-                <Text style={styles.resultEmoji}>{resultMessage.emoji}</Text>
-                <Text style={styles.resultTitle}>Your Prediction</Text>
-                <Text style={styles.resultMessage}>{resultMessage.message}</Text>
-                <View style={styles.resultButtons}>
-                  <TouchableOpacity
-                    style={styles.shareButton}
-                    onPress={() => {
-                      // Get the percentage range based on selected option
-                      const selectedOptionData = PREDICTION_OPTIONS.find(opt => opt.id === selectedOption);
-                      let scorePercentage = 85; // default
-                      if (selectedOption === 'flying') scorePercentage = 95;
-                      else if (selectedOption === 'excellent') scorePercentage = 85;
-                      else if (selectedOption === 'good') scorePercentage = 75;
-                      else if (selectedOption === 'satisfactory') scorePercentage = 65;
-                      else if (selectedOption === 'surprise') scorePercentage = Math.floor(Math.random() * 40) + 60; // 60-99
-                      
-                      shareResultPrediction(
-                        selectedOptionData?.label || 'Your Prediction',
-                        selectedOptionData?.description || '',
-                        scorePercentage
-                      );
-                    }}>
-                    <Icon name="share-social-outline" size={20} color="#FFF" />
-                    <Text style={styles.shareButtonText}>Share Result</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.playAgainButton}
-                    onPress={handleReset}>
-                    <Icon name="refresh-outline" size={20} color="#10B981" />
-                    <Text style={styles.playAgainText}>Play Again</Text>
-                  </TouchableOpacity>
+              {/* Summary Card */}
+              <View style={[styles.summaryCard, {backgroundColor: colors.card}]}>
+                <Text style={[styles.summaryTitle, {color: colors.text}]}>Your Input</Text>
+                <View style={styles.summaryRow}>
+                  <Text style={[styles.summaryLabel, {color: colors.textSecondary}]}>FSc/Matric Marks:</Text>
+                  <Text style={[styles.summaryValue, {color: colors.text}]}>{marks}%</Text>
                 </View>
-              </LinearGradient>
-            </Animated.View>
-          ) : isRevealing ? (
-            <View style={styles.loadingContainer}>
-              <Animated.View style={{transform: [{rotate: loadingRotation}]}}>
-                <LinearGradient
-                  colors={['#4573DF', '#4573DF']}
-                  style={styles.loadingCircle}>
-                  <Icon name="sparkles" size={40} color="#FFF" />
-                </LinearGradient>
-              </Animated.View>
-              <Text style={[styles.loadingText, {color: colors.text}]}>
-                Consulting the stars...
-              </Text>
-              <Text style={[styles.loadingSubtext, {color: colors.textSecondary}]}>
-                Building suspense...
-              </Text>
-            </View>
-          ) : (
-            <>
-              {/* Prediction Options */}
+                <View style={styles.summaryRow}>
+                  <Text style={[styles.summaryLabel, {color: colors.textSecondary}]}>Entry Test Score:</Text>
+                  <Text style={[styles.summaryValue, {color: colors.text}]}>{entryTestScore}/{entryTestMax}</Text>
+                </View>
+              </View>
+
+              {/* Results Title */}
               <View style={styles.section}>
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-                  <Icon name="analytics-outline" size={24} color="#4573DF" />
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+                  <Icon name="stats-chart" size={24} color="#4573DF" />
                   <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
-                    Make Your Prediction
+                    Your Admission Chances
                   </Text>
                 </View>
-                <Text style={[styles.sectionSubtitle, {color: colors.textSecondary}]}>
-                  What do you think your result will be?
-                </Text>
-                
-                {PREDICTION_OPTIONS.map((option, index) => (
-                  <Animated.View
-                    key={option.id}
-                    style={{transform: [{scale: buttonScales[index]}]}}>
-                    <TouchableOpacity
-                      style={[
-                        styles.optionCard,
-                        {
-                          backgroundColor: selectedOption === option.id ? option.color + '20' : colors.card,
-                          borderColor: selectedOption === option.id ? option.color : 'transparent',
-                          borderWidth: 2,
-                        },
-                      ]}
-                      onPress={() => handleOptionPress(option.id, index)}
-                      activeOpacity={0.7}>
-                      <View style={[styles.optionEmoji, {backgroundColor: option.color + '20'}]}>
-                        <Text style={styles.optionEmojiText}>{option.emoji}</Text>
-                      </View>
-                      <View style={styles.optionContent}>
-                        <Text style={[styles.optionLabel, {color: colors.text}]}>{option.label}</Text>
-                        <Text style={[styles.optionDescription, {color: colors.textSecondary}]}>
-                          {option.description}
+
+                {/* Results List */}
+                {results.slice(0, 10).map((result, index) => (
+                  <View 
+                    key={result.program.id} 
+                    style={[styles.resultItem, {backgroundColor: colors.card}]}>
+                    <View style={styles.resultHeader}>
+                      <View style={[styles.rankBadge, {backgroundColor: getChanceColor(result.percentage) + '20'}]}>
+                        <Text style={[styles.rankText, {color: getChanceColor(result.percentage)}]}>
+                          #{index + 1}
                         </Text>
                       </View>
-                      {selectedOption === option.id && (
-                        <Icon name="checkmark-circle" size={24} color={option.color} />
-                      )}
-                    </TouchableOpacity>
-                  </Animated.View>
+                      <View style={styles.resultInfo}>
+                        <Text style={[styles.universityName, {color: result.university.color}]}>
+                          {result.university.shortName}
+                        </Text>
+                        <Text style={[styles.programName, {color: colors.text}]}>
+                          {result.program.name}
+                        </Text>
+                      </View>
+                      <View style={styles.chanceContainer}>
+                        <Text style={[styles.chancePercent, {color: getChanceColor(result.percentage)}]}>
+                          {result.percentage}%
+                        </Text>
+                        <Text style={[styles.chanceStatus, {color: colors.textSecondary}]}>
+                          {result.status}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    {/* Chance Bar */}
+                    <View style={styles.chanceBarContainer}>
+                      <View style={[styles.chanceBarBg, {backgroundColor: colors.border}]}>
+                        <View 
+                          style={[
+                            styles.chanceBarFill, 
+                            {
+                              width: `${result.percentage}%`,
+                              backgroundColor: getChanceColor(result.percentage),
+                            }
+                          ]} 
+                        />
+                      </View>
+                    </View>
+
+                    {/* Program Details */}
+                    <View style={styles.programDetails}>
+                      <View style={styles.detailItem}>
+                        <Icon name="school-outline" size={14} color={colors.textSecondary} />
+                        <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+                          ~{result.program.seats} seats
+                        </Text>
+                      </View>
+                      <View style={styles.detailItem}>
+                        <Icon name="trending-up-outline" size={14} color={colors.textSecondary} />
+                        <Text style={[styles.detailText, {color: colors.textSecondary}]}>
+                          Cutoff: {result.program.lastYearCutoff}
+                        </Text>
+                      </View>
+                      <View style={[styles.difficultyBadge, {backgroundColor: 
+                        result.program.difficulty === 'Very Hard' ? '#EF444420' :
+                        result.program.difficulty === 'Hard' ? '#F59E0B20' :
+                        result.program.difficulty === 'Medium' ? '#4573DF20' : '#10B98120'
+                      }]}>
+                        <Text style={[styles.difficultyText, {color: 
+                          result.program.difficulty === 'Very Hard' ? '#EF4444' :
+                          result.program.difficulty === 'Hard' ? '#F59E0B' :
+                          result.program.difficulty === 'Medium' ? '#4573DF' : '#10B981'
+                        }]}>
+                          {result.program.difficulty}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Recommendations */}
+                    {result.recommendations.length > 0 && (
+                      <View style={styles.recommendationsContainer}>
+                        {result.recommendations.slice(0, 2).map((rec, idx) => (
+                          <View key={idx} style={styles.recommendationItem}>
+                            <Icon name="bulb-outline" size={12} color="#F59E0B" />
+                            <Text style={[styles.recommendationText, {color: colors.textSecondary}]}>
+                              {rec}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
                 ))}
               </View>
 
-              {/* Reveal Button */}
-              {selectedOption && (
-                <TouchableOpacity onPress={handleReveal}>
-                  <LinearGradient
-                    colors={['#4573DF', '#4573DF']}
-                    style={styles.revealButton}>
-                    <Icon name="sparkles" size={24} color="#FFF" />
-                    <Text style={styles.revealButtonText}>Reveal My Future!</Text>
-                  </LinearGradient>
+              {/* Action Buttons */}
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={[styles.shareBtn, {backgroundColor: '#4573DF'}]}
+                  onPress={() => {
+                    const topResult = results[0];
+                    if (topResult) {
+                      shareResultPrediction(
+                        `${topResult.university.name} - ${topResult.program.name}`,
+                        topResult.university.shortName,
+                        topResult.percentage
+                      );
+                    }
+                  }}>
+                  <Icon name="share-social-outline" size={20} color="#FFF" />
+                  <Text style={styles.shareBtnText}>Share Results</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.resetBtn, {backgroundColor: colors.card, borderColor: colors.border}]}
+                  onPress={handleReset}>
+                  <Icon name="refresh-outline" size={20} color={colors.text} />
+                  <Text style={[styles.resetBtnText, {color: colors.text}]}>Calculate Again</Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          ) : (
+            /* Input Form */
+            <>
+              {/* Step 1: Enter Marks */}
+              <View style={styles.section}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+                  <View style={[styles.stepBadge, {backgroundColor: '#4573DF'}]}>
+                    <Text style={styles.stepNumber}>1</Text>
+                  </View>
+                  <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
+                    Enter Your Marks
+                  </Text>
+                </View>
+                
+                <View style={[styles.inputCard, {backgroundColor: colors.card}]}>
+                  <View style={styles.inputGroup}>
+                    <Text style={[styles.inputLabel, {color: colors.text}]}>FSc/Matric Percentage</Text>
+                    <View style={[styles.inputWrapper, {backgroundColor: colors.background, borderColor: colors.border}]}>
+                      <Icon name="school-outline" size={20} color={colors.textSecondary} />
+                      <TextInput
+                        style={[styles.input, {color: colors.text}]}
+                        placeholder="e.g., 85"
+                        placeholderTextColor={colors.textSecondary}
+                        keyboardType="numeric"
+                        value={marks}
+                        onChangeText={setMarks}
+                        maxLength={5}
+                      />
+                      <Text style={[styles.inputSuffix, {color: colors.textSecondary}]}>%</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Text style={[styles.inputLabel, {color: colors.text}]}>Entry Test Score</Text>
+                    <View style={styles.inputRow}>
+                      <View style={[styles.inputWrapper, styles.inputWrapperFlex, {backgroundColor: colors.background, borderColor: colors.border}]}>
+                        <Icon name="document-text-outline" size={20} color={colors.textSecondary} />
+                        <TextInput
+                          style={[styles.input, {color: colors.text}]}
+                          placeholder="Your score"
+                          placeholderTextColor={colors.textSecondary}
+                          keyboardType="numeric"
+                          value={entryTestScore}
+                          onChangeText={setEntryTestScore}
+                          maxLength={4}
+                        />
+                      </View>
+                      <Text style={[styles.outOfText, {color: colors.textSecondary}]}>out of</Text>
+                      <View style={[styles.inputWrapper, styles.inputWrapperSmall, {backgroundColor: colors.background, borderColor: colors.border}]}>
+                        <TextInput
+                          style={[styles.input, styles.inputCenter, {color: colors.text}]}
+                          placeholder="200"
+                          placeholderTextColor={colors.textSecondary}
+                          keyboardType="numeric"
+                          value={entryTestMax}
+                          onChangeText={setEntryTestMax}
+                          maxLength={4}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              {/* Step 2: Select University (Optional) */}
+              <View style={styles.section}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
+                  <View style={[styles.stepBadge, {backgroundColor: '#22C55E'}]}>
+                    <Text style={styles.stepNumber}>2</Text>
+                  </View>
+                  <Text style={[styles.sectionTitle, {color: colors.text, marginLeft: 8}]}>
+                    Select University (Optional)
+                  </Text>
+                </View>
+                <Text style={[styles.sectionSubtitle, {color: colors.textSecondary}]}>
+                  Leave empty to check all universities
+                </Text>
+                
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.uniScroll}>
+                  <TouchableOpacity
+                    style={[
+                      styles.uniChip,
+                      {
+                        backgroundColor: selectedUniversity === null ? '#4573DF' : colors.card,
+                        borderColor: selectedUniversity === null ? '#4573DF' : colors.border,
+                      }
+                    ]}
+                    onPress={() => {
+                      setSelectedUniversity(null);
+                      setSelectedProgram(null);
+                    }}>
+                    <Text style={[styles.uniChipText, {color: selectedUniversity === null ? '#FFF' : colors.text}]}>
+                      All Universities
+                    </Text>
+                  </TouchableOpacity>
+                  {UNIVERSITY_DATA.map(uni => (
+                    <TouchableOpacity
+                      key={uni.id}
+                      style={[
+                        styles.uniChip,
+                        {
+                          backgroundColor: selectedUniversity === uni.id ? uni.color : colors.card,
+                          borderColor: selectedUniversity === uni.id ? uni.color : colors.border,
+                        }
+                      ]}
+                      onPress={() => {
+                        setSelectedUniversity(uni.id);
+                        setSelectedProgram(null);
+                      }}>
+                      <Text style={[styles.uniChipText, {color: selectedUniversity === uni.id ? '#FFF' : colors.text}]}>
+                        {uni.shortName}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+
+                {/* Program Selection */}
+                {selectedUniData && (
+                  <View style={styles.programsContainer}>
+                    <Text style={[styles.programsLabel, {color: colors.textSecondary}]}>
+                      Select Program:
+                    </Text>
+                    <View style={styles.programsGrid}>
+                      <TouchableOpacity
+                        style={[
+                          styles.programChip,
+                          {
+                            backgroundColor: selectedProgram === null ? '#4573DF20' : colors.card,
+                            borderColor: selectedProgram === null ? '#4573DF' : colors.border,
+                          }
+                        ]}
+                        onPress={() => setSelectedProgram(null)}>
+                        <Text style={[styles.programChipText, {color: selectedProgram === null ? '#4573DF' : colors.text}]}>
+                          All Programs
+                        </Text>
+                      </TouchableOpacity>
+                      {selectedUniData.programs.map(prog => (
+                        <TouchableOpacity
+                          key={prog.id}
+                          style={[
+                            styles.programChip,
+                            {
+                              backgroundColor: selectedProgram === prog.id ? '#4573DF20' : colors.card,
+                              borderColor: selectedProgram === prog.id ? '#4573DF' : colors.border,
+                            }
+                          ]}
+                          onPress={() => setSelectedProgram(prog.id)}>
+                          <Text style={[styles.programChipText, {color: selectedProgram === prog.id ? '#4573DF' : colors.text}]}>
+                            {prog.shortName}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                )}
+              </View>
+
+              {/* Calculate Button */}
+              {marks && entryTestScore && (
+                <Animated.View style={{transform: [{scale: buttonScale}]}}>
+                  <TouchableOpacity onPress={() => { handleButtonPress(); handleCalculate(); }}>
+                    <LinearGradient
+                      colors={['#4573DF', '#6366F1']}
+                      style={styles.calculateButton}>
+                      <Icon name="calculator" size={24} color="#FFF" />
+                      <Text style={styles.calculateButtonText}>Calculate My Chances</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </Animated.View>
               )}
+
+              {/* Tips Section */}
+              <View style={[styles.factsCard, {backgroundColor: colors.card}]}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
+                  <Icon name="bulb-outline" size={20} color="#F59E0B" />
+                  <Text style={[styles.factsTitle, {color: colors.text, marginLeft: 8}]}>Tips for Better Chances</Text>
+                </View>
+                <View style={styles.factItem}>
+                  <Icon name="checkmark-circle" size={16} color="#10B981" />
+                  <Text style={[styles.factText, {color: colors.textSecondary}]}>
+                    Focus on entry test prep - it carries 70-80% weight at most universities!
+                  </Text>
+                </View>
+                <View style={styles.factItem}>
+                  <Icon name="book-outline" size={16} color="#4573DF" />
+                  <Text style={[styles.factText, {color: colors.textSecondary}]}>
+                    NUST NET, GIKI, FAST - each has different patterns. Practice past papers!
+                  </Text>
+                </View>
+                <View style={styles.factItem}>
+                  <Icon name="shield-checkmark" size={16} color="#F59E0B" />
+                  <Text style={[styles.factText, {color: colors.textSecondary}]}>
+                    Always have 2-3 backup options. Apply to universities at different difficulty levels.
+                  </Text>
+                </View>
+                <View style={styles.factItem}>
+                  <Icon name="time-outline" size={16} color="#EF4444" />
+                  <Text style={[styles.factText, {color: colors.textSecondary}]}>
+                    Don't miss application deadlines! NUST opens in June, FAST in July.
+                  </Text>
+                </View>
+              </View>
             </>
           )}
-
-          {/* Fun Facts */}
-          <View style={[styles.factsCard, {backgroundColor: colors.card}]}>
-            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 12}}>
-              <Icon name="bulb-outline" size={20} color="#F59E0B" />
-              <Text style={[styles.factsTitle, {color: colors.text, marginLeft: 8}]}>Did You Know?</Text>
-            </View>
-            <View style={styles.factItem}>
-              <Icon name="bulb-outline" size={16} color="#F59E0B" />
-              <Text style={[styles.factText, {color: colors.textSecondary}]}>
-                Most students score within 10% of their predicted score!
-              </Text>
-            </View>
-            <View style={styles.factItem}>
-              <Icon name="trending-up" size={16} color="#10B981" />
-              <Text style={[styles.factText, {color: colors.textSecondary}]}>
-                Positive thinking can improve actual performance by 5-10%!
-              </Text>
-            </View>
-            <View style={styles.factItem}>
-              <Icon name="heart" size={16} color="#4573DF" />
-              <Text style={[styles.factText, {color: colors.textSecondary}]}>
-                Your worth is not defined by your grades. You're amazing!
-              </Text>
-            </View>
-          </View>
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -523,7 +844,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   heroTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '800',
     color: '#FFF',
     textAlign: 'center',
@@ -554,42 +875,111 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
-    marginBottom: SPACING.xs,
   },
   sectionSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginBottom: SPACING.md,
   },
-  optionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: RADIUS.xl,
-    padding: SPACING.md,
-    marginBottom: SPACING.sm,
-  },
-  optionEmoji: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
+  stepBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  optionEmojiText: {
-    fontSize: 24,
-  },
-  optionContent: {
-    flex: 1,
-    marginLeft: SPACING.md,
-  },
-  optionLabel: {
-    fontSize: TYPOGRAPHY.sizes.md,
+  stepNumber: {
+    fontSize: 14,
     fontWeight: '700',
+    color: '#FFF',
   },
-  optionDescription: {
+  inputCard: {
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    marginTop: SPACING.sm,
+  },
+  inputGroup: {
+    marginBottom: SPACING.md,
+  },
+  inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: 2,
+    fontWeight: '600',
+    marginBottom: SPACING.sm,
   },
-  revealButton: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    gap: SPACING.sm,
+  },
+  inputWrapperFlex: {
+    flex: 1,
+  },
+  inputWrapperSmall: {
+    width: 80,
+  },
+  input: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    paddingVertical: 4,
+  },
+  inputCenter: {
+    textAlign: 'center',
+  },
+  inputSuffix: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  outOfText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '500',
+  },
+  uniScroll: {
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.md,
+  },
+  uniChip: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.full,
+    borderWidth: 1,
+    marginRight: SPACING.sm,
+  },
+  uniChipText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+  programsContainer: {
+    marginTop: SPACING.sm,
+  },
+  programsLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginBottom: SPACING.sm,
+  },
+  programsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.sm,
+  },
+  programChip: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+  },
+  programChipText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+  },
+  calculateButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -598,98 +988,171 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
     gap: SPACING.sm,
   },
-  revealButtonText: {
+  calculateButtonText: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '700',
     color: '#FFF',
   },
-  loadingContainer: {
-    alignItems: 'center',
-    paddingVertical: SPACING.xl * 2,
+  resultContainer: {
+    marginBottom: SPACING.lg,
   },
-  loadingCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+  summaryCard: {
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    marginBottom: SPACING.lg,
+  },
+  summaryTitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    marginBottom: SPACING.sm,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: SPACING.xs,
+  },
+  summaryLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  summaryValue: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '700',
+  },
+  resultItem: {
+    borderRadius: RADIUS.xl,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  resultHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rankBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loadingText: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
-    marginTop: SPACING.lg,
-  },
-  loadingSubtext: {
+  rankText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    marginTop: SPACING.xs,
-  },
-  resultContainer: {
-    marginBottom: SPACING.xl,
-  },
-  resultCard: {
-    borderRadius: RADIUS.xl,
-    padding: SPACING.xl,
-    alignItems: 'center',
-  },
-  resultEmoji: {
-    fontSize: 64,
-    marginBottom: SPACING.md,
-  },
-  resultTitle: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
-    color: 'rgba(255,255,255,0.9)',
-  },
-  resultMessage: {
-    fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: '800',
-    color: '#FFF',
-    textAlign: 'center',
-    marginTop: SPACING.sm,
   },
-  resultButtons: {
-    flexDirection: 'row',
-    gap: SPACING.md,
-    marginTop: SPACING.lg,
+  resultInfo: {
+    flex: 1,
+    marginLeft: SPACING.sm,
   },
-  shareButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    gap: SPACING.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+  universityName: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '700',
   },
-  shareButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
-    color: '#FFF',
-  },
-  playAgainButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    gap: SPACING.xs,
-  },
-  playAgainText: {
+  programName: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '700',
-    color: '#10B981',
+  },
+  chanceContainer: {
+    alignItems: 'flex-end',
+  },
+  chancePercent: {
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  chanceStatus: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+  },
+  chanceBarContainer: {
+    marginTop: SPACING.sm,
+  },
+  chanceBarBg: {
+    height: 8,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  chanceBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  programDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: SPACING.sm,
+    gap: SPACING.md,
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  detailText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+  },
+  difficultyBadge: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: RADIUS.sm,
+  },
+  difficultyText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: '600',
+  },
+  recommendationsContainer: {
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+  },
+  recommendationItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 6,
+    marginBottom: 4,
+  },
+  recommendationText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    lineHeight: 16,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: SPACING.md,
+    marginTop: SPACING.md,
+  },
+  shareBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: RADIUS.xl,
+    paddingVertical: SPACING.md,
+    gap: SPACING.sm,
+  },
+  shareBtnText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#FFF',
+  },
+  resetBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: RADIUS.xl,
+    paddingVertical: SPACING.md,
+    gap: SPACING.sm,
+    borderWidth: 1,
+  },
+  resetBtnText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
   },
   factsCard: {
     borderRadius: RADIUS.xl,
     padding: SPACING.lg,
+    marginTop: SPACING.md,
   },
   factsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '700',
-    marginBottom: SPACING.md,
   },
   factItem: {
     flexDirection: 'row',

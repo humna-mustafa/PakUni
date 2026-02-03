@@ -1,9 +1,10 @@
 /**
  * Terms of Service Screen
  * Displays the app's terms of service for store compliance
+ * Enhanced with premium animations
  */
 
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,6 +13,8 @@ import {
   TouchableOpacity,
   Linking,
   StatusBar,
+  Animated,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -19,9 +22,120 @@ import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
 import {Icon} from '../components/icons';
 
+// Animated Section Component
+const AnimatedSection: React.FC<{
+  children: React.ReactNode;
+  index: number;
+  style?: any;
+}> = ({children, index, style}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    const delay = index * 80;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 400,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}],
+        },
+      ]}>
+      {children}
+    </Animated.View>
+  );
+};
+
 const TermsOfServiceScreen: React.FC = () => {
   const navigation = useNavigation();
   const {colors, isDark} = useTheme();
+
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const docScaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Document scale pulse
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(docScaleAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(docScaleAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
+
+  const docScale = docScaleAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 1.08, 1],
+  });
 
   const handleContactPress = () => {
     navigation.navigate('ContactSupport' as never);
@@ -36,8 +150,37 @@ const TermsOfServiceScreen: React.FC = () => {
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {/* Floating Decorations */}
+        <Animated.View
+          style={[
+            styles.floatingDoc1,
+            {
+              opacity: 0.06,
+              transform: [{translateY: floatTranslateY}, {scale: docScale}],
+            },
+          ]}>
+          <Icon name="document-text" family="Ionicons" size={80} color={colors.primary} />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.floatingDoc2,
+            {
+              opacity: 0.04,
+            },
+          ]}>
+          <Icon name="checkmark-circle" family="Ionicons" size={50} color={colors.primary} />
+        </Animated.View>
+
         {/* Header */}
-        <View style={[styles.header, {backgroundColor: colors.card, borderBottomColor: colors.border}]}>
+        <Animated.View 
+          style={[
+            styles.header, 
+            {backgroundColor: colors.card, borderBottomColor: colors.border},
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}],
+            },
+          ]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -46,9 +189,12 @@ const TermsOfServiceScreen: React.FC = () => {
           >
             <Icon name="chevron-back" family="Ionicons" size={24} color={colors.primary} />
           </TouchableOpacity>
+          <Animated.View style={{transform: [{scale: docScale}]}}>
+            <Icon name="document-text-outline" family="Ionicons" size={22} color={colors.primary} />
+          </Animated.View>
           <Text style={[styles.headerTitle, {color: colors.text}]}>Terms of Service</Text>
           <View style={styles.placeholder} />
-        </View>
+        </Animated.View>
 
         <ScrollView
           style={styles.content}
@@ -56,12 +202,14 @@ const TermsOfServiceScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Last Updated */}
-          <Text style={[styles.lastUpdated, {color: colors.textSecondary}]}>
-            Last Updated: January 15, 2026
-          </Text>
+          <AnimatedSection index={0}>
+            <Text style={[styles.lastUpdated, {color: colors.textSecondary}]}>
+              Last Updated: January 15, 2026
+            </Text>
+          </AnimatedSection>
 
           {/* Introduction */}
-          <View style={styles.section}>
+          <AnimatedSection index={1} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="document-text-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Agreement to Terms</Text>
@@ -74,10 +222,10 @@ const TermsOfServiceScreen: React.FC = () => {
               PakUni is a free educational application designed to help Pakistani students 
               explore universities, calculate merit scores, and discover scholarship opportunities.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Eligibility */}
-          <View style={styles.section}>
+          <AnimatedSection index={2} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="person-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Eligibility</Text>
@@ -86,10 +234,10 @@ const TermsOfServiceScreen: React.FC = () => {
               PakUni is designed for students of all ages, including those from class 9 onwards. 
               If you are under 13 years old, please use this app with parental guidance.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Use of Service */}
-          <View style={styles.section}>
+          <AnimatedSection index={3} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="checkmark-circle-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Acceptable Use</Text>
@@ -115,10 +263,10 @@ const TermsOfServiceScreen: React.FC = () => {
                 • Use automated systems to access the app
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* Educational Content */}
-          <View style={styles.section}>
+          <AnimatedSection index={4} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="book-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Educational Content</Text>
@@ -144,10 +292,10 @@ const TermsOfServiceScreen: React.FC = () => {
               While we strive for accuracy, please verify all information with official university 
               sources before making educational decisions.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Disclaimer */}
-          <View style={[styles.section, styles.warningSection, {backgroundColor: colors.warningLight}]}>
+          <AnimatedSection index={5} style={[styles.section, styles.warningSection, {backgroundColor: colors.warningLight}]}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="alert-circle-outline" family="Ionicons" size={20} color={colors.warning} />
               <Text style={[styles.sectionTitle, {color: colors.warning, marginBottom: 0}]}>Disclaimer</Text>
@@ -169,10 +317,10 @@ const TermsOfServiceScreen: React.FC = () => {
                 • Continuous, uninterrupted access to the app
               </Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           {/* User Content */}
-          <View style={styles.section}>
+          <AnimatedSection index={6} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="create-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>User Data</Text>
@@ -182,10 +330,10 @@ const TermsOfServiceScreen: React.FC = () => {
               primarily on your device. You are responsible for the accuracy of the information 
               you provide.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Intellectual Property */}
-          <View style={styles.section}>
+          <AnimatedSection index={7} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="shield-checkmark-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Intellectual Property</Text>
@@ -199,10 +347,10 @@ const TermsOfServiceScreen: React.FC = () => {
               University logos and information belong to their respective institutions and 
               are used for informational purposes only.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Changes to Terms */}
-          <View style={styles.section}>
+          <AnimatedSection index={8} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="refresh-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Changes to Terms</Text>
@@ -212,10 +360,10 @@ const TermsOfServiceScreen: React.FC = () => {
               any significant changes through the app or by updating the "Last Updated" date. 
               Continued use of the app after changes constitutes acceptance of the new terms.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Termination */}
-          <View style={styles.section}>
+          <AnimatedSection index={9} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="ban-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Termination</Text>
@@ -224,10 +372,10 @@ const TermsOfServiceScreen: React.FC = () => {
               We reserve the right to suspend or terminate access to PakUni for users who 
               violate these Terms of Service or engage in harmful behavior.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Governing Law */}
-          <View style={styles.section}>
+          <AnimatedSection index={10} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="briefcase-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Governing Law</Text>
@@ -236,10 +384,10 @@ const TermsOfServiceScreen: React.FC = () => {
               These Terms are governed by the laws of Pakistan. Any disputes arising from 
               these Terms shall be resolved in the courts of Pakistan.
             </Text>
-          </View>
+          </AnimatedSection>
 
           {/* Contact */}
-          <View style={styles.section}>
+          <AnimatedSection index={11} style={styles.section}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
               <Icon name="mail-outline" family="Ionicons" size={20} color={colors.primary} />
               <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Contact Us</Text>
@@ -247,28 +395,32 @@ const TermsOfServiceScreen: React.FC = () => {
             <Text style={[styles.paragraph, {color: colors.textSecondary}]}>
               If you have any questions about these Terms of Service, please contact us:
             </Text>
-            <TouchableOpacity
-              style={[styles.contactButton, {backgroundColor: colors.primary}]}
-              onPress={handleContactPress}
-            >
-              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8}}>
-                <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
-                <Text style={styles.contactButtonText}>Contact Support</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+            <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+              <TouchableOpacity
+                style={[styles.contactButton, {backgroundColor: colors.primary}]}
+                onPress={handleContactPress}
+              >
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8}}>
+                  <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
+                  <Text style={styles.contactButtonText}>Contact Support</Text>
+                </View>
+              </TouchableOpacity>
+            </Animated.View>
+          </AnimatedSection>
 
           {/* Footer */}
-          <View style={styles.footer}>
+          <AnimatedSection index={12} style={styles.footer}>
             <Text style={[styles.footerText, {color: colors.textMuted}]}>
               © 2026 PakUni. All rights reserved.
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4}}>
               <Text style={[styles.footerText, {color: colors.textMuted}]}>Made with</Text>
-              <Icon name="heart" family="Ionicons" size={14} color="#E53935" />
+              <Animated.View style={{transform: [{scale: docScale}]}}>
+                <Icon name="heart" family="Ionicons" size={14} color="#E53935" />
+              </Animated.View>
               <Text style={[styles.footerText, {color: colors.textMuted}]}>in Pakistan</Text>
             </View>
-          </View>
+          </AnimatedSection>
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -364,6 +516,18 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginBottom: SPACING.xs,
+  },
+  floatingDoc1: {
+    position: 'absolute',
+    top: 100,
+    right: -20,
+    zIndex: -1,
+  },
+  floatingDoc2: {
+    position: 'absolute',
+    top: 250,
+    left: -10,
+    zIndex: -1,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,81 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  Animated,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, FONTS, BORDER_RADIUS} from '../constants/theme';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
+
+// Animated Card Component for staggered entrance
+const AnimatedCard: React.FC<{
+  children: React.ReactNode;
+  index: number;
+  style?: any;
+  onPress?: () => void;
+}> = ({children, index, style, onPress}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(40)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
+
+  useEffect(() => {
+    const delay = index * 60;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  if (onPress) {
+    return (
+      <Animated.View
+        style={[
+          style,
+          {
+            opacity: fadeAnim,
+            transform: [{translateY: slideAnim}, {scale: scaleAnim}],
+          },
+        ]}>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+          {children}
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  }
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          opacity: fadeAnim,
+          transform: [{translateY: slideAnim}, {scale: scaleAnim}],
+        },
+      ]}>
+      {children}
+    </Animated.View>
+  );
+};
 
 // Subject Types
 interface Subject {
@@ -287,6 +357,75 @@ const SubjectGuideScreen = () => {
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'groups' | 'subjects'>('groups');
 
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const bookScaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Book icon pulse
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(bookScaleAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(bookScaleAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -10],
+  });
+
+  const bookScale = bookScaleAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 1.1, 1],
+  });
+
   const getDifficultyColor = (difficulty: Subject['difficulty']) => {
     switch (difficulty) {
       case 'easy': return colors.success;
@@ -297,17 +436,48 @@ const SubjectGuideScreen = () => {
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]} edges={['top']}>
+      {/* Floating Decorations */}
+      <Animated.View
+        style={[
+          styles.floatingDecor1,
+          {
+            opacity: 0.06,
+            transform: [{translateY: floatTranslateY}, {scale: bookScale}],
+          },
+        ]}>
+        <Icon name="book" family="Ionicons" size={70} color={colors.primary} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.floatingDecor2,
+          {
+            opacity: 0.04,
+          },
+        ]}>
+        <Icon name="school" family="Ionicons" size={50} color={colors.primary} />
+      </Animated.View>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View style={[styles.header, {backgroundColor: colors.primary}]}>
+        <Animated.View 
+          style={[
+            styles.header, 
+            {backgroundColor: colors.primary},
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}],
+            },
+          ]}>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-            <Icon name="book-outline" family="Ionicons" size={28} color="#FFFFFF" />
+            <Animated.View style={{transform: [{scale: bookScale}]}}>
+              <Icon name="book-outline" family="Ionicons" size={28} color="#FFFFFF" />
+            </Animated.View>
             <Text style={[styles.headerTitle, {color: colors.white}]}>Subject Selection Guide</Text>
           </View>
           <Text style={[styles.headerSubtitle, {color: colors.white}]}>
             Choose the right subjects for your dream career
           </Text>
-        </View>
+        </Animated.View>
 
         {/* Tabs */}
         <View style={[styles.tabContainer, {backgroundColor: colors.card, borderColor: colors.border}]}>
@@ -336,8 +506,11 @@ const SubjectGuideScreen = () => {
         {activeTab === 'groups' ? (
           <>
             {/* Info Card */}
-            <View style={[styles.infoCard, {backgroundColor: colors.info + '15', borderColor: colors.info + '30'}]}>
-              <Icon name="bulb-outline" family="Ionicons" size={24} color={colors.info} />
+            <AnimatedCard index={0}>
+              <View style={[styles.infoCard, {backgroundColor: colors.info + '15', borderColor: colors.info + '30'}]}>
+                <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+                  <Icon name="bulb-outline" family="Ionicons" size={24} color={colors.info} />
+                </Animated.View>
               <View style={styles.infoContent}>
                 <Text style={[styles.infoTitle, {color: colors.text}]}>Choosing Your Group</Text>
                 <Text style={[styles.infoText, {color: colors.textSecondary}]}>
@@ -351,33 +524,36 @@ const SubjectGuideScreen = () => {
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, {color: colors.text}]}>Available Subject Groups</Text>
               
-              {SUBJECT_GROUPS.map(group => (
-                <TouchableOpacity
-                  key={group.id}
-                  style={[styles.groupCard, {backgroundColor: colors.card, borderColor: colors.border}]}
+              {SUBJECT_GROUPS.map((group, index) => (
+                <AnimatedCard 
+                  key={group.id} 
+                  index={index + 1}
                   onPress={() => {
                     setSelectedGroup(group);
                     setShowGroupModal(true);
                   }}>
-                  <View style={[styles.groupIcon, {backgroundColor: group.color + '20'}]}>
-                    <Icon name={group.iconName} family="Ionicons" size={28} color={group.color} />
-                  </View>
-                  <View style={styles.groupInfo}>
-                    <Text style={[styles.groupName, {color: colors.text}]}>{group.name}</Text>
-                    <Text style={[styles.groupDesc, {color: colors.textSecondary}]} numberOfLines={2}>{group.description}</Text>
-                    <View style={styles.groupMeta}>
-                      <View style={[styles.groupBadge, {backgroundColor: group.color + '20'}]}>
-                        <Text style={[styles.groupBadgeText, {color: group.color}]}>
-                          {group.careers.length}+ Careers
-                        </Text>
-                      </View>
-                      <Text style={[styles.groupExam, {color: colors.textMuted}]}>{group.boardExams}</Text>
+                  <View style={[styles.groupCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+                    <View style={[styles.groupIcon, {backgroundColor: group.color + '20'}]}>
+                      <Icon name={group.iconName} family="Ionicons" size={28} color={group.color} />
                     </View>
+                    <View style={styles.groupInfo}>
+                      <Text style={[styles.groupName, {color: colors.text}]}>{group.name}</Text>
+                      <Text style={[styles.groupDesc, {color: colors.textSecondary}]} numberOfLines={2}>{group.description}</Text>
+                      <View style={styles.groupMeta}>
+                        <View style={[styles.groupBadge, {backgroundColor: group.color + '20'}]}>
+                          <Text style={[styles.groupBadgeText, {color: group.color}]}>
+                            {group.careers.length}+ Careers
+                          </Text>
+                        </View>
+                        <Text style={[styles.groupExam, {color: colors.textMuted}]}>{group.boardExams}</Text>
+                      </View>
+                    </View>
+                    <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
                   </View>
-                  <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
-                </TouchableOpacity>
+                </AnimatedCard>
               ))}
             </View>
+            </AnimatedCard>
           </>
         ) : (
           <>
@@ -386,28 +562,31 @@ const SubjectGuideScreen = () => {
               <Text style={[styles.sectionTitle, {color: colors.text}]}>Subject Details</Text>
               
               <View style={styles.subjectsGrid}>
-                {SUBJECTS.map(subject => (
-                  <TouchableOpacity
-                    key={subject.id}
-                    style={[styles.subjectCard, {backgroundColor: colors.card, borderColor: colors.border}]}
+                {SUBJECTS.map((subject, index) => (
+                  <AnimatedCard 
+                    key={subject.id} 
+                    index={index}
+                    style={styles.subjectCardWrapper}
                     onPress={() => {
                       setSelectedSubject(subject);
                       setShowSubjectModal(true);
                     }}>
-                    <Icon name={subject.iconName} family="Ionicons" size={28} color={colors.primary} />
-                    <Text style={[styles.subjectName, {color: colors.text}]}>{subject.name}</Text>
-                    <View style={[
-                      styles.difficultyBadge,
-                      {backgroundColor: getDifficultyColor(subject.difficulty) + '20'},
-                    ]}>
-                      <Text style={[
-                        styles.difficultyText,
-                        {color: getDifficultyColor(subject.difficulty)},
+                    <View style={[styles.subjectCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+                      <Icon name={subject.iconName} family="Ionicons" size={28} color={colors.primary} />
+                      <Text style={[styles.subjectName, {color: colors.text}]}>{subject.name}</Text>
+                      <View style={[
+                        styles.difficultyBadge,
+                        {backgroundColor: getDifficultyColor(subject.difficulty) + '20'},
                       ]}>
-                        {subject.difficulty.charAt(0).toUpperCase() + subject.difficulty.slice(1)}
-                      </Text>
+                        <Text style={[
+                          styles.difficultyText,
+                          {color: getDifficultyColor(subject.difficulty)},
+                        ]}>
+                          {subject.difficulty.charAt(0).toUpperCase() + subject.difficulty.slice(1)}
+                        </Text>
+                      </View>
                     </View>
-                  </TouchableOpacity>
+                  </AnimatedCard>
                 ))}
               </View>
             </View>
@@ -415,13 +594,24 @@ const SubjectGuideScreen = () => {
         )}
 
         {/* Career Path Tips */}
-        <View style={styles.tipsSection}>
+        <AnimatedCard index={8} style={styles.tipsSection}>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
-            <Icon name="ribbon-outline" family="Ionicons" size={22} color={colors.primary} />
+            <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+              <Icon name="ribbon-outline" family="Ionicons" size={22} color={colors.primary} />
+            </Animated.View>
             <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Quick Career Paths</Text>
           </View>
           
-          <View style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+          <TouchableOpacity 
+            activeOpacity={0.8}
+            onPress={() => {
+              const group = SUBJECT_GROUPS.find(g => g.id === 'pre-medical');
+              if (group) {
+                setSelectedGroup(group);
+                setShowGroupModal(true);
+              }
+            }}
+            style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
             <Icon name="medkit-outline" family="Ionicons" size={24} color="#E53935" />
             <View style={styles.careerPathInfo}>
               <Text style={[styles.careerPathTitle, {color: colors.text}]}>Want to be a Doctor?</Text>
@@ -433,9 +623,19 @@ const SubjectGuideScreen = () => {
                 <Text style={[styles.careerPathSteps, {color: colors.textSecondary}]}>Medical</Text>
               </View>
             </View>
-          </View>
+            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
           
-          <View style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+          <TouchableOpacity 
+            activeOpacity={0.8}
+            onPress={() => {
+              const group = SUBJECT_GROUPS.find(g => g.id === 'ics');
+              if (group) {
+                setSelectedGroup(group);
+                setShowGroupModal(true);
+              }
+            }}
+            style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
             <Icon name="laptop-outline" family="Ionicons" size={24} color="#4573DF" />
             <View style={styles.careerPathInfo}>
               <Text style={[styles.careerPathTitle, {color: colors.text}]}>Want to be a Software Engineer?</Text>
@@ -447,9 +647,19 @@ const SubjectGuideScreen = () => {
                 <Text style={[styles.careerPathSteps, {color: colors.textSecondary}]}>CS Degree</Text>
               </View>
             </View>
-          </View>
+            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
           
-          <View style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+          <TouchableOpacity 
+            activeOpacity={0.8}
+            onPress={() => {
+              const group = SUBJECT_GROUPS.find(g => g.id === 'icom');
+              if (group) {
+                setSelectedGroup(group);
+                setShowGroupModal(true);
+              }
+            }}
+            style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
             <Icon name="bar-chart-outline" family="Ionicons" size={24} color="#6A1B9A" />
             <View style={styles.careerPathInfo}>
               <Text style={[styles.careerPathTitle, {color: colors.text}]}>Want to be a CA?</Text>
@@ -461,9 +671,19 @@ const SubjectGuideScreen = () => {
                 <Text style={[styles.careerPathSteps, {color: colors.textSecondary}]}>ICAP</Text>
               </View>
             </View>
-          </View>
+            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
           
-          <View style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
+          <TouchableOpacity 
+            activeOpacity={0.8}
+            onPress={() => {
+              const group = SUBJECT_GROUPS.find(g => g.id === 'fa-arts');
+              if (group) {
+                setSelectedGroup(group);
+                setShowGroupModal(true);
+              }
+            }}
+            style={[styles.careerPathCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
             <Icon name="briefcase-outline" family="Ionicons" size={24} color="#FF5722" />
             <View style={styles.careerPathInfo}>
               <Text style={[styles.careerPathTitle, {color: colors.text}]}>Want to be a Lawyer?</Text>
@@ -475,8 +695,9 @@ const SubjectGuideScreen = () => {
                 <Text style={[styles.careerPathSteps, {color: colors.textSecondary}]}>LLB</Text>
               </View>
             </View>
-          </View>
-        </View>
+            <Icon name="chevron-forward" family="Ionicons" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+        </AnimatedCard>
 
         <View style={{height: SPACING.xxl}} />
       </ScrollView>
@@ -681,6 +902,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  floatingDecor1: {
+    position: 'absolute',
+    top: 120,
+    right: -15,
+    zIndex: -1,
+  },
+  floatingDecor2: {
+    position: 'absolute',
+    top: 280,
+    left: -10,
+    zIndex: -1,
+  },
   header: {
     padding: SPACING.md,
     paddingBottom: 0,
@@ -801,13 +1034,19 @@ const styles = StyleSheet.create({
   subjectsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: SPACING.sm,
+    justifyContent: 'space-between',
+  },
+  subjectCardWrapper: {
+    width: '48%',
+    marginBottom: SPACING.sm,
   },
   subjectCard: {
-    width: '48%',
+    width: '100%',
+    minHeight: 120,
     borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
+    padding: SPACING.lg,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
   },
   subjectEmoji: {

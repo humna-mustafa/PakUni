@@ -1,9 +1,10 @@
 /**
  * FAQScreen - Frequently Asked Questions
  * Dedicated FAQ page for common student questions about the app
+ * Enhanced with premium animations
  */
 
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,6 +15,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Easing,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -153,11 +155,182 @@ const FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
+// Animated FAQ Item Component
+const AnimatedFAQItem: React.FC<{
+  item: FAQItem;
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+  getCategoryColor: (categoryId: string) => string;
+  colors: any;
+}> = ({item, index, isExpanded, onToggle, getCategoryColor, colors}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const rotateAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
+
+  useEffect(() => {
+    const delay = index * 50;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  useEffect(() => {
+    Animated.timing(rotateAnim, {
+      toValue: isExpanded ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [isExpanded]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.98,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      tension: 100,
+      friction: 10,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const rotateZ = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  return (
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+        transform: [{translateY: slideAnim}, {scale: scaleAnim}],
+      }}>
+      <TouchableOpacity
+        style={[styles.faqItem, {backgroundColor: colors.card}]}
+        onPress={onToggle}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={0.7}>
+        <View style={styles.faqHeader}>
+          <View style={[styles.faqIcon, {backgroundColor: getCategoryColor(item.category) + '20'}]}>
+            <Icon name="help" family="Ionicons" size={16} color={getCategoryColor(item.category)} />
+          </View>
+          <Text style={[styles.faqQuestion, {color: colors.text}]}>{item.question}</Text>
+          <Animated.View style={{transform: [{rotate: rotateZ}]}}>
+            <Icon 
+              name="chevron-down" 
+              family="Ionicons" 
+              size={20} 
+              color={colors.textSecondary} 
+            />
+          </Animated.View>
+        </View>
+        {isExpanded && (
+          <View style={[styles.faqAnswer, {borderTopColor: colors.border}]}>
+            <Text style={[styles.answerText, {color: colors.textSecondary}]}>
+              {item.answer}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
 const FAQScreen: React.FC = () => {
   const navigation = useNavigation();
   const {colors, isDark} = useTheme();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  // Animation refs
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-30)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const questionMarkAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    // Question mark bounce
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(questionMarkAnim, {
+          toValue: 1,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(questionMarkAnim, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -8],
+  });
+
+  const questionMarkScale = questionMarkAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 1.1, 1],
+  });
 
   const toggleExpand = (itemId: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -180,23 +353,54 @@ const FAQScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]} edges={['top']}>
+      {/* Floating Decorations */}
+      <Animated.View
+        style={[
+          styles.floatingQuestion1,
+          {
+            opacity: 0.06,
+            transform: [{translateY: floatTranslateY}, {scale: questionMarkScale}],
+          },
+        ]}>
+        <Icon name="help-circle" family="Ionicons" size={80} color={colors.primary} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.floatingQuestion2,
+          {
+            opacity: 0.04,
+          },
+        ]}>
+        <Icon name="help" family="Ionicons" size={50} color={colors.primary} />
+      </Animated.View>
+
       {/* Header */}
-      <LinearGradient
-        colors={['#4573DF', '#3660C9']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Help & FAQ</Text>
-          <Text style={styles.headerSubtitle}>Find answers to common questions</Text>
-        </View>
-        <View style={styles.headerIconContainer}>
-          <Icon name="help-circle" family="Ionicons" size={28} color="rgba(255,255,255,0.3)" />
-        </View>
-      </LinearGradient>
+      <Animated.View
+        style={{
+          opacity: headerFadeAnim,
+          transform: [{translateY: headerSlideAnim}],
+        }}>
+        <LinearGradient
+          colors={['#4573DF', '#3660C9']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
+          <View style={styles.headerContent}>
+            <Text style={styles.headerTitle}>Help & FAQ</Text>
+            <Text style={styles.headerSubtitle}>Find answers to common questions</Text>
+          </View>
+          <Animated.View 
+            style={[
+              styles.headerIconContainer,
+              {transform: [{scale: questionMarkScale}]},
+            ]}>
+            <Icon name="help-circle" family="Ionicons" size={28} color="rgba(255,255,255,0.3)" />
+          </Animated.View>
+        </LinearGradient>
+      </Animated.View>
 
       {/* Category Filter */}
       <View style={styles.categoryContainer}>
@@ -248,35 +452,24 @@ const FAQScreen: React.FC = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         {filteredFAQs.map((item, index) => (
-          <TouchableOpacity
+          <AnimatedFAQItem
             key={item.id}
-            style={[styles.faqItem, {backgroundColor: colors.card}]}
-            onPress={() => toggleExpand(item.id)}
-            activeOpacity={0.7}>
-            <View style={styles.faqHeader}>
-              <View style={[styles.faqIcon, {backgroundColor: getCategoryColor(item.category) + '20'}]}>
-                <Icon name="help" family="Ionicons" size={16} color={getCategoryColor(item.category)} />
-              </View>
-              <Text style={[styles.faqQuestion, {color: colors.text}]}>{item.question}</Text>
-              <Icon 
-                name={expandedItems.has(item.id) ? 'chevron-up' : 'chevron-down'} 
-                family="Ionicons" 
-                size={20} 
-                color={colors.textSecondary} 
-              />
-            </View>
-            {expandedItems.has(item.id) && (
-              <View style={[styles.faqAnswer, {borderTopColor: colors.border}]}>
-                <Text style={[styles.answerText, {color: colors.textSecondary}]}>
-                  {item.answer}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
+            item={item}
+            index={index}
+            isExpanded={expandedItems.has(item.id)}
+            onToggle={() => toggleExpand(item.id)}
+            getCategoryColor={getCategoryColor}
+            colors={colors}
+          />
         ))}
 
         {/* Contact Section */}
-        <View style={[styles.contactCard, {backgroundColor: colors.card}]}>
+        <Animated.View 
+          style={[
+            styles.contactCard, 
+            {backgroundColor: colors.card},
+            {transform: [{translateY: floatTranslateY}]},
+          ]}>
           <View style={[styles.contactIcon, {backgroundColor: '#4573DF20'}]}>
             <Icon name="chatbubbles" family="Ionicons" size={24} color="#4573DF" />
           </View>
@@ -290,7 +483,7 @@ const FAQScreen: React.FC = () => {
             <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
             <Text style={styles.contactButtonText}>Contact Support</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
         <View style={{height: 40}} />
       </ScrollView>
@@ -302,12 +495,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  // Floating decorations
+  floatingQuestion1: {
+    position: 'absolute',
+    top: 150,
+    right: -25,
+    zIndex: 0,
+  },
+  floatingQuestion2: {
+    position: 'absolute',
+    top: 350,
+    left: -15,
+    zIndex: 0,
+  },
   header: {
     paddingTop: 12,
     paddingBottom: 20,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 1,
   },
   backBtn: {
     width: 40,

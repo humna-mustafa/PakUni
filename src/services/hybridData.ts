@@ -289,14 +289,14 @@ class HybridDataService {
         logger.warn('Turso scholarships fetch failed', error, 'HybridData');
       }
     }
-    return SCHOLARSHIPS.filter(s => s.is_active);
+    return SCHOLARSHIPS.filter(s => s.status !== 'closed');
   }
 
   /**
    * Get scholarships synchronously
    */
   getScholarshipsSync(): ScholarshipData[] {
-    return SCHOLARSHIPS.filter(s => s.is_active);
+    return SCHOLARSHIPS.filter(s => s.status !== 'closed');
   }
 
   /**
@@ -315,7 +315,7 @@ class HybridDataService {
     }
 
     // Fallback to local search
-    let results = SCHOLARSHIPS.filter(s => s.is_active);
+    let results = SCHOLARSHIPS.filter(s => s.status !== 'closed');
     const lowerQuery = query.toLowerCase();
 
     if (query.trim()) {
@@ -330,7 +330,7 @@ class HybridDataService {
       results = results.filter(s => s.type === filters.type);
     }
     if (filters?.minCoverage !== undefined) {
-      results = results.filter(s => s.coverage_percentage >= filters.minCoverage!);
+      results = results.filter(s => (s.tuitionCoverage || 0) >= filters.minCoverage!);
     }
 
     return results;

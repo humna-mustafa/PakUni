@@ -1,8 +1,9 @@
 /**
  * FavoritesScreen - Display and manage user's favorite items
+ * ENHANCED: Premium animations, floating effects, polished UI
  */
 
-import React, {useState, useCallback, memo, useRef} from 'react';
+import React, {useState, useCallback, memo, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,6 +15,7 @@ import {
   Animated,
   Modal,
   TouchableOpacity,
+  Easing,
 } from 'react-native';
 import {ANIMATION_SCALES, SPRING_CONFIGS, ACCESSIBILITY} from '../constants/ui';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -94,7 +96,7 @@ const TabButton = memo<TabButtonProps>(({label, count, isActive, onPress, colors
 ));
 
 // ============================================================================
-// FAVORITE ITEM COMPONENT
+// FAVORITE ITEM COMPONENT (ENHANCED)
 // ============================================================================
 
 interface FavoriteItemProps {
@@ -102,10 +104,34 @@ interface FavoriteItemProps {
   onPress: (item: FavoriteItem) => void;
   onRemove: (id: string, type: TabType) => void;
   colors: any;
+  index?: number;
 }
 
-const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colors}) => {
-  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colors, index = 0}) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(40)).current;
+  const heartBeatAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Staggered entrance animation
+    const delay = index * 70;
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -123,8 +149,34 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
     }).start();
   };
 
+  const handleRemovePress = () => {
+    // Heart beat animation on remove
+    Animated.sequence([
+      Animated.timing(heartBeatAnim, {
+        toValue: 1.3,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(heartBeatAnim, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(heartBeatAnim, {
+        toValue: 1,
+        friction: 3,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    onRemove(item.id, item.type);
+  };
+
   return (
-    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+    <Animated.View 
+      style={{
+        transform: [{scale: scaleAnim}, {translateX: slideAnim}],
+        opacity: fadeAnim,
+      }}>
       <Pressable
         style={[styles.itemCard, {backgroundColor: colors.card}]}
         onPress={() => onPress(item)}
@@ -132,6 +184,12 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
         onPressOut={handlePressOut}
         accessibilityRole="button"
         accessibilityLabel={`${item.name}, ${item.subtitle}`}>
+        {/* Gradient accent strip */}
+        <LinearGradient
+          colors={[item.color, item.color + 'CC']}
+          style={styles.itemAccentStrip}
+        />
+        
         {/* Icon */}
         <View style={[styles.itemIcon, {backgroundColor: `${item.color}15`}]}>
           <Icon name={item.icon} family="Ionicons" size={24} color={item.color} />
@@ -148,27 +206,29 @@ const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colo
         </View>
 
         {/* Remove Button */}
-        <Pressable
-          style={({pressed}) => [
-            styles.removeButton,
-            {
-              backgroundColor: `${colors.error}15`,
-              opacity: pressed ? 0.7 : 1,
-            },
-          ]}
-          onPress={() => onRemove(item.id, item.type)}
-          hitSlop={ACCESSIBILITY.HIT_SLOP.medium}
-          accessibilityRole="button"
-          accessibilityLabel={`Remove ${item.name} from favorites`}>
-          <Icon name="heart-dislike-outline" family="Ionicons" size={20} color={colors.error} />
-        </Pressable>
+        <Animated.View style={{transform: [{scale: heartBeatAnim}]}}>
+          <Pressable
+            style={({pressed}) => [
+              styles.removeButton,
+              {
+                backgroundColor: `${colors.error}15`,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
+            onPress={handleRemovePress}
+            hitSlop={ACCESSIBILITY.HIT_SLOP.medium}
+            accessibilityRole="button"
+            accessibilityLabel={`Remove ${item.name} from favorites`}>
+            <Icon name="heart-dislike-outline" family="Ionicons" size={20} color={colors.error} />
+          </Pressable>
+        </Animated.View>
       </Pressable>
     </Animated.View>
   );
 });
 
 // ============================================================================
-// MAIN COMPONENT
+// MAIN COMPONENT (ENHANCED)
 // ============================================================================
 
 const FavoritesScreen: React.FC = () => {
@@ -182,6 +242,51 @@ const FavoritesScreen: React.FC = () => {
   const [itemToRemove, setItemToRemove] = useState<{id: string; type: TabType; name: string} | null>(null);
   const modalScaleAnim = useRef(new Animated.Value(0.8)).current;
   const modalOpacityAnim = useRef(new Animated.Value(0)).current;
+
+  // Header animations
+  const headerFadeAnim = useRef(new Animated.Value(0)).current;
+  const headerSlideAnim = useRef(new Animated.Value(-20)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Header entrance animation
+    Animated.parallel([
+      Animated.timing(headerFadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Floating animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 1,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const floatTranslateY = floatAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -6],
+  });
 
   // Get favorite items
   const getFavoriteItems = useCallback((): FavoriteItem[] => {
@@ -206,7 +311,7 @@ const FavoritesScreen: React.FC = () => {
           return {
             id,
             name: sch?.name || id,
-            subtitle: sch ? `${sch.provider} • ${sch.coverage_percentage}%` : '',
+            subtitle: sch ? `${sch.provider} • ${sch.tuitionCoverage || 0}%` : '',
             type: 'scholarships' as TabType,
             icon: 'ribbon-outline',
             color: '#F59E0B',
@@ -314,12 +419,13 @@ const FavoritesScreen: React.FC = () => {
     showRemoveConfirmation(id, type, name);
   }, [showRemoveConfirmation]);
 
-  const renderItem = useCallback(({item}: {item: FavoriteItem}) => (
+  const renderItem = useCallback(({item, index}: {item: FavoriteItem; index: number}) => (
     <FavoriteItemCard
       item={item}
       onPress={handleItemPress}
       onRemove={handleRemove}
       colors={colors}
+      index={index}
     />
   ), [colors, handleItemPress, handleRemove]);
 
@@ -360,17 +466,48 @@ const FavoritesScreen: React.FC = () => {
         translucent
       />
 
+      {/* Decorative floating hearts */}
+      <Animated.View 
+        style={[
+          styles.floatingHeart1, 
+          {
+            backgroundColor: '#F43F5E10',
+            transform: [{translateY: floatTranslateY}]
+          }
+        ]} 
+      />
+      <Animated.View 
+        style={[
+          styles.floatingHeart2, 
+          {
+            backgroundColor: colors.primary + '08',
+            transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]
+          }
+        ]} 
+      />
+
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Header */}
-        <View style={styles.header}>
+        {/* Animated Header */}
+        <Animated.View 
+          style={[
+            styles.header,
+            {
+              opacity: headerFadeAnim,
+              transform: [{translateY: headerSlideAnim}]
+            }
+          ]}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, {backgroundColor: colors.card}]}
             onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, {color: colors.text}]}>Favorites</Text>
-          <View style={styles.headerSpacer} />
-        </View>
+          <Animated.View style={{transform: [{translateY: floatTranslateY}]}}>
+            <View style={[styles.headerIcon, {backgroundColor: '#F43F5E15'}]}>
+              <Icon name="heart" family="Ionicons" size={20} color="#F43F5E" />
+            </View>
+          </Animated.View>
+        </Animated.View>
 
         {/* Tab Bar */}
         <View style={[styles.tabBar, {backgroundColor: colors.card}]}>
@@ -488,9 +625,27 @@ const FavoritesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'hidden',
   },
   safeArea: {
     flex: 1,
+  },
+  // Decorative floating elements
+  floatingHeart1: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    top: -40,
+    right: -40,
+  },
+  floatingHeart2: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    bottom: 150,
+    left: -40,
   },
   header: {
     flexDirection: 'row',
@@ -499,26 +654,36 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButton: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerTitle: {
     flex: 1,
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 22,
+    fontWeight: '800',
     textAlign: 'center',
   },
-  headerSpacer: {
-    width: 40,
+  headerIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabBar: {
     flexDirection: 'row',
     marginHorizontal: 16,
     marginBottom: 16,
     padding: 4,
-    borderRadius: 12,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   tabButton: {
     flex: 1,
@@ -526,7 +691,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 12,
     gap: 6,
   },
   tabLabel: {
@@ -561,6 +726,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     marginBottom: 12,
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -573,6 +739,15 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  itemAccentStrip: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
+  },
   itemIcon: {
     width: 52,
     height: 52,
@@ -580,6 +755,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
+    marginLeft: 4,
   },
   itemContent: {
     flex: 1,

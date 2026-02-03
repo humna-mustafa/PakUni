@@ -102,8 +102,8 @@ export const captureCard = async (
   viewRef: RefObject<View | null>,
   options?: CaptureOptions,
 ): Promise<CaptureResult> => {
-  if (!viewRef.current) {
-    return {success: false, error: 'View reference not available'};
+  if (!viewRef || !viewRef.current) {
+    return {success: false, error: 'Card view not ready. Please try again.'};
   }
 
   try {
@@ -113,13 +113,19 @@ export const captureCard = async (
       result: options?.result || 'tmpfile',
     });
 
+    if (!uri) {
+      return {success: false, error: 'Failed to capture card image'};
+    }
+
     return {success: true, uri};
   } catch (error) {
     logger.error('Error capturing card', error, 'CardCapture');
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to capture card',
-    };
+    const errorMessage = error instanceof Error ? error.message : 'Failed to capture card';
+    // Handle common react-native-view-shot errors
+    if (errorMessage.includes('null') || errorMessage.includes('undefined')) {
+      return {success: false, error: 'Card view not accessible. Try scrolling the card into view.'};
+    }
+    return {success: false, error: errorMessage};
   }
 };
 

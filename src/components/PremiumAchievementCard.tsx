@@ -300,7 +300,11 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
   };
 
   const handleShare = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Please Wait', 'Card is still loading. Try again in a moment.');
+      onShareComplete?.(false);
+      return;
+    }
     
     setIsSharing(true);
     try {
@@ -309,9 +313,13 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
         achievement.title,
         buildShareMessage()
       );
+      if (!result.success && result.error) {
+        Alert.alert('Share Failed', result.error);
+      }
       onShareComplete?.(result.shared);
     } catch (error) {
       console.error('Share error:', error);
+      Alert.alert('Share Error', 'Unable to share card. Please try again.');
       onShareComplete?.(false);
     } finally {
       setIsSharing(false);
@@ -319,7 +327,11 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
   };
 
   const handleSave = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      Alert.alert('Please Wait', 'Card is still loading. Try again in a moment.');
+      onSaveComplete?.(false);
+      return;
+    }
     
     setIsSaving(true);
     try {
@@ -330,11 +342,12 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
         Alert.alert('✅ Saved!', 'Card saved to your gallery.', [{text: 'Great!'}]);
         onSaveComplete?.(true, result.uri);
       } else {
-        Alert.alert('Error', result.error || 'Failed to save');
+        Alert.alert('Save Failed', result.error || 'Failed to save card');
         onSaveComplete?.(false);
       }
     } catch (error) {
       console.error('Save error:', error);
+      Alert.alert('Save Error', 'Unable to save card. Please try again.');
       onSaveComplete?.(false);
     } finally {
       setIsSaving(false);

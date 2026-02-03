@@ -31,12 +31,12 @@ const SLOT_WIDTH = (width - SPACING.md * 2 - SPACING.sm * 2) / 3;
 const COMPARISON_METRICS = [
   {key: 'type', label: 'Type', iconName: 'business-outline'},
   {key: 'city', label: 'City', iconName: 'location-outline'},
-  {key: 'ranking', label: 'Ranking', iconName: 'trophy-outline'},
+  {key: 'province', label: 'Province', iconName: 'map-outline'},
+  {key: 'ranking', label: 'HEC Ranking', iconName: 'trophy-outline'},
+  {key: 'established', label: 'Established', iconName: 'calendar-outline'},
   {key: 'programs', label: 'Programs', iconName: 'book-outline'},
-  {key: 'facilities', label: 'Facilities', iconName: 'business-outline'},
+  {key: 'campuses', label: 'Campuses', iconName: 'business-outline'},
   {key: 'fee', label: 'Fee Range', iconName: 'cash-outline'},
-  {key: 'hostel', label: 'Hostel', iconName: 'home-outline'},
-  {key: 'scholarships', label: 'Scholarships', iconName: 'school-outline'},
 ];
 
 // Animated slot component
@@ -193,39 +193,54 @@ const ComparisonRow = ({
         return uni.type.charAt(0).toUpperCase() + uni.type.slice(1);
       case 'city':
         return uni.city;
+      case 'province':
+        // Format province name properly
+        const provinceMap: {[key: string]: string} = {
+          'punjab': 'Punjab',
+          'sindh': 'Sindh',
+          'kpk': 'KPK',
+          'balochistan': 'Balochistan',
+          'islamabad': 'ICT',
+          'ajk': 'AJK',
+          'gilgit_baltistan': 'GB',
+        };
+        return provinceMap[uni.province?.toLowerCase()] || uni.province || '-';
       case 'ranking':
-        return uni.ranking_national ? `#${uni.ranking_national}` : uni.ranking_hec || 'N/A';
+        // Combine both rankings for better info
+        if (uni.ranking_national) {
+          return `#${uni.ranking_national} (${uni.ranking_hec || '-'})`;
+        }
+        return uni.ranking_hec || '-';
+      case 'established':
+        return uni.established_year ? uni.established_year.toString() : '-';
       case 'programs': {
         // Count programs offered by this university
         const programCount = PROGRAMS.filter(p => 
           p.universities.includes(uni.short_name)
         ).length;
-        return programCount > 0 ? `${programCount}` : 'N/A';
+        return programCount > 0 ? `${programCount}+` : '-';
       }
-      case 'facilities': {
-        // Count campuses as a proxy for facilities reach
+      case 'campuses': {
+        // Show campus count and cities
         const campusCount = uni.campuses?.length || 1;
-        return campusCount > 1 ? `${campusCount} campuses` : '1 campus';
+        if (campusCount > 1) {
+          return `${campusCount} (${uni.campuses.slice(0, 2).join(', ')}${campusCount > 2 ? '...' : ''})`;
+        }
+        return uni.city;
       }
       case 'fee': {
         // Get fee range from programs offered by this university
         const uniPrograms = PROGRAMS.filter(p => 
           p.universities.includes(uni.short_name)
         );
-        if (uniPrograms.length === 0) return 'N/A';
+        if (uniPrograms.length === 0) return '-';
         const fees = uniPrograms.map(p => p.avg_fee_per_semester).filter(f => f > 0);
-        if (fees.length === 0) return 'N/A';
+        if (fees.length === 0) return '-';
         const minFee = Math.min(...fees);
         const maxFee = Math.max(...fees);
         if (minFee === maxFee) return `${(minFee/1000).toFixed(0)}K/sem`;
         return `${(minFee/1000).toFixed(0)}-${(maxFee/1000).toFixed(0)}K`;
       }
-      case 'hostel':
-        // Most universities have hostels, but we can check if it's a major uni
-        return uni.type === 'public' ? 'Available' : 'Check Website';
-      case 'scholarships':
-        // Check if university is in any scholarship's available_at list
-        return 'Available';
       default:
         return '-';
     }

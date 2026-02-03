@@ -17,7 +17,6 @@ import {View, Text, StyleSheet, Platform, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from './icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
-import {getScholarshipBrandColors} from '../data/scholarships';
 import {getUniversityBrandColor, getLogo} from '../utils/universityLogos';
 import UniversityLogo from './UniversityLogo';
 
@@ -1622,14 +1621,22 @@ interface PersonalizedScholarshipCardProps {
 
 export const PersonalizedScholarshipCard = forwardRef<View, PersonalizedScholarshipCardProps>(
   ({scholarshipName, provider, coverage, coveragePercentage, studentName, universityName, programName, yearAwarded}, ref) => {
-    // Get brand colors for the scholarship provider
-    const brandColors = getScholarshipBrandColors(scholarshipName) || getScholarshipBrandColors(provider);
+    // Get brand colors based on scholarship/provider name keywords
+    const getScholarshipColors = () => {
+      const lowerName = (scholarshipName + ' ' + provider).toLowerCase();
+      if (lowerName.includes('ehsaas') || lowerName.includes('ehsas')) return { primary: '#059669', secondary: '#D1FAE5' };
+      if (lowerName.includes('hec')) return { primary: '#2563EB', secondary: '#DBEAFE' };
+      if (lowerName.includes('peef')) return { primary: '#7C3AED', secondary: '#EDE9FE' };
+      if (lowerName.includes('pm') || lowerName.includes('prime minister')) return { primary: '#DC2626', secondary: '#FEE2E2' };
+      if (lowerName.includes('government') || lowerName.includes('govt')) return { primary: '#059669', secondary: '#D1FAE5' };
+      return { primary: '#4573DF', secondary: '#DBEAFE' };
+    };
+    
+    const brandColors = getScholarshipColors();
     const uniColor = universityName ? getUniversityBrandColor(universityName) : null;
     
-    // Default gradient if no brand colors found
-    const gradientColors: string[] = brandColors 
-      ? [brandColors.primary, brandColors.secondary, brandColors.accent || brandColors.secondary]
-      : ['#4573DF', '#3660C9', '#3660C9'];
+    // Default gradient using primary and secondary
+    const gradientColors: string[] = [brandColors.primary, brandColors.secondary, brandColors.secondary];
     
     // Determine provider type for decorative elements
     const getProviderIcon = () => {

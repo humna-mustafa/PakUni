@@ -167,14 +167,14 @@ async function importScholarships() {
           sch.name,
           sch.provider || 'Unknown',
           sch.type || 'merit_based',
-          sch.coverage_percentage || 0,
-          sch.monthly_stipend || null,
+          sch.tuitionCoverage || 0,
+          sch.monthlyStipend || null,
           sch.description || null,
           safeJson(sch.eligibility),
-          sch.application_deadline || null,
+          sch.deadline || null,
           sch.website || null,
-          safeJson(sch.application_steps),
-          safeJson(sch.available_at),
+          safeJson(sch.applicationProcess),
+          safeJson(sch.targetAudience),
         ]
       });
       count++;
