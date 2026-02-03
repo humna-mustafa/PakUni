@@ -34,6 +34,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Easing,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -1603,6 +1605,34 @@ export const UltraContributeScreen: React.FC<{ navigation: any; route?: any }> =
     setShowSuccess(false);
   };
 
+  // Back button protection - prevent accidental data loss in wizard
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Only intercept if user is mid-wizard (not on step 1)
+      if (activeTab === 'contribute' && currentStep > 1) {
+        Alert.alert(
+          'Discard Changes?',
+          'You have unsaved contribution data. Are you sure you want to go back?',
+          [
+            { text: 'Stay', style: 'cancel' },
+            { 
+              text: 'Discard', 
+              style: 'destructive',
+              onPress: () => {
+                resetForm();
+                navigation.goBack();
+              }
+            },
+          ]
+        );
+        return true; // Prevent default back behavior
+      }
+      return false; // Allow default back behavior
+    });
+
+    return () => backHandler.remove();
+  }, [activeTab, currentStep, navigation]);
+
   const handleCategorySelect = (category: CategoryOption) => {
     updateFormData({ category });
     setCurrentStep(2);
@@ -1842,7 +1872,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   
   // Progress Bar
@@ -1884,10 +1914,10 @@ const styles = StyleSheet.create({
   stepLabel: {
     fontSize: 11,
     marginTop: 4,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   stepLabelActive: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   stepLine: {
     width: 32,
@@ -1905,7 +1935,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     marginBottom: 4,
   },
   stepSubtitle: {
@@ -1949,7 +1979,7 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
     marginBottom: 2,
   },
@@ -1988,7 +2018,7 @@ const styles = StyleSheet.create({
   },
   categoryBadgeText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -2027,7 +2057,7 @@ const styles = StyleSheet.create({
   entityAvatarText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   entityNameRow: {
     flexDirection: 'row',
@@ -2036,7 +2066,7 @@ const styles = StyleSheet.create({
   },
   selectedEntityName: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   selectedEntityMeta: {
     fontSize: 12,
@@ -2047,7 +2077,7 @@ const styles = StyleSheet.create({
   },
   suggestionsLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
     textTransform: 'uppercase',
   },
@@ -2064,7 +2094,7 @@ const styles = StyleSheet.create({
   },
   suggestionName: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   suggestionMeta: {
     fontSize: 12,
@@ -2082,7 +2112,7 @@ const styles = StyleSheet.create({
   },
   manualEntryTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   manualEntrySubtitle: {
     fontSize: 12,
@@ -2105,7 +2135,7 @@ const styles = StyleSheet.create({
   },
   recentChipText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   
   // Verification Badge
@@ -2141,7 +2171,7 @@ const styles = StyleSheet.create({
   },
   contextEntity: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   contextCategory: {
     fontSize: 12,
@@ -2156,7 +2186,7 @@ const styles = StyleSheet.create({
   },
   changeBtnText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formSection: {
     borderRadius: RADIUS.lg,
@@ -2190,11 +2220,11 @@ const styles = StyleSheet.create({
   sectionNumberText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   formSectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     flex: 1,
   },
   optionalBadge: {
@@ -2204,7 +2234,7 @@ const styles = StyleSheet.create({
   },
   optionalText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   fieldChipsWrap: {
     flexDirection: 'row',
@@ -2223,7 +2253,7 @@ const styles = StyleSheet.create({
   },
   fieldChipLargeText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formInput: {
     borderRadius: RADIUS.md,
@@ -2265,7 +2295,7 @@ const styles = StyleSheet.create({
   },
   valueCardLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   valueCardHint: {
     fontSize: 10,
@@ -2306,7 +2336,7 @@ const styles = StyleSheet.create({
   },
   livePreviewLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   livePreviewValues: {
@@ -2323,7 +2353,7 @@ const styles = StyleSheet.create({
   previewNew: {
     fontSize: 12,
     color: SEMANTIC.success,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   quickReasonsWrap: {
     flexDirection: 'row',
@@ -2358,7 +2388,7 @@ const styles = StyleSheet.create({
   },
   reviewLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   reviewValue: {
@@ -2412,7 +2442,7 @@ const styles = StyleSheet.create({
   reviewNewText: {
     fontSize: 12,
     color: SEMANTIC.successText,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   trustCard: {
     flexDirection: 'row',
@@ -2430,7 +2460,7 @@ const styles = StyleSheet.create({
   },
   trustTitle: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   trustSubtitle: {
     fontSize: 11,
@@ -2447,7 +2477,7 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   editButton: {
     flexDirection: 'row',
@@ -2460,7 +2490,7 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   
   // Bottom Nav
@@ -2492,7 +2522,7 @@ const styles = StyleSheet.create({
   nextBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   
   // Success Modal
@@ -2520,7 +2550,7 @@ const styles = StyleSheet.create({
   },
   successTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     marginBottom: SPACING.xs,
   },
   successDescription: {
@@ -2541,7 +2571,7 @@ const styles = StyleSheet.create({
   },
   successStatValue: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     marginTop: 4,
   },
   successStatLabel: {
@@ -2565,7 +2595,7 @@ const styles = StyleSheet.create({
   },
   successBtnSecondaryText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   successBtnPrimary: {
     flex: 1,
@@ -2579,7 +2609,7 @@ const styles = StyleSheet.create({
   successBtnPrimaryText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   
   // History
@@ -2611,7 +2641,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   statLabel: {
     fontSize: 11,
@@ -2644,7 +2674,7 @@ const styles = StyleSheet.create({
   },
   historyCardEntity: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   historyCardField: {
     fontSize: 12,
@@ -2659,7 +2689,7 @@ const styles = StyleSheet.create({
   },
   historyStatusText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   historyCardChange: {
     flexDirection: 'row',
@@ -2675,7 +2705,7 @@ const styles = StyleSheet.create({
   historyNewValue: {
     fontSize: 12,
     color: SEMANTIC.success,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   historyDate: {
     fontSize: 10,
@@ -2698,7 +2728,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   emptySubtitle: {

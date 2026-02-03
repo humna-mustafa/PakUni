@@ -25,6 +25,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
 import { 
   dataSubmissionsService, 
@@ -653,7 +654,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   cardDescription: {
@@ -740,7 +741,7 @@ const styles = StyleSheet.create({
   emptyBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalOverlay: {
     flex: 1,
@@ -762,14 +763,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
     marginTop: 12,
   },
@@ -795,7 +796,7 @@ const styles = StyleSheet.create({
   },
   trustLevelText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   typesGrid: {
     flexDirection: 'row',
@@ -809,7 +810,7 @@ const styles = StyleSheet.create({
   },
   typeChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   switchRow: {
     flexDirection: 'row',
@@ -847,7 +848,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   sectionSubtitle: {
@@ -876,7 +877,7 @@ const styles = StyleSheet.create({
   },
   authProviderText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   modalActions: {
     flexDirection: 'row',
@@ -895,7 +896,7 @@ const styles = StyleSheet.create({
   modalBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

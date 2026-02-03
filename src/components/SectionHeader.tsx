@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FONTS.sizes.lg,
-    fontWeight: '700',
+    fontWeight: FONTS.weight.bold,
     color: COLORS.text,
   },
   subtitle: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: FONTS.sizes.sm,
     color: COLORS.primary,
-    fontWeight: '600',
+    fontWeight: FONTS.weight.semiBold,
   },
   arrow: {
     fontSize: FONTS.sizes.sm,

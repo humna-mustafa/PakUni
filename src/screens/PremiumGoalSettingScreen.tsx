@@ -1021,7 +1021,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -1047,7 +1047,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -1068,7 +1068,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   addBtn: {
     paddingHorizontal: SPACING.md,
@@ -1078,7 +1078,7 @@ const styles = StyleSheet.create({
   addBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   goalCard: {
     borderRadius: RADIUS.lg,
@@ -1112,7 +1112,7 @@ const styles = StyleSheet.create({
   },
   goalTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 2,
   },
   goalDeadline: {
@@ -1134,7 +1134,7 @@ const styles = StyleSheet.create({
   },
   progressCircleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   progressSection: {
     marginBottom: SPACING.sm,
@@ -1192,7 +1192,7 @@ const styles = StyleSheet.create({
   viewBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   emptyState: {
     alignItems: 'center',
@@ -1201,7 +1201,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   emptyText: {
@@ -1217,7 +1217,7 @@ const styles = StyleSheet.create({
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.md,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     fontStyle: 'italic',
   },
   // Modal styles
@@ -1246,13 +1246,13 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
   templatesTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
   },
   templatesContainer: {
@@ -1278,12 +1278,12 @@ const styles = StyleSheet.create({
   difficultyText: {
     color: '#fff',
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   templateTitle: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     marginTop: SPACING.xs,
     marginBottom: 4,
@@ -1319,7 +1319,7 @@ const styles = StyleSheet.create({
   },
   deadlineLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
   },
   deadlineHint: {
@@ -1338,7 +1338,7 @@ const styles = StyleSheet.create({
   createBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Detail modal
   detailModalContent: {
@@ -1353,7 +1353,7 @@ const styles = StyleSheet.create({
   },
   detailTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: SPACING.sm,
     textAlign: 'center',
@@ -1367,14 +1367,14 @@ const styles = StyleSheet.create({
   detailProgressText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   milestonesSection: {
     padding: SPACING.md,
   },
   milestonesTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   milestoneCard: {
@@ -1412,7 +1412,7 @@ const styles = StyleSheet.create({
   },
   deadlineValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   deleteGoalBtn: {
     flexDirection: 'row',
@@ -1427,7 +1427,7 @@ const styles = StyleSheet.create({
   },
   deleteGoalText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

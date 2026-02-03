@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
   },
   widgetTestName: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     marginLeft: 4,
   },
@@ -597,18 +597,18 @@ const styles = StyleSheet.create({
   },
   widgetDays: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
   },
   widgetDaysLabel: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   widgetExpired: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#FFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
 
@@ -643,7 +643,7 @@ const styles = StyleSheet.create({
   },
   compactTestName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   compactDate: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
   },
   compactBadgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
 
@@ -716,7 +716,7 @@ const styles = StyleSheet.create({
   },
   testName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginLeft: 6,
   },
@@ -731,19 +731,19 @@ const styles = StyleSheet.create({
   },
   editBtnText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFF',
   },
   testFullName: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     marginBottom: 4,
   },
   testDate: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 
   // Countdown Section
@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
   },
   countdownLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: 1.5,
     marginBottom: SPACING.md,
   },
@@ -769,18 +769,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   digitValue: {
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: DARK_BG.background,
   },
   digitLabel: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: DARK_BG.cardHover,
     marginTop: 2,
     letterSpacing: 0.5,
   },
   separator: {
     fontSize: 28,
-    fontWeight: '300',
+    fontWeight: TYPOGRAPHY.weight.light,
     marginHorizontal: 4,
   },
   urgentBadge: {
@@ -794,7 +794,7 @@ const styles = StyleSheet.create({
   },
   urgentText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: SEMANTIC.errorDark,
   },
 
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
   },
   expiredText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.sm,
   },
   expiredSubtext: {
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   },
   actionBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
 
@@ -852,7 +852,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalCloseBtn: {
     width: 32,
@@ -877,14 +877,14 @@ const styles = StyleSheet.create({
   },
   dateInputLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
   },
   dateInput: {
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
   },
   infoBox: {
@@ -913,7 +913,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   saveBtn: {
     flex: 1,
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
   },
   saveBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
 });

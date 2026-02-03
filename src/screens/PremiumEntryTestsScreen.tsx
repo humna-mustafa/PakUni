@@ -858,7 +858,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -883,11 +883,11 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   filterChipTextActive: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   statsBar: {
@@ -908,7 +908,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -959,7 +959,7 @@ const styles = StyleSheet.create({
   },
   testName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   categoryBadge: {
@@ -970,7 +970,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   testDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -999,7 +999,7 @@ const styles = StyleSheet.create({
   viewBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Modal styles
   modalOverlay: {
@@ -1030,7 +1030,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -1049,7 +1049,7 @@ const styles = StyleSheet.create({
   modalStatusText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   quickInfo: {
     flexDirection: 'row',
@@ -1067,7 +1067,7 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   section: {
     paddingHorizontal: SPACING.md,
@@ -1075,7 +1075,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   sectionText: {
@@ -1112,7 +1112,7 @@ const styles = StyleSheet.create({
   },
   tipsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
     color: '#F57F17',
   },
@@ -1132,7 +1132,7 @@ const styles = StyleSheet.create({
   registerText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Countdown Widget Styles
   countdownContainer: {
@@ -1155,12 +1155,12 @@ const styles = StyleSheet.create({
   },
   countdownDays: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   countdownDaysLabel: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
     textTransform: 'uppercase',
   },
@@ -1173,11 +1173,11 @@ const styles = StyleSheet.create({
   },
   countdownDate: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   customDateLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   // Date Modal Styles
@@ -1205,7 +1205,7 @@ const styles = StyleSheet.create({
   },
   dateModalTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.sm,
     textAlign: 'center',
   },
@@ -1243,7 +1243,7 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   clearButton: {
     backgroundColor: STATUS_COLORS.backgrounds.error,
@@ -1253,7 +1253,7 @@ const styles = StyleSheet.create({
   },
   clearButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: STATUS_COLORS.urgency.critical,
   },
   saveButton: {},
@@ -1264,7 +1264,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
 });

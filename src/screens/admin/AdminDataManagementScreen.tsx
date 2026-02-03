@@ -30,6 +30,7 @@ import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
+import {TYPOGRAPHY} from '../../constants/design';
 import RNFS from 'react-native-fs';
 
 // Fallback LinearGradient
@@ -1153,7 +1154,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -1180,7 +1181,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scrollView: {
     flex: 1,
@@ -1204,7 +1205,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   infoText: {
@@ -1213,7 +1214,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 8,
   },
   exportGrid: {
@@ -1236,7 +1237,7 @@ const styles = StyleSheet.create({
   exportLabel: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // List styles
   listContainer: {
@@ -1253,7 +1254,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   listCard: {
     padding: 14,
@@ -1271,7 +1272,7 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   listSubtitle: {
     fontSize: 13,
@@ -1306,7 +1307,7 @@ const styles = StyleSheet.create({
   },
   meritText: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   dateBadge: {
     flexDirection: 'row',
@@ -1318,7 +1319,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   yearBadge: {
     paddingHorizontal: 10,
@@ -1327,7 +1328,7 @@ const styles = StyleSheet.create({
   },
   yearText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Empty state
   emptyState: {
@@ -1359,14 +1360,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
     marginTop: 12,
   },
@@ -1394,7 +1395,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formButtons: {
     flexDirection: 'row',
@@ -1411,7 +1412,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   saveBtn: {
     flex: 1,
@@ -1423,7 +1424,7 @@ const styles = StyleSheet.create({
   saveBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

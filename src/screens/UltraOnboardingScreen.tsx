@@ -32,6 +32,7 @@ import {
   Pressable,
   Modal,
   Vibration,
+  BackHandler,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -42,6 +43,7 @@ import {GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import type {RootStackParamList} from '../navigation/AppNavigator';
+import {TYPOGRAPHY} from '../constants/design';
 
 // Import our custom animations
 import {
@@ -752,6 +754,25 @@ const UltraOnboardingScreen: React.FC = () => {
     }).start();
   }, []);
 
+  // Hardware back button - show skip modal to confirm exit
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (currentIndex > 0) {
+        // If not on first slide, go back one slide
+        flatListRef.current?.scrollToIndex({
+          index: currentIndex - 1,
+          animated: true,
+        });
+      } else {
+        // On first slide, show skip confirmation
+        setShowSkipModal(true);
+      }
+      return true; // Prevent default back behavior
+    });
+
+    return () => backHandler.remove();
+  }, [currentIndex]);
+
   const handleNext = useCallback(() => {
     triggerHaptic('light');
     if (currentIndex < ONBOARDING_SLIDES.length - 1) {
@@ -940,7 +961,7 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   brandContainer: {
     flexDirection: 'row',
@@ -949,7 +970,7 @@ const styles = StyleSheet.create({
   },
   brandText: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   skipButton: {
@@ -962,7 +983,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 
   // Progress bar
@@ -989,7 +1010,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     minWidth: 50,
     textAlign: 'right',
   },
@@ -1024,16 +1045,16 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   statLabel: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     opacity: 0.9,
   },
   slideTitle: {
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     textAlign: 'center',
     marginBottom: 8,
     letterSpacing: -0.5,
@@ -1048,7 +1069,7 @@ const styles = StyleSheet.create({
   },
   subtitleText: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     letterSpacing: 0.3,
   },
@@ -1114,7 +1135,7 @@ const styles = StyleSheet.create({
   },
   mainButtonText: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     letterSpacing: 0.3,
   },
@@ -1135,7 +1156,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 
   // Bottom section
@@ -1182,7 +1203,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     marginBottom: 8,
   },
   modalMessage: {
@@ -1203,7 +1224,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   modalButtons: {
     flexDirection: 'row',
@@ -1229,11 +1250,11 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalButtonTextWhite: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
 });

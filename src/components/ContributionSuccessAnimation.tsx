@@ -24,6 +24,7 @@ import {
   Easing,
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../constants/design';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export interface ContributionSuccessProps {
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -425,7 +426,7 @@ const styles = StyleSheet.create({
   },
   impactText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   badgesContainer: {
     marginBottom: 20,
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   quickNotif: {
     position: 'absolute',
@@ -489,6 +490,6 @@ const styles = StyleSheet.create({
   quickNotifText: {
     color: 'white',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });

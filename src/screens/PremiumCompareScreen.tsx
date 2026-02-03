@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
   },
   slotName: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     marginBottom: 4,
   },
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 9,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'capitalize',
   },
   removeBtn: {
@@ -656,11 +656,11 @@ const styles = StyleSheet.create({
   },
   addIconText: {
     fontSize: 24,
-    fontWeight: '300',
+    fontWeight: TYPOGRAPHY.weight.light,
   },
   addText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   comparisonContainer: {
     marginHorizontal: SPACING.md,
@@ -677,7 +677,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     flex: 1,
   },
   shareCompareBtn: {
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
   },
   shareCompareBtnText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   comparisonRow: {
     flexDirection: 'row',
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
   },
   metricText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   valuesContainer: {
     flex: 1,
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.xs,
   },
   emptyDescription: {
@@ -759,7 +759,7 @@ const styles = StyleSheet.create({
   },
   tipsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   tipItem: {
@@ -801,7 +801,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
@@ -836,7 +836,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   universityMeta: {
@@ -853,7 +853,7 @@ const styles = StyleSheet.create({
   },
   selectedBadge: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

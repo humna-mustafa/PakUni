@@ -250,7 +250,7 @@ const sliderStyles = StyleSheet.create({
   thumbText: {
     color: '#FFF',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   scaleContainer: {
     flexDirection: 'row',
@@ -261,7 +261,7 @@ const sliderStyles = StyleSheet.create({
   scaleMark: {
     fontSize: 10,
     color: '#94A3B8',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 
@@ -690,7 +690,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -713,7 +713,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
   },
   tabTextActive: {
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
     marginBottom: 4,
   },
@@ -739,7 +739,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     borderWidth: 1,
     borderColor: '#E2E8F0',
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
   },
   sliderLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginBottom: SPACING.xs,
   },
@@ -772,7 +772,7 @@ const styles = StyleSheet.create({
   },
   aggregateValue: {
     fontSize: 36,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginTop: 4,
   },
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
   },
   chanceBadgeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   progressContainer: {
@@ -835,7 +835,7 @@ const styles = StyleSheet.create({
   },
   programsTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginBottom: SPACING.sm,
   },
@@ -857,7 +857,7 @@ const styles = StyleSheet.create({
   },
   programName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#94A3B8',
     marginLeft: 4,
   },
@@ -877,7 +877,7 @@ const styles = StyleSheet.create({
   comparisonToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 6,
   },
   comparisonSection: {
@@ -908,7 +908,7 @@ const styles = StyleSheet.create({
   },
   comparisonCardValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   comparisonCardScore: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -925,7 +925,7 @@ const styles = StyleSheet.create({
   },
   improvementText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginLeft: 4,
   },
   formulaBox: {

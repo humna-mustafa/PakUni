@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: 4,
   },
@@ -607,14 +607,14 @@ const styles = StyleSheet.create({
   },
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   section: {
     padding: SPACING.md,
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
     textAlign: 'center',
   },
@@ -658,7 +658,7 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     textAlign: 'center',
     marginBottom: SPACING.xs,
@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
   },
   categoryCount: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   quickTipsCard: {
@@ -687,7 +687,7 @@ const styles = StyleSheet.create({
   },
   quickTipsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
     textAlign: 'center',
   },
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
   },
   quickTipNumberText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   quickTipText: {
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   categoryHeader: {
     borderRadius: RADIUS.xl,
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
   },
   categoryHeaderTitle: {
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: SPACING.sm,
   },
@@ -774,7 +774,7 @@ const styles = StyleSheet.create({
   },
   categoryHeaderBadgeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   tipCard: {
@@ -808,7 +808,7 @@ const styles = StyleSheet.create({
   },
   tipTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 2,
   },
   tipDescription: {
@@ -840,7 +840,7 @@ const styles = StyleSheet.create({
     marginRight: SPACING.sm,
   },
   stepNumberText: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     fontSize: 12,
     color: '#fff',
   },
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
   },
   funFactBadgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#333',
   },
   funFactText: {
@@ -893,7 +893,7 @@ const styles = StyleSheet.create({
   bottomAuthor: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: SPACING.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

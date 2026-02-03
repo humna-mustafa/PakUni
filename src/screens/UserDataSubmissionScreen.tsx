@@ -33,6 +33,7 @@ import {
   SubmissionPriority,
 } from '../services/dataSubmissions';
 import { STATUS, PRIORITY, PROVIDERS, SEMANTIC, DARK_BG, LIGHT_BG } from '../constants/brand';
+import { TYPOGRAPHY } from '../constants/design';
 
 // Animated Type Card Component
 const AnimatedTypeCard: React.FC<{
@@ -678,7 +679,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   infoBox: {
     flexDirection: 'row',
@@ -709,7 +710,7 @@ const styles = StyleSheet.create({
   },
   trustBadgeTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   trustBadgeSubtitle: {
     fontSize: 11,
@@ -717,7 +718,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
     marginTop: 8,
   },
@@ -737,7 +738,7 @@ const styles = StyleSheet.create({
   },
   typeLabel: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   typeDescription: {
@@ -766,11 +767,11 @@ const styles = StyleSheet.create({
   },
   priorityText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
     marginTop: 12,
   },
@@ -808,7 +809,7 @@ const styles = StyleSheet.create({
   submitBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statsSummary: {
     flexDirection: 'row',
@@ -822,7 +823,7 @@ const styles = StyleSheet.create({
   },
   summaryValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   summaryLabel: {
     fontSize: 12,
@@ -847,7 +848,7 @@ const styles = StyleSheet.create({
   },
   historyTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   statusBadge: {
@@ -857,7 +858,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'capitalize',
   },
   historyField: {
@@ -877,7 +878,7 @@ const styles = StyleSheet.create({
   },
   newValue: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   rejectionBox: {
@@ -904,7 +905,7 @@ const styles = StyleSheet.create({
   },
   autoApprovedText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
   },
   historyDate: {
@@ -918,7 +919,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 16,
   },
   emptyText: {
@@ -939,7 +940,7 @@ const styles = StyleSheet.create({
   emptyBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

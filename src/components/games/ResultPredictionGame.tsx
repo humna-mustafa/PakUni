@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -750,7 +750,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },
@@ -775,7 +775,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#475569',
   },
   programList: {},
@@ -792,13 +792,13 @@ const styles = StyleSheet.create({
   },
   programName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
   },
   programMerit: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#94A3B8',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   aggregateInputContainer: {
     flexDirection: 'row',
@@ -813,12 +813,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   percentSign: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
     marginLeft: SPACING.sm,
   },
@@ -834,7 +834,7 @@ const styles = StyleSheet.create({
   },
   predictButtonText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginLeft: SPACING.sm,
   },
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
   },
   suspenseText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     textAlign: 'center',
   },
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
   },
   resultTitle: {
     fontSize: 28,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
@@ -904,7 +904,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#1E293B',
   },
   statDivider: {
@@ -933,7 +933,7 @@ const styles = StyleSheet.create({
   },
   chancePercent: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginTop: SPACING.xs,
     textAlign: 'right',
@@ -954,7 +954,7 @@ const styles = StyleSheet.create({
   },
   tryAgainText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
     marginLeft: 6,
   },
@@ -968,7 +968,7 @@ const styles = StyleSheet.create({
   },
   shareText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFF',
     marginLeft: 6,
   },

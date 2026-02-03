@@ -202,7 +202,7 @@ const imagePickerStyles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   closeBtn: {
@@ -238,7 +238,7 @@ const imagePickerStyles = StyleSheet.create({
   },
   imageLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFF',
     marginBottom: 2,
   },
@@ -259,7 +259,7 @@ const imagePickerStyles = StyleSheet.create({
   doneBtnText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1296,7 +1296,7 @@ const containerStyles = StyleSheet.create({
   shareBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   saveBtn: {
     width: 52,
@@ -1323,7 +1323,7 @@ const containerStyles = StyleSheet.create({
   },
   customizeBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1376,7 +1376,7 @@ const customImageStyles = StyleSheet.create({
   },
   studentName: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 4,
     textAlign: 'center',
     maxWidth: 80,
@@ -1460,7 +1460,7 @@ const meritStyles = StyleSheet.create({
   badgeText: {
     color: '#1D2127',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: 1.5,
   },
   iconSection: {
@@ -1483,7 +1483,7 @@ const meritStyles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFD700',
     textAlign: 'center',
     letterSpacing: 2,
@@ -1518,14 +1518,14 @@ const meritStyles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: 'rgba(255, 255, 255, 0.6)',
     letterSpacing: 1,
     marginBottom: 2,
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
   },
   scoreBox: {
@@ -1539,14 +1539,14 @@ const meritStyles = StyleSheet.create({
   },
   scoreLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: 'rgba(26, 26, 46, 0.7)',
     letterSpacing: 1,
     marginBottom: 4,
   },
   scoreValue: {
     fontSize: 36,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#1D2127',
   },
   hashtags: {
@@ -1554,7 +1554,7 @@ const meritStyles = StyleSheet.create({
     color: 'rgba(255, 215, 0, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   branding: {
     marginTop: SPACING.md,
@@ -1563,7 +1563,7 @@ const meritStyles = StyleSheet.create({
   brandText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255, 255, 255, 0.6)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1598,7 +1598,7 @@ const admissionStyles = StyleSheet.create({
   },
   celebrationText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingVertical: SPACING.sm,
@@ -1627,7 +1627,7 @@ const admissionStyles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: 32,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     textAlign: 'center',
     letterSpacing: 1,
@@ -1640,7 +1640,7 @@ const admissionStyles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   whiteCard: {
     marginTop: SPACING.lg,
@@ -1654,13 +1654,13 @@ const admissionStyles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[400],
     letterSpacing: 1,
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[800],
   },
   messageBox: {
@@ -1672,7 +1672,7 @@ const admissionStyles = StyleSheet.create({
   },
   messageText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#00B894',
     textAlign: 'center',
   },
@@ -1686,7 +1686,7 @@ const admissionStyles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   branding: {
     marginTop: SPACING.md,
@@ -1695,7 +1695,7 @@ const admissionStyles = StyleSheet.create({
   brandText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1730,7 +1730,7 @@ const testStyles = StyleSheet.create({
   },
   accentText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingVertical: SPACING.sm,
@@ -1759,7 +1759,7 @@ const testStyles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     textAlign: 'center',
     letterSpacing: 1.5,
@@ -1787,14 +1787,14 @@ const testStyles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[400],
     letterSpacing: 1,
     marginBottom: 2,
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[800],
   },
   scoreSection: {
@@ -1807,14 +1807,14 @@ const testStyles = StyleSheet.create({
   },
   scoreLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: 'rgba(255, 255, 255, 0.8)',
     letterSpacing: 1,
     marginBottom: 4,
   },
   scoreValue: {
     fontSize: 32,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
   },
   motivationBox: {
@@ -1825,7 +1825,7 @@ const testStyles = StyleSheet.create({
   },
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#764ba2',
     textAlign: 'center',
   },
@@ -1834,7 +1834,7 @@ const testStyles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   branding: {
     marginTop: SPACING.md,
@@ -1843,7 +1843,7 @@ const testStyles = StyleSheet.create({
   brandText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1880,7 +1880,7 @@ const scholarshipStyles = StyleSheet.create({
   },
   badgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingVertical: SPACING.sm,
@@ -1909,7 +1909,7 @@ const scholarshipStyles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     textAlign: 'center',
     letterSpacing: 1,
@@ -1932,13 +1932,13 @@ const scholarshipStyles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[400],
     letterSpacing: 1,
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[800],
   },
   coverageBox: {
@@ -1952,14 +1952,14 @@ const scholarshipStyles = StyleSheet.create({
   },
   coverageLabel: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: 'rgba(255, 255, 255, 0.8)',
     letterSpacing: 1,
     marginBottom: 4,
   },
   coverageValue: {
     fontSize: 32,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
   },
   hashtags: {
@@ -1967,7 +1967,7 @@ const scholarshipStyles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   branding: {
     marginTop: SPACING.md,
@@ -1976,7 +1976,7 @@ const scholarshipStyles = StyleSheet.create({
   brandText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255, 255, 255, 0.7)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

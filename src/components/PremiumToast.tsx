@@ -480,19 +480,19 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   content: {
     flex: 1,
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 2,
   },
   message: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     opacity: 0.9,
   },
   actionBtn: {
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   closeBtn: {
     padding: SPACING.xs,
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     fontSize: 24,
-    fontWeight: '300',
+    fontWeight: TYPOGRAPHY.weight.light,
     opacity: 0.7,
   },
   progressTrack: {
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
   },
   bannerTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 2,
   },
   bannerMessage: {
@@ -566,14 +566,14 @@ const styles = StyleSheet.create({
   },
   bannerActionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   bannerDismiss: {
     padding: SPACING.xs,
   },
   bannerDismissText: {
     fontSize: 20,
-    fontWeight: '300',
+    fontWeight: TYPOGRAPHY.weight.light,
   },
 });
 

@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 2,
   },
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
 
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   },
   reportTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   reportCloseBtn: {
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#6B7280',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#DC2626',
     marginBottom: 4,
   },
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#272C34',
     marginBottom: SPACING.xs,
   },
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
   },
   submitBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   cancelBtn: {
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#6B7280',
   },
 
@@ -692,7 +692,7 @@ const styles = StyleSheet.create({
   },
   successTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#10B981',
     marginBottom: SPACING.xs,
   },

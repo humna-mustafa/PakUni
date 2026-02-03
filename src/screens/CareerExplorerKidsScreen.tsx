@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, FONTS, BORDER_RADIUS} from '../constants/theme';
+import {TYPOGRAPHY} from '../constants/design';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {Haptics} from '../utils/haptics';
@@ -1357,7 +1358,7 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   careerCount: {
     fontSize: FONTS.sizes.xs,
@@ -1418,7 +1419,7 @@ const styles = StyleSheet.create({
   },
   categoryBadgeText: {
     fontSize: FONTS.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textTransform: 'capitalize',
   },
   difficultyRow: {
@@ -1432,7 +1433,7 @@ const styles = StyleSheet.create({
   },
   difficultyText: {
     fontSize: FONTS.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   arrow: {
     fontSize: 24,
@@ -1454,7 +1455,7 @@ const styles = StyleSheet.create({
   },
   backBtnText: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailEmoji: {
     fontSize: 64,
@@ -1512,7 +1513,7 @@ const styles = StyleSheet.create({
   },
   powerText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   toolsRow: {
     flexDirection: 'row',
@@ -1554,7 +1555,7 @@ const styles = StyleSheet.create({
   },
   salaryText: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   difficultyInfo: {
@@ -1597,7 +1598,7 @@ const styles = StyleSheet.create({
   },
   roleModelText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   inspirationText: {
@@ -1652,7 +1653,7 @@ const styles = StyleSheet.create({
   },
   quizQuestion: {
     fontSize: FONTS.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     marginBottom: SPACING.xl,
     lineHeight: 28,
@@ -1670,7 +1671,7 @@ const styles = StyleSheet.create({
   },
   quizOptionText: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   quizResult: {

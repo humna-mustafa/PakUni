@@ -24,6 +24,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../../constants/design';
 import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
@@ -485,7 +486,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -508,7 +509,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scrollView: {
     flex: 1,
@@ -526,7 +527,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -551,7 +552,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 12,
@@ -565,7 +566,7 @@ const styles = StyleSheet.create({
   },
   changeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   chartCard: {
     borderRadius: 12,
@@ -580,7 +581,7 @@ const styles = StyleSheet.create({
   },
   chartTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   chartBadge: {
     paddingHorizontal: 10,
@@ -589,7 +590,7 @@ const styles = StyleSheet.create({
   },
   chartBadgeText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   miniChart: {
     flexDirection: 'row',
@@ -628,7 +629,7 @@ const styles = StyleSheet.create({
   },
   barValue: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   barTrack: {
     height: 8,
@@ -646,7 +647,7 @@ const styles = StyleSheet.create({
   },
   actionsTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 12,
   },
   actionsRow: {
@@ -664,7 +665,7 @@ const styles = StyleSheet.create({
   },
   actionBtnText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   loader: {
     paddingVertical: 40,

@@ -23,6 +23,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { UniversalHeader } from '../../components';
+import { TYPOGRAPHY } from '../../constants/design';
 import { 
   dataSubmissionsService, 
   MeritRecord,
@@ -876,7 +877,7 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   tabBadge: {
     paddingHorizontal: 6,
@@ -885,7 +886,7 @@ const styles = StyleSheet.create({
   },
   tabBadgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   card: {
     borderRadius: 12,
@@ -906,7 +907,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   cardSubtitle: {
@@ -924,7 +925,7 @@ const styles = StyleSheet.create({
   verifiedText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   extendedBadge: {
     paddingHorizontal: 8,
@@ -934,7 +935,7 @@ const styles = StyleSheet.create({
   extendedText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   meritDetails: {
     flexDirection: 'row',
@@ -950,7 +951,7 @@ const styles = StyleSheet.create({
   },
   meritValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   seatsRow: {
     flexDirection: 'row',
@@ -973,13 +974,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   pastLabel: {
     color: '#EF4444',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   extensionRow: {
     flexDirection: 'row',
@@ -992,7 +993,7 @@ const styles = StyleSheet.create({
   extensionText: {
     fontSize: 12,
     color: '#92400E',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   description: {
     fontSize: 12,
@@ -1017,7 +1018,7 @@ const styles = StyleSheet.create({
   },
   testDateValue: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   testInfo: {
     flexDirection: 'row',
@@ -1031,7 +1032,7 @@ const styles = StyleSheet.create({
   },
   testInfoText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
   },
   cardFooter: {
@@ -1090,7 +1091,7 @@ const styles = StyleSheet.create({
   emptyBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalOverlay: {
     flex: 1,
@@ -1112,14 +1113,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
     marginTop: 12,
   },
@@ -1154,7 +1155,7 @@ const styles = StyleSheet.create({
   },
   typeChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   modalActions: {
     flexDirection: 'row',
@@ -1173,7 +1174,7 @@ const styles = StyleSheet.create({
   modalBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

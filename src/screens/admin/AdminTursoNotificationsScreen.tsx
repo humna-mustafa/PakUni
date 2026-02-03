@@ -31,6 +31,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { logger } from '../../utils/logger';
+import { TYPOGRAPHY } from '../../constants/design';
 import { tursoAdminService, TursoNotification } from '../../services/tursoAdmin';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -1001,7 +1002,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   headerSubtitle: {
     fontSize: 12,
@@ -1030,7 +1031,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 8,
   },
   statLabel: {
@@ -1065,7 +1066,7 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   loadingContainer: {
     flex: 1,
@@ -1105,7 +1106,7 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
     marginRight: 8,
   },
@@ -1116,7 +1117,7 @@ const styles = StyleSheet.create({
   },
   statusBadgeText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'uppercase',
   },
   notificationBody: {
@@ -1164,7 +1165,7 @@ const styles = StyleSheet.create({
   },
   emptyButtonText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
   modalOverlay: {
@@ -1188,7 +1189,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   createContent: {
     paddingHorizontal: 20,
@@ -1205,7 +1206,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   templateButtonText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
   formField: {
@@ -1213,7 +1214,7 @@ const styles = StyleSheet.create({
   },
   formLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   formInput: {
@@ -1240,7 +1241,7 @@ const styles = StyleSheet.create({
   },
   typeChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   priorityRow: {
     flexDirection: 'row',
@@ -1255,7 +1256,7 @@ const styles = StyleSheet.create({
   },
   priorityText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   audienceChip: {
     paddingHorizontal: 14,
@@ -1266,7 +1267,7 @@ const styles = StyleSheet.create({
   },
   audienceChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textTransform: 'capitalize',
   },
   createActions: {
@@ -1291,7 +1292,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {},
   createActionText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
   templateModal: {
@@ -1324,7 +1325,7 @@ const styles = StyleSheet.create({
   },
   templateName: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   templatePreview: {
     fontSize: 12,
@@ -1350,11 +1351,11 @@ const styles = StyleSheet.create({
   },
   detailStatusText: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   detailTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 8,
   },
   detailBody: {
@@ -1376,7 +1377,7 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   metricLabel: {
     fontSize: 12,
@@ -1395,7 +1396,7 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailActions: {
     flexDirection: 'row',
@@ -1413,7 +1414,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   detailActionText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
 });

@@ -18,6 +18,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from './icons';
 import {Haptics} from '../utils/haptics';
 import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
+import {TYPOGRAPHY} from '../constants/design';
 
 interface FloatingToolsButtonProps {
   /** Position from bottom */
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     }),
   },
   labelText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

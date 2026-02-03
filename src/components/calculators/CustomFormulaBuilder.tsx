@@ -166,12 +166,12 @@ const weightStyles = StyleSheet.create({
   label: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: SPACING.sm,
   },
   value: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   sliderRow: {
     flexDirection: 'row',
@@ -300,7 +300,7 @@ const cardStyles = StyleSheet.create({
   },
   name: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   deleteButton: {
     padding: 4,
@@ -318,7 +318,7 @@ const cardStyles = StyleSheet.create({
   },
   weightValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 });
 
@@ -649,7 +649,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     title: {
       fontSize: TYPOGRAPHY.sizes.lg,
-      fontWeight: '700',
+      fontWeight: TYPOGRAPHY.weight.bold,
       color: colors.text,
     },
     content: {
@@ -661,7 +661,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     inputLabel: {
       fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: '600',
+      fontWeight: TYPOGRAPHY.weight.semibold,
       color: colors.textSecondary,
       marginBottom: SPACING.xs,
     },
@@ -711,7 +711,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     weightsTitle: {
       fontSize: TYPOGRAPHY.sizes.md,
-      fontWeight: '700',
+      fontWeight: TYPOGRAPHY.weight.bold,
       color: colors.text,
     },
     totalBadge: {
@@ -721,7 +721,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     totalText: {
       fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: '700',
+      fontWeight: TYPOGRAPHY.weight.bold,
     },
     warningBox: {
       flexDirection: 'row',
@@ -741,7 +741,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     previewTitle: {
       fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: '600',
+      fontWeight: TYPOGRAPHY.weight.semibold,
       color: colors.textSecondary,
       marginBottom: SPACING.sm,
     },
@@ -771,7 +771,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
     },
     createButtonText: {
       fontSize: TYPOGRAPHY.sizes.md,
-      fontWeight: '700',
+      fontWeight: TYPOGRAPHY.weight.bold,
       color: '#FFF',
       marginLeft: SPACING.sm,
     },
@@ -881,7 +881,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     // color set dynamically via colors.text
   },
   headerSubtitle: {
@@ -894,7 +894,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     // color set dynamically via colors.textSecondary
     marginBottom: SPACING.sm,
   },
@@ -904,7 +904,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     // color set dynamically via colors.textSecondary
     marginTop: SPACING.md,
   },
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     marginLeft: SPACING.sm,
   },

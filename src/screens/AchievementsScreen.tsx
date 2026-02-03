@@ -836,7 +836,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginTop: SPACING.xs,
   },
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -871,7 +871,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   sectionSubtitle: {
@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
   },
   templateTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   achievementsList: {
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   cardSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -970,7 +970,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
   },
   emptyText: {
@@ -991,7 +991,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   infoText: {
@@ -1084,7 +1084,7 @@ const styles = StyleSheet.create({
   },
   tipText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   addModalEmoji: {
     fontSize: 48,
@@ -1092,7 +1092,7 @@ const styles = StyleSheet.create({
   },
   addModalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
   },
   closeButton: {
@@ -1111,7 +1111,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
   },
   fieldInput: {
@@ -1131,7 +1131,7 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   deleteBtn: {
@@ -1147,7 +1147,7 @@ const styles = StyleSheet.create({
   deleteBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

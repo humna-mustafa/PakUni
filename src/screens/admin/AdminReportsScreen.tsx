@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import {TYPOGRAPHY} from '../../constants/design';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, ContentReport, ReportStatus} from '../../services/admin';
 import {Icon} from '../../components/icons';
@@ -473,7 +474,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -500,7 +501,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   listContent: {
     padding: 16,
@@ -527,7 +528,7 @@ const styles = StyleSheet.create({
   },
   reportType: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   reportDate: {
     fontSize: 12,
@@ -543,11 +544,11 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   reportReason: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 4,
   },
   reportDescription: {
@@ -569,7 +570,7 @@ const styles = StyleSheet.create({
   },
   quickBtnText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   loader: {
     paddingVertical: 20,
@@ -606,7 +607,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
@@ -629,11 +630,11 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailText: {
     fontSize: 14,
@@ -658,11 +659,11 @@ const styles = StyleSheet.create({
   modalActionBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   notesInput: {
@@ -687,7 +688,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   confirmBtn: {
     flex: 1,
@@ -698,7 +699,7 @@ const styles = StyleSheet.create({
   confirmBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

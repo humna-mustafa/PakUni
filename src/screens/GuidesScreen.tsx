@@ -894,7 +894,7 @@ const categoryStyles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   description: {
@@ -913,7 +913,7 @@ const categoryStyles = StyleSheet.create({
   },
   countText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1042,7 +1042,7 @@ const guideItemStyles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   meta: {
     flexDirection: 'row',
@@ -1054,7 +1054,7 @@ const guideItemStyles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   description: {
@@ -1301,12 +1301,12 @@ const detailStyles = StyleSheet.create({
   },
   headerBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFF',
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginBottom: SPACING.sm,
   },
@@ -1329,7 +1329,7 @@ const detailStyles = StyleSheet.create({
   difficultyText: {
     fontSize: 11,
     color: '#FFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   content: {
     flex: 1,
@@ -1346,7 +1346,7 @@ const detailStyles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   stepCard: {
@@ -1369,7 +1369,7 @@ const detailStyles = StyleSheet.create({
   },
   stepNumberText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   stepHeaderContent: {
@@ -1377,7 +1377,7 @@ const detailStyles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   importantBadge: {
     flexDirection: 'row',
@@ -1390,7 +1390,7 @@ const detailStyles = StyleSheet.create({
   },
   importantText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 2,
   },
   stepDescription: {
@@ -1410,7 +1410,7 @@ const detailStyles = StyleSheet.create({
   },
   stepSectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
   },
   tipItem: {
@@ -1451,7 +1451,7 @@ const detailStyles = StyleSheet.create({
   },
   tipBulletText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   tipContent: {
@@ -1468,7 +1468,7 @@ const detailStyles = StyleSheet.create({
   },
   resourceText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: SPACING.sm,
   },
   tagsGrid: {
@@ -1484,7 +1484,7 @@ const detailStyles = StyleSheet.create({
   },
   tagChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   suggestCard: {
     flexDirection: 'row',
@@ -1497,7 +1497,7 @@ const detailStyles = StyleSheet.create({
   },
   suggestTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   suggestText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1808,7 +1808,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1832,7 +1832,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   categoriesGrid: {
@@ -1855,12 +1855,12 @@ const styles = StyleSheet.create({
   },
   backCategoryText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 6,
   },
   categoryTitle: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   emptyState: {
     alignItems: 'center',
@@ -1895,7 +1895,7 @@ const styles = StyleSheet.create({
   },
   suggestTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   suggestText: {
     fontSize: TYPOGRAPHY.sizes.sm,

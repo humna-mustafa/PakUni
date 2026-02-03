@@ -23,6 +23,7 @@ import {
   TextStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {TYPOGRAPHY} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {roundToPixel, PP_SHADOWS} from '../constants/pixel-perfect';
 
@@ -515,7 +516,7 @@ const iconStyles = StyleSheet.create({
     position: 'absolute',
   },
   starText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginLeft: SPACING.sm,
   },
@@ -667,18 +667,18 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
     marginLeft: 6,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tabTextActive: {
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   inputSection: {
     marginBottom: SPACING.md,
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },
@@ -700,14 +700,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   inputSuffix: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: '#64748B',
     marginLeft: SPACING.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scaleContainer: {
     marginTop: SPACING.md,
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
   scaleButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scaleButtonTextActive: {
     color: '#FFF',
@@ -757,7 +757,7 @@ const styles = StyleSheet.create({
   },
   gradeButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#64748B',
   },
   gradeButtonTextSelected: {
@@ -776,7 +776,7 @@ const styles = StyleSheet.create({
   },
   selectedGradesText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   convertButton: {
@@ -792,7 +792,7 @@ const styles = StyleSheet.create({
   },
   convertButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     marginLeft: SPACING.sm,
   },
@@ -825,7 +825,7 @@ const styles = StyleSheet.create({
   },
   resultValue: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
   },
   resultSubtitle: {
@@ -855,7 +855,7 @@ const styles = StyleSheet.create({
   },
   breakdownTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginBottom: SPACING.sm,
   },
@@ -870,7 +870,7 @@ const styles = StyleSheet.create({
   },
   breakdownValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   clearButton: {
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
   referenceToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   referenceTable: {
@@ -929,7 +929,7 @@ const styles = StyleSheet.create({
   },
   referenceHeaderText: {
     color: '#FFF',
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   referenceRow: {
     flexDirection: 'row',
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   referenceCellGrade: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
   },
   // Multi-subject styles
@@ -965,7 +965,7 @@ const styles = StyleSheet.create({
   subjectName: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: '#475569',
   },
   subjectMarksRow: {
@@ -981,7 +981,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.sm,
     paddingVertical: 6,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     textAlign: 'center',
   },
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.md,
     color: '#94A3B8',
     marginHorizontal: 4,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Compact styles
   compactContainer: {
@@ -1012,7 +1012,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.md,
     color: '#94A3B8',
     marginHorizontal: 6,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   compactButton: {
     width: 32,
@@ -1026,7 +1026,7 @@ const styles = StyleSheet.create({
   compactResult: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#10B981',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 6,
     textAlign: 'center',
   },
@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
   subjectNumber: {
     width: 24,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
   },
   subjectNameInput: {
@@ -1081,7 +1081,7 @@ const styles = StyleSheet.create({
   },
   gradeChipText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
   },
   gradeChipTextSelected: {
@@ -1104,7 +1104,7 @@ const styles = StyleSheet.create({
   },
   addSubjectText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
     marginLeft: SPACING.xs,
   },
@@ -1118,7 +1118,7 @@ const styles = StyleSheet.create({
   selectedSummaryLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   subjectsBreakdown: {
     marginTop: SPACING.sm,
@@ -1128,7 +1128,7 @@ const styles = StyleSheet.create({
   },
   breakdownSubtitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginBottom: 4,
   },

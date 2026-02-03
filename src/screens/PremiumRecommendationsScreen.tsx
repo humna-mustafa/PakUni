@@ -8,6 +8,8 @@ import {
   TextInput,
   Animated,
   Dimensions,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -275,7 +277,7 @@ const ResultCard = ({
                         ? colors.success
                         : colors.primary,
                     fontSize: 10,
-                    fontWeight: '600',
+                    fontWeight: TYPOGRAPHY.weight.semibold,
                   }}>
                   {university.type.toUpperCase()}
                 </Text>
@@ -285,7 +287,7 @@ const ResultCard = ({
             {/* Fee Info - Verified Verification */}
             <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 4}}>
                <Icon name="cash-outline" family="Ionicons" size={14} color={colors.success} />
-               <Text style={{fontSize: 12, color: colors.textSecondary, fontWeight: '500'}}>
+               <Text style={{fontSize: 12, color: colors.textSecondary, fontWeight: TYPOGRAPHY.weight.medium}}>
                   {university.estimatedFeeRange || 'Fee varies by program'}
                </Text>
             </View>
@@ -389,6 +391,34 @@ const PremiumRecommendationsScreen = () => {
       }),
     ]).start();
   }, []);
+
+  // Back button protection - prevent accidental data loss in wizard
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Only intercept if user has entered data
+      const hasEnteredData = matricMarks || fscMarks || entryTestScore || 
+        preferredPrograms.length > 0 || preferredCities.length > 0;
+      
+      if (hasEnteredData && !showResults) {
+        Alert.alert(
+          'Discard Changes?',
+          'You have entered recommendation criteria. Are you sure you want to go back?',
+          [
+            { text: 'Stay', style: 'cancel' },
+            { 
+              text: 'Discard', 
+              style: 'destructive',
+              onPress: () => navigation.goBack()
+            },
+          ]
+        );
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [matricMarks, fscMarks, entryTestScore, preferredPrograms, preferredCities, showResults, navigation]);
 
   const programs = ['Engineering', 'Medical', 'Business', 'Computer Science', 'Law', 'Arts'];
   const cities = ['Lahore', 'Karachi', 'Islamabad', 'Peshawar', 'Multan', 'Faisalabad'];
@@ -942,7 +972,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -991,7 +1021,7 @@ const styles = StyleSheet.create({
   },
   stepLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
     textAlign: 'center',
   },
@@ -1002,7 +1032,7 @@ const styles = StyleSheet.create({
   stepContent: {},
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   stepDescription: {
@@ -1014,7 +1044,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
   },
   inputWrapper: {
@@ -1036,7 +1066,7 @@ const styles = StyleSheet.create({
   },
   preferenceLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
   },
   chipsContainer: {
@@ -1054,7 +1084,7 @@ const styles = StyleSheet.create({
   },
   chipTextActive: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   reviewCard: {
@@ -1075,7 +1105,7 @@ const styles = StyleSheet.create({
   },
   reviewValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   reviewDivider: {
     height: 1,
@@ -1106,7 +1136,7 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   nextGradient: {
     paddingVertical: SPACING.md,
@@ -1115,7 +1145,7 @@ const styles = StyleSheet.create({
   nextButtonText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Results styles
   resultsHeader: {
@@ -1134,7 +1164,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   resultsEmoji: {
     fontSize: 60,
@@ -1142,7 +1172,7 @@ const styles = StyleSheet.create({
   },
   resultsTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -1178,7 +1208,7 @@ const styles = StyleSheet.create({
   rankText: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resultContent: {
     padding: SPACING.md,
@@ -1192,7 +1222,7 @@ const styles = StyleSheet.create({
   },
   resultName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   resultMeta: {
@@ -1221,7 +1251,7 @@ const styles = StyleSheet.create({
   },
   matchScore: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   matchLabel: {
     fontSize: 10,
@@ -1234,7 +1264,7 @@ const styles = StyleSheet.create({
   },
   matchReasonsTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   matchReason: {
@@ -1249,7 +1279,7 @@ const styles = StyleSheet.create({
   },
   viewDetailText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   tipsCard: {
     borderRadius: RADIUS.lg,
@@ -1265,7 +1295,7 @@ const styles = StyleSheet.create({
   },
   tipsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   tipItem: {
@@ -1275,7 +1305,7 @@ const styles = StyleSheet.create({
   },
   tipBullet: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginRight: 6,
     color: '#4573DF',
   },
@@ -1306,7 +1336,7 @@ const styles = StyleSheet.create({
   },
   validationErrorText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // No results styles
   noResultsCard: {
@@ -1317,7 +1347,7 @@ const styles = StyleSheet.create({
   },
   noResultsTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.md,
   },
   noResultsText: {

@@ -29,6 +29,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { useAuth } from '../../contexts/AuthContext';
 import { UniversalHeader } from '../../components';
 import { 
@@ -879,7 +880,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 11,
@@ -896,7 +897,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginRight: 8,
   },
   filterChip: {
@@ -907,7 +908,7 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textTransform: 'capitalize',
   },
   bulkModeBar: {
@@ -919,7 +920,7 @@ const styles = StyleSheet.create({
   },
   bulkModeText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   bulkActions: {
     flexDirection: 'row',
@@ -936,7 +937,7 @@ const styles = StyleSheet.create({
   bulkBtnText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   card: {
     borderRadius: 12,
@@ -965,7 +966,7 @@ const styles = StyleSheet.create({
   },
   cardType: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -975,7 +976,7 @@ const styles = StyleSheet.create({
   statusText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'capitalize',
   },
   priorityBadge: {
@@ -985,11 +986,11 @@ const styles = StyleSheet.create({
   },
   priorityText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   entityName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   changeRow: {
@@ -1011,7 +1012,7 @@ const styles = StyleSheet.create({
   },
   newValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   impactBox: {
@@ -1024,7 +1025,7 @@ const styles = StyleSheet.create({
   },
   impactText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   cardFooter: {
@@ -1070,7 +1071,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   emptyState: {
     flex: 1,
@@ -1102,7 +1103,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
@@ -1114,7 +1115,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
   },
   comparisonRow: {
@@ -1130,12 +1131,12 @@ const styles = StyleSheet.create({
   },
   compLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   compValue: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   detailsBox: {
     borderRadius: 12,
@@ -1168,7 +1169,7 @@ const styles = StyleSheet.create({
   },
   impactItemTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   impactItemDesc: {
     fontSize: 12,
@@ -1176,7 +1177,7 @@ const styles = StyleSheet.create({
   },
   impactSubtitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 8,
     marginBottom: 8,
   },
@@ -1211,11 +1212,11 @@ const styles = StyleSheet.create({
   submitterAvatarText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   submitterName: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   trustBadgeRow: {
     flexDirection: 'row',
@@ -1236,7 +1237,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 12,
     marginBottom: 6,
   },
@@ -1266,7 +1267,7 @@ const styles = StyleSheet.create({
   modalBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

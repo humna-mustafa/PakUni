@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TYPOGRAPHY } from '../constants/design';
 import { contributionAutomationService } from '../services/contributionAutomation';
 import { dataSubmissionsService } from '../services/dataSubmissions';
 
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
   },
   toggleTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   toggleDescription: {
     fontSize: 12,
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginVertical: 4,
   },
   statLabel: {
@@ -318,7 +319,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   viewAllLink: {
     flexDirection: 'row',
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
   },
   viewAllText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   ruleItem: {
     borderLeftWidth: 3,
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
   },
   ruleName: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   ruleDetail: {
@@ -374,10 +375,10 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   actionTextAlt: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });

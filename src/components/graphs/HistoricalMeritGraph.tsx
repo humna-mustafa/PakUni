@@ -403,7 +403,7 @@ const lineStyles = StyleSheet.create({
   yLabel: {
     fontSize: 10,
     color: '#94A3B8',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   graphArea: {
     backgroundColor: '#F8FAFC',
@@ -445,7 +445,7 @@ const lineStyles = StyleSheet.create({
   xLabel: {
     fontSize: 10,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 
@@ -678,7 +678,7 @@ export const HistoricalMeritGraph: React.FC<HistoricalMeritGraphProps> = ({
                   style={[styles.insightDot, {backgroundColor: program.color}]}
                 />
                 <Text style={styles.insightText}>
-                  <Text style={{fontWeight: '700'}}>{program.program}:</Text>{' '}
+                  <Text style={{fontWeight: TYPOGRAPHY.weight.bold}}>{program.program}:</Text>{' '}
                   Merit has {totalChange > 0 ? 'increased' : 'decreased'} by{' '}
                   {Math.abs(totalChange).toFixed(1)}% over{' '}
                   {program.data.length} years.
@@ -726,7 +726,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -748,7 +748,7 @@ const styles = StyleSheet.create({
   },
   universityTabText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
   },
   programSection: {
@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
   },
   programChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
     marginRight: 4,
   },
@@ -814,13 +814,13 @@ const styles = StyleSheet.create({
   },
   detailProgram: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   detailYear: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailRow: {
     flexDirection: 'row',
@@ -835,7 +835,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#4573DF',
   },
   legend: {
@@ -864,7 +864,7 @@ const styles = StyleSheet.create({
   },
   insightsTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },

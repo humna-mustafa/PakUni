@@ -155,7 +155,7 @@ const chipStyles = StyleSheet.create({
   label: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 
@@ -300,7 +300,7 @@ const sliderStyles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },
@@ -338,12 +338,12 @@ const sliderStyles = StyleSheet.create({
     paddingVertical: SPACING.sm,
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#1E293B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   dash: {
     marginHorizontal: SPACING.md,
     color: '#94A3B8',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   presetsRow: {
     flexDirection: 'row',
@@ -359,7 +359,7 @@ const sliderStyles = StyleSheet.create({
   presetText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#64748B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -432,7 +432,7 @@ const toggleStyles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginLeft: SPACING.xs,
   },
@@ -452,7 +452,7 @@ const toggleStyles = StyleSheet.create({
   optionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -940,7 +940,7 @@ const compactStyles = StyleSheet.create({
   filterLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#475569',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginLeft: 4,
   },
   dot: {
@@ -961,7 +961,7 @@ const compactStyles = StyleSheet.create({
   clearText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#EF4444',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
 });
@@ -983,7 +983,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
     marginLeft: SPACING.sm,
   },
@@ -996,7 +996,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#4573DF',
   },
   activeFiltersScroll: {
@@ -1015,7 +1015,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#475569',
     marginLeft: 4,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   clearTag: {
     flexDirection: 'row',
@@ -1029,7 +1029,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#EF4444',
     marginLeft: 4,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalContainer: {
     flex: 1,
@@ -1046,7 +1046,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#1E293B',
   },
   closeButton: {
@@ -1074,7 +1074,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 6,
   },
   contentScroll: {
@@ -1085,7 +1085,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginBottom: SPACING.md,
   },
@@ -1111,7 +1111,7 @@ const styles = StyleSheet.create({
   resetButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: '#64748B',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 6,
   },
   applyButton: {
@@ -1123,7 +1123,7 @@ const styles = StyleSheet.create({
   },
   applyButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
 });

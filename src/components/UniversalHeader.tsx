@@ -309,17 +309,17 @@ const styles = StyleSheet.create({
   profileInitials: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   title: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: -0.3,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
     marginTop: 1,
     textAlign: 'center',
   },
@@ -329,12 +329,12 @@ const styles = StyleSheet.create({
   },
   largeTitle: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   largeSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
     marginTop: 2,
   },
 });

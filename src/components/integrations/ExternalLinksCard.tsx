@@ -88,7 +88,7 @@ const quickLinkStyles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#64748B',
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 
@@ -190,7 +190,7 @@ const portalCardStyles = StyleSheet.create({
   },
   name: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   fullName: {
@@ -222,7 +222,7 @@ const portalCardStyles = StyleSheet.create({
   linkLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   contactRow: {
@@ -240,7 +240,7 @@ const portalCardStyles = StyleSheet.create({
   contactText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginLeft: 4,
   },
 });
@@ -547,7 +547,7 @@ const calendarButtonStyles = StyleSheet.create({
   },
   text: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFF',
     marginLeft: 6,
   },
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
   compactButtonText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#475569',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 6,
   },
   header: {
@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -626,13 +626,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   seeAllText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   quickLinksSection: {
     marginBottom: SPACING.md,
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
   },
   portalPreviewName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
   },
   // Modal styles
@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#1E293B',
   },
   modalScroll: {
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
   },
   hecLinkTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   hecLinkDesc: {

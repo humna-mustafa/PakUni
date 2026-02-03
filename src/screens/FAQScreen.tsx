@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scrollView: {
     flex: 1,
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
   faqQuestion: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     lineHeight: 22,
   },
   faqAnswer: {
@@ -624,7 +624,7 @@ const styles = StyleSheet.create({
   },
   contactTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   contactText: {
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
   contactButtonText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

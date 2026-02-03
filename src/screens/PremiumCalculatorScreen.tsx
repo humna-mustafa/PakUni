@@ -1360,7 +1360,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -1370,7 +1370,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 6,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: 'rgba(255,255,255,0.9)',
     letterSpacing: 0.2,
   },
@@ -1396,13 +1396,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
     letterSpacing: -0.3,
   },
   changeLink: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   chipScrollContent: {
     gap: SPACING.sm,
@@ -1424,12 +1424,12 @@ const styles = StyleSheet.create({
   },
   selectedFormulaName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   selectedFormulaDetail: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 4,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   selectFormulaBtn: {
     flexDirection: 'row',
@@ -1442,7 +1442,7 @@ const styles = StyleSheet.create({
   },
   selectFormulaBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   inputCard: {
@@ -1459,7 +1459,7 @@ const styles = StyleSheet.create({
   },
   inputCardLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   inputRow: {
     flexDirection: 'row',
@@ -1471,7 +1471,7 @@ const styles = StyleSheet.create({
   },
   inputGroupLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 4,
   },
   marksInput: {
@@ -1479,12 +1479,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
   },
   dividerText: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '300',
+    fontWeight: TYPOGRAPHY.weight.regular,
     marginHorizontal: SPACING.sm,
     marginBottom: SPACING.sm,
   },
@@ -1496,7 +1496,7 @@ const styles = StyleSheet.create({
   },
   percentText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   hafizToggle: {
     flexDirection: 'row',
@@ -1511,11 +1511,11 @@ const styles = StyleSheet.create({
   },
   hafizText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   hafizSubtext: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   hafizCheck: {
@@ -1528,7 +1528,7 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     color: '#FFFFFF',
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     fontSize: 14,
   },
   actionButtons: {
@@ -1559,7 +1559,7 @@ const styles = StyleSheet.create({
   calculateBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resetBtn: {
     flex: 1,
@@ -1571,7 +1571,7 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   resultsSection: {
     marginTop: SPACING.md,
@@ -1610,7 +1610,7 @@ const styles = StyleSheet.create({
   bestBadgeText: {
     color: '#000',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   resultHeader: {
     marginBottom: SPACING.md,
@@ -1618,11 +1618,11 @@ const styles = StyleSheet.create({
   resultInfo: {},
   resultFormulaName: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resultUniversity: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   aggregateBox: {
@@ -1634,7 +1634,7 @@ const styles = StyleSheet.create({
   aggregateLabel: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   aggregateValueRow: {
@@ -1644,13 +1644,13 @@ const styles = StyleSheet.create({
   aggregateValue: {
     color: '#FFFFFF',
     fontSize: 52,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -1,
   },
   aggregatePercent: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 8,
     marginLeft: 2,
   },
@@ -1660,7 +1660,7 @@ const styles = StyleSheet.create({
   },
   breakdownTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: SPACING.sm,
@@ -1675,11 +1675,11 @@ const styles = StyleSheet.create({
   },
   breakdownLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   breakdownValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 2,
   },
   modalOverlay: {
@@ -1701,7 +1701,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalCloseBtn: {
     width: 36,
@@ -1712,7 +1712,7 @@ const styles = StyleSheet.create({
   },
   modalClose: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalScroll: {
     padding: SPACING.lg,
@@ -1731,16 +1731,16 @@ const styles = StyleSheet.create({
   },
   formulaName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   formulaDesc: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   formulaUniversity: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   formulaWeights: {
@@ -1756,11 +1756,11 @@ const styles = StyleSheet.create({
   },
   weightText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formulaCategoryTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.lg,
     marginBottom: SPACING.sm,
     paddingHorizontal: SPACING.xs,
@@ -1779,7 +1779,7 @@ const styles = StyleSheet.create({
   },
   shareResultBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Share Modal Styles
   shareModalOverlay: {
@@ -1805,7 +1805,7 @@ const styles = StyleSheet.create({
   },
   shareModalTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   shareModalCloseBtn: {
     width: 32,
@@ -1825,7 +1825,7 @@ const styles = StyleSheet.create({
   },
   shareOptionsTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -1845,7 +1845,7 @@ const styles = StyleSheet.create({
   },
   shareOptionText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   shareTipBox: {

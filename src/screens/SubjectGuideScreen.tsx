@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, FONTS, BORDER_RADIUS} from '../constants/theme';
+import {TYPOGRAPHY} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
 
@@ -943,7 +944,7 @@ const styles = StyleSheet.create({
   tabActive: {},
   tabText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tabTextActive: {},
   infoCard: {
@@ -963,7 +964,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 2,
   },
   infoText: {
@@ -977,7 +978,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: FONTS.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.md,
   },
   groupCard: {
@@ -1004,7 +1005,7 @@ const styles = StyleSheet.create({
   },
   groupName: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 2,
   },
   groupDesc: {
@@ -1023,7 +1024,7 @@ const styles = StyleSheet.create({
   },
   groupBadgeText: {
     fontSize: FONTS.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   groupExam: {
     fontSize: FONTS.sizes.xs,
@@ -1055,7 +1056,7 @@ const styles = StyleSheet.create({
   },
   subjectName: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.xs,
   },
   difficultyBadge: {
@@ -1065,7 +1066,7 @@ const styles = StyleSheet.create({
   },
   difficultyText: {
     fontSize: FONTS.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   tipsSection: {
     paddingHorizontal: SPACING.md,
@@ -1087,7 +1088,7 @@ const styles = StyleSheet.create({
   },
   careerPathTitle: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   careerPathSteps: {
     fontSize: FONTS.sizes.sm,
@@ -1109,7 +1110,7 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   modalHero: {
     padding: SPACING.xl,
@@ -1134,7 +1135,7 @@ const styles = StyleSheet.create({
   },
   modalSectionTitle: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
   },
   tagContainer: {
@@ -1149,7 +1150,7 @@ const styles = StyleSheet.create({
   },
   subjectTagText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   electiveTag: {
     paddingHorizontal: SPACING.sm,
@@ -1181,7 +1182,7 @@ const styles = StyleSheet.create({
   },
   uniTagText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   testTag: {
     paddingHorizontal: SPACING.sm,
@@ -1190,7 +1191,7 @@ const styles = StyleSheet.create({
   },
   testTagText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   boardExamCard: {
     margin: SPACING.md,
@@ -1229,7 +1230,7 @@ const styles = StyleSheet.create({
   },
   difficultyTextLarge: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   subjectHeroDesc: {
     fontSize: FONTS.sizes.sm,
@@ -1242,7 +1243,7 @@ const styles = StyleSheet.create({
   },
   careerTagText: {
     fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tipItem: {
     flexDirection: 'row',

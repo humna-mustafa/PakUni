@@ -32,6 +32,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../constants/design';
 import {useAuth} from '../contexts/AuthContext';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
@@ -1114,7 +1115,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -1156,7 +1157,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 11,
@@ -1180,7 +1181,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   optionsGrid: {
     gap: 10,
@@ -1204,7 +1205,7 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   optionSubtitle: {
     fontSize: 12,
@@ -1225,7 +1226,7 @@ const styles = StyleSheet.create({
   },
   rateTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   rateSubtitle: {
@@ -1246,7 +1247,7 @@ const styles = StyleSheet.create({
   quickHelpText: {
     flex: 1,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   contactCard: {
     borderRadius: 14,
@@ -1255,7 +1256,7 @@ const styles = StyleSheet.create({
   },
   contactTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 6,
   },
   contactText: {
@@ -1275,7 +1276,7 @@ const styles = StyleSheet.create({
   },
   contactMethodText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // Modal styles
   modalOverlay: {
@@ -1316,7 +1317,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalSubtitle: {
     fontSize: 12,
@@ -1333,7 +1334,7 @@ const styles = StyleSheet.create({
   },
   optionLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 10,
   },
   severityGrid: {
@@ -1357,7 +1358,7 @@ const styles = StyleSheet.create({
   },
   severityLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   severityDesc: {
     fontSize: 11,
@@ -1380,7 +1381,7 @@ const styles = StyleSheet.create({
   },
   contentTypeLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   materialTypeList: {
     gap: 8,
@@ -1406,7 +1407,7 @@ const styles = StyleSheet.create({
   },
   materialLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   materialDesc: {
     fontSize: 11,
@@ -1417,7 +1418,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   textInput: {
@@ -1443,7 +1444,7 @@ const styles = StyleSheet.create({
   },
   ratingLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 12,
   },
   starsRow: {
@@ -1462,7 +1463,7 @@ const styles = StyleSheet.create({
   },
   recommendLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 12,
     textAlign: 'center',
   },
@@ -1482,7 +1483,7 @@ const styles = StyleSheet.create({
   },
   recommendBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   submitButton: {
     marginTop: 20,
@@ -1499,7 +1500,7 @@ const styles = StyleSheet.create({
   submitText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Success modal
   successModalOverlay: {
@@ -1527,7 +1528,7 @@ const styles = StyleSheet.create({
   },
   successTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
   },
   successText: {
@@ -1548,7 +1549,7 @@ const styles = StyleSheet.create({
   successButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 });
 

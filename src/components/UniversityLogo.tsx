@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {getLogo, getUniversityBrandColor} from '../utils/universityLogos';
 import {UNIVERSITIES} from '../data/universities';
 import {Icon} from './icons';
+import {TYPOGRAPHY} from '../constants/design';
 
 // Preload logos utility - call this at app startup for common universities
 export const preloadUniversityLogos = (universityIds: number[]) => {
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   initialsText: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     letterSpacing: 0.5,
   },

@@ -604,14 +604,14 @@ const styles = StyleSheet.create({
   },
   appBrand: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: -0.3,
   },
   appTagline: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.8)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 1,
   },
   mainContent: {
@@ -626,10 +626,10 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.lg,
     color: 'rgba(255,255,255,0.95)',
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   highlightText: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   mainSubtitle: {
@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: 36,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     textAlign: 'center',
     letterSpacing: -0.5,
@@ -669,7 +669,7 @@ const styles = StyleSheet.create({
   aggregateLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
@@ -679,13 +679,13 @@ const styles = StyleSheet.create({
   },
   aggregateValue: {
     fontSize: 56,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: -2,
   },
   aggregatePercent: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 10,
     marginLeft: 2,
@@ -706,12 +706,12 @@ const styles = StyleSheet.create({
   breakdownLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255,255,255,0.75)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 2,
   },
   breakdownValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   breakdownDivider: {
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.95)',
     marginBottom: SPACING.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   downloadBadge: {
     flexDirection: 'row',
@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
   },
   downloadText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     letterSpacing: 0.3,
   },
@@ -805,13 +805,13 @@ const styles = StyleSheet.create({
   },
   comparisonBrand: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   comparisonSubBrand: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.7)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   vsContainer: {
     flexDirection: 'row',
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
   },
   uniShortName: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     textAlign: 'center',
   },
@@ -864,7 +864,7 @@ const styles = StyleSheet.create({
   uniMetaText: {
     fontSize: 9,
     color: 'rgba(255,255,255,0.85)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'capitalize',
   },
   rankingBadge: {
@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
   },
   rankingText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFD700',
   },
   vsBadge: {
@@ -893,7 +893,7 @@ const styles = StyleSheet.create({
   },
   vsText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: 0.5,
   },
@@ -906,7 +906,7 @@ const styles = StyleSheet.create({
   comparisonCta: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.95)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 
   // Poll Result Card Styles
@@ -967,13 +967,13 @@ const styles = StyleSheet.create({
   },
   pollBrand: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   pollSubBrand: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.7)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   pollLiveBadge: {
     flexDirection: 'row',
@@ -992,13 +992,13 @@ const styles = StyleSheet.create({
   },
   pollLiveText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#EF4444',
     letterSpacing: 0.5,
   },
   pollQuestion: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: SPACING.lg,
@@ -1026,15 +1026,15 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#FFFFFF',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   pollWinnerName: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFD700',
   },
   pollOptionPercent: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   pollBarBg: {
@@ -1057,7 +1057,7 @@ const styles = StyleSheet.create({
   pollTotalText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   pollFooter: {
     alignItems: 'center',
@@ -1067,7 +1067,7 @@ const styles = StyleSheet.create({
   },
   pollCta: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
 });
@@ -1437,13 +1437,13 @@ const celebrationStyles = StyleSheet.create({
   },
   brand: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   subBrand: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.8)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   mainContent: {
     alignItems: 'center',
@@ -1455,7 +1455,7 @@ const celebrationStyles = StyleSheet.create({
   },
   bigText: {
     fontSize: 36,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: 2,
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -1464,13 +1464,13 @@ const celebrationStyles = StyleSheet.create({
   },
   securedText: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     marginBottom: SPACING.md,
   },
   studentName: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -1490,7 +1490,7 @@ const celebrationStyles = StyleSheet.create({
   },
   uniShort: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   uniName: {
@@ -1503,7 +1503,7 @@ const celebrationStyles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#FFFFFF',
     marginTop: 8,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   yearBadge: {
     backgroundColor: 'rgba(255,255,255,0.25)',
@@ -1514,12 +1514,12 @@ const celebrationStyles = StyleSheet.create({
   },
   yearText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   testFullName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: SPACING.md,
@@ -1541,7 +1541,7 @@ const celebrationStyles = StyleSheet.create({
   },
   scoreValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   listBadge: {
@@ -1553,18 +1553,18 @@ const celebrationStyles = StyleSheet.create({
   },
   listBadgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   positionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 8,
   },
   scholarshipTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     textAlign: 'center',
   },
@@ -1582,7 +1582,7 @@ const celebrationStyles = StyleSheet.create({
   },
   coverageText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFD700',
   },
   footer: {
@@ -1599,7 +1599,7 @@ const celebrationStyles = StyleSheet.create({
   },
   cta: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
 });
@@ -1856,14 +1856,14 @@ const personalizedStyles = StyleSheet.create({
   },
   brand: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: 0.5,
   },
   subBrand: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.85)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     letterSpacing: 0.3,
   },
   yearBadge: {
@@ -1876,7 +1876,7 @@ const personalizedStyles = StyleSheet.create({
   },
   yearText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   mainContent: {
@@ -1897,7 +1897,7 @@ const personalizedStyles = StyleSheet.create({
   },
   awardedText: {
     fontSize: 34,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: 3,
     textShadowColor: 'rgba(0,0,0,0.25)',
@@ -1906,7 +1906,7 @@ const personalizedStyles = StyleSheet.create({
   },
   awardedSubText: {
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     marginBottom: SPACING.sm,
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -1924,14 +1924,14 @@ const personalizedStyles = StyleSheet.create({
   },
   studentName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   receivedText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
     marginBottom: SPACING.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scholarshipBox: {
     backgroundColor: 'rgba(255,255,255,0.15)',
@@ -1945,7 +1945,7 @@ const personalizedStyles = StyleSheet.create({
   },
   scholarshipName: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 28,
@@ -1954,7 +1954,7 @@ const personalizedStyles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
     marginTop: 4,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   coverageBadgeRow: {
     marginTop: SPACING.sm + 2,
@@ -1969,7 +1969,7 @@ const personalizedStyles = StyleSheet.create({
   },
   coverageBadgeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#000',
   },
   universitySection: {
@@ -1981,7 +1981,7 @@ const personalizedStyles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.8)',
     marginBottom: SPACING.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   universityCard: {
     flexDirection: 'row',
@@ -2003,7 +2003,7 @@ const personalizedStyles = StyleSheet.create({
   },
   uniName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     lineHeight: 18,
   },
@@ -2030,7 +2030,7 @@ const personalizedStyles = StyleSheet.create({
   },
   cta: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
 });
@@ -2231,13 +2231,13 @@ const meritPersonalizedStyles = StyleSheet.create({
   },
   brand: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   subBrand: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.85)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   uniSection: {
     alignItems: 'center',
@@ -2268,7 +2268,7 @@ const meritPersonalizedStyles = StyleSheet.create({
   },
   uniNameText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 22,
@@ -2277,7 +2277,7 @@ const meritPersonalizedStyles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
     marginTop: 2,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scoreSection: {
     alignItems: 'center',
@@ -2299,7 +2299,7 @@ const meritPersonalizedStyles = StyleSheet.create({
   },
   aggregateValue: {
     fontSize: 42,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     letterSpacing: -1,
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -2309,7 +2309,7 @@ const meritPersonalizedStyles = StyleSheet.create({
   aggregateLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
   chanceBadge: {
@@ -2321,7 +2321,7 @@ const meritPersonalizedStyles = StyleSheet.create({
   },
   chanceText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   breakdownRow: {
@@ -2340,11 +2340,11 @@ const meritPersonalizedStyles = StyleSheet.create({
   breakdownLabel: {
     fontSize: 10,
     color: 'rgba(255,255,255,0.8)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   breakdownValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginTop: 2,
   },
@@ -2366,7 +2366,7 @@ const meritPersonalizedStyles = StyleSheet.create({
   },
   ctaText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
 });

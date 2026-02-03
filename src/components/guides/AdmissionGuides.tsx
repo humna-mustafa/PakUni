@@ -632,7 +632,7 @@ const stepCardStyles = StyleSheet.create({
   },
   circleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   content: {
@@ -654,7 +654,7 @@ const stepCardStyles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     flex: 1,
   },
@@ -668,7 +668,7 @@ const stepCardStyles = StyleSheet.create({
   },
   importantText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   description: {
@@ -684,7 +684,7 @@ const stepCardStyles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },
@@ -965,7 +965,7 @@ const compactStyles = StyleSheet.create({
   cardText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginLeft: SPACING.sm,
   },
@@ -1004,7 +1004,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -1035,7 +1035,7 @@ const styles = StyleSheet.create({
   },
   universityCardName: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginTop: SPACING.sm,
   },
@@ -1064,7 +1064,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
   },
   modalSubtitle: {
@@ -1100,14 +1100,14 @@ const styles = StyleSheet.create({
   },
   quickInfoValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
     marginTop: 2,
     textAlign: 'center',
   },
   sectionHeader: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginBottom: SPACING.md,
     marginTop: SPACING.lg,
@@ -1138,7 +1138,7 @@ const styles = StyleSheet.create({
   },
   timelineValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   feeSection: {
@@ -1174,7 +1174,7 @@ const styles = StyleSheet.create({
   },
   feeValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginTop: 4,
   },
@@ -1202,7 +1202,7 @@ const styles = StyleSheet.create({
   linkText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: SPACING.sm,
   },
 });

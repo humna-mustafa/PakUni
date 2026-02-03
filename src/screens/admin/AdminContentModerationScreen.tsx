@@ -26,6 +26,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { UniversalHeader } from '../../components';
+import { TYPOGRAPHY } from '../../constants/design';
 import { enhancedAdminService, ContentModerationItem } from '../../services/adminEnhanced';
 
 type StatusFilter = 'all' | 'pending' | 'needs_review' | 'approved' | 'rejected';
@@ -525,11 +526,11 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   statBadgeCount: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statBadgeLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     marginTop: 4,
@@ -541,7 +542,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   filterLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     marginBottom: 8,
   },
@@ -561,7 +562,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   filterChipText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: colors.textSecondary,
   },
   filterChipTextActive: {
@@ -576,7 +577,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   queueTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
   },
   queueCount: {
@@ -610,7 +611,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   itemTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
     lineHeight: 20,
   },
@@ -622,7 +623,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   itemType: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.primary,
     letterSpacing: 0.5,
   },
@@ -637,7 +638,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   priorityText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     textTransform: 'uppercase',
   },
@@ -665,7 +666,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   statusText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'capitalize',
   },
   flagsBadge: {
@@ -676,7 +677,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   flagsText: {
     fontSize: 12,
     color: '#EF4444',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   emptyState: {
     alignItems: 'center',
@@ -686,7 +687,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
     marginTop: 16,
   },
@@ -705,7 +706,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   clearFiltersText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   modalOverlay: {
@@ -730,7 +731,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
   },
   modalBody: {
@@ -760,7 +761,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   previewType: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.primary,
     letterSpacing: 0.5,
   },
@@ -779,13 +780,13 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   priorityTextLarge: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     textTransform: 'uppercase',
   },
   previewTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
     marginBottom: 16,
     lineHeight: 22,
@@ -810,7 +811,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   currentStatusLabel: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   flagsSection: {
@@ -821,7 +822,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   flagsTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#EF4444',
     marginBottom: 8,
   },
@@ -838,7 +839,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   notesTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     marginBottom: 8,
   },
@@ -852,7 +853,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   reviewLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
     marginBottom: 8,
   },
@@ -890,7 +891,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   actionButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   skipButton: {
@@ -900,7 +901,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   skipButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
   },
   loadingOverlay: {

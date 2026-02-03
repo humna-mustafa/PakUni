@@ -18,6 +18,7 @@ import {
   Easing,
 } from 'react-native';
 import {ANIMATION_SCALES, SPRING_CONFIGS, ACCESSIBILITY} from '../constants/ui';
+import {TYPOGRAPHY} from '../constants/design';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -582,7 +583,7 @@ const FavoritesScreen: React.FC = () => {
               </Text>
               <Text style={[styles.modalMessage, {color: colors.textSecondary}]}>
                 Are you sure you want to remove{' '}
-                <Text style={{fontWeight: '600', color: colors.text}}>
+                <Text style={{fontWeight: TYPOGRAPHY.weight.semibold, color: colors.text}}>
                   {itemToRemove?.name}
                 </Text>{' '}
                 from your saved {itemToRemove?.type === 'universities' ? 'universities' : 
@@ -663,7 +664,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     textAlign: 'center',
   },
   headerIcon: {
@@ -696,10 +697,10 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tabLabelActive: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   tabCount: {
     paddingHorizontal: 6,
@@ -710,7 +711,7 @@ const styles = StyleSheet.create({
   },
   tabCountText: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   listContent: {
     paddingHorizontal: 16,
@@ -762,7 +763,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   itemSubtitle: {
@@ -789,7 +790,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 8,
   },
   emptyText: {
@@ -806,7 +807,7 @@ const styles = StyleSheet.create({
   exploreButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Remove Confirmation Modal Styles
   modalOverlay: {
@@ -844,7 +845,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -872,7 +873,7 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   removeConfirmButton: {
     overflow: 'hidden',
@@ -887,7 +888,7 @@ const styles = StyleSheet.create({
   removeButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 });
 

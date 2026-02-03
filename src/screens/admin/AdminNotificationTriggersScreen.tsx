@@ -24,6 +24,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
 import { dataSubmissionsService, NotificationTrigger } from '../../services/dataSubmissions';
 
@@ -599,7 +600,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 11,
@@ -633,7 +634,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   cardSubtitle: {
     fontSize: 12,
@@ -651,7 +652,7 @@ const styles = StyleSheet.create({
   },
   previewTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   previewMessage: {
@@ -674,7 +675,7 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: '#4573DF',
   },
   cardFooter: {
@@ -695,7 +696,7 @@ const styles = StyleSheet.create({
   },
   sentCount: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   cardActions: {
     flexDirection: 'row',
@@ -730,7 +731,7 @@ const styles = StyleSheet.create({
   emptyBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalOverlay: {
     flex: 1,
@@ -752,14 +753,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
     marginTop: 12,
   },
@@ -788,7 +789,7 @@ const styles = StyleSheet.create({
   },
   typeOptionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   targetRow: {
     flexDirection: 'row',
@@ -804,7 +805,7 @@ const styles = StyleSheet.create({
   },
   targetOptionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scheduleRow: {
     flexDirection: 'row',
@@ -820,7 +821,7 @@ const styles = StyleSheet.create({
   },
   scheduleOptionText: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   divider: {
     height: 1,
@@ -829,7 +830,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   helpBox: {
@@ -873,7 +874,7 @@ const styles = StyleSheet.create({
   modalBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

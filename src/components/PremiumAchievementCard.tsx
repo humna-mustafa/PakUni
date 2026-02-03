@@ -617,7 +617,7 @@ const statStyles = StyleSheet.create({
   },
   label: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: PALETTE.neutral[500],
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -625,7 +625,7 @@ const statStyles = StyleSheet.create({
   },
   value: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
 });
@@ -646,7 +646,7 @@ const badgeStyles = StyleSheet.create({
   },
   text: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
@@ -699,7 +699,7 @@ const premiumStyles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: 28,
-    fontWeight: '900',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     textAlign: 'center',
     letterSpacing: 2,
@@ -712,7 +712,7 @@ const premiumStyles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     marginTop: SPACING.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   infoContent: {
     gap: SPACING.md,
@@ -731,7 +731,7 @@ const premiumStyles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: PALETTE.neutral[500],
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -739,7 +739,7 @@ const premiumStyles = StyleSheet.create({
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: PALETTE.neutral[800],
     lineHeight: 22,
   },
@@ -761,7 +761,7 @@ const premiumStyles = StyleSheet.create({
   dateText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: PALETTE.neutral[500],
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   hashtagRow: {
     marginTop: SPACING.lg,
@@ -770,7 +770,7 @@ const premiumStyles = StyleSheet.create({
   hashtags: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255, 255, 255, 0.85)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   brandingFooter: {
@@ -793,7 +793,7 @@ const premiumStyles = StyleSheet.create({
   },
   brandingText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
   },
   brandingDot: {
@@ -805,7 +805,7 @@ const premiumStyles = StyleSheet.create({
   brandingUrl: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   actionsRow: {
     flexDirection: 'row',
@@ -825,7 +825,7 @@ const premiumStyles = StyleSheet.create({
   primaryBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   secondaryBtn: {
     width: 52,

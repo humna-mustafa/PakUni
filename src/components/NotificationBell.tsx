@@ -27,6 +27,7 @@ import {
   MODERN_TYPOGRAPHY,
   MODERN_SHADOWS,
 } from '../constants/modern-design';
+import {TYPOGRAPHY} from '../constants/design';
 import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -559,7 +560,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#FFFFFF',
     fontSize: 9,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 
   // Dropdown Panel
@@ -593,7 +594,7 @@ const styles = StyleSheet.create({
   },
   panelTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   unreadBadge: {
     paddingHorizontal: 7,
@@ -603,11 +604,11 @@ const styles = StyleSheet.create({
   unreadBadgeText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   clearAllText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   notificationList: {
     maxHeight: SCREEN_HEIGHT * 0.38,
@@ -622,7 +623,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 
   // Notification Item
@@ -678,7 +679,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: MODERN_SPACING.md,
   },
   emptyMessage: {

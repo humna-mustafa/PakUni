@@ -12,6 +12,7 @@
  */
 
 import React, {useRef, useEffect, useCallback, memo} from 'react';
+import {TYPOGRAPHY} from '../constants/design';
 import {
   Modal,
   View,
@@ -448,7 +449,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   closeButton: {
@@ -487,7 +488,7 @@ const styles = StyleSheet.create({
   dialogButtonPrimary: {},
   dialogButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

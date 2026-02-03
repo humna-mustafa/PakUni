@@ -28,6 +28,8 @@ import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuthToast} from '../hooks/useAuthToast';
 import {useToast} from '../components/PremiumToast';
+import {SPACING, FONTS} from '../constants/theme';
+import {TYPOGRAPHY} from '../constants/design';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -335,7 +337,9 @@ const AuthScreen: React.FC = () => {
       {/* Back Button */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => animateTransition('welcome')}>
+        onPress={() => animateTransition('welcome')}
+        accessibilityRole="button"
+        accessibilityLabel="Go back to welcome screen">
         <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
       </TouchableOpacity>
 
@@ -440,7 +444,9 @@ const AuthScreen: React.FC = () => {
       {/* Back Button */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => animateTransition('welcome')}>
+        onPress={() => animateTransition('welcome')}
+        accessibilityRole="button"
+        accessibilityLabel="Go back to welcome screen">
         <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
       </TouchableOpacity>
 
@@ -573,7 +579,9 @@ const AuthScreen: React.FC = () => {
       {/* Back Button */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => animateTransition('login')}>
+        onPress={() => animateTransition('login')}
+        accessibilityRole="button"
+        accessibilityLabel="Go back to login screen">
         <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
       </TouchableOpacity>
 
@@ -729,13 +737,13 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: FONTS.weights.bold,
     letterSpacing: -0.5,
   },
   logoSubtext: {
     fontSize: 13,
     marginTop: 4,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
   },
   contentContainer: {
     flex: 1,
@@ -747,9 +755,9 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: FONTS.weights.bold,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: SPACING.sm,
     letterSpacing: -0.3,
   },
   welcomeSubtitle: {
@@ -783,7 +791,7 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -809,7 +817,7 @@ const styles = StyleSheet.create({
   },
   guestButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
   signUpButton: {
     flexDirection: 'row',
@@ -833,7 +841,7 @@ const styles = StyleSheet.create({
   },
   signUpButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
     color: '#FFFFFF',
   },
   termsText: {
@@ -842,28 +850,28 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   termsLink: {
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
   formContainer: {
     flex: 1,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44, // Minimum touch target (WCAG 2.1)
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 14,
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 6,
+    fontWeight: FONTS.weights.bold,
+    marginBottom: SPACING.xs,
     letterSpacing: -0.3,
   },
   formSubtitle: {
     fontSize: 14,
-    marginBottom: 28,
+    marginBottom: SPACING.xl,
     lineHeight: 21,
   },
   inputContainer: {
@@ -887,7 +895,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
   primaryButton: {
     marginBottom: 18,
@@ -911,7 +919,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
   },
   switchContainer: {
     flexDirection: 'row',
@@ -923,7 +931,7 @@ const styles = StyleSheet.create({
   },
   switchLink: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
   },
   backToLoginButton: {
     alignItems: 'center',
@@ -931,7 +939,7 @@ const styles = StyleSheet.create({
   },
   backToLoginText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
 });
 

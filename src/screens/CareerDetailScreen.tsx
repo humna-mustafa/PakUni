@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: SPACING.md,
     marginBottom: SPACING.lg,
   },
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: TYPOGRAPHY.sizes.md,
   },
   header: {
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginTop: SPACING.md,
     textAlign: 'center',
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 2,
   },
   section: {
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   listItem: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   },
   skillText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   jobChip: {
     paddingHorizontal: SPACING.md,
@@ -382,13 +382,13 @@ const styles = StyleSheet.create({
   },
   prosTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#2E7D32',
     marginBottom: SPACING.sm,
   },
   consTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#C62828',
     marginBottom: SPACING.sm,
   },
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   salaryValue: {
     width: 50,
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#333',
     textAlign: 'right',
   },

@@ -11,6 +11,7 @@ import {Icon} from '../icons';
 import UniversityLogo from '../UniversityLogo';
 import {getUniversityBrandColor} from '../../utils/universityLogos';
 import {Haptics} from '../../utils/haptics';
+import {TYPOGRAPHY} from '../../constants/design';
 import type {UniversityData} from '../../data';
 
 interface SwipeableUniversityCardProps {
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: -0.3,
   },
   badgeRow: {
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   },
   shortName: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   typeBadge: {
     paddingHorizontal: 6,
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: 0.5,
   },
   hecBadge: {
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
   },
   hecText: {
     fontSize: 9,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   headerRight: {
     alignItems: 'flex-end',
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
   rankText: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   favoriteButton: {
     width: 32,
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

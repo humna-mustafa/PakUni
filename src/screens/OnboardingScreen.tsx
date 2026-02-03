@@ -25,6 +25,7 @@ import {Icon} from '../components/icons';
 import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
+import {TYPOGRAPHY} from '../constants/design';
 import type {RootStackParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -524,7 +525,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     letterSpacing: 0.3,
   },
   slide: {
@@ -627,12 +628,12 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: 0.6,
   },
   title: {
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     textAlign: 'center',
     marginBottom: 18,
     letterSpacing: -0.5,
@@ -685,7 +686,7 @@ const styles = StyleSheet.create({
   },
   nextText: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     letterSpacing: 0.3,
   },
@@ -714,7 +715,7 @@ const styles = StyleSheet.create({
   },
   getStartedText: {
     fontSize: 19,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     letterSpacing: 0.4,
   },

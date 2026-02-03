@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: 4,
   },
@@ -853,7 +853,7 @@ const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     lineHeight: 20,
   },
   section: {
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginRight: SPACING.sm,
   },
   countBadge: {
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   roadmapCard: {
     borderRadius: RADIUS.lg,
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
   },
   roadmapTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 2,
   },
   roadmapTagline: {
@@ -933,14 +933,14 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   salaryRow: {
     marginBottom: SPACING.sm,
   },
   salaryText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   stepsPreview: {
     flexDirection: 'row',
@@ -962,12 +962,12 @@ const styles = StyleSheet.create({
   },
   moreSteps: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   stepsPreviewText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Modal Styles
   modalOverlay: {
@@ -988,7 +988,7 @@ const styles = StyleSheet.create({
   },
   backBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalHero: {
     padding: SPACING.xl,
@@ -1015,7 +1015,7 @@ const styles = StyleSheet.create({
   },
   modalHeroTitle: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: 4,
     textAlign: 'center',
@@ -1039,7 +1039,7 @@ const styles = StyleSheet.create({
   },
   heroStatValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
   },
   heroStatLabel: {
@@ -1067,7 +1067,7 @@ const styles = StyleSheet.create({
   },
   funFactBadgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#333',
   },
   funFactText: {
@@ -1098,14 +1098,14 @@ const styles = StyleSheet.create({
   },
   salaryValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   stepsSection: {
     paddingHorizontal: SPACING.md,
   },
   stepsSectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   stepItem: {
@@ -1124,7 +1124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   stepNumber: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#fff',
   },
@@ -1149,7 +1149,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   durationBadge: {
@@ -1160,7 +1160,7 @@ const styles = StyleSheet.create({
   },
   durationText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   stepDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1174,7 +1174,7 @@ const styles = StyleSheet.create({
   },
   requirementsTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   requirementItem: {
@@ -1187,7 +1187,7 @@ const styles = StyleSheet.create({
   },
   tipsTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
     color: '#E65100',
   },
@@ -1204,7 +1204,7 @@ const styles = StyleSheet.create({
   },
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     lineHeight: 24,
   },

@@ -315,7 +315,7 @@ const salaryBarStyles = StyleSheet.create({
   },
   amount: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginTop: 4,
   },
@@ -606,7 +606,7 @@ const cardStyles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   field: {
@@ -629,7 +629,7 @@ const cardStyles = StyleSheet.create({
   },
   demandText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   salaryPreview: {
     flexDirection: 'row',
@@ -649,7 +649,7 @@ const cardStyles = StyleSheet.create({
   },
   salaryValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 2,
   },
   expandedContent: {
@@ -669,7 +669,7 @@ const cardStyles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginBottom: SPACING.sm,
   },
@@ -699,7 +699,7 @@ const cardStyles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   stepYears: {
@@ -708,7 +708,7 @@ const cardStyles = StyleSheet.create({
   },
   stepSalary: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 2,
   },
   marketStats: {
@@ -725,7 +725,7 @@ const cardStyles = StyleSheet.create({
   },
   statNumber: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#4573DF',
   },
   statLabel: {
@@ -736,7 +736,7 @@ const cardStyles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   growthStars: {
@@ -756,7 +756,7 @@ const cardStyles = StyleSheet.create({
   },
   skillText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   companiesList: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -780,7 +780,7 @@ const cardStyles = StyleSheet.create({
   degreeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#4573DF',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginLeft: 4,
   },
   envContainer: {
@@ -798,7 +798,7 @@ const cardStyles = StyleSheet.create({
   envText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginLeft: 4,
   },
   expandIndicator: {
@@ -941,7 +941,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -969,7 +969,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
   },
   filterTextActive: {

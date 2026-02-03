@@ -22,6 +22,7 @@ import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, UserProfile, UserRole} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
+import {TYPOGRAPHY} from '../../constants/design';
 import {PremiumLoading} from '../../components/PremiumLoading';
 import {PremiumSearchBar} from '../../components/PremiumSearchBar';
 
@@ -567,7 +568,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -603,7 +604,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   resultCount: {
     fontSize: 13,
@@ -624,7 +625,7 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   userInfo: {
     flex: 1,
@@ -632,7 +633,7 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   userEmail: {
     fontSize: 13,
@@ -651,7 +652,7 @@ const styles = StyleSheet.create({
   },
   roleText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -663,7 +664,7 @@ const styles = StyleSheet.create({
   },
   bannedText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#EF4444',
   },
   loader: {
@@ -698,7 +699,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   userDetailHeader: {
     alignItems: 'center',
@@ -714,11 +715,11 @@ const styles = StyleSheet.create({
   },
   largeAvatarText: {
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   detailName: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   detailEmail: {
     fontSize: 14,
@@ -739,7 +740,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   actionButtons: {
     flexDirection: 'row',
@@ -758,7 +759,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   roleModalContent: {
     margin: 20,
@@ -781,7 +782,7 @@ const styles = StyleSheet.create({
   roleOptionText: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   banModalContent: {
     margin: 20,
@@ -814,7 +815,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   confirmBanBtn: {
     flex: 1,
@@ -826,7 +827,7 @@ const styles = StyleSheet.create({
   confirmBanText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

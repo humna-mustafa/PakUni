@@ -143,7 +143,7 @@ const FilterChip = ({
             styles.filterChipText,
             {
               color: chipColors.text,
-              fontWeight: isSelected ? '600' : '500',
+              fontWeight: isSelected ? TYPOGRAPHY.weight.semibold : TYPOGRAPHY.weight.medium,
             },
           ]}>
           {label}
@@ -257,7 +257,7 @@ const UniversityCard = ({
                 </Text>
               </View>
               <View style={styles.shortNameRow}>
-                <Text style={[styles.shortName, {color: getUniversityBrandColor(item.name) || colors.primary, fontWeight: '700'}]}>
+                <Text style={[styles.shortName, {color: getUniversityBrandColor(item.name) || colors.primary, fontWeight: TYPOGRAPHY.weight.bold}]}>
                   {item.short_name}
                 </Text>
                 <View style={[
@@ -659,6 +659,8 @@ const PremiumUniversitiesScreen = () => {
                 <TouchableOpacity
                   key={prov.value}
                   onPress={() => setSelectedProvince(prov.value)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Filter by ${prov.label}${selectedProvince === prov.value ? ', currently selected' : ''}`}
                   style={[
                     styles.quickFilterPill,
                     {
@@ -698,7 +700,9 @@ const PremiumUniversitiesScreen = () => {
                       : colors.border,
                   },
                 ]}
-                onPress={() => setSelectedType(type)}>
+                onPress={() => setSelectedType(type)}
+                accessibilityRole="button"
+                accessibilityLabel={`Filter by ${type === 'all' ? 'all universities' : type} universities${selectedType === type ? ', currently selected' : ''}`}>
                 <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
                   <Icon 
                     name={type === 'all' ? 'school-outline' : type === 'public' ? 'business-outline' : 'briefcase-outline'} 
@@ -711,7 +715,7 @@ const PremiumUniversitiesScreen = () => {
                       styles.typeBtnText,
                       {
                         color: selectedType === type ? '#FFFFFF' : colors.text,
-                        fontWeight: selectedType === type ? '700' : '500',
+                        fontWeight: selectedType === type ? TYPOGRAPHY.weight.bold : TYPOGRAPHY.weight.medium,
                       },
                     ]}>
                 {type === 'all' ? 'All' : type === 'public' ? 'Public' : 'Private'}
@@ -870,7 +874,7 @@ const styles = StyleSheet.create({
   },
   screenTitle: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   countBadgeInline: {
@@ -880,7 +884,7 @@ const styles = StyleSheet.create({
   },
   countTextInline: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   filterIconBtn: {
     width: 40,
@@ -892,8 +896,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.06)',
   },
   profileBtn: {
-    width: 38,
-    height: 38,
+    width: 44, // WCAG 2.1 minimum touch target
+    height: 44,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -901,12 +905,12 @@ const styles = StyleSheet.create({
   profileInitials: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
   },
   headerCard: {
     margin: SPACING.lg,
@@ -927,7 +931,7 @@ const styles = StyleSheet.create({
   screenSubtitle: {
     fontSize: 14,
     marginTop: 4,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
   },
   countBadge: {
     paddingHorizontal: SPACING.md,
@@ -936,7 +940,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Unified search container style
   searchContainer: {
@@ -949,7 +953,7 @@ const styles = StyleSheet.create({
   },
   sortLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -1023,7 +1027,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.md - 1,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     lineHeight: 20,
   },
   shortNameRow: {
@@ -1034,7 +1038,7 @@ const styles = StyleSheet.create({
   },
   shortName: {
     fontSize: TYPOGRAPHY.sizes.sm - 1,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   typeBadgeSmall: {
     paddingHorizontal: SPACING.xs + 2,
@@ -1043,7 +1047,7 @@ const styles = StyleSheet.create({
   },
   typeBadgeText: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   hecBadge: {
     paddingHorizontal: SPACING.xs,
@@ -1055,7 +1059,7 @@ const styles = StyleSheet.create({
   },
   hecText: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   rankBadge: {
     paddingHorizontal: SPACING.sm + 2,
@@ -1065,7 +1069,7 @@ const styles = StyleSheet.create({
   },
   rankText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   cardDetailsCompact: {
@@ -1093,7 +1097,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailDivider: {
     width: 4,
@@ -1123,7 +1127,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textTransform: 'capitalize',
   },
   viewMore: {
@@ -1133,7 +1137,7 @@ const styles = StyleSheet.create({
   },
   viewMoreText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   viewMoreArrow: {
     fontSize: 16,
@@ -1155,7 +1159,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.xs,
   },
   emptySubtitle: {
@@ -1171,7 +1175,7 @@ const styles = StyleSheet.create({
   resetBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // NEW: Enhanced filter styles
   filterRow: {
@@ -1194,7 +1198,7 @@ const styles = StyleSheet.create({
   },
   quickFilterText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // University card logo styles
   logoContainer: {
@@ -1216,9 +1220,9 @@ const styles = StyleSheet.create({
     gap: SPACING.xs,
   },
   favoriteBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44, // WCAG 2.1 minimum touch target
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1257,7 +1261,7 @@ const styles = StyleSheet.create({
   swipeActionText: {
     color: '#FFFFFF',
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -1278,7 +1282,7 @@ const styles = StyleSheet.create({
   },
   websiteText: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

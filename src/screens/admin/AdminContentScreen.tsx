@@ -29,6 +29,7 @@ import {adminService} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
 import {PremiumLoading} from '../../components/PremiumLoading';
+import {TYPOGRAPHY} from '../../constants/design';
 // Static data imports (zero egress)
 import {PROGRAMS, ProgramData} from '../../data/programs';
 
@@ -1176,7 +1177,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -1209,7 +1210,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   searchWrapper: {
     paddingHorizontal: 16,
@@ -1253,7 +1254,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
     marginRight: 8,
   },
@@ -1272,7 +1273,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   itemMeta: {
     flexDirection: 'row',
@@ -1319,14 +1320,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   detailName: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 16,
   },
   detailSection: {
@@ -1345,7 +1346,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 2,
     textAlign: 'right',
   },
@@ -1367,14 +1368,14 @@ const styles = StyleSheet.create({
   actionBtnText: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formGroup: {
     marginBottom: 16,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   formInput: {
@@ -1401,7 +1402,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   saveBtn: {
     flex: 1,
@@ -1413,7 +1414,7 @@ const styles = StyleSheet.create({
   saveBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Select/dropdown styles
   selectContainer: {
@@ -1437,7 +1438,7 @@ const styles = StyleSheet.create({
   },
   selectOptionText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // Static data notice
   staticNotice: {

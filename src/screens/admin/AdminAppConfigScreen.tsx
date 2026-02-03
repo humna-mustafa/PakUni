@@ -26,6 +26,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
 import {
   enhancedAdminService,
@@ -806,7 +807,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   tabText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
   },
   tabTextActive: {
@@ -853,7 +854,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   categoryChipText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: colors.textSecondary,
   },
   categoryChipTextActive: {
@@ -873,7 +874,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   maintenanceTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
   },
   maintenanceText: {
@@ -908,7 +909,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   configLabel: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   configDescription: {
@@ -933,7 +934,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   configValueText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: colors.primary,
   },
   flagsList: {
@@ -944,7 +945,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
   },
   sectionDescription: {
@@ -969,7 +970,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   flagKey: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
     letterSpacing: 0.5,
   },
@@ -1005,7 +1006,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   flagEditText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.primary,
   },
   backupContainer: {
@@ -1023,7 +1024,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   createBackupText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   backupItem: {
@@ -1049,7 +1050,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   backupName: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   backupDate: {
@@ -1064,7 +1065,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   backupBadgeText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
     textTransform: 'uppercase',
   },
@@ -1099,7 +1100,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   backupActionText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   emptyState: {
@@ -1109,7 +1110,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     marginTop: 12,
   },
@@ -1133,13 +1134,13 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
     marginBottom: 8,
   },
   modalConfigKey: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.primary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -1172,7 +1173,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
     marginBottom: 8,
   },
@@ -1188,7 +1189,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
     borderWidth: 1,
     borderColor: colors.border,
@@ -1196,7 +1197,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   percentageLabel: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
   },
   percentageBar: {
@@ -1232,7 +1233,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   modalCancelText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   modalConfirmButton: {
@@ -1244,7 +1245,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   modalConfirmText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   backupTypeOption: {
@@ -1268,7 +1269,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   backupTypeName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   backupTypeDesc: {

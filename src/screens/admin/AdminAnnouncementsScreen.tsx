@@ -22,6 +22,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../../constants/design';
 import {adminService, Announcement, AnnouncementType} from '../../services/admin';
 import {logger} from '../../utils/logger';
 import {Icon} from '../../components/icons';
@@ -504,7 +505,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -537,7 +538,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   countText: {
     fontSize: 13,
@@ -569,7 +570,7 @@ const styles = StyleSheet.create({
   },
   announcementTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   announcementDate: {
     fontSize: 12,
@@ -586,7 +587,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   announcementMessage: {
     fontSize: 13,
@@ -626,7 +627,7 @@ const styles = StyleSheet.create({
   createBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   modalOverlay: {
     flex: 1,
@@ -648,14 +649,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
     marginTop: 16,
   },
@@ -682,7 +683,7 @@ const styles = StyleSheet.create({
   },
   typeLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   toggleRow: {
     flexDirection: 'row',
@@ -693,7 +694,7 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formButtons: {
     flexDirection: 'row',
@@ -710,7 +711,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   saveBtn: {
     flex: 1,
@@ -722,7 +723,7 @@ const styles = StyleSheet.create({
   saveBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

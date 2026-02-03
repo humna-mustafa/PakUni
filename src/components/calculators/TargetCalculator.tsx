@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   headerSubtitle: {
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginBottom: SPACING.sm,
   },
@@ -637,7 +637,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#475569',
     marginTop: SPACING.xs,
     textAlign: 'center',
@@ -666,7 +666,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#475569',
     marginBottom: SPACING.xs,
   },
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#1E293B',
   },
   weightLabel: {
@@ -699,7 +699,7 @@ const styles = StyleSheet.create({
   },
   targetSuffix: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#64748B',
     marginLeft: SPACING.sm,
   },
@@ -730,14 +730,14 @@ const styles = StyleSheet.create({
   },
   resultScore: {
     fontSize: 40,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginVertical: 4,
   },
   resultTestName: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   messageCard: {
     flexDirection: 'row',
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
   detailsToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: '#4573DF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   breakdownSection: {
@@ -773,7 +773,7 @@ const styles = StyleSheet.create({
   },
   breakdownTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
     marginBottom: SPACING.md,
   },
@@ -796,7 +796,7 @@ const styles = StyleSheet.create({
     marginLeft: 22,
   },
   breakdownValueBold: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   totalRow: {
@@ -810,12 +810,12 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1E293B',
   },
   totalValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#4573DF',
   },
   formulaBox: {
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   },
   formulaTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#4573DF',
     marginBottom: 4,
   },

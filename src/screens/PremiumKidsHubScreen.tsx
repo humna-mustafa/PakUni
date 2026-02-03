@@ -679,14 +679,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 36,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: 4,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   welcomeCard: {
     marginHorizontal: SPACING.md,
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   welcomeDesc: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
   },
   factBadgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#333',
   },
   factEmoji: {
@@ -759,7 +759,7 @@ const styles = StyleSheet.create({
   },
   factText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -785,7 +785,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   sectionBadge: {
     backgroundColor: '#FF6B6B20',
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
   },
   sectionBadgeText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FF6B6B',
   },
   featuresGrid: {
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
     textAlign: 'center',
@@ -856,7 +856,7 @@ const styles = StyleSheet.create({
   },
   featureTaglineText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   statsSection: {
@@ -881,7 +881,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -905,7 +905,7 @@ const styles = StyleSheet.create({
   },
   motivationQuote: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     fontStyle: 'italic',
     marginBottom: SPACING.xs,
@@ -913,7 +913,7 @@ const styles = StyleSheet.create({
   },
   motivationAuthor: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   quoteDots: {
     flexDirection: 'row',
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
   },
   ageText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   ageCheck: {
     color: '#fff',
@@ -987,7 +987,7 @@ const styles = StyleSheet.create({
   },
   ctaTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: SPACING.xs,
   },
@@ -1011,7 +1011,7 @@ const styles = StyleSheet.create({
   },
   ctaButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#45B7D1',
   },
 });

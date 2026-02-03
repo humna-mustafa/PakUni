@@ -26,6 +26,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { logger } from '../../utils/logger';
+import { TYPOGRAPHY } from '../../constants/design';
 import type { RootStackParamList } from '../../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -1036,7 +1037,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   headerSubtitle: {
     fontSize: 12,
@@ -1073,7 +1074,7 @@ const styles = StyleSheet.create({
   },
   tableSelectorLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   tableSelectorCount: {
     fontSize: 12,
@@ -1112,7 +1113,7 @@ const styles = StyleSheet.create({
   },
   toolbarButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   toolbarActions: {
     flexDirection: 'row',
@@ -1164,7 +1165,7 @@ const styles = StyleSheet.create({
   },
   dataCellPrimary: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   dataRowActions: {
     flexDirection: 'row',
@@ -1200,7 +1201,7 @@ const styles = StyleSheet.create({
   paginationText: {
     marginHorizontal: 16,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -1221,7 +1222,7 @@ const styles = StyleSheet.create({
   },
   emptyButtonText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
   modalOverlay: {
@@ -1237,7 +1238,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     paddingHorizontal: 20,
     marginBottom: 16,
   },
@@ -1263,7 +1264,7 @@ const styles = StyleSheet.create({
   tableSelectLabel: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailModal: {
     borderTopLeftRadius: 24,
@@ -1293,7 +1294,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailActions: {
     flexDirection: 'row',
@@ -1311,7 +1312,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   detailButtonText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
   editModal: {
@@ -1330,7 +1331,7 @@ const styles = StyleSheet.create({
   editFieldLabel: {
     fontSize: 12,
     marginBottom: 8,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   editFieldInput: {
     borderWidth: 1,
@@ -1356,7 +1357,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {},
   editButtonText: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 14,
   },
 });

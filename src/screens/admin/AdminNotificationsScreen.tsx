@@ -29,6 +29,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../../constants/design';
 import {adminService} from '../../services/admin';
 import {adminNotificationService, AdminNotification, NotificationStats, CreateNotificationInput} from '../../services/adminNotifications';
 import {Icon} from '../../components/icons';
@@ -896,7 +897,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -937,7 +938,7 @@ const styles = StyleSheet.create({
   },
   statsValue: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   statsTitle: {
     fontSize: 13,
@@ -945,7 +946,7 @@ const styles = StyleSheet.create({
   },
   statsSubtitle: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 2,
   },
   filtersSection: {
@@ -979,7 +980,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   section: {
     paddingHorizontal: 16,
@@ -987,7 +988,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
   },
   notificationItem: {
@@ -1015,7 +1016,7 @@ const styles = StyleSheet.create({
   },
   notifTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   statusBadge: {
@@ -1026,7 +1027,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   notifBody: {
     fontSize: 13,
@@ -1064,7 +1065,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 10,
@@ -1082,7 +1083,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 16,
   },
   emptyText: {
@@ -1102,7 +1103,7 @@ const styles = StyleSheet.create({
   emptyBtnText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   templatesGrid: {
     flexDirection: 'row',
@@ -1125,7 +1126,7 @@ const styles = StyleSheet.create({
   },
   templateLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textAlign: 'center',
   },
   fab: {
@@ -1162,14 +1163,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   inputGroup: {
     marginBottom: 20,
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   input: {
@@ -1203,7 +1204,7 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   audienceGrid: {
     flexDirection: 'row',
@@ -1221,7 +1222,7 @@ const styles = StyleSheet.create({
   },
   audienceText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   priorityRow: {
@@ -1245,7 +1246,7 @@ const styles = StyleSheet.create({
   },
   priorityText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   switchRow: {
     flexDirection: 'row',
@@ -1278,7 +1279,7 @@ const styles = StyleSheet.create({
   },
   modalBtnText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

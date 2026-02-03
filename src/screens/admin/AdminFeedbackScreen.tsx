@@ -20,6 +20,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import {adminService, UserFeedback, FeedbackCategory, FeedbackStatus} from '../../services/admin';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
@@ -674,7 +675,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -705,7 +706,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   statusChip: {
     flexDirection: 'row',
@@ -722,7 +723,7 @@ const styles = StyleSheet.create({
   },
   statusChipText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   listContent: {
     padding: 16,
@@ -751,7 +752,7 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   feedbackDate: {
     fontSize: 11,
@@ -764,7 +765,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   feedbackMessage: {
     fontSize: 13,
@@ -827,7 +828,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
@@ -847,7 +848,7 @@ const styles = StyleSheet.create({
   },
   categoryBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   metadataBlock: {
     borderRadius: 12,
@@ -856,7 +857,7 @@ const styles = StyleSheet.create({
   },
   metadataTitle: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
   },
   metadataRow: {
@@ -865,13 +866,13 @@ const styles = StyleSheet.create({
   },
   metadataLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     width: 100,
   },
   metadataValue: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailBlock: {
     marginBottom: 16,
@@ -886,12 +887,12 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 4,
   },
   detailTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailText: {
     fontSize: 14,
@@ -899,7 +900,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   responseBlock: {
     borderRadius: 10,
@@ -908,7 +909,7 @@ const styles = StyleSheet.create({
   },
   responseLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
   },
   responseText: {
@@ -933,11 +934,11 @@ const styles = StyleSheet.create({
   modalActionBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 10,
     marginTop: 8,
   },
@@ -956,7 +957,7 @@ const styles = StyleSheet.create({
   },
   statusOptionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   responseInput: {
     borderRadius: 10,
@@ -980,7 +981,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   submitBtn: {
     flex: 1,
@@ -992,7 +993,7 @@ const styles = StyleSheet.create({
   submitBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

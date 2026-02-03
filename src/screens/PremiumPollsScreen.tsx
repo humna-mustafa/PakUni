@@ -730,7 +730,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: SPACING.md,
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   safeArea: {
     flex: 1,
@@ -793,7 +793,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -820,7 +820,7 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Login Notice
   loginNotice: {
@@ -835,7 +835,7 @@ const styles = StyleSheet.create({
   loginNoticeText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   loginBtn: {
     paddingHorizontal: SPACING.md,
@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
   loginBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Polls List
   pollsList: {
@@ -880,7 +880,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   shareBtn: {
     width: 32,
@@ -891,7 +891,7 @@ const styles = StyleSheet.create({
   },
   pollQuestion: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   pollDescription: {
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
   },
   voteBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   votedBadge: {
     flexDirection: 'row',
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
   },
   votedText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Empty State
   emptyState: {
@@ -999,7 +999,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.md,
     marginBottom: SPACING.xs,
   },

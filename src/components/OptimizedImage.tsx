@@ -16,7 +16,7 @@ import {
   Animated,
 } from 'react-native';
 import {useTheme} from '../contexts/ThemeContext';
-import {RADIUS, ANIMATION} from '../constants/design';
+import {RADIUS, ANIMATION, TYPOGRAPHY} from '../constants/design';
 
 // ============================================================================
 // TYPES
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
   fallbackText: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
 });
 

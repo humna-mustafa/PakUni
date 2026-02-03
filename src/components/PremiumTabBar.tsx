@@ -34,7 +34,7 @@ import {
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTheme} from '../contexts/ThemeContext';
-import {RADIUS, ANIMATION} from '../constants/design';
+import {RADIUS, ANIMATION, TYPOGRAPHY} from '../constants/design';
 import {ANIMATION_SCALES} from '../constants/ui';
 import {
   CLEAN_COMPONENTS,
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
 });

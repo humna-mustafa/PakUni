@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../constants/design';
 import {useNotifications, LocalNotification} from '../services/notifications';
 
 // ============================================================================
@@ -497,7 +498,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   badge: {
     paddingHorizontal: 8,
@@ -509,7 +510,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   headerActions: {
     flexDirection: 'row',
@@ -571,11 +572,11 @@ const styles = StyleSheet.create({
   },
   notificationTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 4,
   },
   unreadTitle: {
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   notificationBody: {
     fontSize: 13,
@@ -605,7 +606,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 8,
   },
   emptyText: {

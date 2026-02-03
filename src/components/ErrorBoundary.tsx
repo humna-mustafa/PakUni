@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: FONTS.sizes.md,
-    fontWeight: '600',
+    fontWeight: FONTS.weight.semiBold,
   },
 });
 

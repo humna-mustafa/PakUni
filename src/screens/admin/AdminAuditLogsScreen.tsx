@@ -20,6 +20,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../../constants/design';
 import {adminService, AuditLog} from '../../services/admin';
 import {logger} from '../../utils/logger';
 import {Icon} from '../../components/icons';
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -502,7 +503,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   listContent: {
     padding: 16,
@@ -534,7 +535,7 @@ const styles = StyleSheet.create({
   },
   logAction: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   logTime: {
     fontSize: 11,
@@ -559,7 +560,7 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   loader: {
     paddingVertical: 20,
@@ -592,7 +593,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
@@ -612,11 +613,11 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailValueMono: {
     fontSize: 12,
@@ -637,7 +638,7 @@ const styles = StyleSheet.create({
   },
   actionBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   jsonBlock: {
     borderRadius: 8,

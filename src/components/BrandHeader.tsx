@@ -23,6 +23,7 @@ import {useTheme} from '../contexts/ThemeContext';
 import {LogoBadge, BRAND_COLORS} from './AppLogo';
 import {Icon} from './icons';
 import {MODERN_SPACING, MODERN_TYPOGRAPHY, MODERN_RADIUS} from '../constants/modern-design';
+import {TYPOGRAPHY} from '../constants/design';
 
 // ============================================================================
 // TYPES
@@ -210,7 +211,7 @@ export const BrandFooter: React.FC<BrandFooterProps> = memo(({showVersion = fals
     <View style={styles.footer}>
       <Text style={[styles.footerText, {color: colors.textSecondary}]}>
         Powered by{' '}
-        <Text style={{color: BRAND_COLORS.primary, fontWeight: '600'}}>PakUni</Text>
+        <Text style={{color: BRAND_COLORS.primary, fontWeight: TYPOGRAPHY.weight.semibold}}>PakUni</Text>
       </Text>
       {showVersion && (
         <Text style={[styles.versionText, {color: colors.textSecondary}]}>
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: MODERN_TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   subtitle: {
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   },
   brandName: {
     fontSize: MODERN_TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: -0.5,
     fontFamily: Platform.select({
       ios: 'System',
@@ -305,7 +306,7 @@ const styles = StyleSheet.create({
   },
   compactBrandName: {
     fontSize: MODERN_TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     letterSpacing: -0.3,
   },
   footer: {
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   versionText: {
     fontSize: 10,

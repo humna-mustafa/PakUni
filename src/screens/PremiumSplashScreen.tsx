@@ -25,6 +25,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {AppLogo, GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
 import {PremiumLoading} from '../components/PremiumLoading';
 import {useTheme} from '../contexts/ThemeContext';
+import {TYPOGRAPHY} from '../constants/design';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 48,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -1,
     fontFamily: Platform.select({
       ios: 'System',
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textAlign: 'center',
     marginTop: 4,
     letterSpacing: 0.3,
@@ -329,7 +330,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     letterSpacing: 0.5,
   },
   footer: {
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 4,
   },
   versionText: {

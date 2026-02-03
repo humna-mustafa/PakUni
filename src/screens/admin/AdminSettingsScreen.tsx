@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import {TYPOGRAPHY} from '../../constants/design';
 import {useTheme} from '../../contexts/ThemeContext';
 import {adminService, AppSetting} from '../../services/admin';
 import {Icon} from '../../components/icons';
@@ -649,7 +650,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -689,7 +690,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scrollView: {
     flex: 1,
@@ -710,7 +711,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   sectionCount: {
     fontSize: 13,
@@ -731,7 +732,7 @@ const styles = StyleSheet.create({
   },
   settingKey: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontFamily: 'monospace',
   },
   settingDescription: {
@@ -753,7 +754,7 @@ const styles = StyleSheet.create({
   },
   valueLabel: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   settingValue: {
@@ -777,7 +778,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   loader: {
     paddingVertical: 40,
@@ -810,14 +811,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
     marginTop: 16,
   },
@@ -833,7 +834,7 @@ const styles = StyleSheet.create({
   },
   keyText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontFamily: 'monospace',
   },
   descText: {
@@ -851,7 +852,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   categorySelector: {
     flexDirection: 'row',
@@ -868,7 +869,7 @@ const styles = StyleSheet.create({
   },
   categoryOptionText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   toggleRow: {
     flexDirection: 'row',
@@ -879,7 +880,7 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formButtons: {
     flexDirection: 'row',
@@ -896,7 +897,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   saveBtn: {
     flex: 1,
@@ -908,7 +909,7 @@ const styles = StyleSheet.create({
   saveBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

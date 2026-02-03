@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     marginBottom: SPACING.sm,
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
   },
   actionBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#1D2127',
   },
   branding: {
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   brandingText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: 'rgba(255,255,255,0.8)',
   },
 
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
   },
   bannerTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   bannerMessage: {
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
   },
   bannerActionText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   bannerClose: {

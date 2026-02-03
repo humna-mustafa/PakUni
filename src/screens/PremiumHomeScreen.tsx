@@ -266,12 +266,12 @@ const deadlineWidgetStyles = StyleSheet.create({
   title: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     letterSpacing: -0.2,
   },
   count: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
   },
   list: {},
   item: {
@@ -284,7 +284,7 @@ const deadlineWidgetStyles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
   },
   itemSub: {
     fontSize: 12,
@@ -292,7 +292,7 @@ const deadlineWidgetStyles = StyleSheet.create({
   },
   itemDate: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
   },
   footer: {
     flexDirection: 'row',
@@ -306,7 +306,7 @@ const deadlineWidgetStyles = StyleSheet.create({
   },
   footerText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
   },
 });
 
@@ -392,7 +392,7 @@ const statsWidgetStyles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     letterSpacing: -0.2,
   },
   statsRow: {
@@ -405,12 +405,12 @@ const statsWidgetStyles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: MODERN_TYPOGRAPHY.weight.bold,
     letterSpacing: -0.5,
   },
   statLabel: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
     marginTop: 2,
   },
 });
@@ -531,7 +531,7 @@ const quickActionStyles = StyleSheet.create({
   },
   title: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
     textAlign: 'center',
     letterSpacing: -0.1,
   },
@@ -596,13 +596,13 @@ const sectionHeaderStyles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: MODERN_TYPOGRAPHY.weight.bold,
     letterSpacing: -0.4,
     lineHeight: 26,
   },
   subtitle: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: MODERN_TYPOGRAPHY.weight.regular,
     marginTop: 2,
     letterSpacing: 0,
   },
@@ -913,11 +913,11 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: MODERN_TYPOGRAPHY.weight.regular,
   },
   appName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     marginTop: 1,
     letterSpacing: -0.3,
   },
@@ -942,7 +942,7 @@ const styles = StyleSheet.create({
   profileInitials: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: MODERN_TYPOGRAPHY.weight.bold,
   },
   searchContainer: {
     paddingHorizontal: 20,
@@ -996,7 +996,7 @@ const heroStyles = StyleSheet.create({
   },
   heroLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
     marginBottom: 8,
@@ -1006,19 +1006,19 @@ const heroStyles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: MODERN_TYPOGRAPHY.weight.medium,
     letterSpacing: 0,
     lineHeight: 20,
   },
   heroTitleAccent: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: MODERN_TYPOGRAPHY.weight.bold,
     letterSpacing: -0.5,
     lineHeight: 30,
   },
   heroDesc: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: MODERN_TYPOGRAPHY.weight.regular,
     lineHeight: 20,
     marginBottom: 16,
   },
@@ -1039,7 +1039,7 @@ const heroStyles = StyleSheet.create({
   heroPrimaryText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     letterSpacing: 0.1,
   },
   heroSecondary: {
@@ -1053,7 +1053,7 @@ const heroStyles = StyleSheet.create({
   },
   heroSecondaryText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
   },
 });
 
@@ -1090,13 +1090,13 @@ const journeyStyles = StyleSheet.create({
   },
   ctaTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: MODERN_TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
     letterSpacing: -0.2,
   },
   ctaSubtitle: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: MODERN_TYPOGRAPHY.weight.regular,
     color: 'rgba(255,255,255,0.75)',
     marginTop: 2,
   },

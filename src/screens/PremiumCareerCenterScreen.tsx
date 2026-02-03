@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
     marginBottom: 4,
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scrollContent: {
     paddingHorizontal: SPACING.md,
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
   },
   quickStatValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   quickStatLabel: {
     fontSize: 11,
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     flex: 1,
   },
   seeAllBtn: {
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Feature Cards Grid
   featuresGrid: {
@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
   highlightText: {
     color: '#FFFFFF',
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   featureIconContainer: {
     width: 52,
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -668,12 +668,12 @@ const styles = StyleSheet.create({
   },
   popularName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 2,
   },
   popularDemand: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // Motivation Card
   motivationCard: {
@@ -684,7 +684,7 @@ const styles = StyleSheet.create({
   },
   motivationTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.xs,
     marginBottom: SPACING.xs,
   },
@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
   motivationBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 });
 

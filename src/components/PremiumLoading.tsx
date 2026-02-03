@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
   },
   message: {
-    fontWeight: '600',
+    fontWeight: FONTS.weight.semiBold,
     textAlign: 'center',
     letterSpacing: 0.3,
   },

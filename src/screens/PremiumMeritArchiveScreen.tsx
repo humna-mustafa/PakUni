@@ -296,7 +296,7 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
                 />
                 <Text style={[styles.trendSummaryText, {color: colors.textSecondary}]}>
                   Merit has {isIncreasing ? 'increased' : 'decreased'} by{' '}
-                  <Text style={{color: isIncreasing ? colors.error : colors.success, fontWeight: '700'}}>
+                  <Text style={{color: isIncreasing ? colors.error : colors.success, fontWeight: TYPOGRAPHY.weight.bold}}>
                     {Math.abs(totalChange).toFixed(1)}%
                   </Text>{' '}
                   over {data.length} years
@@ -799,7 +799,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -828,7 +828,7 @@ const styles = StyleSheet.create({
   },
   yearText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Category Filter
   categoryContainer: {
@@ -848,7 +848,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Insights
   insightsContainer: {
@@ -882,12 +882,12 @@ const styles = StyleSheet.create({
   },
   insightTitle: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 2,
   },
   insightValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   insightSubtitle: {
     fontSize: 10,
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -963,11 +963,11 @@ const styles = StyleSheet.create({
   },
   universityShort: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   programName: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginTop: 1,
   },
   rowCity: {
@@ -982,7 +982,7 @@ const styles = StyleSheet.create({
   },
   meritValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   rowTrend: {
     flex: 1,
@@ -995,7 +995,7 @@ const styles = StyleSheet.create({
   },
   trendText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   rowSeats: {
     flex: 0.7,
@@ -1003,7 +1003,7 @@ const styles = StyleSheet.create({
   },
   seatsText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // Results Count
   resultsCount: {
@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.md,
     marginBottom: SPACING.xs,
   },
@@ -1056,7 +1056,7 @@ const styles = StyleSheet.create({
   },
   trendChartTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   trendChartSubtitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -1079,7 +1079,7 @@ const styles = StyleSheet.create({
   },
   axisLabel: {
     fontSize: 9,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   barsContainer: {
     flex: 1,
@@ -1122,12 +1122,12 @@ const styles = StyleSheet.create({
   },
   barValue: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 3,
   },
   barLabel: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: 6,
   },
   changeIndicator: {
@@ -1138,7 +1138,7 @@ const styles = StyleSheet.create({
   },
   changeText: {
     fontSize: 8,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   trendSummary: {
     flexDirection: 'row',
@@ -1151,7 +1151,7 @@ const styles = StyleSheet.create({
   },
   trendSummaryText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

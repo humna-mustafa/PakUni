@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTheme} from '../contexts/ThemeContext';
-import {RADIUS, SPACING} from '../constants/design';
+import {RADIUS, SPACING, TYPOGRAPHY} from '../constants/design';
 import {Haptics} from '../utils/haptics';
 import {Icon} from './icons';
 
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
   },
   topRefreshText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     letterSpacing: 0.3,
   },
   pulseDot: {
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   footerEnd: {
     alignItems: 'center',

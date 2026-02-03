@@ -459,11 +459,11 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   placeholder: {
     width: 40,
@@ -488,12 +488,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   subheading: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: SPACING.sm,
     marginBottom: SPACING.xs,
   },
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   contactButtonText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   footer: {
     alignItems: 'center',

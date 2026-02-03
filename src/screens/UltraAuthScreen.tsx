@@ -30,6 +30,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../components/icons';
 import {GraduationCapIcon, BRAND_COLORS} from '../components/AppLogo';
+import {TYPOGRAPHY} from '../constants/design';
 import {
   SubtleFloatingShapes,
   AmbientGlow,
@@ -846,13 +847,13 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   logoSubtext: {
     fontSize: 13,
     marginTop: 4,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
   },
   contentContainer: {
     flex: 1,
@@ -864,7 +865,7 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     textAlign: 'center',
     marginBottom: 10,
     letterSpacing: -0.3,
@@ -900,7 +901,7 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -926,7 +927,7 @@ const styles = StyleSheet.create({
   },
   guestButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   signUpButton: {
     flexDirection: 'row',
@@ -950,7 +951,7 @@ const styles = StyleSheet.create({
   },
   signUpButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   termsText: {
@@ -959,7 +960,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   termsLink: {
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formContainer: {
     flex: 1,
@@ -974,7 +975,7 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 6,
     letterSpacing: -0.3,
   },
@@ -1004,7 +1005,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   primaryButton: {
     marginBottom: 18,
@@ -1028,7 +1029,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   switchContainer: {
@@ -1041,7 +1042,7 @@ const styles = StyleSheet.create({
   },
   switchLink: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   backToLoginButton: {
     alignItems: 'center',
@@ -1049,7 +1050,7 @@ const styles = StyleSheet.create({
   },
   backToLoginText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

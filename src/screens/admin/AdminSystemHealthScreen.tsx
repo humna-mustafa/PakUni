@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { TYPOGRAPHY } from '../../constants/design';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -594,7 +595,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -634,7 +635,7 @@ const styles = StyleSheet.create({
   },
   overallStatusText: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   overallStatusSubtext: {
@@ -656,7 +657,7 @@ const styles = StyleSheet.create({
   },
   quickActionText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 
   // Sections
@@ -668,7 +669,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 
   // Metrics
@@ -696,7 +697,7 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   metricLabel: {
     fontSize: 12,
@@ -710,7 +711,7 @@ const styles = StyleSheet.create({
   },
   metricStatusText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 
   // Database Stats
@@ -724,7 +725,7 @@ const styles = StyleSheet.create({
   },
   totalBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -751,7 +752,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 11,
@@ -777,7 +778,7 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   tableRow: {
     flexDirection: 'row',
@@ -792,7 +793,7 @@ const styles = StyleSheet.create({
   },
   tableName: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textTransform: 'capitalize',
   },
   tableMessage: {
@@ -825,7 +826,7 @@ const styles = StyleSheet.create({
   cacheStatusInfo: {},
   cacheStatusLabel: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   cacheStatusDesc: {
     fontSize: 13,
@@ -847,7 +848,7 @@ const styles = StyleSheet.create({
   },
   cacheDetailValue: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   dbStatusContainer: {
     flexDirection: 'row',

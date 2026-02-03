@@ -814,7 +814,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     textAlign: 'center',
   },
@@ -867,14 +867,14 @@ const styles = StyleSheet.create({
   disclaimerText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   section: {
     marginBottom: SPACING.xl,
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   sectionSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -889,7 +889,7 @@ const styles = StyleSheet.create({
   },
   stepNumber: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   inputCard: {
@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
   },
   inputWrapper: {
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     paddingVertical: 4,
   },
   inputCenter: {
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
   inputSuffix: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   inputRow: {
     flexDirection: 'row',
@@ -940,7 +940,7 @@ const styles = StyleSheet.create({
   },
   outOfText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   uniScroll: {
     marginTop: SPACING.sm,
@@ -955,7 +955,7 @@ const styles = StyleSheet.create({
   },
   uniChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   programsContainer: {
     marginTop: SPACING.sm,
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
   },
   programChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   calculateButton: {
     flexDirection: 'row',
@@ -990,7 +990,7 @@ const styles = StyleSheet.create({
   },
   calculateButtonText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   resultContainer: {
@@ -1003,7 +1003,7 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   summaryRow: {
@@ -1016,7 +1016,7 @@ const styles = StyleSheet.create({
   },
   summaryValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resultItem: {
     borderRadius: RADIUS.xl,
@@ -1036,7 +1036,7 @@ const styles = StyleSheet.create({
   },
   rankText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   resultInfo: {
     flex: 1,
@@ -1044,18 +1044,18 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   programName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   chanceContainer: {
     alignItems: 'flex-end',
   },
   chancePercent: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   chanceStatus: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -1093,7 +1093,7 @@ const styles = StyleSheet.create({
   },
   difficultyText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   recommendationsContainer: {
     marginTop: SPACING.sm,
@@ -1128,7 +1128,7 @@ const styles = StyleSheet.create({
   },
   shareBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   resetBtn: {
@@ -1143,7 +1143,7 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   factsCard: {
     borderRadius: RADIUS.xl,
@@ -1152,7 +1152,7 @@ const styles = StyleSheet.create({
   },
   factsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   factItem: {
     flexDirection: 'row',

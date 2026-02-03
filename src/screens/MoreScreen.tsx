@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
   headerLeft: {},
   headerTitle: {
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   headerSubtitle: {
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
   profileInitials: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
     width: 42,
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
   },
   quickCardTitle: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   // Admin Card
@@ -552,7 +552,7 @@ const styles = StyleSheet.create({
   adminCardTitle: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   adminCardSubtitle: {
     color: 'rgba(255,255,255,0.75)',
@@ -596,14 +596,14 @@ const styles = StyleSheet.create({
   contributeCardTitle: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.3,
   },
   contributeCardSubtitle: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: 12,
     marginTop: 3,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   contributeArrow: {
     width: 36,
@@ -624,7 +624,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -664,7 +664,7 @@ const styles = StyleSheet.create({
   },
   gridTitle: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   gridBadge: {
@@ -679,7 +679,7 @@ const styles = StyleSheet.create({
   gridBadgeText: {
     color: '#FFFFFF',
     fontSize: 7,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   // Bottom Links Row
   bottomLinks: {
@@ -699,7 +699,7 @@ const styles = StyleSheet.create({
   },
   bottomLinkText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Kids Hub Card
   kidsHubCard: {
@@ -717,13 +717,13 @@ const styles = StyleSheet.create({
   kidsHubTitle: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     flex: 1,
   },
   kidsHubSubtitle: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // Footer
   footer: {

@@ -24,6 +24,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
 import { enhancedAdminService, ActivityLogEntry } from '../../services/adminEnhanced';
 
@@ -572,7 +573,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
     marginBottom: 12,
   },
@@ -597,7 +598,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
   },
   statLabel: {
@@ -631,7 +632,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   quickFilterText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: colors.textSecondary,
   },
   activitySection: {
@@ -646,7 +647,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   clearButton: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.primary,
   },
   activityItem: {
@@ -675,7 +676,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   activityDescription: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     color: colors.text,
     lineHeight: 20,
   },
@@ -687,7 +688,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   entityBadge: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.primary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -718,7 +719,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     marginTop: 12,
   },
@@ -748,7 +749,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.text,
   },
   detailContent: {
@@ -759,7 +760,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   detailLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -800,7 +801,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   severityBadgeText: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     letterSpacing: 0.5,
   },
   metadataContainer: {
@@ -819,7 +820,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   filterSectionTitle: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -846,7 +847,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
     color: colors.text,
   },
   filterOptionTextActive: {
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.primary,
   },
   filterSeverityDot: {
@@ -870,7 +871,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   clearFiltersText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: colors.text,
   },
   applyFiltersButton: {
@@ -882,7 +883,7 @@ const createStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   },
   applyFiltersText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
 });

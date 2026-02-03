@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from './icons';
-import {PREMIUM_DESIGN} from '../constants/design';
+import {PREMIUM_DESIGN, TYPOGRAPHY} from '../constants/design';
 
 // ============================================================================
 // TYPES
@@ -707,11 +707,11 @@ const styles = StyleSheet.create({
   errorBadgeText: {
     color: '#FF6B6B',
     fontSize: PREMIUM_DESIGN.typography.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   title: {
     fontSize: PREMIUM_DESIGN.typography.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: PREMIUM_DESIGN.spacing.sm,
     textAlign: 'center',
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
   suggestionsTitle: {
     color: '#FFFFFF',
     fontSize: PREMIUM_DESIGN.typography.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: PREMIUM_DESIGN.spacing.sm,
   },
   suggestionItem: {
@@ -788,7 +788,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: PREMIUM_DESIGN.typography.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   secondaryButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: 'rgba(255, 255, 255, 0.9)',
     fontSize: PREMIUM_DESIGN.typography.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   dangerButton: {
     backgroundColor: 'rgba(255, 59, 48, 0.2)',
@@ -827,7 +827,7 @@ const styles = StyleSheet.create({
   devToggleText: {
     color: 'rgba(255, 255, 255, 0.5)',
     fontSize: PREMIUM_DESIGN.typography.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   stackContainer: {
     marginTop: PREMIUM_DESIGN.spacing.sm,
@@ -835,7 +835,7 @@ const styles = StyleSheet.create({
   stackTitle: {
     color: '#FF6B6B',
     fontSize: PREMIUM_DESIGN.typography.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: PREMIUM_DESIGN.spacing.xs,
     marginTop: PREMIUM_DESIGN.spacing.sm,
   },

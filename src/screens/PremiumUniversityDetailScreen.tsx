@@ -1164,7 +1164,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.lg,
   },
   errorButton: {
@@ -1175,7 +1175,7 @@ const styles = StyleSheet.create({
   errorButtonText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   header: {
     overflow: 'hidden',
@@ -1225,13 +1225,13 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 24,
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   headerTitle: {
     flex: 1,
     textAlign: 'center',
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerRight: {
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
   },
   universityName: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: SPACING.xs,
@@ -1298,7 +1298,7 @@ const styles = StyleSheet.create({
   },
   typeBadgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   rankBadge: {
@@ -1309,7 +1309,7 @@ const styles = StyleSheet.create({
   },
   rankBadgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   tabsContainer: {
@@ -1335,7 +1335,7 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tabIndicator: {
     position: 'absolute',
@@ -1362,7 +1362,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   aboutCard: {
     padding: SPACING.md,
@@ -1400,7 +1400,7 @@ const styles = StyleSheet.create({
   },
   factValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   campusList: {
     borderRadius: RADIUS.lg,
@@ -1424,7 +1424,7 @@ const styles = StyleSheet.create({
   },
   campusName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   contactList: {
     borderRadius: RADIUS.lg,
@@ -1456,7 +1456,7 @@ const styles = StyleSheet.create({
   },
   contactValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   contactArrowContainer: {
     width: 32,
@@ -1467,7 +1467,7 @@ const styles = StyleSheet.create({
   },
   contactArrow: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   programsNote: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1499,7 +1499,7 @@ const styles = StyleSheet.create({
   },
   programName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   programFullName: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1527,7 +1527,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   eligibilitySection: {
     flexDirection: 'row',
@@ -1546,7 +1546,7 @@ const styles = StyleSheet.create({
   },
   eligibilityText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   admissionBanner: {
     flexDirection: 'row',
@@ -1577,7 +1577,7 @@ const styles = StyleSheet.create({
   },
   admissionBannerTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   admissionBannerSubtitle: {
@@ -1607,11 +1607,11 @@ const styles = StyleSheet.create({
   },
   statusNoteTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statusNoteText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   stepsContainer: {
     borderRadius: RADIUS.lg,
@@ -1634,7 +1634,7 @@ const styles = StyleSheet.create({
   stepNumberText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   stepText: {
     flex: 1,
@@ -1644,7 +1644,7 @@ const styles = StyleSheet.create({
   admissionArrowText: {
     fontSize: 20,
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formulaCard: {
     borderRadius: RADIUS.lg,
@@ -1653,7 +1653,7 @@ const styles = StyleSheet.create({
   },
   formulaName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   formulaUniversity: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1677,7 +1677,7 @@ const styles = StyleSheet.create({
   },
   weightValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   weightLabel: {
@@ -1694,7 +1694,7 @@ const styles = StyleSheet.create({
   },
   bonusText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   timeline: {
@@ -1725,7 +1725,7 @@ const styles = StyleSheet.create({
   },
   timelineTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   timelineDate: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1748,7 +1748,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   emptySubtext: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1781,7 +1781,7 @@ const styles = StyleSheet.create({
   },
   scholarshipName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   scholarshipProvider: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1794,7 +1794,7 @@ const styles = StyleSheet.create({
   },
   coverageText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   scholarshipDesc: {
@@ -1815,7 +1815,7 @@ const styles = StyleSheet.create({
   },
   coverageChipText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   scholarshipStats: {
     flexDirection: 'row',
@@ -1833,7 +1833,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   scholarshipFooter: {
     flexDirection: 'row',
@@ -1852,7 +1852,7 @@ const styles = StyleSheet.create({
   },
   deadlineText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   applyBtn: {
     paddingHorizontal: SPACING.lg,
@@ -1861,7 +1861,7 @@ const styles = StyleSheet.create({
   },
   applyBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   // Merit Tab Styles
@@ -1875,7 +1875,7 @@ const styles = StyleSheet.create({
   },
   meritStatValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   meritStatLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -1898,7 +1898,7 @@ const styles = StyleSheet.create({
   },
   trendBadgeText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   meritProgramCard: {
@@ -1921,7 +1921,7 @@ const styles = StyleSheet.create({
   },
   meritProgramName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   meritProgramMeta: {
     fontSize: TYPOGRAPHY.sizes.xs,
@@ -1940,7 +1940,7 @@ const styles = StyleSheet.create({
   yearLabel: {
     width: 50,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   meritValuesRow: {
     flex: 1,
@@ -1958,7 +1958,7 @@ const styles = StyleSheet.create({
   },
   meritValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

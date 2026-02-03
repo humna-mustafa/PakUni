@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   retryButton: {
     paddingHorizontal: SPACING.md,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   retryText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   restoredToast: {
     position: 'absolute',
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   restoredText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: SPACING.xs,
   },
 });

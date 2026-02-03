@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: 0,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
     ...Platform.select({
       android: {
         paddingVertical: 0,

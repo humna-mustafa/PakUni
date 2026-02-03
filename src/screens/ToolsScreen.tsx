@@ -782,7 +782,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
     marginTop: SPACING.md,
   },
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   },
   heroStatValue: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
   },
   heroStatLabel: {
@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   toolCard: {
@@ -873,7 +873,7 @@ const styles = StyleSheet.create({
   },
   toolTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   toolDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
   },
   quickText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   infoCard: {
     marginHorizontal: SPACING.lg,
@@ -917,7 +917,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   infoText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
   },
   calculatorTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   calculatorContent: {
     flex: 1,
@@ -1010,7 +1010,7 @@ const styles = StyleSheet.create({
   },
   marksDivider: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formulaCard: {
     flexDirection: 'row',
@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
   },
   formulaText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
   },
   // Formula Selector Styles
@@ -1047,11 +1047,11 @@ const styles = StyleSheet.create({
   },
   formulaSelectorLabel: {
     fontSize: 11,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   formulaSelectorName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   formulaDropdown: {
     borderRadius: RADIUS.lg,
@@ -1076,7 +1076,7 @@ const styles = StyleSheet.create({
   },
   formulaOptionName: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 2,
   },
   formulaOptionWeights: {
@@ -1102,7 +1102,7 @@ const styles = StyleSheet.create({
   },
   calculateButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFF',
   },
   resultCard: {
@@ -1122,7 +1122,7 @@ const styles = StyleSheet.create({
   },
   resultValue: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFF',
   },
   resultHint: {
@@ -1137,7 +1137,7 @@ const styles = StyleSheet.create({
   },
   tipsTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.md,
   },
   tipItem: {

@@ -774,7 +774,7 @@ const styles = StyleSheet.create({
   },
   fabLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     letterSpacing: 0.1,
   },
 });

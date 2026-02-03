@@ -24,6 +24,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
 import { dataSubmissionsService, batchUpdateService } from '../../services';
 
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 12,
   },
   metricCard: {
@@ -376,7 +377,7 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   metricSubtitle: {
     fontSize: 11,
@@ -395,7 +396,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 8,
   },
   statLabel: {
@@ -426,7 +427,7 @@ const styles = StyleSheet.create({
   },
   trustPercent: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     width: 40,
     textAlign: 'right',
   },
@@ -453,7 +454,7 @@ const styles = StyleSheet.create({
   rejectionCount: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   actionBtn: {
     flexDirection: 'row',
@@ -467,7 +468,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     flex: 1,
     marginLeft: 12,
   },

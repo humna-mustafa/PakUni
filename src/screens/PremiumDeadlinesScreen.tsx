@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -694,7 +694,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   statLabel: {
@@ -728,7 +728,7 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   followingToggle: {
     flexDirection: 'row',
@@ -743,7 +743,7 @@ const styles = StyleSheet.create({
   },
   followingToggleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Deadlines List
   deadlinesList: {
@@ -785,7 +785,7 @@ const styles = StyleSheet.create({
   },
   universityShortName: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   followBtn: {
     width: 36,
@@ -809,7 +809,7 @@ const styles = StyleSheet.create({
   },
   deadlineTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
     lineHeight: 22,
   },
@@ -839,11 +839,11 @@ const styles = StyleSheet.create({
   timelineInfo: {},
   timelineLabel: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   timelineDate: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   timelineLine: {
     width: 20,
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
   },
   feeText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   applyBtn: {
     flexDirection: 'row',
@@ -878,7 +878,7 @@ const styles = StyleSheet.create({
   applyBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   highlightedBadge: {
     position: 'absolute',
@@ -898,7 +898,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: SPACING.md,
     marginBottom: SPACING.xs,
   },

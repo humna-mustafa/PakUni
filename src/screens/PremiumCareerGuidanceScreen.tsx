@@ -431,7 +431,7 @@ const PremiumCareerGuidanceScreen = () => {
       {/* Results count */}
       <View style={styles.resultsBar}>
         <Text style={[styles.resultsText, {color: colors.text}]}>
-          <Text style={{fontWeight: '700'}}>{filteredCareers.length}</Text> careers found
+          <Text style={{fontWeight: TYPOGRAPHY.weight.bold}}>{filteredCareers.length}</Text> careers found
         </Text>
       </View>
 
@@ -689,7 +689,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#fff',
     marginBottom: 6,
     letterSpacing: -0.5,
@@ -700,7 +700,7 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.95)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     letterSpacing: 0.2,
   },
   filtersContainer: {
@@ -719,11 +719,11 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   filterChipTextActive: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   resultsBar: {
@@ -769,7 +769,7 @@ const styles = StyleSheet.create({
   },
   careerName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   categoryBadge: {
@@ -780,14 +780,14 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   demandIndicator: {
     alignItems: 'center',
   },
   demandText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   careerDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -818,7 +818,7 @@ const styles = StyleSheet.create({
   },
   salaryTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   salaryBarContainer: {},
   salaryTrackBg: {
@@ -833,7 +833,7 @@ const styles = StyleSheet.create({
   },
   salaryAmount: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -860,7 +860,7 @@ const styles = StyleSheet.create({
   exploreBtnText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Salary bar styles
   salaryBar: {
@@ -887,7 +887,7 @@ const styles = StyleSheet.create({
   },
   salaryValue: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // Modal styles
   modalOverlay: {
@@ -925,7 +925,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: SPACING.sm,
   },
@@ -942,7 +942,7 @@ const styles = StyleSheet.create({
   modalBadgeText: {
     color: '#fff',
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   statsRow: {
     flexDirection: 'row',
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   section: {
     paddingHorizontal: SPACING.md,
@@ -974,7 +974,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   sectionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
   stepNumber: {
     color: '#fff',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   stepLine: {
     width: 3,
@@ -1013,7 +1013,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 2,
   },
   stepDurationRow: {
@@ -1050,7 +1050,7 @@ const styles = StyleSheet.create({
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

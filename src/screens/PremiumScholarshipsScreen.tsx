@@ -1144,7 +1144,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
   },
   countBadgeCompact: {
@@ -1154,7 +1154,7 @@ const styles = StyleSheet.create({
   },
   countTextCompact: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   filterToggleBtn: {
     width: 40,
@@ -1180,7 +1180,7 @@ const styles = StyleSheet.create({
   profileInitials: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
     width: 38,
@@ -1189,7 +1189,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '400',
+    fontWeight: TYPOGRAPHY.weight.regular,
   },
   headerGradient: {
     margin: SPACING.lg,
@@ -1232,7 +1232,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     letterSpacing: -0.5,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0,0,0,0.2)',
@@ -1243,7 +1243,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 6,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     letterSpacing: 0.2,
   },
   countBadge: {
@@ -1256,7 +1256,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   // Unified search container
@@ -1298,11 +1298,11 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   filterTextActive: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
   },
   listContent: {
@@ -1332,7 +1332,7 @@ const styles = StyleSheet.create({
   },
   coverageText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -1356,7 +1356,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: TYPOGRAPHY.sizes.base,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     lineHeight: 20,
   },
   cardProvider: {
@@ -1390,7 +1390,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -1424,7 +1424,7 @@ const styles = StyleSheet.create({
   },
   viewBtnText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   emptyState: {
     alignItems: 'center',
@@ -1436,7 +1436,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.xs,
   },
   emptyText: {
@@ -1491,7 +1491,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalProvider: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1530,13 +1530,13 @@ const styles = StyleSheet.create({
   },
   coverageHeroPercent: {
     fontSize: 48,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
   },
   coverageHeroText: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: 'rgba(255,255,255,0.9)',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   coverageGrid: {
     flexDirection: 'row',
@@ -1556,11 +1556,11 @@ const styles = StyleSheet.create({
   },
   coverageItemText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   coverageCheck: {
     fontSize: 12,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
     marginTop: 2,
   },
   amountRow: {
@@ -1584,14 +1584,14 @@ const styles = StyleSheet.create({
   },
   amountValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   section: {
     marginBottom: SPACING.lg,
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.sm,
   },
   sectionText: {
@@ -1613,7 +1613,7 @@ const styles = StyleSheet.create({
   },
   eligibilityCheckIcon: {
     fontSize: 12,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   eligibilityRowText: {
     flex: 1,
@@ -1654,7 +1654,7 @@ const styles = StyleSheet.create({
   },
   deadlineValue: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   applyBtnWrapper: {
     marginTop: SPACING.sm,
@@ -1669,7 +1669,7 @@ const styles = StyleSheet.create({
   applyBtnText: {
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   applyBtnIcon: {
     color: '#FFFFFF',
@@ -1707,7 +1707,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   availabilitySection: {
     marginBottom: SPACING.xs,
@@ -1722,7 +1722,7 @@ const styles = StyleSheet.create({
   },
   availabilityTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -1763,7 +1763,7 @@ const styles = StyleSheet.create({
   },
   applicationMethodText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   // NEW: Modal university availability styles
   availabilitySectionModal: {
@@ -1775,7 +1775,7 @@ const styles = StyleSheet.create({
   availabilityTextModal: {
     fontSize: TYPOGRAPHY.sizes.sm,
     lineHeight: 20,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   universityListModal: {
     marginTop: SPACING.sm,
@@ -1797,7 +1797,7 @@ const styles = StyleSheet.create({
   },
   uniNameModal: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
   moreUnisText: {
@@ -1829,7 +1829,7 @@ const styles = StyleSheet.create({
   },
   methodLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   methodDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -1841,7 +1841,7 @@ const styles = StyleSheet.create({
   },
   stepsTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: SPACING.sm,
   },
   stepItem: {
@@ -1861,7 +1861,7 @@ const styles = StyleSheet.create({
   },
   stepNumberText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   stepText: {
@@ -1880,7 +1880,7 @@ const styles = StyleSheet.create({
   statusNoteText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginLeft: SPACING.sm,
     lineHeight: 20,
   },

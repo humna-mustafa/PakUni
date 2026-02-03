@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import {TYPOGRAPHY} from '../constants/design';
 import {NavigationContainer, DefaultTheme, DarkTheme} from '@react-navigation/native';
 import {createNativeStackNavigator, NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {createBottomTabNavigator, type BottomTabBarProps} from '@react-navigation/bottom-tabs';
@@ -205,7 +206,7 @@ const MainTabs = () => {
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
-          fontWeight: '700',
+          fontWeight: TYPOGRAPHY.weight.bold,
           fontSize: 18,
         },
         headerShadowVisible: false,
@@ -290,7 +291,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
         <View style={{width: 80, height: 80, borderRadius: 24, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', marginBottom: 16}}>
           <Icon name="school-outline" family="Ionicons" size={36} color="#FFFFFF" />
         </View>
-        <Text style={{fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 8}}>PakUni</Text>
+        <Text style={{fontSize: 24, fontWeight: TYPOGRAPHY.weight.bold, color: colors.text, marginBottom: 8}}>PakUni</Text>
         <Text style={{fontSize: 14, color: colors.textSecondary}}>Loading...</Text>
       </View>
     );
@@ -307,7 +308,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             },
             headerTintColor: colors.text,
             headerTitleStyle: {
-              fontWeight: '700',
+              fontWeight: TYPOGRAPHY.weight.bold,
               fontSize: 18,
             },
             headerShadowVisible: false,

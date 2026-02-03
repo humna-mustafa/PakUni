@@ -655,7 +655,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -681,11 +681,11 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   progressPercent: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   progressTrack: {
     height: 8,
@@ -721,7 +721,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
     lineHeight: 28,
   },
@@ -748,12 +748,12 @@ const styles = StyleSheet.create({
   optionText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   optionTextSelected: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
   checkmark: {
@@ -787,7 +787,7 @@ const styles = StyleSheet.create({
   },
   resultsTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
     marginBottom: 4,
   },
@@ -823,7 +823,7 @@ const styles = StyleSheet.create({
   topBadgeText: {
     color: '#fff',
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resultContent: {
     flexDirection: 'row',
@@ -841,14 +841,14 @@ const styles = StyleSheet.create({
   resultRankText: {
     color: '#fff',
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   resultInfo: {
     flex: 1,
   },
   resultName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 6,
   },
   resultBarContainer: {
@@ -868,7 +868,7 @@ const styles = StyleSheet.create({
   },
   resultPercent: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     minWidth: 45,
     textAlign: 'right',
   },
@@ -884,7 +884,7 @@ const styles = StyleSheet.create({
   },
   adviceTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: 4,
   },
   adviceText: {
@@ -903,7 +903,7 @@ const styles = StyleSheet.create({
   },
   retakeBtnText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

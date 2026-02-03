@@ -700,7 +700,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
     marginTop: SPACING.sm,
   },
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 11,
@@ -758,7 +758,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   sectionSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
@@ -788,7 +788,7 @@ const styles = StyleSheet.create({
   },
   templateTitle: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     textAlign: 'center',
   },
   achievementsList: {
@@ -808,7 +808,7 @@ const styles = StyleSheet.create({
   },
   deleteBtnText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: TYPOGRAPHY.sizes.sm,
   },
   emptyState: {
@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginTop: SPACING.sm,
     marginBottom: SPACING.xs,
   },
@@ -842,7 +842,7 @@ const styles = StyleSheet.create({
   },
   infoTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   infoText: {
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
   },
   addModalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#fff',
   },
   closeButton: {
@@ -915,7 +915,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
   },
   fieldInput: {
@@ -939,7 +939,7 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: TYPOGRAPHY.sizes.md,
   },
 });

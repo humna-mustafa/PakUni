@@ -28,6 +28,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../contexts/ThemeContext';
+import { TYPOGRAPHY } from '../../constants/design';
 import {errorReportingService, ErrorReport, ErrorStatus, ErrorCategory, ErrorSeverity} from '../../services/errorReporting';
 import {Icon} from '../../components/icons';
 import {logger} from '../../utils/logger';
@@ -772,7 +773,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -793,7 +794,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   statLabel: {
     fontSize: 12,
@@ -819,7 +820,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginRight: 4,
   },
   filterChip: {
@@ -845,7 +846,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   listContent: {
     padding: 16,
@@ -880,7 +881,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   statusBadge: {
     flexDirection: 'row',
@@ -892,7 +893,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   severityBadge: {
     paddingHorizontal: 10,
@@ -901,11 +902,11 @@ const styles = StyleSheet.create({
   },
   severityText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   errorName: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 4,
   },
   errorMessage: {
@@ -934,7 +935,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   quickActions: {
     flexDirection: 'row',
@@ -951,7 +952,7 @@ const styles = StyleSheet.create({
   },
   quickBtnText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   emptyState: {
     alignItems: 'center',
@@ -959,7 +960,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 16,
   },
   emptyText: {
@@ -990,7 +991,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   modalBody: {
     padding: 16,
@@ -1008,14 +1009,14 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
     marginBottom: 6,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   detailValue: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   detailValueLong: {
     fontSize: 14,
@@ -1034,7 +1035,7 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   feedbackText: {
     fontSize: 14,
@@ -1054,7 +1055,7 @@ const styles = StyleSheet.create({
   },
   deviceInfoValue: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   occurrenceInfo: {
     flexDirection: 'row',
@@ -1064,7 +1065,7 @@ const styles = StyleSheet.create({
   },
   occurrenceCount: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   occurrenceDate: {
     fontSize: 11,
@@ -1082,7 +1083,7 @@ const styles = StyleSheet.create({
   },
   copyBtnText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   stackBox: {
     padding: 12,
@@ -1101,7 +1102,7 @@ const styles = StyleSheet.create({
   },
   resolutionLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
   },
   resolutionText: {
@@ -1125,7 +1126,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   deleteBtn: {
     flexDirection: 'row',
@@ -1140,11 +1141,11 @@ const styles = StyleSheet.create({
   deleteBtnText: {
     color: '#EF4444',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   formLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 8,
   },
   notesInput: {
@@ -1169,7 +1170,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   confirmBtn: {
     flex: 1,
@@ -1180,7 +1181,7 @@ const styles = StyleSheet.create({
   confirmBtnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });
 

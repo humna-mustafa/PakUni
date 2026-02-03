@@ -25,6 +25,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { logger } from '../../utils/logger';
+import { TYPOGRAPHY } from '../../constants/design';
 import { tursoAdminService, TursoStats, DatabaseHealth } from '../../services/tursoAdmin';
 import { adminService } from '../../services/admin';
 import type { RootStackParamList } from '../../navigation/AppNavigator';
@@ -770,7 +771,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     color: '#FFFFFF',
   },
   headerSubtitle: {
@@ -807,7 +808,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   syncButton: {
     flexDirection: 'row',
@@ -823,7 +824,7 @@ const styles = StyleSheet.create({
   },
   syncButtonText: {
     color: '#FFFFFF',
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     fontSize: 12,
   },
   statusGrid: {
@@ -850,12 +851,12 @@ const styles = StyleSheet.create({
   statusLabel: {
     fontSize: 11,
     marginTop: 6,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   statusValue: {
     fontSize: 10,
     marginTop: 2,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   healthDetails: {
     flexDirection: 'row',
@@ -873,7 +874,7 @@ const styles = StyleSheet.create({
   },
   healthValue: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginTop: 2,
   },
 
@@ -903,7 +904,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '800',
+    fontWeight: TYPOGRAPHY.weight.heavy,
   },
   statLabel: {
     fontSize: 12,
@@ -932,7 +933,7 @@ const styles = StyleSheet.create({
   },
   userStatValue: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   userStatLabel: {
     fontSize: 10,
@@ -952,7 +953,7 @@ const styles = StyleSheet.create({
   },
   clearCacheText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   quickActionsGrid: {
     flexDirection: 'row',
@@ -988,11 +989,11 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
   quickActionTitle: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: TYPOGRAPHY.weight.semibold,
     textAlign: 'center',
   },
   quickActionDesc: {
@@ -1030,7 +1031,7 @@ const styles = StyleSheet.create({
   },
   tableName: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   tableCount: {
     fontSize: 12,

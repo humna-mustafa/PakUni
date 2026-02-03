@@ -29,6 +29,19 @@ import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
+import {SPACING, FONTS} from '../constants/theme';
+
+// Semantic color constants - mapped from theme at render time
+const SEMANTIC_COLORS = {
+  favorites: '#EF4444',    // Red - hearts/favorites
+  notification: '#F59E0B', // Amber - alerts
+  success: '#10B981',      // Green - success/linked
+  info: '#4573DF',         // Blue - primary info
+  danger: '#EF4444',       // Red - destructive
+  cache: '#06B6D4',        // Cyan - storage
+  google: '#4285F4',       // Google brand
+  tertiary: '#14B8A6',     // Teal - tertiary actions
+} as const;
 import {
   NotificationPreferences,
   notificationService,
@@ -135,7 +148,11 @@ const SettingItem: React.FC<SettingItemProps> = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         disabled={!onPress}
-        activeOpacity={onPress ? 0.7 : 1}>
+        activeOpacity={onPress ? 0.7 : 1}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityHint={subtitle}
+        accessibilityState={{disabled: disabled || !onPress}}>
         <View style={[styles.settingIcon, {backgroundColor: `${iconColor}15`}]}>
           <Icon name={icon} family="Ionicons" size={20} color={iconColor} />
         </View>
@@ -523,7 +540,10 @@ const SettingsScreen: React.FC = () => {
           ]}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.goBack()}>
+            onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Navigate to previous screen">
             <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
           </TouchableOpacity>
           <View style={styles.headerCenter}>
@@ -946,14 +966,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backButton: {
-    width: 36,
-    height: 36,
+    width: 44, // Minimum touch target (WCAG 2.1)
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
   },
   headerSpacer: {
     width: 36,
@@ -966,10 +986,10 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
     letterSpacing: 0.8,
-    marginLeft: 32,
-    marginBottom: 6,
+    marginLeft: SPACING.lg, // Use spacing constants
+    marginBottom: SPACING.xs,
   },
   sectionContent: {
     marginHorizontal: 16,
@@ -1005,7 +1025,7 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: FONTS.weights.medium,
   },
   settingSubtitle: {
     fontSize: 12,
@@ -1022,7 +1042,7 @@ const styles = StyleSheet.create({
   },
   linkBadgeText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: FONTS.weights.semiBold,
   },
   loadingIndicator: {
     paddingHorizontal: 12,
@@ -1057,8 +1077,8 @@ const styles = StyleSheet.create({
   },
   versionText: {
     fontSize: 13,
-    fontWeight: '500',
-    marginBottom: 8,
+    fontWeight: FONTS.weights.medium,
+    marginBottom: SPACING.sm,
   },
   copyrightText: {
     fontSize: 11,
