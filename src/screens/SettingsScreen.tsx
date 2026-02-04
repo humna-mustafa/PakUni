@@ -973,7 +973,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
   },
   headerSpacer: {
     width: 36,
@@ -986,7 +986,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 11,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
     letterSpacing: 0.8,
     marginLeft: SPACING.lg, // Use spacing constants
     marginBottom: SPACING.xs,
@@ -1025,7 +1025,7 @@ const styles = StyleSheet.create({
   },
   settingTitle: {
     fontSize: 15,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
   settingSubtitle: {
     fontSize: 12,
@@ -1042,7 +1042,7 @@ const styles = StyleSheet.create({
   },
   linkBadgeText: {
     fontSize: 12,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
   },
   loadingIndicator: {
     paddingHorizontal: 12,
@@ -1077,7 +1077,7 @@ const styles = StyleSheet.create({
   },
   versionText: {
     fontSize: 13,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
     marginBottom: SPACING.sm,
   },
   copyrightText: {

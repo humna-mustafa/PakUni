@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 28,
-    fontWeight: FONTS.weights.bold,
+    fontWeight: FONTS.weight.bold,
     letterSpacing: -0.5,
   },
   logoSubtext: {
@@ -755,7 +755,7 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 24,
-    fontWeight: FONTS.weights.bold,
+    fontWeight: FONTS.weight.bold,
     textAlign: 'center',
     marginBottom: SPACING.sm,
     letterSpacing: -0.3,
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
   },
   socialButtonText: {
     fontSize: 15,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -817,7 +817,7 @@ const styles = StyleSheet.create({
   },
   guestButtonText: {
     fontSize: 14,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
   signUpButton: {
     flexDirection: 'row',
@@ -841,7 +841,7 @@ const styles = StyleSheet.create({
   },
   signUpButtonText: {
     fontSize: 15,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
     color: '#FFFFFF',
   },
   termsText: {
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   termsLink: {
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
   formContainer: {
     flex: 1,
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     fontSize: 24,
-    fontWeight: FONTS.weights.bold,
+    fontWeight: FONTS.weight.bold,
     marginBottom: SPACING.xs,
     letterSpacing: -0.3,
   },
@@ -895,7 +895,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
   primaryButton: {
     marginBottom: 18,
@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
   },
   switchContainer: {
     flexDirection: 'row',
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
   switchLink: {
     fontSize: 13,
-    fontWeight: FONTS.weights.semiBold,
+    fontWeight: FONTS.weight.semiBold,
   },
   backToLoginButton: {
     alignItems: 'center',
@@ -939,7 +939,7 @@ const styles = StyleSheet.create({
   },
   backToLoginText: {
     fontSize: 14,
-    fontWeight: FONTS.weights.medium,
+    fontWeight: FONTS.weight.medium,
   },
 });
 
