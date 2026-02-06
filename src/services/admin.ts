@@ -382,18 +382,31 @@ class AdminService {
    */
   async updateUserRole(userId: string, newRole: UserRole): Promise<boolean> {
     try {
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('profiles')
         .update({role: newRole, updated_at: new Date().toISOString()})
-        .eq('id', userId);
+        .eq('id', userId)
+        .select('id, role');
 
       if (error) throw error;
+
+      // Verify the update actually took effect (RLS may silently block it)
+      if (!data || data.length === 0) {
+        logger.error('Role update blocked by RLS - no rows affected', {userId, newRole}, 'Admin');
+        throw new Error('Update failed: insufficient permissions. Ensure your admin RLS policies are applied.');
+      }
+
+      // Verify the role was actually changed
+      if (data[0].role !== newRole) {
+        logger.error('Role update did not persist', {expected: newRole, actual: data[0].role}, 'Admin');
+        throw new Error('Role update did not persist. Check database policies.');
+      }
 
       // Log the action
       await this.logAction('update_user_role', 'user', userId, null, {role: newRole});
 
       return true;
-    } catch (error) {
+    } catch (error: any) {
       logger.error('Error updating user role', error, 'Admin');
       return false;
     }
@@ -404,7 +417,7 @@ class AdminService {
    */
   async banUser(userId: string, reason: string, expiresAt?: string): Promise<boolean> {
     try {
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('profiles')
         .update({
           is_banned: true,
@@ -412,9 +425,16 @@ class AdminService {
           ban_expires_at: expiresAt || null,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
+        .select('id, is_banned');
 
       if (error) throw error;
+
+      // Verify the update actually took effect
+      if (!data || data.length === 0) {
+        logger.error('Ban update blocked by RLS - no rows affected', {userId}, 'Admin');
+        throw new Error('Ban failed: insufficient permissions. Ensure admin RLS policies are applied.');
+      }
 
       await this.logAction('ban_user', 'user', userId, null, {reason, expiresAt});
 
@@ -430,7 +450,7 @@ class AdminService {
    */
   async unbanUser(userId: string): Promise<boolean> {
     try {
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('profiles')
         .update({
           is_banned: false,
@@ -438,9 +458,16 @@ class AdminService {
           ban_expires_at: null,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', userId);
+        .eq('id', userId)
+        .select('id, is_banned');
 
       if (error) throw error;
+
+      // Verify the update actually took effect
+      if (!data || data.length === 0) {
+        logger.error('Unban update blocked by RLS - no rows affected', {userId}, 'Admin');
+        throw new Error('Unban failed: insufficient permissions. Ensure admin RLS policies are applied.');
+      }
 
       await this.logAction('unban_user', 'user', userId);
 
@@ -456,12 +483,19 @@ class AdminService {
    */
   async verifyUser(userId: string): Promise<boolean> {
     try {
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('profiles')
         .update({is_verified: true, updated_at: new Date().toISOString()})
-        .eq('id', userId);
+        .eq('id', userId)
+        .select('id, is_verified');
 
       if (error) throw error;
+
+      // Verify the update actually took effect
+      if (!data || data.length === 0) {
+        logger.error('Verify update blocked by RLS - no rows affected', {userId}, 'Admin');
+        throw new Error('Verify failed: insufficient permissions. Ensure admin RLS policies are applied.');
+      }
 
       await this.logAction('verify_user', 'user', userId);
 
@@ -560,12 +594,17 @@ class AdminService {
         .eq('id', universityId)
         .single();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('universities')
         .update({...updates, updated_at: new Date().toISOString()})
-        .eq('id', universityId);
+        .eq('id', universityId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('University update failed: insufficient permissions or record not found.');
+      }
 
       await this.logAction('update_university', 'university', universityId, oldData, updates);
 
@@ -692,12 +731,17 @@ class AdminService {
         .eq('id', scholarshipId)
         .single();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('scholarships')
         .update({...updates, updated_at: new Date().toISOString()})
-        .eq('id', scholarshipId);
+        .eq('id', scholarshipId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Scholarship update failed: insufficient permissions or record not found.');
+      }
 
       await this.logAction('update_scholarship', 'scholarship', scholarshipId, oldData, updates);
 
@@ -825,12 +869,17 @@ class AdminService {
         .eq('id', programId)
         .single();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('programs')
         .update({...updates, updated_at: new Date().toISOString()})
-        .eq('id', programId);
+        .eq('id', programId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Program update failed: insufficient permissions or record not found.');
+      }
 
       await this.logAction('update_program', 'program', programId, oldData, updates);
 
@@ -987,12 +1036,17 @@ class AdminService {
    */
   async updateAnnouncement(announcementId: string, updates: Partial<Announcement>): Promise<boolean> {
     try {
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('announcements')
         .update({...updates, updated_at: new Date().toISOString()})
-        .eq('id', announcementId);
+        .eq('id', announcementId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Announcement update failed: insufficient permissions or record not found.');
+      }
 
       await this.logAction('update_announcement', 'announcement', announcementId, null, updates);
 
@@ -1100,7 +1154,7 @@ class AdminService {
     try {
       const {data: {user}} = await supabase.auth.getUser();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('content_reports')
         .update({
           status,
@@ -1108,9 +1162,14 @@ class AdminService {
           reviewed_by: user?.id,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', reportId);
+        .eq('id', reportId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Report update failed: insufficient permissions or record not found.');
+      }
 
       await this.logAction('update_report_status', 'content_report', reportId, null, {status, resolutionNotes});
 
@@ -1128,16 +1187,21 @@ class AdminService {
     try {
       const {data: {user}} = await supabase.auth.getUser();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('content_reports')
         .update({
           ...updates,
           reviewed_by: user?.id,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', reportId);
+        .eq('id', reportId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Content report update failed: insufficient permissions.');
+      }
 
       await this.logAction('update_content_report', 'content_report', reportId, null, updates);
 
@@ -1235,7 +1299,7 @@ class AdminService {
     try {
       const {data: {user}} = await supabase.auth.getUser();
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('user_feedback')
         .update({
           admin_response: response,
@@ -1243,9 +1307,14 @@ class AdminService {
           responded_by: user?.id,
           responded_at: new Date().toISOString(),
         })
-        .eq('id', feedbackId);
+        .eq('id', feedbackId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Feedback response failed: insufficient permissions.');
+      }
 
       await this.logAction('respond_feedback', 'user_feedback', feedbackId, null, {response});
 
@@ -1300,12 +1369,17 @@ class AdminService {
         updateData.responded_at = new Date().toISOString();
       }
 
-      const {error} = await supabase
+      const {data, error} = await supabase
         .from('user_feedback')
         .update(updateData)
-        .eq('id', feedbackId);
+        .eq('id', feedbackId)
+        .select('id');
 
       if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error('Feedback update failed: insufficient permissions.');
+      }
 
       await this.logAction('update_feedback', 'user_feedback', feedbackId, null, updates);
 
