@@ -18,6 +18,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
+import {useTheme} from '../../contexts';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -68,11 +69,11 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     minAggregate: 60,
     color: '#4573DF',
     programs: [
-      {name: 'CS', lastMerit: 87},
-      {name: 'EE', lastMerit: 82},
-      {name: 'ME', lastMerit: 78},
-      {name: 'Civil', lastMerit: 72},
-      {name: 'BBA', lastMerit: 68},
+      {name: 'CS', lastMerit: 90},
+      {name: 'EE', lastMerit: 85},
+      {name: 'ME', lastMerit: 80},
+      {name: 'Civil', lastMerit: 75},
+      {name: 'BBA', lastMerit: 72},
     ],
   },
   {
@@ -86,11 +87,11 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     minAggregate: 50,
     color: '#DC2626',
     programs: [
-      {name: 'CS', lastMerit: 78},
-      {name: 'SE', lastMerit: 75},
-      {name: 'DS', lastMerit: 73},
-      {name: 'AI', lastMerit: 76},
-      {name: 'Cyber', lastMerit: 70},
+      {name: 'CS', lastMerit: 82},
+      {name: 'SE', lastMerit: 78},
+      {name: 'DS', lastMerit: 75},
+      {name: 'AI', lastMerit: 80},
+      {name: 'Cyber', lastMerit: 73},
     ],
   },
   {
@@ -104,10 +105,10 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     minAggregate: 65,
     color: '#059669',
     programs: [
-      {name: 'CS', lastMerit: 82},
-      {name: 'EE', lastMerit: 78},
-      {name: 'ME', lastMerit: 75},
-      {name: 'Materials', lastMerit: 68},
+      {name: 'CS', lastMerit: 85},
+      {name: 'EE', lastMerit: 80},
+      {name: 'ME', lastMerit: 77},
+      {name: 'Materials', lastMerit: 70},
     ],
   },
   {
@@ -121,10 +122,10 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     minAggregate: 45,
     color: '#0891B2',
     programs: [
-      {name: 'CS', lastMerit: 72},
-      {name: 'SE', lastMerit: 68},
-      {name: 'EE', lastMerit: 65},
-      {name: 'BBA', lastMerit: 60},
+      {name: 'CS', lastMerit: 75},
+      {name: 'SE', lastMerit: 72},
+      {name: 'EE', lastMerit: 68},
+      {name: 'BBA', lastMerit: 63},
     ],
   },
 ];
@@ -139,6 +140,8 @@ interface CustomSliderProps {
   minimumValue: number;
   maximumValue: number;
   color: string;
+  trackBgColor?: string;
+  scaleColor?: string;
 }
 
 const CustomSlider: React.FC<CustomSliderProps> = ({
@@ -147,6 +150,8 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   minimumValue,
   maximumValue,
   color,
+  trackBgColor = '#E2E8F0',
+  scaleColor = '#94A3B8',
 }) => {
   const sliderWidth = SCREEN_WIDTH - 80;
   const position = React.useRef(new Animated.Value(0)).current;
@@ -183,7 +188,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
   return (
     <View style={sliderStyles.container} {...panResponder.panHandlers}>
       {/* Track Background */}
-      <View style={sliderStyles.trackBackground}>
+      <View style={[sliderStyles.trackBackground, {backgroundColor: trackBgColor}]}>
         {/* Filled Track */}
         <Animated.View
           style={[
@@ -208,7 +213,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
       {/* Scale Markers */}
       <View style={sliderStyles.scaleContainer}>
         {[0, 25, 50, 75, 100].map(mark => (
-          <Text key={mark} style={sliderStyles.scaleMark}>
+          <Text key={mark} style={[sliderStyles.scaleMark, {color: scaleColor}]}>
             {mark}
           </Text>
         ))}
@@ -270,6 +275,8 @@ const sliderStyles = StyleSheet.create({
 // ============================================================================
 
 export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) => {
+  const {colors, isDark} = useTheme();
+
   // State
   const [selectedUniversity, setSelectedUniversity] = useState<UniversityConfig>(
     PRESET_UNIVERSITIES[0]
@@ -283,6 +290,39 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
   // Animations
   const aggregateAnim = React.useRef(new Animated.Value(0)).current;
   const barAnim = React.useRef(new Animated.Value(0)).current;
+
+  // Dark mode theme styles
+  const themeStyles = useMemo(() => ({
+    container: { backgroundColor: colors.card },
+    headerTitle: { color: colors.text },
+    headerSubtitle: { color: colors.textSecondary },
+    tabInactive: { backgroundColor: isDark ? colors.surfaceContainer : '#F1F5F9' },
+    tabText: { color: colors.textMuted },
+    inputLabel: { color: colors.textMuted },
+    textInput: {
+      backgroundColor: colors.inputBackground,
+      borderColor: colors.inputBorder,
+      color: colors.inputText,
+    },
+    sliderLabel: { color: colors.text },
+    programsSection: { backgroundColor: isDark ? colors.surfaceContainer : '#F8FAFC' },
+    programsTitle: { color: colors.textSecondary },
+    programChipInactive: {
+      backgroundColor: isDark ? colors.surfaceContainerHigh : '#F1F5F9',
+      borderColor: colors.border,
+    },
+    programNameInactive: { color: colors.textMuted },
+    programMeritInactive: { color: colors.textMuted },
+    comparisonToggle: { borderTopColor: colors.divider },
+    comparisonSection: { backgroundColor: isDark ? colors.surfaceContainer : '#F8FAFC' },
+    comparisonLabel: { color: colors.textSecondary },
+    comparisonCardLabel: { color: colors.textMuted },
+    comparisonCardScore: { color: colors.textMuted },
+    formulaBox: { backgroundColor: isDark ? colors.surfaceContainer : '#F8FAFC' },
+    formulaText: { color: colors.textMuted },
+    trackBg: isDark ? colors.surfaceContainerHigh : '#E2E8F0',
+    scaleColor: colors.textMuted,
+  }), [colors, isDark]);
 
   // Calculate aggregate
   const calculateAggregate = useCallback(
@@ -320,13 +360,30 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
     );
   }, [currentAggregate, selectedUniversity.programs]);
 
-  // Merit chance
+  // Improved merit chance - based on actual cutoff comparison, not just program count
   const meritChance = useMemo((): 'high' | 'medium' | 'low' | 'unlikely' => {
-    if (matchingPrograms.length >= 3) return 'high';
-    if (matchingPrograms.length >= 1) return 'medium';
-    if (currentAggregate >= (selectedUniversity.minAggregate || 50)) return 'low';
+    if (!selectedUniversity.programs || selectedUniversity.programs.length === 0) {
+      if (currentAggregate >= (selectedUniversity.minAggregate || 50) + 15) return 'high';
+      if (currentAggregate >= (selectedUniversity.minAggregate || 50) + 5) return 'medium';
+      if (currentAggregate >= (selectedUniversity.minAggregate || 50)) return 'low';
+      return 'unlikely';
+    }
+
+    // Sort programs by merit (hardest first)
+    const sorted = [...selectedUniversity.programs].sort((a, b) => b.lastMerit - a.lastMerit);
+    const highestMerit = sorted[0].lastMerit;
+    const lowestMerit = sorted[sorted.length - 1].lastMerit;
+    const medianMerit = sorted[Math.floor(sorted.length / 2)].lastMerit;
+
+    // High: aggregate >= median merit (can get into majority of programs)
+    if (currentAggregate >= medianMerit) return 'high';
+    // Medium: aggregate >= lowest merit (can get into at least some programs)
+    if (currentAggregate >= lowestMerit) return 'medium';
+    // Low: aggregate within 5% of lowest merit (close but not there)
+    if (currentAggregate >= lowestMerit - 5) return 'low';
+    // Unlikely: well below all cutoffs
     return 'unlikely';
-  }, [matchingPrograms, currentAggregate, selectedUniversity.minAggregate]);
+  }, [matchingPrograms, currentAggregate, selectedUniversity]);
 
   // Animate aggregate bar
   useEffect(() => {
@@ -368,22 +425,24 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
     }
   };
 
-  // Get chance text
+  // Get chance text - more accurate descriptions
   const getChanceText = () => {
+    const total = selectedUniversity.programs?.length || 0;
+    const matched = matchingPrograms.length;
     switch (meritChance) {
       case 'high':
-        return 'High Chance! 🎯';
+        return `Strong (${matched}/${total})`;
       case 'medium':
-        return 'Possible 💪';
+        return `Possible (${matched}/${total})`;
       case 'low':
-        return 'Challenging 📚';
+        return 'Below Cutoff';
       default:
-        return 'Very Difficult ⚠️';
+        return 'Unlikely';
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themeStyles.container]}>
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
@@ -392,8 +451,8 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
           <Icon name="analytics-outline" size={24} color="#FFF" />
         </LinearGradient>
         <View style={styles.headerText}>
-          <Text style={styles.headerTitle}>What-If Simulator</Text>
-          <Text style={styles.headerSubtitle}>
+          <Text style={[styles.headerTitle, themeStyles.headerTitle]}>What-If Simulator</Text>
+          <Text style={[styles.headerSubtitle, themeStyles.headerSubtitle]}>
             Slide to see your aggregate change
           </Text>
         </View>
@@ -407,6 +466,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
             onPress={() => setSelectedUniversity(uni)}
             style={[
               styles.tab,
+              themeStyles.tabInactive,
               selectedUniversity.id === uni.id && {
                 backgroundColor: uni.color,
               },
@@ -415,6 +475,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
             <Text
               style={[
                 styles.tabText,
+                themeStyles.tabText,
                 selectedUniversity.id === uni.id && styles.tabTextActive,
               ]}>
               {uni.shortName}
@@ -426,22 +487,24 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
       {/* Academic Inputs */}
       <View style={styles.inputsRow}>
         <View style={styles.inputBox}>
-          <Text style={styles.inputLabel}>Matric %</Text>
+          <Text style={[styles.inputLabel, themeStyles.inputLabel]}>Matric %</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, themeStyles.textInput]}
             value={matricPercent}
             onChangeText={setMatricPercent}
             keyboardType="decimal-pad"
+            placeholderTextColor={colors.placeholder}
             maxLength={5}
           />
         </View>
         <View style={styles.inputBox}>
-          <Text style={styles.inputLabel}>Inter %</Text>
+          <Text style={[styles.inputLabel, themeStyles.inputLabel]}>Inter %</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, themeStyles.textInput]}
             value={interPercent}
             onChangeText={setInterPercent}
             keyboardType="decimal-pad"
+            placeholderTextColor={colors.placeholder}
             maxLength={5}
           />
         </View>
@@ -449,7 +512,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
 
       {/* Test Score Slider */}
       <View style={styles.sliderSection}>
-        <Text style={styles.sliderLabel}>
+        <Text style={[styles.sliderLabel, themeStyles.sliderLabel]}>
           {selectedUniversity.testName} Score
         </Text>
         <CustomSlider
@@ -458,6 +521,8 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
           minimumValue={0}
           maximumValue={100}
           color={selectedUniversity.color}
+          trackBgColor={themeStyles.trackBg}
+          scaleColor={themeStyles.scaleColor}
         />
       </View>
 
@@ -511,19 +576,21 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
 
         {/* Matching Programs */}
         {selectedUniversity.programs && selectedUniversity.programs.length > 0 && (
-          <View style={styles.programsSection}>
-            <Text style={styles.programsTitle}>
+          <View style={[styles.programsSection, themeStyles.programsSection]}>
+            <Text style={[styles.programsTitle, themeStyles.programsTitle]}>
               Programs You Can Get ({matchingPrograms.length}/
               {selectedUniversity.programs.length})
             </Text>
             <View style={styles.programsGrid}>
               {selectedUniversity.programs.map(program => {
                 const isMatch = currentAggregate >= program.lastMerit;
+                const diff = currentAggregate - program.lastMerit;
                 return (
                   <View
                     key={program.name}
                     style={[
                       styles.programChip,
+                      themeStyles.programChipInactive,
                       isMatch && {
                         backgroundColor: selectedUniversity.color + '15',
                         borderColor: selectedUniversity.color,
@@ -532,11 +599,12 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                     <Icon
                       name={isMatch ? 'checkmark-circle' : 'close-circle'}
                       size={16}
-                      color={isMatch ? selectedUniversity.color : '#CBD5E1'}
+                      color={isMatch ? selectedUniversity.color : colors.textMuted}
                     />
                     <Text
                       style={[
                         styles.programName,
+                        themeStyles.programNameInactive,
                         isMatch && {color: selectedUniversity.color},
                       ]}>
                       {program.name}
@@ -544,9 +612,17 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                     <Text
                       style={[
                         styles.programMerit,
+                        themeStyles.programMeritInactive,
                         isMatch && {color: selectedUniversity.color},
                       ]}>
                       {program.lastMerit}%
+                    </Text>
+                    <Text
+                      style={[
+                        styles.programDiff,
+                        {color: isMatch ? colors.success : colors.error},
+                      ]}>
+                      {isMatch ? `+${diff.toFixed(1)}` : `${diff.toFixed(1)}`}
                     </Text>
                   </View>
                 );
@@ -557,22 +633,22 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
 
         {/* Comparison Mode */}
         <TouchableOpacity
-          style={styles.comparisonToggle}
+          style={[styles.comparisonToggle, {borderTopColor: themeStyles.comparisonToggle.borderTopColor}]}
           onPress={() => setShowComparison(!showComparison)}
           activeOpacity={0.7}>
           <Icon
             name={showComparison ? 'chevron-up' : 'git-compare-outline'}
             size={20}
-            color="#4573DF"
+            color={colors.primary}
           />
-          <Text style={styles.comparisonToggleText}>
+          <Text style={[styles.comparisonToggleText, {color: colors.primary}]}>
             {showComparison ? 'Hide Comparison' : 'Compare Scenarios'}
           </Text>
         </TouchableOpacity>
 
         {showComparison && (
-          <View style={styles.comparisonSection}>
-            <Text style={styles.comparisonLabel}>
+          <View style={[styles.comparisonSection, themeStyles.comparisonSection]}>
+            <Text style={[styles.comparisonLabel, themeStyles.comparisonLabel]}>
               What if you scored {comparisonScore}% instead?
             </Text>
             <CustomSlider
@@ -580,11 +656,13 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
               onValueChange={setComparisonScore}
               minimumValue={0}
               maximumValue={100}
-              color="#4573DF"
+              color={colors.primary}
+              trackBgColor={themeStyles.trackBg}
+              scaleColor={themeStyles.scaleColor}
             />
             <View style={styles.comparisonResult}>
               <View style={styles.comparisonCard}>
-                <Text style={styles.comparisonCardLabel}>Current</Text>
+                <Text style={[styles.comparisonCardLabel, themeStyles.comparisonCardLabel]}>Current</Text>
                 <Text
                   style={[
                     styles.comparisonCardValue,
@@ -592,17 +670,17 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                   ]}>
                   {currentAggregate.toFixed(2)}%
                 </Text>
-                <Text style={styles.comparisonCardScore}>
+                <Text style={[styles.comparisonCardScore, themeStyles.comparisonCardScore]}>
                   @ {testScore}% test
                 </Text>
               </View>
-              <Icon name="arrow-forward" size={24} color="#94A3B8" />
+              <Icon name="arrow-forward" size={24} color={colors.textMuted} />
               <View style={styles.comparisonCard}>
-                <Text style={styles.comparisonCardLabel}>If Scored</Text>
-                <Text style={[styles.comparisonCardValue, {color: '#4573DF'}]}>
+                <Text style={[styles.comparisonCardLabel, themeStyles.comparisonCardLabel]}>If Scored</Text>
+                <Text style={[styles.comparisonCardValue, {color: colors.primary}]}>
                   {comparisonAggregate.toFixed(2)}%
                 </Text>
-                <Text style={styles.comparisonCardScore}>
+                <Text style={[styles.comparisonCardScore, themeStyles.comparisonCardScore]}>
                   @ {comparisonScore}% test
                 </Text>
               </View>
@@ -610,8 +688,8 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                 style={[
                   styles.improvementBadge,
                   comparisonAggregate > currentAggregate
-                    ? {backgroundColor: '#DCFCE7'}
-                    : {backgroundColor: '#FEE2E2'},
+                    ? {backgroundColor: isDark ? '#1A2F2A' : '#DCFCE7'}
+                    : {backgroundColor: isDark ? '#2D1A1F' : '#FEE2E2'},
                 ]}>
                 <Icon
                   name={
@@ -622,8 +700,8 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                   size={16}
                   color={
                     comparisonAggregate > currentAggregate
-                      ? '#10B981'
-                      : '#EF4444'
+                      ? colors.success
+                      : colors.error
                   }
                 />
                 <Text
@@ -632,8 +710,8 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
                     {
                       color:
                         comparisonAggregate > currentAggregate
-                          ? '#10B981'
-                          : '#EF4444',
+                          ? colors.success
+                          : colors.error,
                     },
                   ]}>
                   {Math.abs(comparisonAggregate - currentAggregate).toFixed(2)}%
@@ -645,9 +723,9 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({onSimulate}) =>
       </View>
 
       {/* Formula Reference */}
-      <View style={styles.formulaBox}>
-        <Icon name="information-circle-outline" size={16} color="#64748B" />
-        <Text style={styles.formulaText}>
+      <View style={[styles.formulaBox, themeStyles.formulaBox]}>
+        <Icon name="information-circle-outline" size={16} color={colors.textMuted} />
+        <Text style={[styles.formulaText, themeStyles.formulaText]}>
           {selectedUniversity.name}: Matric ({selectedUniversity.matricWeight}%) +
           Inter ({selectedUniversity.interWeight}%) + {selectedUniversity.testName} (
           {selectedUniversity.testWeight}%)
@@ -864,6 +942,11 @@ const styles = StyleSheet.create({
   programMerit: {
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#CBD5E1',
+    marginLeft: 4,
+  },
+  programDiff: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.semibold,
     marginLeft: 4,
   },
   comparisonToggle: {

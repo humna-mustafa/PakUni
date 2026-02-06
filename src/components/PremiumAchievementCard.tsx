@@ -279,16 +279,29 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
 
   const config = PREMIUM_CARD_CONFIG[achievement.type] || PREMIUM_CARD_CONFIG.custom;
 
-  // Build share message
+  // Build HONEST share message based on actual performance
   const buildShareMessage = (): string => {
     const baseMessage = (() => {
       switch (achievement.type) {
-        case 'merit_list':
-          return `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ One step closer to my dream!\n`;
+        case 'merit_list': {
+          // Parse percentage for honest messaging
+          const percentageStr = achievement.percentage?.replace('%', '') || '0';
+          const percentageNum = parseFloat(percentageStr) || 0;
+          
+          if (percentageNum >= 85) {
+            return `🎉 Great achievement at ${achievement.universityName || 'University'}!\n\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Hard work paying off!\n`;
+          } else if (percentageNum >= 70) {
+            return `📊 Merit calculated at ${achievement.universityName || 'University'}!\n\n📈 Score: ${achievement.percentage || 'Calculated'}\n\nStrong foundation, working towards my goals!\n`;
+          } else if (percentageNum >= 50) {
+            return `📈 My merit at ${achievement.universityName || 'University'}!\n\n🎯 Score: ${achievement.percentage || 'Calculated'}\n\nRoom for growth - time to work harder!\n`;
+          } else {
+            return `🎯 Starting my journey at ${achievement.universityName || 'University'}!\n\n📊 Score: ${achievement.percentage || 'Calculated'}\n\nEvery expert was once a beginner. Hard work ahead!\n`;
+          }
+        }
         case 'admission':
-          return `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n`;
+          return `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Hard work paid off! ✨\n`;
         case 'entry_test':
-          return `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to success!\n`;
+          return `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step completed in my journey!\n`;
         case 'scholarship':
           return `💎 SCHOLARSHIP WON! 🏅\n\n📝 ${achievement.scholarshipName || 'Scholarship'}\n${achievement.percentage ? `💰 Coverage: ${achievement.percentage}\n` : ''}${achievement.universityName ? `🏛️ At: ${achievement.universityName}\n` : ''}\n`;
         default:
@@ -296,7 +309,7 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
       }
     })();
 
-    return `${baseMessage}\n#PakUni #Pakistan #Education #Success #2026\n\n📱 Made with PakUni App`;
+    return `${baseMessage}\n#PakUni #Pakistan #Education #2026\n\n📱 Made with PakUni App`;
   };
 
   const handleShare = async () => {
@@ -391,7 +404,7 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
             {/* Top celebration badge */}
             <CelebrationBadge 
               emoji={config.badge}
-              text={config.title}
+              text={achievement.title || config.title}
               color="#fff"
             />
 
@@ -403,12 +416,25 @@ export const PremiumAchievementCard: React.FC<PremiumAchievementCardProps> = ({
             </View>
 
             {/* Title section */}
-            <Text style={premiumStyles.heroTitle}>{config.title}</Text>
-            <Text style={premiumStyles.heroSubtitle}>{config.subtitle}</Text>
+            <Text style={premiumStyles.heroTitle}>{achievement.title || config.title}</Text>
+            <Text style={premiumStyles.heroSubtitle}>
+              {achievement.description || config.subtitle}
+            </Text>
 
             {/* Glass content card */}
             <GlassBackground>
               <View style={premiumStyles.infoContent}>
+                {/* Custom achievement description (if title and description both exist) */}
+                {achievement.type === 'custom' && achievement.title && achievement.description && (
+                  <View style={premiumStyles.infoRow}>
+                    <Text style={premiumStyles.infoIcon}>✨</Text>
+                    <View style={premiumStyles.infoText}>
+                      <Text style={premiumStyles.infoLabel}>Achievement</Text>
+                      <Text style={premiumStyles.infoValue}>{achievement.description}</Text>
+                    </View>
+                  </View>
+                )}
+
                 {/* University name */}
                 {achievement.universityName && (
                   <View style={premiumStyles.infoRow}>

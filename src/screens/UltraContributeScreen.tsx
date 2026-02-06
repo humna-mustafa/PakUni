@@ -553,10 +553,7 @@ const EntitySelectionStep: React.FC<{
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<EntityData[]>([]);
   const [loading, setLoading] = useState(false);
-  const [recentSearches] = useState<EntityData[]>([
-    { id: 'nust', name: 'NUST', type: 'Public', location: 'Islamabad', verified: true },
-    { id: 'lums', name: 'LUMS', type: 'Private', location: 'Lahore', verified: true },
-  ]);
+  const [popularItems, setPopularItems] = useState<EntityData[]>([]);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const searchInputRef = useRef<TextInput>(null);
@@ -569,11 +566,72 @@ const EntitySelectionStep: React.FC<{
     }).start();
     
     setTimeout(() => searchInputRef.current?.focus(), 300);
+    
+    // Load category-specific popular items
+    loadPopularItems();
   }, []);
 
-  // Debounced search - searches based on selected category
+  // Load popular items based on selected category
+  const loadPopularItems = async () => {
+    try {
+      let items: EntityData[] = [];
+      
+      if (category?.id === 'scholarship_info') {
+        const scholarships = await hybridDataService.getScholarships();
+        items = scholarships.slice(0, 6).map(s => ({
+          id: s.id || s.name.toLowerCase().replace(/\s+/g, '_'),
+          name: s.name,
+          type: (s as any).type || 'Scholarship',
+          location: s.provider || '',
+          verified: true,
+        }));
+      } else if (category?.id === 'entry_test_update') {
+        const entryTests = await hybridDataService.getEntryTests();
+        items = entryTests.slice(0, 6).map(t => ({
+          id: t.id || t.name.toLowerCase().replace(/\s+/g, '_'),
+          name: t.name,
+          type: 'Entry Test',
+          location: t.conducting_body || '',
+          verified: true,
+        }));
+      } else {
+        // Universities - show most popular ones
+        const universities = await hybridDataService.getUniversities();
+        // Prioritize well-known universities
+        const popularShortNames = ['NUST', 'LUMS', 'QAU', 'PU', 'UET', 'GIKI', 'FAST', 'IBA', 'NED', 'COMSATS', 'IIU', 'GCU'];
+        const popular = universities.filter(u => popularShortNames.includes(u.short_name));
+        const others = universities.filter(u => !popularShortNames.includes(u.short_name)).slice(0, 6 - popular.length);
+        items = [...popular.slice(0, 6), ...others].slice(0, 6).map(u => ({
+          id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
+          name: u.name,
+          type: u.type || 'University',
+          location: (u as any).city || '',
+          verified: true,
+        }));
+      }
+      
+      setPopularItems(items);
+    } catch (error) {
+      console.error('Error loading popular items:', error);
+    }
+  };
+
+  // Helper function to check if text matches query (case-insensitive, partial match)
+  const matchesQuery = (text: string | null | undefined, query: string): boolean => {
+    if (!text) return false;
+    return text.toLowerCase().includes(query);
+  };
+
+  // Helper function to check if any item in array matches query
+  const arrayMatchesQuery = (arr: string[] | null | undefined, query: string): boolean => {
+    if (!arr || !Array.isArray(arr)) return false;
+    return arr.some(item => item && item.toLowerCase().includes(query));
+  };
+
+  // Debounced search - searches based on selected category with comprehensive matching
   useEffect(() => {
-    if (searchQuery.length < 2) {
+    // Allow searching with just 1 character for better UX
+    if (searchQuery.length < 1) {
       setSuggestions([]);
       return;
     }
@@ -581,54 +639,101 @@ const EntitySelectionStep: React.FC<{
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const query = searchQuery.toLowerCase();
+        const query = searchQuery.toLowerCase().trim();
         let matched: EntityData[] = [];
 
         // Search different data sources based on category
         if (category?.id === 'scholarship_info') {
-          // Search scholarships for scholarship-related categories
+          // Comprehensive scholarship search
           const scholarships = await hybridDataService.getScholarships();
           matched = scholarships
-            .filter(s => 
-              s.name.toLowerCase().includes(query) || 
-              (s.provider && s.provider.toLowerCase().includes(query)) ||
-              (s.eligibility && s.eligibility.some(e => e.toLowerCase().includes(query)))
-            )
-            .slice(0, 8)
+            .filter(s => {
+              // Check multiple fields for matching
+              const sData = s as any;
+              return (
+                matchesQuery(s.name, query) ||
+                matchesQuery(s.provider, query) ||
+                matchesQuery(s.id, query) ||
+                matchesQuery(sData.description, query) ||
+                matchesQuery(sData.type, query) ||
+                matchesQuery(sData.coverageLabel, query) ||
+                arrayMatchesQuery(sData.eligibility, query) ||
+                arrayMatchesQuery(sData.targetAudience, query) ||
+                arrayMatchesQuery(sData.provinces, query) ||
+                arrayMatchesQuery(sData.otherBenefits, query) ||
+                // Search by partial ID tokens (e.g., "csc" for "csc-scholarship")
+                (s.id && s.id.split('-').some((part: string) => part.toLowerCase().includes(query))) ||
+                // Search abbreviations in name (e.g., "HEC" in names)
+                (s.name && s.name.split(' ').some(word => word.toLowerCase() === query))
+              );
+            })
+            .slice(0, 12)
             .map(s => ({
               id: s.id || s.name.toLowerCase().replace(/\s+/g, '_'),
               name: s.name,
-              type: s.type || 'Scholarship',
+              type: (s as any).type || 'Scholarship',
               location: s.provider || '',
               verified: true,
             }));
         } else if (category?.id === 'entry_test_update') {
-          // Search entry tests for entry test categories
+          // Comprehensive entry test search
           const entryTests = await hybridDataService.getEntryTests();
           matched = entryTests
-            .filter(t => 
-              t.name.toLowerCase().includes(query) || 
-              (t.conducting_body && t.conducting_body.toLowerCase().includes(query)) ||
-              (t.full_name && t.full_name.toLowerCase().includes(query))
-            )
-            .slice(0, 8)
+            .filter(t => {
+              const tData = t as any;
+              return (
+                matchesQuery(t.name, query) ||
+                matchesQuery(t.conducting_body, query) ||
+                matchesQuery(t.full_name, query) ||
+                matchesQuery(t.id, query) ||
+                matchesQuery(tData.description, query) ||
+                arrayMatchesQuery(tData.applicable_for, query) ||
+                arrayMatchesQuery(tData.provinces, query) ||
+                // Search by partial ID (e.g., "mdcat" for "mdcat-2026")
+                (t.id && t.id.split('-').some((part: string) => part.toLowerCase().includes(query))) ||
+                // Search by abbreviation (name often is abbreviation like "MDCAT", "ECAT")
+                (t.name && t.name.toLowerCase() === query) ||
+                // Search applicable programs
+                (tData.applicable_for && tData.applicable_for.some((prog: string) => 
+                  prog.toLowerCase().includes(query) || query.includes(prog.toLowerCase())
+                ))
+              );
+            })
+            .slice(0, 12)
             .map(t => ({
               id: t.id || t.name.toLowerCase().replace(/\s+/g, '_'),
-              name: t.name,
+              name: `${t.name}${t.full_name ? ` (${t.full_name})` : ''}`,
               type: 'Entry Test',
               location: t.conducting_body || '',
               verified: true,
             }));
         } else {
-          // Default: Search universities (for merit_update, fee_update, date_correction, university_info)
+          // Comprehensive university search (for merit_update, fee_update, date_correction, university_info)
           const universities = await hybridDataService.getUniversities();
           matched = universities
-            .filter(u => 
-              u.name.toLowerCase().includes(query) || 
-              u.short_name.toLowerCase().includes(query) ||
-              ((u as any).city && (u as any).city.toLowerCase().includes(query))
-            )
-            .slice(0, 8)
+            .filter(u => {
+              const uData = u as any;
+              return (
+                matchesQuery(u.name, query) ||
+                matchesQuery(u.short_name, query) ||
+                matchesQuery(uData.city, query) ||
+                matchesQuery(uData.province, query) ||
+                matchesQuery(uData.description, query) ||
+                matchesQuery(uData.type, query) ||
+                matchesQuery(uData.address, query) ||
+                matchesQuery(uData.ranking_hec, query) ||
+                arrayMatchesQuery(uData.campuses, query) ||
+                // Exact short_name match (important for abbreviations like "NUST", "LUMS")
+                (u.short_name && u.short_name.toLowerCase() === query) ||
+                // Search by individual words in name
+                (u.name && u.name.split(' ').some(word => 
+                  word.toLowerCase().startsWith(query) || word.toLowerCase() === query
+                )) ||
+                // Search by ID
+                (String(u.id).includes(query))
+              );
+            })
+            .slice(0, 12)
             .map(u => ({
               id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
               name: u.name,
@@ -641,10 +746,11 @@ const EntitySelectionStep: React.FC<{
         setSuggestions(matched);
       } catch (error) {
         console.error('Search error:', error);
+        setSuggestions([]);
       } finally {
         setLoading(false);
       }
-    }, 300);
+    }, 250); // Reduced debounce for faster feedback
 
     return () => clearTimeout(timer);
   }, [searchQuery, category]);
@@ -777,20 +883,27 @@ const EntitySelectionStep: React.FC<{
         </AnimatedPressable>
       )}
 
-      {/* Recent Searches */}
-      {searchQuery.length === 0 && !selected && (
+      {/* Popular/Recent Items */}
+      {searchQuery.length === 0 && !selected && popularItems.length > 0 && (
         <View style={styles.recentContainer}>
           <Text style={[styles.suggestionsLabel, { color: colors.textSecondary }]}>
-            Popular
+            Popular {category?.id === 'scholarship_info' ? 'Scholarships' : 
+                     category?.id === 'entry_test_update' ? 'Entry Tests' : 'Universities'}
           </Text>
           <View style={styles.recentChips}>
-            {recentSearches.map((entity) => (
+            {popularItems.map((entity) => (
               <TouchableOpacity
                 key={entity.id}
                 style={[styles.recentChip, { backgroundColor: colors.card }]}
                 onPress={() => handleSelectEntity(entity)}>
-                <Icon name="school-outline" size={14} color={colors.primary} />
-                <Text style={[styles.recentChipText, { color: colors.text }]}>{entity.name}</Text>
+                <Icon 
+                  name={category?.id === 'scholarship_info' ? 'ribbon-outline' : 
+                        category?.id === 'entry_test_update' ? 'document-text-outline' : 
+                        'school-outline'} 
+                  size={14} 
+                  color={colors.primary} 
+                />
+                <Text style={[styles.recentChipText, { color: colors.text }]} numberOfLines={1}>{entity.name}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -826,6 +939,27 @@ const UpdateDetailsStep: React.FC<{
     }).start();
   }, []);
 
+  // Helper to check if a string looks like a valid date
+  const isValidDateFormat = (value: string): boolean => {
+    const trimmed = value.trim();
+    // "March 15, 2025" or "15 March 2025" etc.
+    const monthNamePattern = /^\d{1,2}\s+\w+[,.]?\s*\d{4}$|^\w+\s+\d{1,2}[,.]?\s*\d{4}$/i;
+    // "15/03/2025" or "15-03-2025" or "03/15/2025"
+    const slashDashPattern = /^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/;
+    // "2025-03-15" (ISO)
+    const isoPattern = /^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/;
+    // "March 2025" or "Mar 2025"
+    const monthYearPattern = /^\w+[,.]?\s*\d{4}$/i;
+
+    if (monthNamePattern.test(trimmed) || slashDashPattern.test(trimmed) || isoPattern.test(trimmed) || monthYearPattern.test(trimmed)) {
+      // Extra check: try parsing with Date to catch nonsense
+      const parsed = Date.parse(trimmed);
+      // If Date.parse fails, still allow it if it matches our patterns (some formats like DD/MM/YYYY won't parse correctly)
+      return true;
+    }
+    return false;
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.field && !formData.customField.trim()) {
@@ -833,6 +967,8 @@ const UpdateDetailsStep: React.FC<{
     }
     if (!formData.newValue.trim()) {
       newErrors.newValue = 'Enter the correct value';
+    } else if (category?.id === 'date_correction' && !isValidDateFormat(formData.newValue)) {
+      newErrors.newValue = 'Please enter a valid date (e.g., "March 15, 2025", "15/03/2025", or "2025-03-15")';
     }
     if (!formData.reason.trim()) {
       newErrors.reason = 'Brief reason required';

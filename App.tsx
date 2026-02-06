@@ -13,6 +13,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
 import {ThemeProvider, useTheme, AuthProvider} from './src/contexts';
 import {GlobalErrorProvider, ToastProvider, OfflineNotice, ConnectionRestoredToast, preloadUniversityLogos} from './src/components';
+import {View, Text} from 'react-native';
 import {analytics} from './src/services/analytics';
 import {supabase} from './src/services/supabase';
 import {errorReportingService} from './src/services/errorReporting';
@@ -65,85 +66,28 @@ const linking = {
 
 function AppContent(): React.JSX.Element {
   const {isDark, colors} = useTheme();
+  const [showNav, setShowNav] = React.useState(false);
 
-  useEffect(() => {
-    // Initialize all services
-    const initializeServices = async () => {
-      try {
-        // Initialize analytics
-        analytics.initialize();
-        analytics.trackEvent('app_opened');
-        
-        // Initialize error reporting
-        await errorReportingService.initialize();
-        
-        // Initialize offline sync
-        await offlineSyncService.initialize();
-        
-        // Initialize contribution automation service
-        await contributionAutomationService.initialize();
-        
-        // Preload top university logos for instant display
-        // This runs in background and caches logos locally via FastImage
-        preloadUniversityLogos(TOP_UNIVERSITY_IDS);
-        
-        logger.info('All services initialized successfully', undefined, 'App');
-      } catch (error) {
-        logger.error('Service initialization failed', error as Error, 'App');
-      }
-    };
-    
-    initializeServices();
-    
-    // Handle deep links for OAuth
-    const handleDeepLink = async (event: {url: string}) => {
-      logger.debug('Received deep link URL', {url: event.url}, 'DeepLink');
-      
-      // Handle Supabase OAuth callback
-      if (event.url.includes('auth/callback') || event.url.includes('auth/v1/callback')) {
-        try {
-          const url = new URL(event.url);
-          const accessToken = url.searchParams.get('access_token') || 
-                             url.hash?.match(/access_token=([^&]*)/)?.[1];
-          const refreshToken = url.searchParams.get('refresh_token') || 
-                              url.hash?.match(/refresh_token=([^&]*)/)?.[1];
-          
-          if (accessToken && refreshToken) {
-            logger.debug('Setting session from OAuth callback', null, 'DeepLink');
-            await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
-          }
-        } catch (error) {
-          logger.error('Error processing OAuth callback', error as Error, 'DeepLink');
-          await errorReportingService.reportError(
-            error instanceof Error ? error : new Error(String(error)),
-            {
-              userAction: 'OAuthCallback',
-              additionalContext: { severity: 'high' }
-            }
-          );
-        }
-      }
-    };
+  React.useEffect(() => {
+    console.log('[App] AppContent mounted, waiting 500ms for nav...');
+    // Delay navigation rendering - gives React time to stabilize
+    const delay = setTimeout(() => {
+      console.log('[App] Setting showNav = true');
+      setShowNav(true);
+    }, 500);
+    return () => clearTimeout(delay);
+  }, []);
 
-    // Listen for deep links
-    const subscription = Linking.addEventListener('url', handleDeepLink);
-    
-    // Check for initial URL (app opened via deep link)
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink({url});
-      }
-    });
-    
-    return () => {
-      subscription.remove();
-      analytics.endSession();
-      analytics.cleanup();
-      offlineSyncService.cleanup();
-    };
+  React.useEffect(() => {
+    console.log('[App] showNav changed to:', showNav);
+  }, [showNav]);
+
+  React.useEffect(() => {
+    // Fire and forget  initialization - don't block UI
+    Promise.resolve().then(() => {
+      analytics.initialize && analytics.initialize();
+      analytics.trackEvent && analytics.trackEvent('app_opened');
+    }).catch(e => logger.error('Analytics failed', e as Error, 'App'));
   }, []);
 
   return (
@@ -153,9 +97,12 @@ function AppContent(): React.JSX.Element {
           barStyle={isDark ? 'light-content' : 'dark-content'}
           backgroundColor={colors.background}
         />
-        <OfflineNotice position="top" />
-        <ConnectionRestoredToast />
-        <AppNavigator linking={linking} />
+        {showNav && <>
+          <OfflineNotice position="top" />
+          <ConnectionRestoredToast />
+          <AppNavigator linking={linking} />
+        </>}
+        {!showNav && <View style={{flex: 1, backgroundColor: colors.background}} />}
       </ToastProvider>
     </GlobalErrorProvider>
   );

@@ -782,36 +782,6 @@ const SettingsScreen: React.FC = () => {
               onPress={() => navigation.navigate('ContactSupport' as never)}
               index={11}
             />
-            <View style={[styles.divider, {backgroundColor: colors.border}]} />
-            <SettingItem
-              icon="bug-outline"
-              iconColor="#EF4444"
-              title="Report an Issue"
-              subtitle="Found a bug? Let us know"
-              colors={colors}
-              onPress={() => navigation.navigate('ContactSupport' as never)}
-              index={12}
-            />
-            <View style={[styles.divider, {backgroundColor: colors.border}]} />
-            <SettingItem
-              icon="bulb-outline"
-              iconColor="#F59E0B"
-              title="Suggest a Feature"
-              subtitle="Help us improve the app"
-              colors={colors}
-              onPress={() => navigation.navigate('ContactSupport' as never)}
-              index={13}
-            />
-            <View style={[styles.divider, {backgroundColor: colors.border}]} />
-            <SettingItem
-              icon="document-attach-outline"
-              iconColor="#10B981"
-              title="Submit Resources"
-              subtitle="Share merit lists, past papers & more"
-              colors={colors}
-              onPress={() => navigation.navigate('ContactSupport' as never)}
-              index={14}
-            />
           </Section>
 
           {/* Support */}

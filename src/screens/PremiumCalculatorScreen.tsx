@@ -13,6 +13,7 @@ import {
   StatusBar,
   Platform,
   KeyboardAvoidingView,
+  Share,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -36,6 +37,7 @@ const isMediumScreen = SCREEN_WIDTH >= 375 && SCREEN_WIDTH < 414;
 
 // Storage key for persisting calculator inputs
 const CALCULATOR_STORAGE_KEY = '@pakuni_calculator_inputs';
+const CUSTOM_FORMULAS_STORAGE_KEY = '@pakuni_custom_formulas';
 
 interface CalculationResult {
   aggregate: number;
@@ -360,6 +362,7 @@ const PremiumCalculatorScreen = () => {
   const [selectedEducation, setSelectedEducation] = useState('fsc_pre_engineering');
   const [selectedFormula, setSelectedFormula] = useState<MeritFormulaData | null>(null);
   const [showFormulaModal, setShowFormulaModal] = useState(false);
+  const [customFormulas, setCustomFormulas] = useState<MeritFormulaData[]>([]);
 
   // Result
   const [results, setResults] = useState<CalculationResult[]>([]);
@@ -417,6 +420,47 @@ const PremiumCalculatorScreen = () => {
     };
     saveInputs();
   }, [matricMarks, matricTotal, interMarks, interTotal, entryTestMarks, entryTestTotal, isHafiz, selectedEducation]);
+
+  // Load custom formulas from AsyncStorage
+  const loadCustomFormulas = useCallback(async () => {
+    try {
+      const data = await AsyncStorage.getItem(CUSTOM_FORMULAS_STORAGE_KEY);
+      if (data) {
+        const parsed = JSON.parse(data);
+        const converted: MeritFormulaData[] = parsed.map((cf: any) => ({
+          id: `custom_${cf.id}`,
+          name: cf.name,
+          university: `Custom: ${cf.name}`,
+          description: 'Custom formula created by you',
+          matric_weightage: cf.matricWeight,
+          inter_weightage: cf.interWeight,
+          entry_test_weightage: cf.testWeight,
+          hafiz_bonus: 0,
+          applicable_fields: ['All Programs'],
+          entry_test_name: cf.testName,
+          formula_expression: `Aggregate = (Matric × ${cf.matricWeight}%) + (Inter × ${cf.interWeight}%) + (${cf.testName} × ${cf.testWeight}%)`,
+          official_link: '',
+        }));
+        setCustomFormulas(converted);
+      } else {
+        setCustomFormulas([]);
+      }
+    } catch (error) {
+      logger.debug('Failed to load custom formulas', error, 'Calculator');
+    }
+  }, []);
+
+  // Load custom formulas on mount
+  useEffect(() => {
+    loadCustomFormulas();
+  }, [loadCustomFormulas]);
+
+  // Reload custom formulas when formula modal opens
+  useEffect(() => {
+    if (showFormulaModal) {
+      loadCustomFormulas();
+    }
+  }, [showFormulaModal, loadCustomFormulas]);
 
   // Filter formulas based on education system
   const applicableFormulas = useMemo(() => {
@@ -525,7 +569,8 @@ const PremiumCalculatorScreen = () => {
       const result = calculateSingleFormula(selectedFormula);
       setResults([result]);
     } else {
-      const allResults = applicableFormulas.map(f => calculateSingleFormula(f));
+      const allFormulas = [...applicableFormulas, ...customFormulas];
+      const allResults = allFormulas.map(f => calculateSingleFormula(f));
       allResults.sort((a, b) => b.aggregate - a.aggregate);
       setResults(allResults);
     }
@@ -577,6 +622,57 @@ const PremiumCalculatorScreen = () => {
     Haptics.light();
     setShareResult(result);
     setShowShareModal(true);
+  };
+
+  // Handle sharing all results at once with HONEST messaging
+  const handleShareAllResults = async () => {
+    if (results.length === 0) return;
+    Haptics.light();
+    
+    const resultLines = results.map((r) => {
+      const rawChance = getChanceLevel(r.aggregate);
+      const emoji = rawChance === 'high' ? '🟢' : rawChance === 'medium' ? '🟡' : '🔴';
+      // Honest labels instead of misleading "Fair Chance"
+      let chanceLabel: string;
+      switch (rawChance) {
+        case 'high': chanceLabel = 'Strong Chances'; break;
+        case 'medium': chanceLabel = 'Building Momentum'; break;
+        case 'low': chanceLabel = 'Room to Grow'; break;
+        case 'unlikely': chanceLabel = 'Focus Area'; break;
+        default: chanceLabel = 'Calculated';
+      }
+      return `${emoji} ${r.formula.name}: ${r.aggregate.toFixed(2)}% (${chanceLabel})`;
+    }).join('\n');
+    
+    // Get honest prefix based on top score
+    const topAggregate = results[0].aggregate;
+    let honestPrefix: string;
+    let hashtag: string;
+    if (topAggregate >= 85) {
+      honestPrefix = '🎉 Great achievement on my merit results!';
+      hashtag = '#Achievement';
+    } else if (topAggregate >= 70) {
+      honestPrefix = '📊 My merit results - strong foundation, working towards my goals!';
+      hashtag = '#Progress';
+    } else if (topAggregate >= 50) {
+      honestPrefix = '📈 My current merit scores - room for growth, time to work harder!';
+      hashtag = '#JourneyToExcellence';
+    } else {
+      honestPrefix = '🎯 Starting my journey - every expert was once a beginner!';
+      hashtag = '#NeverGiveUp';
+    }
+    
+    const message = `${honestPrefix}\n\n${resultLines}\n\n${hashtag} #PakUni\n\n📱 Calculated with PakUni App`;
+    
+    try {
+      await Share.share({
+        title: 'My Merit Journey - PakUni',
+        message,
+      });
+      Haptics.success();
+    } catch (error) {
+      // User cancelled
+    }
   };
 
   // Perform the actual share
@@ -747,6 +843,30 @@ const PremiumCalculatorScreen = () => {
                   </Text>
                 </TouchableOpacity>
               )}
+
+              {/* Create Custom Formula - Prominent CTA */}
+              <TouchableOpacity
+                style={[
+                  styles.customFormulaCta,
+                  {backgroundColor: isDark ? '#10B98115' : '#ECFDF5', borderColor: '#10B981'},
+                ]}
+                onPress={() => (navigation as any).navigate('Tools')}
+                activeOpacity={0.8}>
+                <LinearGradient
+                  colors={['#10B981', '#059669']}
+                  style={styles.customFormulaCtaIcon}>
+                  <Icon name="flask-outline" family="Ionicons" size={20} color="#FFFFFF" />
+                </LinearGradient>
+                <View style={styles.customFormulaCtaContent}>
+                  <Text style={[styles.customFormulaCtaTitle, {color: colors.text}]}>
+                    Create Custom Formula
+                  </Text>
+                  <Text style={[styles.customFormulaCtaSubtitle, {color: colors.textSecondary}]}>
+                    Build your own weightage formula
+                  </Text>
+                </View>
+                <Icon name="arrow-forward-circle" family="Ionicons" size={24} color="#10B981" />
+              </TouchableOpacity>
             </View>
 
             {/* Marks Input Section */}
@@ -882,6 +1002,19 @@ const PremiumCalculatorScreen = () => {
                     onShare={handleShareResult}
                   />
                 ))}
+
+                {/* Share All Results Button */}
+                {results.length > 1 && (
+                  <TouchableOpacity
+                    style={[styles.shareAllButton, {backgroundColor: colors.primary}]}
+                    onPress={handleShareAllResults}
+                    activeOpacity={0.8}>
+                    <Icon name="share-social-outline" family="Ionicons" size={18} color="#FFFFFF" />
+                    <Text style={styles.shareAllButtonText}>
+                      Share All {results.length} Results
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </Animated.View>
             )}
 
@@ -1210,6 +1343,64 @@ const PremiumCalculatorScreen = () => {
                 </TouchableOpacity>
               ))}
               
+              {/* Custom Formulas Section */}
+              {customFormulas.length > 0 && (
+                <>
+                  <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, marginBottom: 8}}>
+                    <Icon name="construct-outline" family="Ionicons" size={18} color="#10B981" />
+                    <Text style={[styles.formulaCategoryTitle, {color: colors.text, marginTop: 0, marginBottom: 0}]}>Your Custom Formulas</Text>
+                  </View>
+                  {customFormulas.map(formula => (
+                    <TouchableOpacity
+                      key={formula.id}
+                      style={[
+                        styles.formulaOption,
+                        {
+                          backgroundColor:
+                            selectedFormula?.id === formula.id
+                              ? `${colors.primary}10`
+                              : colors.background,
+                          borderColor:
+                            selectedFormula?.id === formula.id ? colors.primary : 'transparent',
+                        },
+                      ]}
+                      onPress={() => {
+                        setSelectedFormula(formula);
+                        setShowFormulaModal(false);
+                      }}>
+                      <Icon name="flask-outline" family="Ionicons" size={28} color="#10B981" />
+                      <View style={styles.formulaOptionInfo}>
+                        <Text style={[styles.formulaName, {color: colors.text}]}>
+                          {formula.name}
+                        </Text>
+                        <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>
+                          {formula.university}
+                        </Text>
+                        <View style={styles.formulaWeights}>
+                          <View style={[styles.weightBadge, {backgroundColor: `${colors.primary}15`}]}>
+                            <Text style={[styles.weightText, {color: colors.primary}]}>
+                              {formula.matric_weightage}% Matric
+                            </Text>
+                          </View>
+                          <View style={[styles.weightBadge, {backgroundColor: `${colors.success}15`}]}>
+                            <Text style={[styles.weightText, {color: colors.success}]}>
+                              {formula.inter_weightage}% Inter
+                            </Text>
+                          </View>
+                          {formula.entry_test_weightage > 0 && (
+                            <View style={[styles.weightBadge, {backgroundColor: `${colors.warning}15`}]}>
+                              <Text style={[styles.weightText, {color: colors.warning}]}>
+                                {formula.entry_test_weightage}% {formula.entry_test_name}
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </>
+              )}
+
               <View style={{height: 50}} />
             </ScrollView>
           </View>
@@ -1445,6 +1636,34 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.medium,
     flex: 1,
   },
+  customFormulaCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderRadius: RADIUS.xl,
+    borderWidth: 1.5,
+    marginTop: SPACING.sm,
+    gap: SPACING.sm,
+  },
+  customFormulaCtaIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  customFormulaCtaContent: {
+    flex: 1,
+  },
+  customFormulaCtaTitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  customFormulaCtaSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.medium,
+    marginTop: 2,
+  },
   inputCard: {
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
@@ -1575,6 +1794,21 @@ const styles = StyleSheet.create({
   },
   resultsSection: {
     marginTop: SPACING.md,
+  },
+  shareAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    borderRadius: RADIUS.xl,
+    marginTop: SPACING.xs,
+    marginBottom: SPACING.sm,
+  },
+  shareAllButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   resultsSectionHeader: {
     marginBottom: SPACING.md,

@@ -7,6 +7,7 @@ export interface CareerField {
   iconName: string;
   iconColor: string;
   description: string;
+  duration: string; // Total education duration shown on cards
   scope_pakistan: 'excellent' | 'good' | 'moderate' | 'limited';
   demand_trend: 'rising' | 'stable' | 'declining';
   average_starting_salary: number; // PKR per month
@@ -45,6 +46,7 @@ export const CAREER_FIELDS: CareerField[] = [
     iconName: 'medkit',
     iconColor: '#E53935',
     description: 'Become a licensed physician to diagnose and treat illnesses. Most respected profession in Pakistan with excellent job security.',
+    duration: '5 years + 1 year house job',
     scope_pakistan: 'excellent',
     demand_trend: 'rising',
     average_starting_salary: 100000,
@@ -99,6 +101,7 @@ export const CAREER_FIELDS: CareerField[] = [
     iconName: 'happy',
     iconColor: '#EC407A',
     description: 'Specialize in oral health, from routine cleanings to complex surgeries. Growing field with excellent private practice potential.',
+    duration: '4 years + 1 year house job',
     scope_pakistan: 'good',
     demand_trend: 'rising',
     average_starting_salary: 80000,
@@ -151,6 +154,7 @@ export const CAREER_FIELDS: CareerField[] = [
     name: 'Software Engineering',
     iconName: 'code-slash',
     iconColor: '#1E88E5',
+    duration: '4 years',
     description: 'Design and develop software applications. Highest paying field in Pakistan with excellent international remote work opportunities.',
     scope_pakistan: 'excellent',
     demand_trend: 'rising',
@@ -205,6 +209,7 @@ export const CAREER_FIELDS: CareerField[] = [
     name: 'Electrical Engineering',
     iconName: 'flash',
     iconColor: '#FFA000',
+    duration: '4 years',
     description: 'Design electrical systems, power generation, and electronics. Strong demand in power sector and manufacturing.',
     scope_pakistan: 'good',
     demand_trend: 'stable',
@@ -258,6 +263,7 @@ export const CAREER_FIELDS: CareerField[] = [
     name: 'Civil Engineering',
     iconName: 'construct',
     iconColor: '#FB8C00',
+    duration: '4 years',
     description: 'Design and oversee construction of infrastructure like roads, bridges, and buildings.',
     scope_pakistan: 'good',
     demand_trend: 'stable',
@@ -310,6 +316,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'business-finance',
     name: 'Business & Finance',
+    duration: '4 years (BBA/BS)',
     iconName: 'trending-up',
     iconColor: '#43A047',
     description: 'Manage business operations, investments, and financial planning. Essential for corporate and banking sectors.',
@@ -363,6 +370,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'chartered-accountant',
     name: 'Chartered Accountant (CA)',
+    duration: '4-6 years',
     iconName: 'calculator',
     iconColor: '#2E7D32',
     description: 'Most prestigious commerce qualification. Become an expert in auditing, taxation, and financial management.',
@@ -418,6 +426,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'law',
     name: 'Law & Legal Practice',
+    duration: '5 years (LLB)',
     iconName: 'shield-checkmark',
     iconColor: '#5D4037',
     description: 'Advocate for justice in courts, provide legal counsel, or work in corporate law. Respected profession with diverse specializations.',
@@ -472,6 +481,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'graphic-design',
     name: 'Graphic Design & UI/UX',
+    duration: '4 years',
     iconName: 'brush',
     iconColor: '#7B1FA2',
     description: 'Create visual content for brands, apps, and websites. Growing field with freelancing opportunities.',
@@ -525,6 +535,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'teaching',
     name: 'Teaching & Education',
+    duration: '4 years (B.Ed/BS)',
     iconName: 'school',
     iconColor: '#1976D2',
     description: 'Shape future generations as a teacher. From school teaching to university professor.',
@@ -580,6 +591,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'journalism',
     name: 'Journalism & Media',
+    duration: '4 years',
     iconName: 'videocam',
     iconColor: '#D32F2F',
     description: 'Report news, create content, and work in broadcasting or digital media.',
@@ -632,6 +644,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'civil-services',
     name: 'Civil Services (CSS/PMS)',
+    duration: '1-2 years prep',
     iconName: 'flag',
     iconColor: '#2E7D32',
     description: 'Premier administrative service of Pakistan. Bureaucracy roles in administration, police, foreign service, etc.',
@@ -687,6 +700,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'aviation-pilot',
     name: 'Commercial Pilot',
+    duration: '18-24 months (CPL)',
     iconName: 'airplane',
     iconColor: '#0288D1',
     description: 'Fly commercial aircraft for airlines. High-status, high-responsibility job with travel benefits.',
@@ -743,6 +757,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'data-science-ai',
     name: 'Data Science & AI',
+    duration: '4 years',
     iconName: 'hardware-chip',
     iconColor: '#7C4DFF',
     description: 'Analyze complex data and build AI models. The future of tech industry with massive global demand.',
@@ -797,6 +812,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'psychology',
     name: 'Psychology & Therapy',
+    duration: '4 years (BS) + 2 years (MS)',
     iconName: 'people',
     iconColor: '#00897B',
     description: 'Study human behavior and mental processes. Help people overcome mental health challenges.',
@@ -853,6 +869,7 @@ export const CAREER_FIELDS: CareerField[] = [
     name: 'Pharmacy (Pharm-D)',
     iconName: 'flask',
     iconColor: '#FF7043',
+    duration: '5 years',
     description: 'Become a Doctor of Pharmacy. Work in hospitals, pharmaceuticals, or own a pharmacy. Growing field with excellent scope.',
     scope_pakistan: 'excellent',
     demand_trend: 'rising',
@@ -904,6 +921,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'nursing',
     name: 'Nursing (BSN)',
+    duration: '4 years (BSN)',
     iconName: 'heart-circle',
     iconColor: '#F06292',
     description: 'Provide patient care in hospitals and clinics. High demand profession with international opportunities.',
@@ -958,6 +976,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'veterinary',
     name: 'Veterinary Medicine (DVM)',
+    duration: '5 years',
     iconName: 'paw',
     iconColor: '#8D6E63',
     description: 'Become an animal doctor. Work with livestock, pets, or wildlife. Growing field with agriculture importance in Pakistan.',
@@ -1013,6 +1032,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'architecture',
     name: 'Architecture (B.Arch)',
+    duration: '5 years',
     iconName: 'business',
     iconColor: '#5C6BC0',
     description: 'Design buildings and spaces. Blend art with engineering. Respected profession with creative expression.',
@@ -1069,6 +1089,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'mechanical-engineering',
     name: 'Mechanical Engineering',
+    duration: '4 years',
     iconName: 'settings',
     iconColor: '#607D8B',
     description: 'Design and manufacture machines, vehicles, and industrial equipment. Core engineering discipline with wide applications.',
@@ -1122,6 +1143,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'chemical-engineering',
     name: 'Chemical Engineering',
+    duration: '4 years',
     iconName: 'water',
     iconColor: '#26A69A',
     description: 'Process engineering for chemicals, pharmaceuticals, and petrochemicals. High demand in industrial Pakistan.',
@@ -1176,6 +1198,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'acca',
     name: 'ACCA (Chartered Certified Accountant)',
+    duration: '3-4 years',
     iconName: 'document-text',
     iconColor: '#43A047',
     description: 'International accounting qualification from UK. Alternative to CA with more flexibility and global recognition.',
@@ -1229,6 +1252,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'banking',
     name: 'Banking & Financial Services',
+    duration: '4 years (BBA/BS)',
     iconName: 'card',
     iconColor: '#1565C0',
     description: 'Work in banks from operations to investment banking. Stable career with good growth in Pakistan financial sector.',
@@ -1285,6 +1309,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'army-officer',
     name: 'Pakistan Army Officer',
+    duration: '2 years (PMA)',
     iconName: 'shield',
     iconColor: '#2E7D32',
     description: 'Serve the nation as a commissioned officer. Highly respected career with excellent benefits and discipline.',
@@ -1341,6 +1366,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'agriculture',
     name: 'Agriculture & Agribusiness',
+    duration: '4 years (BSc)',
     iconName: 'leaf',
     iconColor: '#689F38',
     description: 'Modern farming, agribusiness, and food science. Critical sector for Pakistan economy with growing opportunities.',
@@ -1395,6 +1421,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'mass-communication',
     name: 'Mass Communication & Media',
+    duration: '4 years',
     iconName: 'videocam',
     iconColor: '#FF5722',
     description: 'Work in TV, radio, digital media, and advertising. Creative field with diverse opportunities.',
@@ -1450,6 +1477,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'hotel-management',
     name: 'Hotel & Tourism Management',
+    duration: '4 years',
     iconName: 'bed',
     iconColor: '#8E24AA',
     description: 'Manage hotels, restaurants, and tourism services. Growing industry with international opportunities.',
@@ -1504,6 +1532,7 @@ export const CAREER_FIELDS: CareerField[] = [
   {
     id: 'human-resources',
     name: 'Human Resource Management',
+    duration: '4 years (BBA/BS)',
     iconName: 'people-circle',
     iconColor: '#00ACC1',
     description: 'Manage recruitment, training, and employee relations. Essential corporate function with good growth.',

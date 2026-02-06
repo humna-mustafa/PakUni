@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useRef, useEffect} from 'react';
+import React, {useState, useMemo, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Animated,
   StatusBar,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute, useNavigation} from '@react-navigation/native';
@@ -28,6 +29,20 @@ import {Icon, FeatureIcon} from '../components/icons';
 import {logger} from '../utils/logger';
 import UniversityLogo from '../components/UniversityLogo';
 import {analytics} from '../services/analytics';
+import {ErrorBoundary} from '../components/ErrorBoundary';
+
+// Safe tab wrapper to catch render errors
+const SafeTabContent: React.FC<{children: React.ReactNode; fallbackMessage?: string; colors: any}> = ({children, fallbackMessage = 'Information coming soon', colors}) => {
+  try {
+    return <>{children}</>;
+  } catch (error) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32}}>
+        <Text style={{color: colors?.textSecondary || '#666', textAlign: 'center'}}>{fallbackMessage}</Text>
+      </View>
+    );
+  }
+};
 
 // Fallback LinearGradient component
 let LinearGradient: React.ComponentType<any>;
@@ -347,14 +362,22 @@ const PremiumUniversityDetailScreen = () => {
     return getScholarshipsForUniversity(university.short_name);
   }, [university]);
 
-  const meritFormulas = useMemo(() => 
-    MERIT_FORMULAS.filter(f => 
-      f.university.toLowerCase().includes(university?.short_name?.toLowerCase() || '') ||
-      f.university.toLowerCase().includes('general') ||
-      f.university.toLowerCase().includes(university?.province?.toLowerCase() || '')
-    ).slice(0, 3),
-    [university]
-  );
+  const meritFormulas = useMemo(() => {
+    if (!university) return [];
+    try {
+      return MERIT_FORMULAS.filter(f => {
+        const uniLower = f.university?.toLowerCase() || '';
+        const shortName = university?.short_name?.toLowerCase() || '';
+        const province = university?.province?.toLowerCase() || '';
+        return uniLower.includes(shortName) ||
+               uniLower.includes('general') ||
+               uniLower.includes(province);
+      }).slice(0, 3);
+    } catch (error) {
+      logger.error('Error computing merit formulas', error, 'UniversityDetail');
+      return [];
+    }
+  }, [university]);
 
   const openLink = async (url?: string) => {
     if (!url) {
@@ -395,8 +418,13 @@ const PremiumUniversityDetailScreen = () => {
 
   // Get university merit summary for the Merits tab
   const meritSummary = useMemo(() => {
-    if (!university) return { programs: [], years: [], totalRecords: 0, trend: null };
-    return getUniversityMeritSummaryByShortName(MERIT_RECORDS, university.short_name);
+    if (!university?.short_name) return { programs: [], years: [], totalRecords: 0, trend: null };
+    try {
+      return getUniversityMeritSummaryByShortName(MERIT_RECORDS, university.short_name) || { programs: [], years: [], totalRecords: 0, trend: null };
+    } catch (error) {
+      logger.error('Error computing merit summary', error, 'UniversityDetail');
+      return { programs: [], years: [], totalRecords: 0, trend: null };
+    }
   }, [university?.short_name]);
 
   if (!university) {
@@ -449,7 +477,7 @@ const PremiumUniversityDetailScreen = () => {
         </View>
         <View style={[styles.aboutCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
           <Text style={[styles.description, {color: colors.textSecondary}]}>
-            {university.description || `${university.name || 'This university'} is a prestigious ${university.type || 'higher education'} university located in ${university.city || 'Pakistan'}, ${university.province || ''}. Established in ${university.established_year || 'N/A'}, it offers various undergraduate and postgraduate programs with a commitment to excellence in education and research.`}
+            {university?.description || `${university?.name || 'This university'} is a prestigious ${university?.type || 'higher education'} university located in ${university?.city || 'Pakistan'}, ${university?.province || ''}. Established in ${university?.established_year || 'N/A'}, it offers various undergraduate and postgraduate programs with a commitment to excellence in education and research.`}
           </Text>
         </View>
       </View>
@@ -464,7 +492,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="location-outline"
             label="Location"
-            value={university.city || 'N/A'}
+            value={university?.city || 'N/A'}
             index={0}
             colors={colors}
             isDark={isDark}
@@ -472,7 +500,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="calendar-outline"
             label="Established"
-            value={String(university.established_year || 'N/A')}
+            value={String(university?.established_year || 'N/A')}
             index={1}
             colors={colors}
             isDark={isDark}
@@ -480,7 +508,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="trophy-outline"
             label="HEC Ranking"
-            value={university.ranking_national ? `#${university.ranking_national}` : (university.ranking_hec || 'N/A')}
+            value={university?.ranking_national ? `#${university.ranking_national}` : (university?.ranking_hec || 'N/A')}
             index={2}
             colors={colors}
             isDark={isDark}
@@ -488,7 +516,7 @@ const PremiumUniversityDetailScreen = () => {
           <FactCard
             iconName="business-outline"
             label="Type"
-            value={(university.type || 'N/A').toUpperCase()}
+            value={(university?.type || 'N/A').toUpperCase()}
             index={3}
             colors={colors}
             isDark={isDark}
@@ -497,7 +525,7 @@ const PremiumUniversityDetailScreen = () => {
       </View>
 
       {/* Campuses */}
-      {university.campuses && university.campuses.length > 0 && (
+      {university?.campuses && university.campuses.length > 0 && (
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="business-outline" family="Ionicons" size={22} color={colors.primary} />
@@ -509,12 +537,12 @@ const PremiumUniversityDetailScreen = () => {
                 key={index}
                 style={[
                   styles.campusItem,
-                  index !== university.campuses!.length - 1 && {borderBottomWidth: 1, borderBottomColor: colors.border},
+                  index !== (university?.campuses?.length || 0) - 1 && {borderBottomWidth: 1, borderBottomColor: colors.border},
                 ]}>
                 <View style={[styles.campusIconContainer, {backgroundColor: `${colors.primary}15`}]}>
                   <Icon name="location" family="Ionicons" size={18} color={colors.primary} />
                 </View>
-                <Text style={[styles.campusName, {color: colors.text}]}>{campus}</Text>
+                <Text style={[styles.campusName, {color: colors.text}]}>{campus || 'Campus'}</Text>
               </View>
             ))}
           </View>
@@ -528,10 +556,10 @@ const PremiumUniversityDetailScreen = () => {
           <Text style={[styles.sectionTitle, {color: colors.text}]}>Contact Information</Text>
         </View>
         <View style={[styles.contactList, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
-          {university.website && (
+          {university?.website && (
             <TouchableOpacity
               style={[styles.contactItem, {borderBottomColor: colors.border}]}
-              onPress={() => openLink(university.website)}
+              onPress={() => openLink(university?.website)}
               activeOpacity={0.7}>
               <View style={[styles.contactIconContainer, {backgroundColor: '#4573DF15'}]}>
                 <Icon name="globe-outline" family="Ionicons" size={20} color="#4573DF" />
@@ -539,7 +567,7 @@ const PremiumUniversityDetailScreen = () => {
               <View style={styles.contactInfo}>
                 <Text style={[styles.contactLabel, {color: colors.textSecondary}]}>Website</Text>
                 <Text style={[styles.contactValue, {color: colors.primary}]} numberOfLines={1}>
-                  {university.website}
+                  {university?.website}
                 </Text>
               </View>
               <View style={[styles.contactArrowContainer, {backgroundColor: `${colors.primary}10`}]}>
@@ -547,10 +575,10 @@ const PremiumUniversityDetailScreen = () => {
               </View>
             </TouchableOpacity>
           )}
-          {university.email && (
+          {university?.email && (
             <TouchableOpacity
               style={[styles.contactItem, {borderBottomColor: colors.border}]}
-              onPress={() => openLink(`mailto:${university.email}`)}
+              onPress={() => openLink(`mailto:${university?.email}`)}
               activeOpacity={0.7}>
               <View style={[styles.contactIconContainer, {backgroundColor: '#EF444415'}]}>
                 <Icon name="mail-outline" family="Ionicons" size={20} color="#EF4444" />
@@ -558,7 +586,7 @@ const PremiumUniversityDetailScreen = () => {
               <View style={styles.contactInfo}>
                 <Text style={[styles.contactLabel, {color: colors.textSecondary}]}>Email</Text>
                 <Text style={[styles.contactValue, {color: colors.primary}]} numberOfLines={1}>
-                  {university.email}
+                  {university?.email}
                 </Text>
               </View>
               <View style={[styles.contactArrowContainer, {backgroundColor: `${colors.primary}10`}]}>
@@ -566,10 +594,10 @@ const PremiumUniversityDetailScreen = () => {
               </View>
             </TouchableOpacity>
           )}
-          {university.phone && (
+          {university?.phone && (
             <TouchableOpacity
               style={styles.contactItem}
-              onPress={() => openLink(`tel:${university.phone}`)}
+              onPress={() => openLink(`tel:${university?.phone}`)}
               activeOpacity={0.7}>
               <View style={[styles.contactIconContainer, {backgroundColor: '#10B98115'}]}>
                 <Icon name="call-outline" family="Ionicons" size={20} color="#10B981" />
@@ -577,7 +605,7 @@ const PremiumUniversityDetailScreen = () => {
               <View style={styles.contactInfo}>
                 <Text style={[styles.contactLabel, {color: colors.textSecondary}]}>Phone</Text>
                 <Text style={[styles.contactValue, {color: colors.primary}]} numberOfLines={1}>
-                  {university.phone}
+                  {university?.phone}
                 </Text>
               </View>
               <View style={[styles.contactArrowContainer, {backgroundColor: `${colors.primary}10`}]}>
@@ -665,13 +693,41 @@ const PremiumUniversityDetailScreen = () => {
     </View>
   );
 
-  const renderAdmissionTab = () => (
+  const renderAdmissionTab = () => {
+    // Show fallback if no admission data available
+    const hasAdmissionData = university?.admission_url || university?.status_notes || 
+                             (university?.application_steps && university.application_steps.length > 0) ||
+                             meritFormulas.length > 0;
+    
+    if (!hasAdmissionData) {
+      return (
+        <View style={styles.tabContent}>
+          <View style={[styles.emptyScholarships, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
+            <Icon name="document-text-outline" family="Ionicons" size={48} color={colors.textMuted || colors.textSecondary} />
+            <Text style={[styles.emptyText, {color: colors.text}]}>No admission information available yet</Text>
+            <Text style={[styles.emptySubtext, {color: colors.textSecondary}]}>
+              Check the university website for the latest admission details
+            </Text>
+            {university?.website && (
+              <TouchableOpacity
+                style={[styles.errorButton, {backgroundColor: colors.primary, marginTop: 16}]}
+                onPress={() => openLink(university?.website)}
+                activeOpacity={0.7}>
+                <Text style={styles.errorButtonText}>Visit Website</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      );
+    }
+    
+    return (
     <View style={styles.tabContent}>
       {/* Apply Banner */}
-      {university.admission_url && (
+      {university?.admission_url && (
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => openLink(university.admission_url)}>
+          onPress={() => openLink(university?.admission_url)}>
           <LinearGradient
             colors={GRADIENTS.primary}
             start={{x: 0, y: 0}}
@@ -694,7 +750,7 @@ const PremiumUniversityDetailScreen = () => {
       )}
 
       {/* Admission Status Note */}
-      {university.status_notes && (
+      {university?.status_notes && (
         <View style={[styles.statusNoteCard, {backgroundColor: isDark ? 'rgba(59, 130, 246, 0.1)' : '#EFF6FF', borderColor: colors.primary}]}>
           <View style={styles.statusNoteHeader}>
             <Icon name="notifications-outline" family="Ionicons" size={20} color={colors.primary} />
@@ -705,7 +761,7 @@ const PremiumUniversityDetailScreen = () => {
       )}
 
       {/* Application Steps */}
-      {university.application_steps && university.application_steps.length > 0 && (
+      {university?.application_steps && university.application_steps.length > 0 && (
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Icon name="list-outline" family="Ionicons" size={22} color={colors.primary} />
@@ -717,7 +773,7 @@ const PremiumUniversityDetailScreen = () => {
                 <View style={[styles.stepNumber, {backgroundColor: colors.primary}]}>
                   <Text style={styles.stepNumberText}>{index + 1}</Text>
                 </View>
-                <Text style={[styles.stepText, {color: colors.textSecondary}]}>{step}</Text>
+                <Text style={[styles.stepText, {color: colors.textSecondary}]}>{step || 'Step information not available'}</Text>
               </View>
             ))}
           </View>
@@ -725,6 +781,7 @@ const PremiumUniversityDetailScreen = () => {
       )}
 
       {/* Merit Formulas */}
+      {meritFormulas.length > 0 && (
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Icon name="calculator-outline" family="Ionicons" size={22} color={colors.primary} />
@@ -732,33 +789,33 @@ const PremiumUniversityDetailScreen = () => {
         </View>
         {meritFormulas.map((formula, index) => (
           <View
-            key={formula.id}
+            key={formula?.id || index}
             style={[styles.formulaCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
-            <Text style={[styles.formulaName, {color: colors.text}]}>{formula.name || 'Merit Formula'}</Text>
-            <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>{formula.university || 'General'}</Text>
+            <Text style={[styles.formulaName, {color: colors.text}]}>{formula?.name || 'Merit Formula'}</Text>
+            <Text style={[styles.formulaUniversity, {color: colors.textSecondary}]}>{formula?.university || 'General'}</Text>
 
             <View style={styles.formulaWeights}>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.matric_weightage || 0}%</Text>
+                  <Text style={styles.weightValue}>{formula?.matric_weightage || 0}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Matric</Text>
               </View>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#4573DF', '#3660C9']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.inter_weightage || 0}%</Text>
+                  <Text style={styles.weightValue}>{formula?.inter_weightage || 0}%</Text>
                 </LinearGradient>
                 <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>Inter</Text>
               </View>
               <View style={styles.weightItem}>
                 <LinearGradient colors={['#10B981', '#059669']} style={styles.weightCircle}>
-                  <Text style={styles.weightValue}>{formula.entry_test_weightage || 0}%</Text>
+                  <Text style={styles.weightValue}>{formula?.entry_test_weightage || 0}%</Text>
                 </LinearGradient>
-                <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>{formula.entry_test_name || 'Test'}</Text>
+                <Text style={[styles.weightLabel, {color: colors.textSecondary}]}>{formula?.entry_test_name || 'Test'}</Text>
               </View>
             </View>
 
-            {formula.hafiz_bonus != null && formula.hafiz_bonus > 0 && (
+            {formula?.hafiz_bonus != null && formula.hafiz_bonus > 0 && (
               <View style={styles.bonusBadge}>
                 <LinearGradient
                   colors={['#F59E0B', '#D97706']}
@@ -775,6 +832,7 @@ const PremiumUniversityDetailScreen = () => {
           </View>
         ))}
       </View>
+      )}
 
       {/* Admission Timeline */}
       <View style={styles.section}>
@@ -791,8 +849,16 @@ const PremiumUniversityDetailScreen = () => {
       </View>
     </View>
   );
+  };
 
-  const renderMeritsTab = () => (
+  const renderMeritsTab = () => {
+    // Safe access to merit programs
+    const meritPrograms = meritSummary?.programs || [];
+    const meritYears = meritSummary?.years || [];
+    const totalRecords = meritSummary?.totalRecords || 0;
+    const trend = meritSummary?.trend || null;
+    
+    return (
     <View style={styles.tabContent}>
       {/* Merit Summary Header */}
       <View style={styles.section}>
@@ -801,12 +867,12 @@ const PremiumUniversityDetailScreen = () => {
           <Text style={[styles.sectionTitle, {color: colors.text}]}>Merit History</Text>
         </View>
         
-        {meritSummary.programs.length === 0 ? (
+        {meritPrograms.length === 0 ? (
           <View style={[styles.emptyScholarships, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
-            <Icon name="analytics-outline" family="Ionicons" size={48} color={colors.textMuted} />
-            <Text style={[styles.emptyText, {color: colors.text}]}>No merit data available</Text>
+            <Icon name="analytics-outline" family="Ionicons" size={48} color={colors.textMuted || colors.textSecondary} />
+            <Text style={[styles.emptyText, {color: colors.text}]}>No merit data available yet</Text>
             <Text style={[styles.emptySubtext, {color: colors.textSecondary}]}>
-              Merit records for this university are not yet in our database
+              Merit records for this university will be available soon
             </Text>
           </View>
         ) : (
@@ -815,32 +881,32 @@ const PremiumUniversityDetailScreen = () => {
             <View style={[styles.aboutCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card, marginBottom: SPACING.md}]}>
               <View style={styles.meritStatsRow}>
                 <View style={styles.meritStatItem}>
-                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.programs.length}</Text>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritPrograms.length}</Text>
                   <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Programs</Text>
                 </View>
                 <View style={styles.meritStatItem}>
-                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.years.length}</Text>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritYears.length}</Text>
                   <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Years Data</Text>
                 </View>
                 <View style={styles.meritStatItem}>
-                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{meritSummary.totalRecords}</Text>
+                  <Text style={[styles.meritStatValue, {color: colors.primary}]}>{totalRecords}</Text>
                   <Text style={[styles.meritStatLabel, {color: colors.textSecondary}]}>Records</Text>
                 </View>
               </View>
               
-              {meritSummary.trend && (
+              {trend && (
                 <View style={styles.trendBadgeContainer}>
                   <LinearGradient
-                    colors={meritSummary.trend === 'increasing' ? ['#EF4444', '#F87171'] : meritSummary.trend === 'decreasing' ? ['#10B981', '#34D399'] : ['#6B7280', '#9CA3AF']}
+                    colors={trend === 'increasing' ? ['#EF4444', '#F87171'] : trend === 'decreasing' ? ['#10B981', '#34D399'] : ['#6B7280', '#9CA3AF']}
                     style={styles.trendBadge}>
                     <Icon 
-                      name={meritSummary.trend === 'increasing' ? 'trending-up' : meritSummary.trend === 'decreasing' ? 'trending-down' : 'remove'} 
+                      name={trend === 'increasing' ? 'trending-up' : trend === 'decreasing' ? 'trending-down' : 'remove'} 
                       family="Ionicons" 
                       size={14} 
                       color="#FFFFFF" 
                     />
                     <Text style={styles.trendBadgeText}>
-                      {meritSummary.trend === 'increasing' ? 'Merit Rising' : meritSummary.trend === 'decreasing' ? 'Merit Dropping' : 'Stable'}
+                      {trend === 'increasing' ? 'Merit Rising' : trend === 'decreasing' ? 'Merit Dropping' : 'Stable'}
                     </Text>
                   </LinearGradient>
                 </View>
@@ -848,87 +914,121 @@ const PremiumUniversityDetailScreen = () => {
             </View>
 
             {/* Program-wise Merit List */}
-            {meritSummary.programs.map((program) => (
+            {meritPrograms.map((program, progIndex) => {
+              const programName = program?.programName || 'Unknown Program';
+              const programCategory = program?.category || 'General';
+              const programYears = program?.years || [];
+              
+              return (
               <View 
-                key={program.programName} 
+                key={programName + progIndex} 
                 style={[styles.meritProgramCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
                 <View style={styles.meritProgramHeader}>
                   <View style={[styles.programIconBg, {backgroundColor: `${colors.primary}15`}]}>
                     <Icon name="school-outline" family="Ionicons" size={20} color={colors.primary} />
                   </View>
                   <View style={{flex: 1}}>
-                    <Text style={[styles.meritProgramName, {color: colors.text}]}>{program.programName}</Text>
+                    <Text style={[styles.meritProgramName, {color: colors.text}]}>{programName}</Text>
                     <Text style={[styles.meritProgramMeta, {color: colors.textSecondary}]}>
-                      {program.category} • {program.years.length} years data
+                      {programCategory} • {programYears.length} years data
                     </Text>
                   </View>
                 </View>
                 
                 {/* Year-wise merits */}
                 <View style={styles.yearMeritsContainer}>
-                  {program.years.sort((a, b) => b.year - a.year).slice(0, 5).map((yearData, idx) => (
-                    <View key={yearData.year} style={styles.yearMeritRow}>
-                      <Text style={[styles.yearLabel, {color: colors.textSecondary}]}>{yearData.year}</Text>
+                  {programYears.sort((a, b) => (b?.year || 0) - (a?.year || 0)).slice(0, 5).map((yearData, idx) => {
+                    const year = yearData?.year || 'N/A';
+                    const closingMerit = yearData?.closingMerit || 0;
+                    const list2Merit = yearData?.list2Merit;
+                    const list3Merit = yearData?.list3Merit;
+                    
+                    return (
+                    <View key={`${year}-${idx}`} style={styles.yearMeritRow}>
+                      <Text style={[styles.yearLabel, {color: colors.textSecondary}]}>{year}</Text>
                       <View style={styles.meritValuesRow}>
                         <View style={styles.meritValueItem}>
-                          <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 1</Text>
-                          <Text style={[styles.meritValue, {color: colors.text}]}>{(yearData.closingMerit || 0).toFixed(1)}%</Text>
+                          <Text style={[styles.meritValueLabel, {color: colors.textMuted || colors.textSecondary}]}>List 1</Text>
+                          <Text style={[styles.meritValue, {color: colors.text}]}>{closingMerit.toFixed(1)}%</Text>
                         </View>
-                        {yearData.list2Merit != null && (
+                        {list2Merit != null && (
                           <View style={styles.meritValueItem}>
-                            <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 2</Text>
-                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list2Merit.toFixed(1)}%</Text>
+                            <Text style={[styles.meritValueLabel, {color: colors.textMuted || colors.textSecondary}]}>List 2</Text>
+                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{list2Merit.toFixed(1)}%</Text>
                           </View>
                         )}
-                        {yearData.list3Merit != null && (
+                        {list3Merit != null && (
                           <View style={styles.meritValueItem}>
-                            <Text style={[styles.meritValueLabel, {color: colors.textMuted}]}>List 3</Text>
-                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{yearData.list3Merit.toFixed(1)}%</Text>
+                            <Text style={[styles.meritValueLabel, {color: colors.textMuted || colors.textSecondary}]}>List 3</Text>
+                            <Text style={[styles.meritValue, {color: colors.textSecondary}]}>{list3Merit.toFixed(1)}%</Text>
                           </View>
                         )}
                       </View>
                     </View>
-                  ))}
+                  );
+                  })}
                 </View>
               </View>
-            ))}
+            );
+            })}
           </>
         )}
       </View>
     </View>
   );
+  };
 
-  const renderScholarshipsTab = () => (
+  const renderScholarshipsTab = () => {
+    // Safely get scholarships count
+    const scholarshipsCount = universityScholarships?.length || 0;
+    
+    return (
     <View style={styles.tabContent}>
       <View style={styles.scholarshipsHeader}>
         <Text style={[styles.scholarshipsNote, {color: colors.textSecondary}]}>
-          {universityScholarships.length} scholarships available
+          {scholarshipsCount} scholarship{scholarshipsCount !== 1 ? 's' : ''} available
         </Text>
       </View>
 
-      {universityScholarships.length === 0 ? (
+      {scholarshipsCount === 0 ? (
         <View style={[styles.emptyScholarships, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
-          <Icon name="clipboard-outline" family="Ionicons" size={48} color={colors.textMuted} />
-          <Text style={[styles.emptyText, {color: colors.text}]}>No specific scholarships found</Text>
+          <Icon name="wallet-outline" family="Ionicons" size={48} color={colors.textMuted || colors.textSecondary} />
+          <Text style={[styles.emptyText, {color: colors.text}]}>No financial aid information available yet</Text>
           <Text style={[styles.emptySubtext, {color: colors.textSecondary}]}>
-            Check HEC or university website for more options
+            Check HEC or university website for scholarship opportunities
           </Text>
+          {university?.website && (
+            <TouchableOpacity
+              style={[styles.errorButton, {backgroundColor: colors.primary, marginTop: 16}]}
+              onPress={() => openLink(university?.website)}
+              activeOpacity={0.7}>
+              <Text style={styles.errorButtonText}>Visit Website</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
-        universityScholarships.map((scholarship: ScholarshipData, index) => (
+        universityScholarships.map((scholarship: ScholarshipData, index) => {
+          // Safe access with fallbacks
+          const scholarshipName = scholarship?.name || 'Scholarship';
+          const scholarshipProvider = scholarship?.provider || 'Provider';
+          const scholarshipType = scholarship?.type || 'institutional';
+          const tuitionCoverage = scholarship?.tuitionCoverage || 0;
+          const scholarshipDesc = scholarship?.description || 'Details available on application';
+          
+          return (
           <Animated.View
-            key={scholarship.id}
+            key={scholarship?.id || `scholarship-${index}`}
             style={[styles.scholarshipCard, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
             <View style={styles.scholarshipHeader}>
               <View style={[styles.scholarshipIconContainer, {backgroundColor: `${colors.primary}15`}]}>
                 <Icon
                   name={
-                    scholarship.type === 'government' ? 'business' :
-                    scholarship.type === 'need_based' ? 'wallet' :
-                    scholarship.type === 'merit_based' ? 'trophy' :
-                    scholarship.type === 'hafiz_e_quran' ? 'book' :
-                    scholarship.type === 'sports' ? 'football' :
-                    scholarship.type === 'disabled' ? 'accessibility' : 'school'
+                    scholarshipType === 'government' ? 'business' :
+                    scholarshipType === 'need_based' ? 'wallet' :
+                    scholarshipType === 'merit_based' ? 'trophy' :
+                    scholarshipType === 'hafiz_e_quran' ? 'book' :
+                    scholarshipType === 'sports' ? 'football' :
+                    scholarshipType === 'disabled' ? 'accessibility' : 'school'
                   }
                   family="Ionicons"
                   size={24}
@@ -936,32 +1036,34 @@ const PremiumUniversityDetailScreen = () => {
                 />
               </View>
               <View style={styles.scholarshipInfo}>
-                <Text style={[styles.scholarshipName, {color: colors.text}]}>{scholarship.name || 'Scholarship'}</Text>
-                <Text style={[styles.scholarshipProvider, {color: colors.textSecondary}]}>{scholarship.provider || 'Unknown Provider'}</Text>
+                <Text style={[styles.scholarshipName, {color: colors.text}]}>{scholarshipName}</Text>
+                <Text style={[styles.scholarshipProvider, {color: colors.textSecondary}]}>{scholarshipProvider}</Text>
               </View>
               <LinearGradient
                 colors={
-                  (scholarship.tuitionCoverage || 0) === 100 ? ['#10B981', '#059669'] :
-                  (scholarship.tuitionCoverage || 0) >= 75 ? ['#F59E0B', '#D97706'] :
+                  tuitionCoverage === 100 ? ['#10B981', '#059669'] :
+                  tuitionCoverage >= 75 ? ['#F59E0B', '#D97706'] :
                   GRADIENTS.primary
                 }
                 style={styles.coverageBadge}>
-                <Text style={styles.coverageText}>{scholarship.tuitionCoverage || 0}%</Text>
+                <Text style={styles.coverageText}>{tuitionCoverage}%</Text>
               </LinearGradient>
             </View>
 
             <Text style={[styles.scholarshipDesc, {color: colors.textSecondary}]}>
-              {scholarship.description || 'No description available'}
+              {scholarshipDesc}
             </Text>
 
             {/* Coverage Details - computed from coverageType and otherBenefits */}
             {(() => {
-              const coversTuition = scholarship.coverageType === 'full' || 
-                                   scholarship.coverageType === 'tuition' || 
-                                   (scholarship.tuitionCoverage && scholarship.tuitionCoverage > 0);
-              const coversHostel = scholarship.coverageType === 'full' || 
-                                  scholarship.otherBenefits?.some((b: string) => b.toLowerCase().includes('hostel') || b.toLowerCase().includes('accommodation'));
-              const coversBooks = scholarship.otherBenefits?.some((b: string) => b.toLowerCase().includes('book'));
+              const coverageType = scholarship?.coverageType || '';
+              const otherBenefits = scholarship?.otherBenefits || [];
+              const coversTuition = coverageType === 'full' || 
+                                   coverageType === 'tuition' || 
+                                   tuitionCoverage > 0;
+              const coversHostel = coverageType === 'full' || 
+                                  otherBenefits.some((b: string) => (b?.toLowerCase() || '').includes('hostel') || (b?.toLowerCase() || '').includes('accommodation'));
+              const coversBooks = otherBenefits.some((b: string) => (b?.toLowerCase() || '').includes('book'));
               
               return (
                 <View style={styles.coverageDetails}>
@@ -987,7 +1089,7 @@ const PremiumUniversityDetailScreen = () => {
               );
             })()}
 
-            {scholarship.monthlyStipend && (
+            {scholarship?.monthlyStipend && scholarship.monthlyStipend > 0 && (
               <View style={[styles.scholarshipStats, {backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'}]}>
                 <View style={styles.statItem}>
                   <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Monthly Stipend</Text>
@@ -1003,11 +1105,11 @@ const PremiumUniversityDetailScreen = () => {
                 <View style={styles.deadlineRow}>
                   <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.warning} />
                   <Text style={[styles.deadlineText, {color: colors.warning}]}>
-                    {scholarship.deadline || 'Check website'}
+                    {scholarship?.deadline || 'Check website'}
                   </Text>
                 </View>
               </View>
-              {scholarship.website && (
+              {scholarship?.website && (
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => openLink(scholarship.website)}>
@@ -1023,10 +1125,12 @@ const PremiumUniversityDetailScreen = () => {
               )}
             </View>
           </Animated.View>
-        ))
+        );
+        })
       )}
     </View>
   );
+  };
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -1035,7 +1139,7 @@ const PremiumUniversityDetailScreen = () => {
       {/* Animated Header */}
       <Animated.View style={[styles.header, {height: headerHeight}]}>
         <LinearGradient
-          colors={university.type === 'public' ? ['#10B981', '#059669', '#047857'] : GRADIENTS.primary}
+          colors={university?.type === 'public' ? ['#10B981', '#059669', '#047857'] : GRADIENTS.primary}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={StyleSheet.absoluteFill}
@@ -1060,7 +1164,7 @@ const PremiumUniversityDetailScreen = () => {
           <Animated.Text
             style={[styles.headerTitle, {opacity: headerTitleOpacity}]}
             numberOfLines={1}>
-            {university.short_name || university.name}
+            {university?.short_name || university?.name || 'University'}
           </Animated.Text>
           
           <TouchableOpacity
@@ -1079,32 +1183,32 @@ const PremiumUniversityDetailScreen = () => {
         {/* Hero Content */}
         <Animated.View style={[styles.heroContent, {opacity: heroOpacity}]}>
           {/* Only show logo container if university has a logo_url */}
-          {university.logo_url ? (
+          {university?.logo_url ? (
             <View style={styles.logoContainer}>
               <UniversityLogo
-                shortName={university.short_name}
-                universityName={university.name}
-                logoUrl={university.logo_url}
+                shortName={university?.short_name || ''}
+                universityName={university?.name || 'University'}
+                logoUrl={university?.logo_url || ''}
                 size={72}
                 borderRadius={16}
                 showLoader={false}
               />
             </View>
           ) : null}
-          <Text style={styles.universityName}>{university.name || 'Unknown University'}</Text>
+          <Text style={styles.universityName}>{university?.name || 'Unknown University'}</Text>
           <View style={styles.locationRow}>
             <Icon name="location" family="Ionicons" size={16} color="#FFFFFF" />
-            <Text style={styles.universityLocation}>{university.city || 'Unknown'}, {university.province || 'Pakistan'}</Text>
+            <Text style={styles.universityLocation}>{university?.city || 'Unknown'}, {university?.province || 'Pakistan'}</Text>
           </View>
           <View style={styles.badgeRow}>
             <View style={styles.typeBadge}>
-              <Text style={styles.typeBadgeText}>{(university.type || 'N/A').toUpperCase()}</Text>
+              <Text style={styles.typeBadgeText}>{(university?.type || 'N/A').toUpperCase()}</Text>
             </View>
-            {(university.ranking_national || university.ranking_hec) && (
+            {(university?.ranking_national || university?.ranking_hec) && (
               <View style={styles.rankBadge}>
                 <Icon name="trophy" family="Ionicons" size={12} color="#F59E0B" />
                 <Text style={styles.rankBadgeText}>
-                  HEC #{university.ranking_national || university.ranking_hec}
+                  HEC #{university?.ranking_national || university?.ranking_hec}
                 </Text>
               </View>
             )}
@@ -1137,11 +1241,25 @@ const PremiumUniversityDetailScreen = () => {
           {useNativeDriver: false}
         )}
         scrollEventThrottle={16}>
-        {activeTab === 'overview' && renderOverviewTab()}
-        {activeTab === 'programs' && renderProgramsTab()}
-        {activeTab === 'merits' && renderMeritsTab()}
-        {activeTab === 'admission' && renderAdmissionTab()}
-        {activeTab === 'scholarships' && renderScholarshipsTab()}
+        <ErrorBoundary 
+          fallback={
+            <View style={styles.tabContent}>
+              <View style={[styles.emptyScholarships, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : colors.card}]}>
+                <Icon name="information-circle-outline" family="Ionicons" size={48} color={colors.textSecondary} />
+                <Text style={[styles.emptyText, {color: colors.text}]}>Information coming soon</Text>
+                <Text style={[styles.emptySubtext, {color: colors.textSecondary}]}>
+                  We're working on adding this content
+                </Text>
+              </View>
+            </View>
+          }
+        >
+          {activeTab === 'overview' && renderOverviewTab()}
+          {activeTab === 'programs' && renderProgramsTab()}
+          {activeTab === 'merits' && renderMeritsTab()}
+          {activeTab === 'admission' && renderAdmissionTab()}
+          {activeTab === 'scholarships' && renderScholarshipsTab()}
+        </ErrorBoundary>
         <View style={{height: 100}} />
       </Animated.ScrollView>
     </View>

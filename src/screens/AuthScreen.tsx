@@ -179,7 +179,11 @@ const AuthScreen: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     setLocalLoading('google');
-    await signInWithGoogle();
+    try {
+      await signInWithGoogle();
+    } catch (_) {
+      // Error displayed via toast
+    }
     setLocalLoading(null);
     // Navigation will be handled by useEffect watching auth state
   };
@@ -197,7 +201,11 @@ const AuthScreen: React.FC = () => {
 
   const handleGuestMode = async () => {
     setLocalLoading('guest');
-    await continueAsGuest();
+    try {
+      await continueAsGuest();
+    } catch (_) {
+      // Error displayed via toast
+    }
     setLocalLoading(null);
     // Navigation is handled by useEffect watching isAuthenticated
     // Guests always go to Onboarding (hasCompletedOnboarding is false for new guests)
@@ -206,7 +214,11 @@ const AuthScreen: React.FC = () => {
   const handleEmailLogin = async () => {
     // Validation is handled by useAuthToast with beautiful toasts
     setLocalLoading('email');
-    await signInWithEmail(email.trim(), password);
+    try {
+      await signInWithEmail(email.trim(), password);
+    } catch (_) {
+      // Error displayed via toast
+    }
     setLocalLoading(null);
     // Navigation is handled by useEffect watching isAuthenticated
   };
@@ -219,7 +231,12 @@ const AuthScreen: React.FC = () => {
     }
     
     setLocalLoading('signup');
-    const success = await signUpWithEmail(email.trim(), password, name.trim());
+    let success = false;
+    try {
+      success = await signUpWithEmail(email.trim(), password, name.trim());
+    } catch (_) {
+      // Error displayed via toast
+    }
     setLocalLoading(null);
     
     if (success) {
@@ -230,7 +247,11 @@ const AuthScreen: React.FC = () => {
 
   const handleForgotPassword = async () => {
     setLocalLoading('forgot');
-    await resetPassword(email.trim());
+    try {
+      await resetPassword(email.trim());
+    } catch (_) {
+      // Error displayed via toast
+    }
     setLocalLoading(null);
   };
 

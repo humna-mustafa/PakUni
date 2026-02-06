@@ -97,6 +97,7 @@ interface WeightSliderProps {
     textSecondary: string;
     border: string;
     card: string;
+    background: string;
   };
 }
 
@@ -108,15 +109,56 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
   icon,
   themeColors,
 }) => {
+  const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+
   const handleIncrement = () => {
-    if (value < 100) onChange(value + 5);
+    if (value < 100) onChange(value + 1);
   };
 
   const handleDecrement = () => {
-    if (value > 0) onChange(value - 5);
+    if (value > 0) onChange(value - 1);
   };
 
-  const buttonBg = themeColors?.card || '#F1F5F9';
+  // Long-press support for continuous +/- at 1-unit increments
+  const startContinuous = (direction: 'up' | 'down') => {
+    intervalRef.current = setInterval(() => {
+      onChange((prev: number) => {
+        const current = typeof prev === 'number' ? prev : value;
+        return direction === 'up'
+          ? Math.min(100, current + 1)
+          : Math.max(0, current - 1);
+      });
+    }, 80);
+  };
+
+  const stopContinuous = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  // Tap on track to set value directly
+  const handleTrackPress = (event: any) => {
+    const {locationX} = event.nativeEvent;
+    // Track layout width needed - use the event target width
+    const trackWidth = event.nativeEvent.target
+      ? event.currentTarget?.offsetWidth || 200
+      : 200;
+    event.target.measure?.(
+      (_x: number, _y: number, width: number) => {
+        if (width > 0) {
+          const percent = Math.round(Math.max(0, Math.min(100, (locationX / width) * 100)));
+          onChange(percent);
+        }
+      },
+    );
+    // Fallback: estimate from locationX assuming typical track width
+    const estimatedPercent = Math.round(Math.max(0, Math.min(100, (locationX / 200) * 100)));
+    onChange(estimatedPercent);
+  };
+
+  const buttonBg = themeColors?.background || '#F1F5F9';
   const trackBg = themeColors?.border || '#E2E8F0';
   const labelColor = themeColors?.textSecondary || '#475569';
   const iconColor = themeColors?.textSecondary || '#64748B';
@@ -131,20 +173,27 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
       <View style={weightStyles.sliderRow}>
         <TouchableOpacity
           onPress={handleDecrement}
+          onLongPress={() => startContinuous('down')}
+          onPressOut={stopContinuous}
           style={[weightStyles.button, {backgroundColor: buttonBg}]}
           activeOpacity={0.7}>
           <Icon name="remove" size={20} color={iconColor} />
         </TouchableOpacity>
-        <View style={[weightStyles.track, {backgroundColor: trackBg}]}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={handleTrackPress}
+          style={[weightStyles.track, {backgroundColor: trackBg}]}>
           <Animated.View
             style={[
               weightStyles.fill,
               {width: `${value}%`, backgroundColor: color},
             ]}
           />
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={handleIncrement}
+          onLongPress={() => startContinuous('up')}
+          onPressOut={stopContinuous}
           style={[weightStyles.button, {backgroundColor: buttonBg}]}
           activeOpacity={0.7}>
           <Icon name="add" size={20} color={iconColor} />
@@ -211,6 +260,8 @@ interface FormulaCardProps {
     textSecondary: string;
     textMuted: string;
     card: string;
+    background: string;
+    border: string;
   };
 }
 
@@ -221,17 +272,23 @@ const FormulaCard: React.FC<FormulaCardProps> = ({
   isSelected,
   themeColors,
 }) => {
-  const cardBg = themeColors?.card || '#FFF';
+  const cardBg = isSelected 
+    ? `${formula.color}15` 
+    : (themeColors?.background || '#F8FAFC');
   const nameColor = themeColors?.text || '#1E293B';
   const labelColor = themeColors?.textMuted || '#94A3B8';
+  const borderColor = isSelected ? formula.color : (themeColors?.border || '#E2E8F0');
   
   return (
     <TouchableOpacity
       onPress={onSelect}
       style={[
         cardStyles.container,
-        {backgroundColor: cardBg},
-        isSelected && {borderColor: formula.color, borderWidth: 2},
+        {
+          backgroundColor: cardBg,
+          borderWidth: isSelected ? 2 : 1,
+          borderColor,
+        },
       ]}
       activeOpacity={0.8}>
       <LinearGradient
@@ -778,17 +835,17 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: colors.card}]}>
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#4573DF', '#4573DF']}
+          colors={[colors.primary, colors.primaryDark]}
           style={styles.headerIcon}>
           <Icon name="construct-outline" size={24} color="#FFF" />
         </LinearGradient>
         <View style={styles.headerText}>
-          <Text style={styles.headerTitle}>Custom Formula Builder</Text>
-          <Text style={styles.headerSubtitle}>
+          <Text style={[styles.headerTitle, {color: colors.text}]}>Custom Formula Builder</Text>
+          <Text style={[styles.headerSubtitle, {color: colors.textSecondary}]}>
             Create your own university formula
           </Text>
         </View>
@@ -797,7 +854,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       {/* Saved Formulas */}
       {formulas.length > 0 && (
         <View style={styles.savedSection}>
-          <Text style={styles.sectionTitle}>
+          <Text style={[styles.sectionTitle, {color: colors.textSecondary}]}>
             Your Formulas ({formulas.length})
           </Text>
           {formulas.map(formula => (
@@ -817,8 +874,8 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
       {formulas.length === 0 && !isLoading && (
         <View style={styles.emptyState}>
           <Icon name="flask-outline" size={48} color={colors.border} />
-          <Text style={styles.emptyTitle}>No Custom Formulas</Text>
-          <Text style={styles.emptyText}>
+          <Text style={[styles.emptyTitle, {color: colors.textSecondary}]}>No Custom Formulas</Text>
+          <Text style={[styles.emptyText, {color: colors.textMuted}]}>
             Create a custom formula for universities not in our database
           </Text>
         </View>
@@ -833,7 +890,7 @@ export const CustomFormulaBuilder: React.FC<FormulaBuilderProps> = ({
         }}
         activeOpacity={0.8}>
         <LinearGradient
-          colors={['#4573DF', '#4573DF']}
+          colors={[colors.primary, colors.primaryDark]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.addButtonGradient}>

@@ -968,7 +968,7 @@ Additional Details:
                       '• Domicile certificate\n\n' +
                       '🎯 Tip: Apply early and check deadlines! Each scholarship has different requirements.',
                       [
-                        {text: 'View Scholarships', onPress: () => navigation.navigate('Scholarships' as never)},
+                        {text: 'View Scholarships', onPress: () => navigation.navigate('MainTabs' as never, {screen: 'Scholarships'})},
                         {text: 'OK', style: 'cancel'},
                       ]
                     );

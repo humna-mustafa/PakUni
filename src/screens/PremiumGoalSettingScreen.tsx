@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   TextInput,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +20,37 @@ import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
+
+// Date helper functions
+const formatDateToDDMMYYYY = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+const parseDDMMYYYY = (dateStr: string): Date | null => {
+  const parts = dateStr.split('/');
+  if (parts.length !== 3) return null;
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1;
+  const year = parseInt(parts[2], 10);
+  const date = new Date(year, month, day);
+  if (isNaN(date.getTime())) return null;
+  return date;
+};
+
+const isValidDateFormat = (dateStr: string): boolean => {
+  const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!regex.test(dateStr)) return false;
+  const parsed = parseDDMMYYYY(dateStr);
+  return parsed !== null;
+};
+
+const getDefaultDeadline = (daysFromNow: number = 30): string => {
+  const date = new Date(Date.now() + daysFromNow * 24 * 60 * 60 * 1000);
+  return formatDateToDDMMYYYY(date);
+};
 
 const {width} = Dimensions.get('window');
 
@@ -192,7 +224,8 @@ interface UserGoal {
   iconName: string;
   color: string;
   progress: number;
-  deadline: string;
+  deadline?: string; // DD/MM/YYYY format
+  completed: boolean;
   createdAt: string;
   category?: string;
   difficulty?: string;
@@ -278,11 +311,13 @@ const ProgressCircle = ({
 const GoalCard = ({
   goal,
   onPress,
+  onEdit,
   index,
   colors,
 }: {
   goal: any;
   onPress: () => void;
+  onEdit: () => void;
   index: number;
   colors: any;
 }) => {
@@ -311,10 +346,42 @@ const GoalCard = ({
   const totalMilestones = goal.milestones.length;
 
   const getDaysRemaining = () => {
-    const deadline = new Date(goal.deadline);
+    if (!goal.deadline) return null;
+    // Parse DD/MM/YYYY format
+    const parsed = parseDDMMYYYY(goal.deadline);
+    if (!parsed) {
+      // Fallback for old ISO format
+      const deadline = new Date(goal.deadline);
+      if (isNaN(deadline.getTime())) return null;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    }
     const today = new Date();
-    const diff = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    return diff;
+    today.setHours(0, 0, 0, 0);
+    return Math.ceil((parsed.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  const daysRemaining = getDaysRemaining();
+  const isOverdue = daysRemaining !== null && daysRemaining < 0;
+  const isDueSoon = daysRemaining !== null && daysRemaining >= 0 && daysRemaining <= 3;
+  const isCompleted = goal.completed || goal.progress === 100;
+
+  const getDeadlineText = () => {
+    if (!goal.deadline) return 'No deadline';
+    if (isCompleted) return 'Completed!';
+    if (daysRemaining === null) return 'No deadline';
+    if (daysRemaining < 0) return `${Math.abs(daysRemaining)} days overdue`;
+    if (daysRemaining === 0) return 'Due today!';
+    if (daysRemaining === 1) return '1 day left';
+    return `${daysRemaining} days left`;
+  };
+
+  const getDeadlineColor = () => {
+    if (isCompleted) return colors.success;
+    if (isOverdue) return '#E74C3C';
+    if (isDueSoon) return '#f39c12';
+    return colors.textSecondary;
   };
 
   return (
@@ -325,14 +392,26 @@ const GoalCard = ({
           opacity: fadeAnim,
         },
       ]}>
-      <TouchableOpacity activeOpacity={0.9} onPress={onPress}>
-        <View style={[styles.goalCard, {backgroundColor: colors.card}]}>
+      <TouchableOpacity activeOpacity={0.9} onPress={onPress} onLongPress={onEdit}>
+        <View style={[
+          styles.goalCard, 
+          {backgroundColor: colors.card},
+          isOverdue && !isCompleted && {borderColor: '#E74C3C', borderWidth: 2},
+        ]}>
           <LinearGradient
             colors={[goal.color + '15', 'transparent']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.cardGradient}
           />
+          
+          {/* Edit button */}
+          <TouchableOpacity 
+            style={styles.editIconBtn}
+            onPress={onEdit}
+            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+            <Icon name="pencil-outline" family="Ionicons" size={18} color={colors.textSecondary} />
+          </TouchableOpacity>
           
           <View style={styles.goalHeader}>
             <View style={[styles.goalIconContainer, {backgroundColor: goal.color + '20'}]}>
@@ -341,11 +420,21 @@ const GoalCard = ({
             <View style={styles.goalTitleArea}>
               <Text style={[styles.goalTitle, {color: colors.text}]}>{goal.title}</Text>
               <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-                <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
-                <Text style={[styles.goalDeadline, {color: colors.textSecondary}]}>
-                  {getDaysRemaining()} days remaining
+                <Icon 
+                  name={isOverdue && !isCompleted ? "alert-circle-outline" : "time-outline"} 
+                  family="Ionicons" 
+                  size={12} 
+                  color={getDeadlineColor()} 
+                />
+                <Text style={[styles.goalDeadline, {color: getDeadlineColor(), fontWeight: isOverdue ? '600' : '400'}]}>
+                  {getDeadlineText()}
                 </Text>
               </View>
+              {goal.deadline && (
+                <Text style={[styles.goalDeadlineDate, {color: colors.textMuted}]}>
+                  Due: {goal.deadline}
+                </Text>
+              )}
             </View>
             <ProgressCircle
               progress={goal.progress}
@@ -462,10 +551,18 @@ const PremiumGoalSettingScreen = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<any>(null);
   const [newGoalTitle, setNewGoalTitle] = useState('');
-  const [newGoalDeadline, setNewGoalDeadline] = useState(() => {
-    const defaultDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    return defaultDate.toISOString().split('T')[0];
-  });
+  const [newGoalDeadline, setNewGoalDeadline] = useState(() => getDefaultDeadline(30));
+  
+  // Template deadline selection state
+  const [showTemplateDeadlineModal, setShowTemplateDeadlineModal] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<typeof GOAL_TEMPLATES[0] | null>(null);
+  const [templateDeadline, setTemplateDeadline] = useState('');
+  
+  // Edit goal state
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editGoalTitle, setEditGoalTitle] = useState('');
+  const [editGoalDeadline, setEditGoalDeadline] = useState('');
+  const [editingGoalId, setEditingGoalId] = useState<string | null>(null);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const modalAnim = useRef(new Animated.Value(0)).current;
@@ -486,7 +583,18 @@ const PremiumGoalSettingScreen = () => {
     try {
       const storedGoals = await AsyncStorage.getItem(GOALS_STORAGE_KEY);
       if (storedGoals) {
-        setGoals(JSON.parse(storedGoals));
+        const parsedGoals = JSON.parse(storedGoals);
+        // Normalize goals for backward compatibility
+        const normalizedGoals = parsedGoals.map((goal: any) => ({
+          ...goal,
+          // Ensure completed field exists (for old goals)
+          completed: goal.completed ?? (goal.progress === 100),
+          // Convert old ISO date format to DD/MM/YYYY if needed
+          deadline: goal.deadline && goal.deadline.includes('-') && !goal.deadline.includes('/')
+            ? formatDateToDDMMYYYY(new Date(goal.deadline))
+            : goal.deadline,
+        }));
+        setGoals(normalizedGoals);
       }
     } catch (error) {
       logger.error('Failed to load goals', error, 'GoalSetting');
@@ -569,23 +677,35 @@ const PremiumGoalSettingScreen = () => {
     }
   };
 
-  // Create goal from template
-  const handleCreateFromTemplate = (template: typeof GOAL_TEMPLATES[0]) => {
-    const estimatedDays = template.estimatedDays || 30;
+  // Create goal from template - now shows deadline modal first
+  const handleSelectTemplate = (template: typeof GOAL_TEMPLATES[0]) => {
+    setSelectedTemplate(template);
+    setTemplateDeadline(getDefaultDeadline(template.estimatedDays || 30));
+    setShowTemplateDeadlineModal(true);
+  };
+
+  const handleCreateFromTemplate = () => {
+    if (!selectedTemplate) return;
+    
+    const template = selectedTemplate;
     const newGoal: UserGoal = {
       id: `${template.id}-${Date.now()}`,
       title: template.title,
       iconName: template.iconName,
       color: template.color,
       progress: 0,
+      completed: false,
       createdAt: new Date().toISOString(),
       category: template.category,
       difficulty: template.difficulty,
       streak: 0,
-      deadline: new Date(Date.now() + estimatedDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      deadline: templateDeadline || getDefaultDeadline(template.estimatedDays || 30),
       milestones: template.milestones.map(m => ({text: m, completed: false})),
     };
     setGoals(prev => [...prev, newGoal]);
+    setShowTemplateDeadlineModal(false);
+    setSelectedTemplate(null);
+    setTemplateDeadline('');
     closeAddModal();
   };
 
@@ -595,17 +715,24 @@ const PremiumGoalSettingScreen = () => {
       return; // Don't create empty goals
     }
     
+    // Validate deadline format if provided
+    if (newGoalDeadline && !isValidDateFormat(newGoalDeadline)) {
+      Alert.alert('Invalid Date', 'Please use DD/MM/YYYY format (e.g., 15/03/2025)');
+      return;
+    }
+    
     const newGoal: UserGoal = {
       id: `custom-${Date.now()}`,
       title: newGoalTitle.trim(),
       iconName: 'flag-outline',
       color: '#e74c3c',
       progress: 0,
+      completed: false,
       createdAt: new Date().toISOString(),
       category: 'custom',
       difficulty: 'Medium',
       streak: 0,
-      deadline: newGoalDeadline,
+      deadline: newGoalDeadline || undefined,
       milestones: [
         {text: 'Define what success looks like', completed: false},
         {text: 'Break down into smaller tasks', completed: false},
@@ -616,9 +743,74 @@ const PremiumGoalSettingScreen = () => {
     };
     setGoals(prev => [...prev, newGoal]);
     setNewGoalTitle('');
-    // Reset deadline to default 30 days from now
-    setNewGoalDeadline(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+    setNewGoalDeadline(getDefaultDeadline(30));
     closeAddModal();
+  };
+
+  // Edit goal functions
+  const openEditModal = (goal: UserGoal) => {
+    setEditingGoalId(goal.id);
+    setEditGoalTitle(goal.title);
+    setEditGoalDeadline(goal.deadline || '');
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingGoalId(null);
+    setEditGoalTitle('');
+    setEditGoalDeadline('');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingGoalId || !editGoalTitle.trim()) {
+      return;
+    }
+    
+    // Validate deadline format if provided
+    if (editGoalDeadline && !isValidDateFormat(editGoalDeadline)) {
+      Alert.alert('Invalid Date', 'Please use DD/MM/YYYY format (e.g., 15/03/2025)');
+      return;
+    }
+    
+    setGoals(prev =>
+      prev.map(g => {
+        if (g.id === editingGoalId) {
+          const updatedGoal = {
+            ...g,
+            title: editGoalTitle.trim(),
+            deadline: editGoalDeadline || undefined,
+          };
+          // Also update selected goal if viewing it
+          if (selectedGoal && selectedGoal.id === editingGoalId) {
+            setSelectedGoal(updatedGoal);
+          }
+          return updatedGoal;
+        }
+        return g;
+      }),
+    );
+    closeEditModal();
+  };
+
+  const toggleGoalCompleted = (goalId: string) => {
+    setGoals(prev =>
+      prev.map(g => {
+        if (g.id === goalId) {
+          const newCompleted = !g.completed;
+          const updatedGoal = {
+            ...g,
+            completed: newCompleted,
+            progress: newCompleted ? 100 : Math.round((g.milestones.filter(m => m.completed).length / g.milestones.length) * 100),
+          };
+          if (selectedGoal && selectedGoal.id === goalId) {
+            setSelectedGoal(updatedGoal);
+          }
+          return updatedGoal;
+        }
+        return g;
+      }),
+    );
   };
 
   // Delete a goal
@@ -715,6 +907,7 @@ const PremiumGoalSettingScreen = () => {
               key={goal.id}
               goal={goal}
               onPress={() => openDetailModal(goal)}
+              onEdit={() => openEditModal(goal)}
               index={index}
               colors={colors}
             />
@@ -787,7 +980,7 @@ const PremiumGoalSettingScreen = () => {
                 <TemplateCard
                   key={template.id}
                   template={template}
-                  onSelect={() => handleCreateFromTemplate(template)}
+                  onSelect={() => handleSelectTemplate(template)}
                   colors={colors}
                 />
               ))}
@@ -814,19 +1007,19 @@ const PremiumGoalSettingScreen = () => {
             {/* Deadline Input */}
             <View style={{marginTop: SPACING.sm}}>
               <Text style={[styles.deadlineLabel, {color: colors.textSecondary}]}>
-                Set Deadline
+                Set Deadline (optional)
               </Text>
               <View
                 style={[
                   styles.customInput,
                   {backgroundColor: colors.background, borderColor: colors.border, flexDirection: 'row', alignItems: 'center'},
                 ]}>
-                <View style={{marginRight: 8}}>
+                <View style={{marginRight: 8, marginLeft: SPACING.sm}}>
                   <Icon name="calendar-outline" family="Ionicons" size={20} color={colors.textMuted} />
                 </View>
                 <TextInput
                   style={[styles.input, {color: colors.text, flex: 1}]}
-                  placeholder="YYYY-MM-DD"
+                  placeholder="DD/MM/YYYY (e.g., 15/03/2025)"
                   placeholderTextColor={colors.textMuted}
                   value={newGoalDeadline}
                   onChangeText={setNewGoalDeadline}
@@ -834,7 +1027,7 @@ const PremiumGoalSettingScreen = () => {
                 />
               </View>
               <Text style={[styles.deadlineHint, {color: colors.textMuted}]}>
-                Format: YYYY-MM-DD (e.g., 2025-03-15)
+                Setting a deadline helps you stay on track!
               </Text>
             </View>
             
@@ -940,19 +1133,47 @@ const PremiumGoalSettingScreen = () => {
                   <View style={{marginRight: SPACING.md}}>
                     <Icon name="calendar-outline" family="Ionicons" size={28} color={colors.primary} />
                   </View>
-                  <View>
+                  <View style={{flex: 1}}>
                     <Text style={[styles.deadlineLabel, {color: colors.textSecondary}]}>
                       Deadline
                     </Text>
                     <Text style={[styles.deadlineValue, {color: colors.text}]}>
-                      {new Date(selectedGoal.deadline).toLocaleDateString('en-PK', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
+                      {selectedGoal.deadline ? selectedGoal.deadline : 'No deadline set'}
                     </Text>
                   </View>
                 </View>
+
+                {/* Edit Goal Button */}
+                <TouchableOpacity
+                  style={[styles.editGoalBtn, {backgroundColor: colors.primary + '15', borderColor: colors.primary}]}
+                  onPress={() => {
+                    closeDetailModal();
+                    setTimeout(() => openEditModal(selectedGoal), 200);
+                  }}>
+                  <Icon name="pencil-outline" family="Ionicons" size={20} color={colors.primary} />
+                  <Text style={[styles.editGoalText, {color: colors.primary}]}>Edit Goal</Text>
+                </TouchableOpacity>
+
+                {/* Mark Complete Button */}
+                <TouchableOpacity
+                  style={[
+                    styles.completeGoalBtn, 
+                    {
+                      backgroundColor: selectedGoal.completed ? colors.success + '15' : colors.background,
+                      borderColor: colors.success,
+                    }
+                  ]}
+                  onPress={() => toggleGoalCompleted(selectedGoal.id)}>
+                  <Icon 
+                    name={selectedGoal.completed ? "checkmark-circle" : "checkmark-circle-outline"} 
+                    family="Ionicons" 
+                    size={20} 
+                    color={colors.success} 
+                  />
+                  <Text style={[styles.completeGoalText, {color: colors.success}]}>
+                    {selectedGoal.completed ? 'Mark Incomplete' : 'Mark as Complete'}
+                  </Text>
+                </TouchableOpacity>
 
                 {/* Delete Goal Button */}
                 <TouchableOpacity
@@ -965,6 +1186,159 @@ const PremiumGoalSettingScreen = () => {
                 <View style={{height: SPACING.xxl}} />
               </ScrollView>
             )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Template Deadline Modal */}
+      <Modal
+        visible={showTemplateDeadlineModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowTemplateDeadlineModal(false)}>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={() => setShowTemplateDeadlineModal(false)}
+          />
+          <View style={[styles.editModalContent, {backgroundColor: colors.card}]}>
+            <View style={styles.modalHandle} />
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: SPACING.md}}>
+              <Icon name="calendar-outline" family="Ionicons" size={24} color={colors.primary} />
+              <Text style={[styles.modalTitle, {color: colors.text, marginBottom: 0}]}>Set Deadline</Text>
+            </View>
+            
+            {selectedTemplate && (
+              <>
+                <View style={[styles.templatePreview, {backgroundColor: selectedTemplate.color + '15'}]}>
+                  <Icon name={selectedTemplate.iconName} family="Ionicons" size={32} color={selectedTemplate.color} />
+                  <Text style={[styles.templatePreviewTitle, {color: colors.text}]}>{selectedTemplate.title}</Text>
+                  <Text style={[styles.templatePreviewMeta, {color: colors.textSecondary}]}>
+                    Suggested: {selectedTemplate.estimatedDays} days
+                  </Text>
+                </View>
+                
+                <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>
+                  When do you want to complete this?
+                </Text>
+                <View
+                  style={[
+                    styles.customInput,
+                    {backgroundColor: colors.background, borderColor: colors.border, flexDirection: 'row', alignItems: 'center'},
+                  ]}>
+                  <View style={{marginRight: 8, marginLeft: SPACING.sm}}>
+                    <Icon name="calendar-outline" family="Ionicons" size={20} color={colors.textMuted} />
+                  </View>
+                  <TextInput
+                    style={[styles.input, {color: colors.text, flex: 1}]}
+                    placeholder="DD/MM/YYYY (e.g., 15/03/2025)"
+                    placeholderTextColor={colors.textMuted}
+                    value={templateDeadline}
+                    onChangeText={setTemplateDeadline}
+                    keyboardType="default"
+                  />
+                </View>
+                
+                <View style={{flexDirection: 'row', gap: SPACING.sm, marginTop: SPACING.md}}>
+                  <TouchableOpacity 
+                    style={[styles.cancelBtn, {backgroundColor: colors.background, borderColor: colors.border, flex: 1}]}
+                    onPress={() => {
+                      setShowTemplateDeadlineModal(false);
+                      setSelectedTemplate(null);
+                    }}>
+                    <Text style={[styles.cancelBtnText, {color: colors.text}]}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[styles.saveBtnContainer, {flex: 1}]}
+                    onPress={handleCreateFromTemplate}>
+                    <LinearGradient
+                      colors={[selectedTemplate.color, selectedTemplate.color + 'CC']}
+                      style={styles.saveBtn}>
+                      <Text style={styles.saveBtnText}>Create Goal</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Edit Goal Modal */}
+      <Modal
+        visible={showEditModal}
+        transparent
+        animationType="fade"
+        onRequestClose={closeEditModal}>
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.modalBackdrop}
+            activeOpacity={1}
+            onPress={closeEditModal}
+          />
+          <View style={[styles.editModalContent, {backgroundColor: colors.card}]}>
+            <View style={styles.modalHandle} />
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: SPACING.md}}>
+              <Icon name="pencil-outline" family="Ionicons" size={24} color={colors.primary} />
+              <Text style={[styles.modalTitle, {color: colors.text, marginBottom: 0}]}>Edit Goal</Text>
+            </View>
+            
+            <Text style={[styles.inputLabel, {color: colors.textSecondary}]}>Goal Title</Text>
+            <View
+              style={[
+                styles.customInput,
+                {backgroundColor: colors.background, borderColor: colors.border},
+              ]}>
+              <TextInput
+                style={[styles.input, {color: colors.text}]}
+                placeholder="Enter goal title..."
+                placeholderTextColor={colors.textMuted}
+                value={editGoalTitle}
+                onChangeText={setEditGoalTitle}
+              />
+            </View>
+            
+            <Text style={[styles.inputLabel, {color: colors.textSecondary, marginTop: SPACING.sm}]}>
+              Deadline (optional)
+            </Text>
+            <View
+              style={[
+                styles.customInput,
+                {backgroundColor: colors.background, borderColor: colors.border, flexDirection: 'row', alignItems: 'center'},
+              ]}>
+              <View style={{marginRight: 8, marginLeft: SPACING.sm}}>
+                <Icon name="calendar-outline" family="Ionicons" size={20} color={colors.textMuted} />
+              </View>
+              <TextInput
+                style={[styles.input, {color: colors.text, flex: 1}]}
+                placeholder="DD/MM/YYYY (e.g., 15/03/2025)"
+                placeholderTextColor={colors.textMuted}
+                value={editGoalDeadline}
+                onChangeText={setEditGoalDeadline}
+                keyboardType="default"
+              />
+            </View>
+            <Text style={[styles.deadlineHint, {color: colors.textMuted}]}>
+              Leave empty to remove deadline
+            </Text>
+            
+            <View style={{flexDirection: 'row', gap: SPACING.sm, marginTop: SPACING.md}}>
+              <TouchableOpacity 
+                style={[styles.cancelBtn, {backgroundColor: colors.background, borderColor: colors.border, flex: 1}]}
+                onPress={closeEditModal}>
+                <Text style={[styles.cancelBtnText, {color: colors.text}]}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.saveBtnContainer, {flex: 1}]}
+                onPress={handleSaveEdit}>
+                <LinearGradient
+                  colors={['#4573DF', '#3461C7']}
+                  style={styles.saveBtn}>
+                  <Text style={styles.saveBtnText}>Save Changes</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -1428,6 +1802,103 @@ const styles = StyleSheet.create({
   deleteGoalText: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  // New styles for edit and deadline features
+  editIconBtn: {
+    position: 'absolute',
+    top: SPACING.sm,
+    right: SPACING.sm,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  goalDeadlineDate: {
+    fontSize: 10,
+    marginTop: 2,
+  },
+  editGoalBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.md,
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    gap: SPACING.sm,
+  },
+  editGoalText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  completeGoalBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.sm,
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    gap: SPACING.sm,
+  },
+  completeGoalText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  editModalContent: {
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.xl,
+    borderRadius: RADIUS.xxl,
+    padding: SPACING.md,
+    paddingTop: SPACING.sm,
+  },
+  templatePreview: {
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.md,
+  },
+  templatePreviewTitle: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    marginTop: SPACING.xs,
+    textAlign: 'center',
+  },
+  templatePreviewMeta: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginTop: 4,
+  },
+  inputLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+    marginBottom: SPACING.xs,
+  },
+  cancelBtn: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  cancelBtnText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  saveBtnContainer: {
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+  },
+  saveBtn: {
+    paddingVertical: SPACING.md,
+    alignItems: 'center',
+  },
+  saveBtnText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.bold,
   },
 });
 

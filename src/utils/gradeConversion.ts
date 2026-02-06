@@ -204,11 +204,11 @@ export const convertOLevelToMatric = (
   // IBCC Formula for O-Level to Matric:
   // Best 8 subjects considered
   // Maximum points = 8 × 8 = 64
-  // Equivalent marks = (Total Points / 64) × 1100
+  // Equivalent marks = (Total Points / 64) × 1200
   
   const maxPoints = subjects * 8;
   const percentage = (totalPoints / maxPoints) * 100;
-  const totalMarks = 1100; // Standard Matric total
+  const totalMarks = 1200; // Updated Matric total (2025 onwards)
   const equivalentMarks = Math.round((totalPoints / maxPoints) * totalMarks);
 
   // Determine grade
@@ -276,11 +276,11 @@ export const convertALevelToInter = (
   // IBCC Formula for A-Level to Inter:
   // Usually 3 principal subjects
   // Maximum points = 3 × 8 = 24
-  // Equivalent marks = (Total Points / 24) × 1100
+  // Equivalent marks = (Total Points / 24) × 1200
   
   const maxPoints = subjects * 8;
   const percentage = (totalPoints / maxPoints) * 100;
-  const totalMarks = 1100; // Standard Inter total
+  const totalMarks = 1200; // Updated Inter total (2025 onwards)
   const equivalentMarks = Math.round((totalPoints / maxPoints) * totalMarks);
 
   // Determine grade

@@ -221,42 +221,93 @@ export const shareMeritResults = async (
 };
 
 /**
- * Share career quiz results
+ * Share career quiz results (with HONEST feedback based on match %)
  */
 export const shareQuizResults = async (
   career: string,
   matchPercentage: number
 ): Promise<boolean> => {
-  const message = `🎯 Career Match: ${career} (${matchPercentage}% match)\n\nI took the career interest quiz on PakUni and discovered my ideal career path!\n\nTake the quiz on PakUni - Your University Guide!`;
+  // Honest messaging based on match percentage
+  const getHonestCareerMessage = (): {emoji: string; text: string} => {
+    if (matchPercentage >= 85) {
+      return {
+        emoji: '🎯',
+        text: `Excellent match! ${career} (${matchPercentage}% match) - This could be my calling!`
+      };
+    } else if (matchPercentage >= 70) {
+      return {
+        emoji: '📊',
+        text: `Good alignment with ${career} (${matchPercentage}% match). Worth exploring further!`
+      };
+    } else if (matchPercentage >= 50) {
+      return {
+        emoji: '🔍',
+        text: `Exploring ${career} as an option (${matchPercentage}% match). Still discovering my path!`
+      };
+    } else {
+      return {
+        emoji: '🌱',
+        text: `${career} showed ${matchPercentage}% match. Keeping options open - still exploring what suits me best!`
+      };
+    }
+  };
+  
+  const honest = getHonestCareerMessage();
+  const message = `${honest.emoji} ${honest.text}\n\nI took the career interest quiz on PakUni to explore my options!\n\n#CareerExploration #PakUni\n\n📱 Take the quiz on PakUni App!`;
   
   return shareContent({
-    title: 'Share My Career Match',
+    title: 'My Career Exploration',
     message,
   });
 };
 
 /**
- * Share merit success card (enhanced with chance indicator)
+ * Share merit success card (enhanced with HONEST chance indicator)
+ * Uses encouraging but honest messaging based on actual performance
  */
 export const shareMeritSuccessCard = async (
   data: MeritShareData
 ): Promise<boolean> => {
-  const chanceText = data.chance === 'high' 
-    ? 'Excellent Chance' 
-    : data.chance === 'medium' 
-    ? 'Good Chance' 
-    : 'Fair Chance';
+  // Get honest message based on aggregate score
+  const getHonestMessage = (): {emoji: string; text: string; hashtag: string} => {
+    const score = data.aggregate;
+    if (score >= 85) {
+      return {
+        emoji: '🎉',
+        text: `Great achievement! I scored ${score.toFixed(2)}% - Strong chances at ${data.universityShortName}!`,
+        hashtag: '#Achievement #Dream'
+      };
+    } else if (score >= 70) {
+      return {
+        emoji: '📊',
+        text: `I scored ${score.toFixed(2)}%. Strong foundation, working towards my goals at ${data.universityShortName}!`,
+        hashtag: '#Progress #Focused'
+      };
+    } else if (score >= 50) {
+      return {
+        emoji: '📈',
+        text: `My current score is ${score.toFixed(2)}%. Room for growth - time to work harder for ${data.universityShortName}!`,
+        hashtag: '#JourneyToExcellence #GrowthMindset'
+      };
+    } else {
+      return {
+        emoji: '🎯',
+        text: `Starting my journey with ${score.toFixed(2)}%. Every expert was once a beginner. Hard work ahead for ${data.universityShortName}!`,
+        hashtag: '#NeverGiveUp #NewBeginnings'
+      };
+    }
+  };
   
-  const emoji = data.chance === 'high' ? '🎯' : data.chance === 'medium' ? '📈' : '💪';
+  const honest = getHonestMessage();
   
   const breakdownText = data.breakdown 
     ? `\n\n📊 Score Breakdown:\n• Matric: ${data.breakdown.matricContribution.toFixed(1)}\n• Inter: ${data.breakdown.interContribution.toFixed(1)}${data.breakdown.testContribution > 0 ? `\n• Test: ${data.breakdown.testContribution.toFixed(1)}` : ''}`
     : '';
   
-  const message = `${emoji} I have an ${chanceText} of getting into ${data.universityShortName}!\n\n🎓 ${data.universityName}\n📈 My Merit Score: ${data.aggregate.toFixed(2)}%${breakdownText}\n\nCalculate your chances on PakUni App! 🚀`;
+  const message = `${honest.emoji} ${honest.text}\n\n🎓 ${data.universityName}${breakdownText}\n\n${honest.hashtag} #PakUni\n\n📱 Calculate your merit on PakUni App!`;
   
   return shareContent({
-    title: `Share My ${data.universityShortName} Chances`,
+    title: `My ${data.universityShortName} Journey`,
     message,
   });
 };
@@ -464,24 +515,47 @@ export const shareMilestone = async (
 };
 
 /**
- * Share result game prediction
+ * Share result game prediction (with HONEST messaging)
  */
 export const shareResultPrediction = async (
   universityName: string,
   universityShortName: string,
   chancePercentage: number
 ): Promise<boolean> => {
-  const emoji = chancePercentage >= 80 ? '🎯' : chancePercentage >= 50 ? '📈' : '💪';
-  const motivationText = chancePercentage >= 80 
-    ? 'Looking good!' 
-    : chancePercentage >= 50 
-    ? 'Keep pushing!' 
-    : 'Every effort counts!';
+  // Honest messaging based on actual chances
+  const getHonestPredictionMessage = (): {emoji: string; text: string; hashtag: string} => {
+    if (chancePercentage >= 85) {
+      return {
+        emoji: '🎉',
+        text: `Strong chances at ${universityShortName}! ${chancePercentage}% prediction - hard work paying off!`,
+        hashtag: '#StrongChances'
+      };
+    } else if (chancePercentage >= 70) {
+      return {
+        emoji: '📊',
+        text: `${chancePercentage}% chance at ${universityShortName}. Good foundation, staying focused!`,
+        hashtag: '#OnTrack'
+      };
+    } else if (chancePercentage >= 50) {
+      return {
+        emoji: '📈',
+        text: `${chancePercentage}% prediction for ${universityShortName}. Room to improve - working harder!`,
+        hashtag: '#GrowthMindset'
+      };
+    } else {
+      return {
+        emoji: '🎯',
+        text: `${chancePercentage}% at ${universityShortName}. Challenge accepted - improvement plan in action!`,
+        hashtag: '#NeverGiveUp'
+      };
+    }
+  };
   
-  const message = `${emoji} My ${universityShortName} Prediction: ${chancePercentage}%!\n\n🏛️ ${universityName}\n💭 ${motivationText}\n\nJust played the Result Prediction Game on PakUni! 🎮\n\n#ResultPrediction #${universityShortName} #PakUni\n\n📱 Made with PakUni App`;
+  const honest = getHonestPredictionMessage();
+  const message = `${honest.emoji} ${honest.text}\n\n🏛️ ${universityName}\n\nJust used PakUni's Admission Predictor! 🎮\n\n${honest.hashtag} #PakUni\n\n📱 Made with PakUni App`;
   
   return shareContent({
-    title: `My ${universityShortName} Chances`,
+    title: `My ${universityShortName} Journey`,
     message,
   });
 };

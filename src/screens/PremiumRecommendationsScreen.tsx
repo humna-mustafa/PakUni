@@ -193,6 +193,9 @@ const ResultCard = ({
   index,
   colors,
   onViewDetails,
+  tier,
+  isReachSchool,
+  matchBreakdown,
 }: {
   university: any;
   matchScore: number;
@@ -200,6 +203,15 @@ const ResultCard = ({
   index: number;
   colors: any;
   onViewDetails: () => void;
+  tier?: number;
+  isReachSchool?: boolean;
+  matchBreakdown?: {
+    cityMatch: boolean;
+    programMatch: boolean;
+    typeMatch: boolean;
+    academicTier: string;
+    meetsMinimum: boolean;
+  };
 }) => {
   const slideAnim = useRef(new Animated.Value(100)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -209,13 +221,13 @@ const ResultCard = ({
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 500,
-        delay: index * 150,
+        delay: index * 100, // Faster animation for more results
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
-        delay: index * 150,
+        delay: index * 100,
         useNativeDriver: true,
       }),
     ]).start();
@@ -227,6 +239,20 @@ const ResultCard = ({
     return '#e74c3c';
   };
 
+  const getTierColor = (t: number) => {
+    if (t === 1) return '#9b59b6'; // Purple for Tier 1
+    if (t === 2) return '#3498db'; // Blue for Tier 2
+    if (t === 3) return '#1abc9c'; // Teal for Tier 3
+    return '#95a5a6'; // Gray for Tier 4
+  };
+
+  const getTierLabel = (t: number) => {
+    if (t === 1) return 'Tier 1';
+    if (t === 2) return 'Tier 2';
+    if (t === 3) return 'Tier 3';
+    return 'Tier 4';
+  };
+
   return (
     <Animated.View
       style={[
@@ -235,6 +261,8 @@ const ResultCard = ({
           backgroundColor: colors.card,
           transform: [{translateX: slideAnim}],
           opacity: fadeAnim,
+          borderLeftWidth: 4,
+          borderLeftColor: tier ? getTierColor(tier) : getMatchColor(matchScore),
         },
       ]}>
       <LinearGradient
@@ -246,6 +274,20 @@ const ResultCard = ({
       <View style={[styles.rankBadge, {backgroundColor: getMatchColor(matchScore)}]}>
         <Text style={styles.rankText}>#{index + 1}</Text>
       </View>
+
+      {/* Tier Badge */}
+      {tier && (
+        <View style={[styles.tierBadge, {backgroundColor: getTierColor(tier)}]}>
+          <Text style={styles.tierText}>{getTierLabel(tier)}</Text>
+        </View>
+      )}
+
+      {/* Reach School Badge */}
+      {isReachSchool && (
+        <View style={[styles.reachBadge, {backgroundColor: '#e74c3c'}]}>
+          <Text style={styles.reachText}>REACH</Text>
+        </View>
+      )}
 
       <View style={styles.resultContent}>
         <View style={styles.resultHeader}>
@@ -306,14 +348,55 @@ const ResultCard = ({
           </View>
         </View>
 
+        {/* Match Breakdown - Quick Visual */}
+        {matchBreakdown && (
+          <View style={[styles.matchBreakdownRow, {backgroundColor: colors.background}]}>
+            <View style={styles.breakdownItem}>
+              <Icon 
+                name={matchBreakdown.cityMatch ? 'checkmark-circle' : 'close-circle'} 
+                family="Ionicons" 
+                size={16} 
+                color={matchBreakdown.cityMatch ? colors.success : colors.error} 
+              />
+              <Text style={[styles.breakdownText, {color: colors.textSecondary}]}>City</Text>
+            </View>
+            <View style={styles.breakdownItem}>
+              <Icon 
+                name={matchBreakdown.programMatch ? 'checkmark-circle' : 'close-circle'} 
+                family="Ionicons" 
+                size={16} 
+                color={matchBreakdown.programMatch ? colors.success : colors.error} 
+              />
+              <Text style={[styles.breakdownText, {color: colors.textSecondary}]}>Program</Text>
+            </View>
+            <View style={styles.breakdownItem}>
+              <Icon 
+                name={matchBreakdown.typeMatch ? 'checkmark-circle' : 'close-circle'} 
+                family="Ionicons" 
+                size={16} 
+                color={matchBreakdown.typeMatch ? colors.success : colors.error} 
+              />
+              <Text style={[styles.breakdownText, {color: colors.textSecondary}]}>Type</Text>
+            </View>
+            <View style={styles.breakdownItem}>
+              <Icon 
+                name={matchBreakdown.meetsMinimum ? 'checkmark-circle' : 'alert-circle'} 
+                family="Ionicons" 
+                size={16} 
+                color={matchBreakdown.meetsMinimum ? colors.success : '#f39c12'} 
+              />
+              <Text style={[styles.breakdownText, {color: colors.textSecondary}]}>Level</Text>
+            </View>
+          </View>
+        )}
+
         {/* Why this matches */}
         <View style={[styles.matchReasons, {backgroundColor: colors.background}]}>
           <Text style={[styles.matchReasonsTitle, {color: colors.text}]}>
             Why this matches:
           </Text>
-          {matchReasons.slice(0, 3).map((reason, idx) => (
+          {matchReasons.slice(0, 4).map((reason, idx) => (
             <View key={idx} style={{flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2}}>
-              <Icon name="checkmark-circle" family="Ionicons" size={14} color={colors.success} />
               <Text style={[styles.matchReason, {color: colors.textSecondary}]}>{reason}</Text>
             </View>
           ))}
@@ -466,8 +549,8 @@ const PremiumRecommendationsScreen = () => {
       universityType: preferredType === 'Public' ? 'Public' : preferredType === 'Private' ? 'Private' : 'Both',
     });
     
-    // City filtering: Prioritize preferred cities but don't exclude others
-    // If user selected cities, filter to show those first
+    // City filtering: Prioritize preferred cities but include all
+    // Sort: preferred cities first, then others
     if (preferredCities.length > 0) {
       const inCityResults = allRecommendations.filter(uni => 
         preferredCities.some(city => 
@@ -476,16 +559,28 @@ const PremiumRecommendationsScreen = () => {
         )
       );
       
-      // If we have matches in preferred cities, show those
-      // Otherwise show ALL results (better than showing "No Matches")
-      if (inCityResults.length > 0) {
-        return inCityResults;
-      }
-      // Fall through to return all recommendations if no city matches
+      const outCityResults = allRecommendations.filter(uni => 
+        !preferredCities.some(city => 
+          uni.city.toLowerCase().includes(city.toLowerCase()) ||
+          city.toLowerCase().includes(uni.city.toLowerCase())
+        )
+      );
+      
+      // Return combined: preferred cities first, then others
+      return [...inCityResults, ...outCityResults];
     }
     
     return allRecommendations;
   }, [showResults, matricMarks, matricTotal, fscMarks, fscTotal, entryTestScore, entryTestTotal, preferredPrograms, preferredCities, preferredType]);
+
+  // Calculate recommendation stats
+  const recommendationStats = React.useMemo(() => {
+    if (recommendations.length === 0) return null;
+    const tier1Count = recommendations.filter(r => r.tier === 1).length;
+    const tier2Count = recommendations.filter(r => r.tier === 2).length;
+    const reachCount = recommendations.filter(r => r.isReachSchool).length;
+    return { tier1Count, tier2Count, reachCount, total: recommendations.length };
+  }, [recommendations]);
 
   // Handle navigation to university details
   const handleViewDetails = (universityId: string) => {
@@ -514,6 +609,23 @@ const PremiumRecommendationsScreen = () => {
           <Text style={styles.resultsSubtitle}>
             Found {recommendations.length} universities matching your criteria
           </Text>
+          {recommendationStats && recommendationStats.tier1Count > 0 && (
+            <View style={styles.statsRow}>
+              <View style={styles.statBadge}>
+                <Text style={styles.statText}>🏆 {recommendationStats.tier1Count} Elite</Text>
+              </View>
+              {recommendationStats.tier2Count > 0 && (
+                <View style={styles.statBadge}>
+                  <Text style={styles.statText}>🥇 {recommendationStats.tier2Count} Top</Text>
+                </View>
+              )}
+              {recommendationStats.reachCount > 0 && (
+                <View style={styles.statBadge}>
+                  <Text style={styles.statText}>🎯 {recommendationStats.reachCount} Reach</Text>
+                </View>
+              )}
+            </View>
+          )}
         </LinearGradient>
 
         <ScrollView
@@ -529,15 +641,33 @@ const PremiumRecommendationsScreen = () => {
                 index={index}
                 colors={colors}
                 onViewDetails={() => handleViewDetails(uni.short_name)}
+                tier={uni.tier}
+                isReachSchool={uni.isReachSchool}
+                matchBreakdown={uni.matchBreakdown}
               />
             ))
           ) : (
             <View style={[styles.noResultsCard, {backgroundColor: colors.card}]}>
-              <Icon name="search-outline" family="Ionicons" size={48} color={colors.textSecondary} />
-              <Text style={[styles.noResultsTitle, {color: colors.text}]}>No Matches Found</Text>
-              <Text style={[styles.noResultsText, {color: colors.textSecondary}]}>
-                Try selecting different cities or programs to find more universities.
+              <Icon name="school-outline" family="Ionicons" size={48} color={colors.textSecondary} />
+              <Text style={[styles.noResultsTitle, {color: colors.text}]}>
+                {parseFloat(fscMarks) / parseFloat(fscTotal) * 100 < 50 
+                  ? 'Focus on Improving Your Marks' 
+                  : 'No Matches Found'}
               </Text>
+              <Text style={[styles.noResultsText, {color: colors.textSecondary}]}>
+                {parseFloat(fscMarks) / parseFloat(fscTotal) * 100 < 50 
+                  ? 'With your current marks, we recommend focusing on improving your academic performance. Consider taking extra classes, joining study groups, or exploring vocational training programs.'
+                  : 'Try selecting different cities, programs, or university types to find more options. You can also try selecting "Both" for university type.'}
+              </Text>
+              {parseFloat(fscMarks) / parseFloat(fscTotal) * 100 < 60 && (
+                <View style={[styles.guidanceCard, {backgroundColor: colors.background, marginTop: SPACING.md}]}>
+                  <Text style={[styles.guidanceTitle, {color: colors.text}]}>📚 Improvement Tips:</Text>
+                  <Text style={[styles.guidanceText, {color: colors.textSecondary}]}>• Consider retaking your exams</Text>
+                  <Text style={[styles.guidanceText, {color: colors.textSecondary}]}>• Look into technical/vocational programs</Text>
+                  <Text style={[styles.guidanceText, {color: colors.textSecondary}]}>• Explore AIOU or VU distance learning</Text>
+                  <Text style={[styles.guidanceText, {color: colors.textSecondary}]}>• Check diploma programs at polytechnics</Text>
+                </View>
+              )}
             </View>
           )}
 
@@ -1181,6 +1311,24 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.9)',
     textAlign: 'center',
   },
+  statsRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginTop: SPACING.sm,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  statBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+  },
+  statText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
   resultsContainer: {
     padding: SPACING.md,
   },
@@ -1209,6 +1357,47 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  tierBadge: {
+    position: 'absolute',
+    top: SPACING.sm,
+    left: SPACING.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+  },
+  tierText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  reachBadge: {
+    position: 'absolute',
+    top: SPACING.sm + 28,
+    left: SPACING.sm,
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 2,
+    borderRadius: RADIUS.sm,
+  },
+  reachText: {
+    color: '#fff',
+    fontSize: 8,
+    fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  matchBreakdownRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: SPACING.sm,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.sm,
+  },
+  breakdownItem: {
+    alignItems: 'center',
+    gap: 2,
+  },
+  breakdownText: {
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   resultContent: {
     padding: SPACING.md,
@@ -1354,6 +1543,21 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     textAlign: 'center',
     marginTop: SPACING.xs,
+    paddingHorizontal: SPACING.md,
+  },
+  guidanceCard: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    width: '100%',
+  },
+  guidanceTitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    marginBottom: SPACING.xs,
+  },
+  guidanceText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginBottom: 4,
   },
 });
 

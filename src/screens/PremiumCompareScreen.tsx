@@ -32,7 +32,8 @@ const COMPARISON_METRICS = [
   {key: 'type', label: 'Type', iconName: 'business-outline'},
   {key: 'city', label: 'City', iconName: 'location-outline'},
   {key: 'province', label: 'Province', iconName: 'map-outline'},
-  {key: 'ranking', label: 'HEC Ranking', iconName: 'trophy-outline'},
+  {key: 'ranking', label: 'National Rank', iconName: 'trophy-outline'},
+  {key: 'hec_category', label: 'HEC Category', iconName: 'ribbon-outline'},
   {key: 'established', label: 'Established', iconName: 'calendar-outline'},
   {key: 'programs', label: 'Programs', iconName: 'book-outline'},
   {key: 'campuses', label: 'Campuses', iconName: 'business-outline'},
@@ -190,11 +191,12 @@ const ComparisonRow = ({
     if (!uni) return '-';
     switch (metric.key) {
       case 'type':
-        return uni.type.charAt(0).toUpperCase() + uni.type.slice(1);
+        return uni.type ? uni.type.charAt(0).toUpperCase() + uni.type.slice(1) : 'N/A';
       case 'city':
-        return uni.city;
-      case 'province':
+        return uni.city || 'N/A';
+      case 'province': {
         // Format province name properly
+        if (!uni.province) return 'N/A';
         const provinceMap: {[key: string]: string} = {
           'punjab': 'Punjab',
           'sindh': 'Sindh',
@@ -204,45 +206,61 @@ const ComparisonRow = ({
           'ajk': 'AJK',
           'gilgit_baltistan': 'GB',
         };
-        return provinceMap[uni.province?.toLowerCase()] || uni.province || '-';
+        return provinceMap[uni.province?.toLowerCase()] || uni.province;
+      }
       case 'ranking':
-        // Combine both rankings for better info
-        if (uni.ranking_national) {
-          return `#${uni.ranking_national} (${uni.ranking_hec || '-'})`;
+        // Show national ranking clearly
+        if (uni.ranking_national && uni.ranking_national > 0) {
+          return `#${uni.ranking_national}`;
         }
-        return uni.ranking_hec || '-';
+        return 'Not Ranked';
+      case 'hec_category':
+        // Show HEC category
+        return uni.ranking_hec || 'N/A';
       case 'established':
-        return uni.established_year ? uni.established_year.toString() : '-';
+        return uni.established_year ? uni.established_year.toString() : 'N/A';
       case 'programs': {
         // Count programs offered by this university
         const programCount = PROGRAMS.filter(p => 
           p.universities.includes(uni.short_name)
         ).length;
-        return programCount > 0 ? `${programCount}+` : '-';
+        if (programCount > 0) {
+          return `${programCount} Programs`;
+        }
+        return 'Contact Univ.';
       }
       case 'campuses': {
-        // Show campus count and cities
-        const campusCount = uni.campuses?.length || 1;
+        // Show campus count simply
+        const campusCount = uni.campuses?.length || 0;
         if (campusCount > 1) {
-          return `${campusCount} (${uni.campuses.slice(0, 2).join(', ')}${campusCount > 2 ? '...' : ''})`;
+          return `${campusCount} Campuses`;
+        } else if (campusCount === 1) {
+          return '1 Campus';
         }
-        return uni.city;
+        return 'N/A';
       }
       case 'fee': {
         // Get fee range from programs offered by this university
         const uniPrograms = PROGRAMS.filter(p => 
           p.universities.includes(uni.short_name)
         );
-        if (uniPrograms.length === 0) return '-';
+        if (uniPrograms.length === 0) return 'Contact Univ.';
         const fees = uniPrograms.map(p => p.avg_fee_per_semester).filter(f => f > 0);
-        if (fees.length === 0) return '-';
+        if (fees.length === 0) return 'Contact Univ.';
         const minFee = Math.min(...fees);
         const maxFee = Math.max(...fees);
-        if (minFee === maxFee) return `${(minFee/1000).toFixed(0)}K/sem`;
-        return `${(minFee/1000).toFixed(0)}-${(maxFee/1000).toFixed(0)}K`;
+        // Format as PKR with K suffix
+        const formatFee = (fee: number) => {
+          if (fee >= 1000000) return `${(fee/1000000).toFixed(1)}M`;
+          return `${(fee/1000).toFixed(0)}K`;
+        };
+        if (minFee === maxFee) {
+          return `PKR ${formatFee(minFee)}/sem`;
+        }
+        return `PKR ${formatFee(minFee)}-${formatFee(maxFee)}`;
       }
       default:
-        return '-';
+        return 'N/A';
     }
   };
 
@@ -513,15 +531,17 @@ const PremiumCompareScreen = () => {
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
-      {/* University Selection Dropdown */}
-      <SearchableDropdown
-        label="Select University"
-        placeholder="Search for a university..."
-        visible={modalVisible}
-        options={universityOptions}
-        onSelect={(option, value) => selectUniversity(value)}
-        onClose={closeModal}
-      />
+      {/* University Selection Modal - only rendered when visible */}
+      {modalVisible && (
+        <SearchableDropdown
+          label="Select University"
+          placeholder="Search for a university..."
+          visible={modalVisible}
+          options={universityOptions}
+          onSelect={(option, value) => selectUniversity(value)}
+          onClose={closeModal}
+        />
+      )}
     </SafeAreaView>
   );
 };

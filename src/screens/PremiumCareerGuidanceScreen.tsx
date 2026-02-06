@@ -17,7 +17,7 @@ import {Icon} from '../components/icons';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
-import {CAREER_FIELDS, CareerField} from '../data';
+import {CAREER_FIELDS, CAREER_PATHS, CareerField} from '../data';
 
 const {width} = Dimensions.get('window');
 
@@ -49,6 +49,11 @@ const getCareerCategory = (career: CareerField): string => {
 
 // Helper to extract career duration from education requirements
 const getCareerDuration = (career: CareerField): string => {
+  // Use the explicit duration field if available
+  if (career.duration) {
+    return career.duration;
+  }
+
   const educationList = career.required_education || [];
   
   // Look for duration patterns in education requirements
@@ -60,15 +65,6 @@ const getCareerDuration = (career: CareerField): string => {
       return durationMatch[1].trim();
     }
   }
-  
-  // Career-specific defaults based on career ID
-  const id = career.id.toLowerCase();
-  if (id.includes('medicine') || id.includes('mbbs')) return '5 years + house job';
-  if (id.includes('dentistry') || id.includes('bds')) return '4 years + house job';
-  if (id.includes('pharmacy')) return '5 years';
-  if (id.includes('chartered') || id.includes('ca')) return '5-7 years';
-  if (id.includes('civil-service') || id.includes('css')) return '1-2 years prep';
-  if (id.includes('law') || id.includes('llb')) return '5 years';
   
   // Default for most BS degrees
   return '4 years';
@@ -196,6 +192,17 @@ const CareerCard = ({
   const category = getCareerCategory(career);
   const categoryColor = getCategoryColor(category);
 
+  const getDemandColor = (trend: string) => {
+    switch (trend) {
+      case 'rising': return '#10B981';
+      case 'stable': return '#F59E0B';
+      case 'declining': return '#EF4444';
+      default: return '#10B981';
+    }
+  };
+
+  const demandColor = getDemandColor(career.demand_trend);
+
   return (
     <Animated.View
       style={[
@@ -225,75 +232,33 @@ const CareerCard = ({
               <Text style={[styles.careerName, {color: colors.text}]}>
                 {career.name}
               </Text>
-              <View style={[styles.categoryBadge, {backgroundColor: categoryColor + '20'}]}>
-                <Text style={[styles.categoryText, {color: categoryColor}]}>
-                  {category}
-                </Text>
+              <View style={styles.cardMetaRow}>
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+                  <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
+                  <Text style={[styles.metaText, {color: colors.textSecondary}]}>
+                    {getCareerDuration(career)}
+                  </Text>
+                </View>
               </View>
             </View>
-            <View style={styles.demandIndicator}>
-              <Icon name="flame-outline" family="Ionicons" size={16} color={colors.success} />
-              <Text style={[styles.demandText, {color: colors.success}]}>
-                {career.demand_trend || 'High'}
-              </Text>
-            </View>
-          </View>
-
-          <Text
-            style={[styles.careerDescription, {color: colors.textSecondary}]}
-            numberOfLines={2}>
-            {career.description}
-          </Text>
-
-          {/* Skills */}
-          <View style={styles.skillsContainer}>
-            {(career.key_skills || career.skills || ['Problem Solving', 'Communication', 'Technical']).slice(0, 3).map((skill: string, i: number) => (
-              <View key={i} style={[styles.skillChip, {backgroundColor: colors.background}]}>
-                <Text style={[styles.skillText, {color: colors.textSecondary}]}>
-                  {skill}
-                </Text>
-              </View>
-            ))}
-          </View>
-
-          {/* Salary Range */}
-          <View style={styles.salarySection}>
-            <View style={styles.salaryTitleRow}>
-              <Icon name="wallet-outline" family="Ionicons" size={14} color={colors.text} />
-              <Text style={[styles.salaryTitle, {color: colors.text}]}> Salary Range</Text>
-            </View>
-            <View style={styles.salaryBarContainer}>
-              <View style={[styles.salaryTrackBg, {backgroundColor: colors.background}]}>
-                <LinearGradient
-                  colors={['#27ae60', '#2ecc71']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  style={[styles.salaryProgress, {width: `${(career.average_senior_salary || career.maxSalary || 200000) / 10000}%`}]}
-                />
-              </View>
-              <Text style={[styles.salaryAmount, {color: colors.success}]}>
-                {((career.average_starting_salary || career.minSalary || 50000) / 1000).toFixed(0)}K - {((career.average_senior_salary || career.maxSalary || 200000) / 1000).toFixed(0)}K PKR/month
+            <View style={[styles.demandBadge, {backgroundColor: demandColor + '15'}]}>
+              <View style={[styles.demandDot, {backgroundColor: demandColor}]} />
+              <Text style={[styles.demandText, {color: demandColor}]}>
+                {career.demand_trend === 'rising' ? 'High' : career.demand_trend === 'stable' ? 'Stable' : 'Low'} Demand
               </Text>
             </View>
           </View>
 
           <View style={styles.cardFooter}>
-            <View style={styles.metaItem}>
-              <Icon name="school-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-              <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                {career.required_education?.[1]?.split('(')[0]?.trim() || career.education || 'Bachelor\'s'}
-              </Text>
-            </View>
-            <View style={styles.metaItem}>
-              <Icon name="time-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-              <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                {getCareerDuration(career)}
+            <View style={[styles.categoryBadge, {backgroundColor: categoryColor + '15'}]}>
+              <Text style={[styles.categoryText, {color: categoryColor}]}>
+                {category}
               </Text>
             </View>
             <TouchableOpacity
-              style={[styles.exploreBtn, {backgroundColor: categoryColor, flexDirection: 'row', alignItems: 'center'}]}
+              style={[styles.exploreBtn, {backgroundColor: categoryColor}]}
               onPress={onPress}>
-              <Text style={[styles.exploreBtnText, {marginRight: 4}]}>Explore</Text>
+              <Text style={styles.exploreBtnText}>Explore</Text>
               <Icon name="arrow-forward" family="Ionicons" size={12} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
@@ -527,14 +492,14 @@ const PremiumCareerGuidanceScreen = () => {
                     <Icon name="time-outline" family="Ionicons" size={24} color={colors.primary} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Duration</Text>
                     <Text style={[styles.statValue, {color: colors.text}]}>
-                      {selectedCareer.duration || '4 years'}
+                      {getCareerDuration(selectedCareer)}
                     </Text>
                   </View>
                   <View style={[styles.statCard, {backgroundColor: colors.background}]}>
                     <Icon name="wallet-outline" family="Ionicons" size={24} color={colors.success} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Avg Salary</Text>
                     <Text style={[styles.statValue, {color: colors.success}]}>
-                      {((selectedCareer.maxSalary || 150000) / 1000).toFixed(0)}K
+                      {((selectedCareer.average_mid_career_salary || selectedCareer.maxSalary || 150000) / 1000).toFixed(0)}K
                     </Text>
                   </View>
                 </View>
@@ -556,30 +521,39 @@ const PremiumCareerGuidanceScreen = () => {
                     <Icon name="map-outline" family="Ionicons" size={18} color={colors.text} />
                     <Text style={[styles.sectionTitle, {color: colors.text}]}> Career Roadmap</Text>
                   </View>
-                  {(selectedCareer.roadmap || [
-                    {step: 1, title: 'Complete Matric', duration: '2 years'},
-                    {step: 2, title: 'FSc / Intermediate', duration: '2 years'},
-                    {step: 3, title: "Bachelor's Degree", duration: '4 years'},
-                    {step: 4, title: 'Entry Level Job', duration: 'Ongoing'},
-                  ]).map((step: any, i: number) => (
-                    <View key={i} style={styles.roadmapStep}>
-                      <View style={styles.stepTimeline}>
-                        <LinearGradient
-                          colors={['#1abc9c', '#16a085']}
-                          style={styles.stepDot}>
-                          <Text style={styles.stepNumber}>{step.step || i + 1}</Text>
-                        </LinearGradient>
-                        {i < 3 && <View style={[styles.stepLine, {backgroundColor: '#1abc9c'}]} />}
-                      </View>
-                      <View style={[styles.stepContent, {backgroundColor: colors.background}]}>
-                        <Text style={[styles.stepTitle, {color: colors.text}]}>{step.title}</Text>
-                        <View style={styles.stepDurationRow}>
-                          <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
-                          <Text style={[styles.stepDuration, {color: colors.textSecondary}]}> {step.duration}</Text>
+                  {(() => {
+                    // Find matching career path from CAREER_PATHS data
+                    const careerPath = CAREER_PATHS.find(p => p.field_id === selectedCareer.id);
+                    const steps = careerPath?.steps?.map((s, idx) => ({
+                      step: idx + 1,
+                      title: s.stage,
+                      duration: s.duration,
+                    })) || selectedCareer.roadmap || [
+                      {step: 1, title: 'Complete Matric', duration: '2 years'},
+                      {step: 2, title: 'FSc / Intermediate', duration: '2 years'},
+                      {step: 3, title: "Bachelor's Degree", duration: getCareerDuration(selectedCareer)},
+                      {step: 4, title: 'Entry Level Job', duration: 'Ongoing'},
+                    ];
+                    return steps.map((step: any, i: number) => (
+                      <View key={i} style={styles.roadmapStep}>
+                        <View style={styles.stepTimeline}>
+                          <LinearGradient
+                            colors={['#1abc9c', '#16a085']}
+                            style={styles.stepDot}>
+                            <Text style={styles.stepNumber}>{step.step || i + 1}</Text>
+                          </LinearGradient>
+                          {i < steps.length - 1 && <View style={[styles.stepLine, {backgroundColor: '#1abc9c'}]} />}
+                        </View>
+                        <View style={[styles.stepContent, {backgroundColor: colors.background}]}>
+                          <Text style={[styles.stepTitle, {color: colors.text}]}>{step.title}</Text>
+                          <View style={styles.stepDurationRow}>
+                            <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
+                            <Text style={[styles.stepDuration, {color: colors.textSecondary}]}> {step.duration}</Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  ))}
+                    ));
+                  })()}
                 </View>
 
                 {/* Skills Required */}
@@ -589,7 +563,7 @@ const PremiumCareerGuidanceScreen = () => {
                     <Text style={[styles.sectionTitle, {color: colors.text}]}> Skills Required</Text>
                   </View>
                   <View style={styles.skillsGrid}>
-                    {(selectedCareer.skills || ['Problem Solving', 'Communication', 'Technical Skills', 'Teamwork', 'Creativity']).map((skill: string, i: number) => (
+                    {(selectedCareer.key_skills || selectedCareer.skills || ['Problem Solving', 'Communication', 'Technical Skills', 'Teamwork', 'Creativity']).map((skill: string, i: number) => (
                       <View key={i} style={[styles.skillItem, {backgroundColor: colors.background}]}>
                         <View style={styles.skillItemContent}>
                           <Icon name="checkmark-outline" family="Ionicons" size={14} color={colors.success} />
@@ -770,92 +744,61 @@ const styles = StyleSheet.create({
   careerName: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 4,
+    marginBottom: 2,
+  },
+  cardMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 2,
   },
   categoryBadge: {
+    flex: 1,
     alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: RADIUS.full,
   },
   categoryText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: TYPOGRAPHY.weight.semibold,
   },
-  demandIndicator: {
+  demandBadge: {
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    gap: 4,
+  },
+  demandDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   demandText: {
     fontSize: 10,
     fontWeight: TYPOGRAPHY.weight.semibold,
   },
-  careerDescription: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 20,
-    marginBottom: SPACING.sm,
-  },
-  skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: SPACING.sm,
-  },
-  skillChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  skillText: {
-    fontSize: 11,
-  },
-  salarySection: {
-    marginBottom: SPACING.sm,
-  },
-  salaryTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  salaryTitle: {
+  metaText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  salaryBarContainer: {},
-  salaryTrackBg: {
-    height: 8,
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 4,
-  },
-  salaryProgress: {
-    height: '100%',
-    borderRadius: 4,
-  },
-  salaryAmount: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   cardFooter: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: SPACING.sm,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.05)',
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: SPACING.md,
-    gap: 4,
-  },
-  metaText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
+    overflow: 'hidden',
   },
   exploreBtn: {
-    marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: SPACING.md,
     paddingVertical: 6,
     borderRadius: RADIUS.full,
+    gap: 4,
+    flexShrink: 0,
   },
   exploreBtnText: {
     color: '#fff',

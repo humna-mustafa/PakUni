@@ -250,7 +250,11 @@ export class UltraAuthScreen extends React.Component<UltraAuthScreenProps, Ultra
 
   handleGoogleSignIn = async () => {
     this.setState({localLoading: 'google'});
-    await this.props.signInWithGoogle();
+    try {
+      await this.props.signInWithGoogle();
+    } catch (_) {
+      // Error handled by caller/toast
+    }
     this.setState({localLoading: null});
   };
 

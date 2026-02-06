@@ -341,9 +341,9 @@ export const validate = {
   },
 
   /**
-   * Validate marks (0-1100 range)
+   * Validate marks (0-1200 range)
    */
-  marks: (marks: number, max: number = 1100): ValidationResult => {
+  marks: (marks: number, max: number = 1200): ValidationResult => {
     if (marks < 0) {
       return {isValid: false, error: 'Marks cannot be negative'};
     }

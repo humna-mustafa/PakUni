@@ -409,9 +409,13 @@ export function getUniversityMeritSummaryByShortName(
 
 /**
  * Get yearly trend data (average merit by year)
+ * Returns data sorted oldest-to-newest for chart display (left-to-right)
  */
 export function getYearlyTrendData(records: MeritRecord[]) {
-  return AVAILABLE_YEARS.map(year => {
+  // Sort years ascending (oldest to newest) for proper chart display
+  const sortedYears = [...AVAILABLE_YEARS].sort((a, b) => a - b);
+  
+  return sortedYears.map(year => {
     const yearRecords = records.filter(r => r.year === year);
     if (yearRecords.length === 0) {
       return {year, merit: 0, count: 0};

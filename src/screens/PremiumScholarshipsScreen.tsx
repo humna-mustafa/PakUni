@@ -268,14 +268,14 @@ const ScholarshipCard = ({
               </Text>
             </View>
 
-            {/* Coverage Badge */}
+            {/* Coverage Badge - Show coverageLabel */}
             <View
               style={[
                 styles.coverageBadge,
                 {backgroundColor: getCoverageColor(coveragePercentage) + '20'},
               ]}>
               <Text style={[styles.coverageText, {color: getCoverageColor(coveragePercentage)}]}>
-                {coveragePercentage}% Coverage
+                {item.coverageLabel || `${coveragePercentage}% Tuition`}
               </Text>
             </View>
             
@@ -313,56 +313,20 @@ const ScholarshipCard = ({
             </View>
           </View>
 
-          {/* Description */}
-          <Text style={[styles.cardDescription, {color: colors.textSecondary}]} numberOfLines={1} ellipsizeMode="tail">
-            {item.description}
-          </Text>
-
-          {/* University Availability Section */}
-          <View style={[styles.availabilitySection, {backgroundColor: colors.background}]}>
-            <View style={styles.availabilityHeader}>
-              <Icon name="school-outline" family="Ionicons" size={16} color={colors.primary} />
-              <Text style={[styles.availabilityTitle, {color: colors.text}]}>Available At</Text>
+          {/* Deadline - Show prominently if available */}
+          {item.deadline && (
+            <View style={[styles.deadlineRowCompact, {backgroundColor: colors.warningLight}]}>
+              <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.warning} />
+              <Text style={[styles.deadlineTextCompact, {color: colors.warning}]}>Deadline: {item.deadline}</Text>
             </View>
-            <Text style={[styles.availabilityText, {color: colors.textSecondary}]}>
+          )}
+
+          {/* University Availability Section - Simplified - Simplified */}
+          <View style={[styles.availabilitySectionSimple, {backgroundColor: colors.background}]}>
+            <Icon name="school-outline" family="Ionicons" size={14} color={colors.primary} />
+            <Text style={[styles.availabilityTextSimple, {color: colors.textSecondary}]} numberOfLines={1}>
               {availabilityText}
             </Text>
-            {!isBroadlyAvailable && universityCount > 0 && universityCount <= 4 && (
-              <View style={styles.universityLogosRow}>
-                {specificUniversities.slice(0, 4).map((uniName: string) => (
-                  <View key={uniName} style={styles.miniLogoContainer}>
-                    <UniversityLogo
-                      universityName={uniName}
-                      size={28}
-                      style={styles.miniLogo}
-                    />
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {/* Application Method Badge */}
-          <View style={[styles.applicationMethodBadge, {backgroundColor: colors.background}]}>
-            <Icon name="document-text-outline" family="Ionicons" size={14} color={accentColor} />
-            <Text style={[styles.applicationMethodText, {color: colors.textSecondary}]}>
-              {methodLabel}
-            </Text>
-          </View>
-
-          {/* Stats Row */}
-          <View style={styles.statsRow}>
-            {item.monthlyStipend && (
-              <View style={[styles.statBox, {backgroundColor: colors.successLight}]}>
-                <Icon name="cash-outline" family="Ionicons" size={18} color={colors.success} />
-                <View>
-                  <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Stipend</Text>
-                  <Text style={[styles.statValue, {color: colors.success}]}>
-                    {formatCurrency(item.monthlyStipend)}
-                  </Text>
-                </View>
-              </View>
-            )}
           </View>
 
           {/* Footer */}
@@ -540,11 +504,36 @@ const PremiumScholarshipsScreen = () => {
 
   const filteredScholarships = useMemo(() => {
     return scholarships.filter((scholarship: ScholarshipData) => {
-      // Basic search
-      const matchesSearch =
-        scholarship.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        scholarship.provider.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        scholarship.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+      // Enhanced search - matches name, provider, description, short_name, and keyword prefixes
+      const query = debouncedSearchQuery.toLowerCase().trim();
+      if (!query) {
+        // No search query - match all
+        var matchesSearch = true;
+      } else {
+        const nameLower = scholarship.name.toLowerCase();
+        const providerLower = scholarship.provider.toLowerCase();
+        const descLower = (scholarship.description || '').toLowerCase();
+        
+        // Direct text match
+        const directMatch = 
+          nameLower.includes(query) ||
+          providerLower.includes(query) ||
+          descLower.includes(query);
+        
+        // Word prefix match - match if any word starts with the query
+        const nameWords = nameLower.split(/[\s,\-()]+/);
+        const prefixMatch = nameWords.some(word => word.startsWith(query));
+        
+        // Provider word prefix match
+        const providerWords = providerLower.split(/[\s,\-()]+/);
+        const providerPrefixMatch = providerWords.some(word => word.startsWith(query));
+        
+        // Abbreviation match - build abbreviation from name words
+        const abbreviation = nameWords.filter(w => w.length > 0).map(w => w[0]).join('');
+        const abbrMatch = abbreviation.startsWith(query);
+        
+        matchesSearch = directMatch || prefixMatch || providerPrefixMatch || abbrMatch;
+      }
 
       // Type filter
       const matchesType = selectedType === 'all' || scholarship.type === selectedType;
@@ -664,20 +653,18 @@ const PremiumScholarshipsScreen = () => {
               {/* Coverage Hero */}
               <LinearGradient
                 colors={
-                  (selectedScholarship.tuitionCoverage || 0) === 100
+                  (selectedScholarship.tuitionCoverage || 0) >= 100
                     ? ['#10B981', '#059669']
                     : ['#F59E0B', '#D97706']
                 }
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={styles.coverageHero}>
-                <Text style={styles.coverageHeroPercent}>
-                  {selectedScholarship.tuitionCoverage || 0}%
+                <Text style={styles.coverageHeroLabel}>
+                  {selectedScholarship.coverageLabel || `${selectedScholarship.tuitionCoverage || 0}% Tuition`}
                 </Text>
                 <Text style={styles.coverageHeroText}>
-                  {(selectedScholarship.tuitionCoverage || 0) === 100
-                    ? 'Full Tuition Coverage'
-                    : 'Partial Tuition Support'}
+                  {selectedScholarship.coverageType === 'full' ? 'Full Scholarship Package' : 'Financial Support'}
                 </Text>
               </LinearGradient>
 
@@ -1044,6 +1031,23 @@ const PremiumScholarshipsScreen = () => {
             />
           </View>
           
+          {/* Show selected university as active filter chip */}
+          {selectedUniversity && (
+            <View style={styles.activeFiltersRow}>
+              <View style={[styles.activeFilterChip, {backgroundColor: colors.primary + '20'}]}>
+                <Icon name="school" family="Ionicons" size={14} color={colors.primary} />
+                <Text style={[styles.activeFilterText, {color: colors.primary}]} numberOfLines={1}>
+                  {selectedUniversity}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => setSelectedUniversity(null)}
+                  hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
+                  <Icon name="close-circle" family="Ionicons" size={16} color={colors.primary} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -1060,6 +1064,14 @@ const PremiumScholarshipsScreen = () => {
           </ScrollView>
         </View>
         )}
+        
+        {/* Application Process Disclaimer */}
+        <View style={[styles.disclaimerBanner, {backgroundColor: colors.warningLight, borderColor: colors.warning + '40'}]}>
+          <Icon name="information-circle-outline" family="Ionicons" size={18} color={colors.warning} />
+          <Text style={[styles.disclaimerText, {color: colors.text}]}>
+            Note: Application process varies by university. Many universities process scholarship applications offline through their focal person. Please confirm with your university's financial aid office.
+          </Text>
+        </View>
 
         {/* List */}
         <FlatList
@@ -1528,10 +1540,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SPACING.md,
   },
-  coverageHeroPercent: {
-    fontSize: 48,
+  coverageHeroLabel: {
+    fontSize: 24,
     fontWeight: TYPOGRAPHY.weight.heavy,
     color: '#FFFFFF',
+    textAlign: 'center',
   },
   coverageHeroText: {
     fontSize: TYPOGRAPHY.sizes.md,
@@ -1868,6 +1881,69 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
     lineHeight: 20,
+  },
+  // Simplified card styles
+  deadlineRowCompact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
+    gap: 4,
+    marginBottom: SPACING.xs,
+  },
+  deadlineTextCompact: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  availabilitySectionSimple: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.xs,
+    paddingVertical: 4,
+    borderRadius: RADIUS.sm,
+    gap: 4,
+    marginBottom: SPACING.xs,
+  },
+  availabilityTextSimple: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    flex: 1,
+  },
+  // Active filter chip styles
+  activeFiltersRow: {
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.xs,
+  },
+  activeFilterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.full,
+    gap: 6,
+    alignSelf: 'flex-start',
+  },
+  activeFilterText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+    maxWidth: 200,
+  },
+  // Disclaimer banner styles
+  disclaimerBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    gap: 8,
+  },
+  disclaimerText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    lineHeight: 16,
   },
   statusNoteCard: {
     flexDirection: 'row',

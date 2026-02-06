@@ -221,9 +221,9 @@ interface MeritCalculatorProps {
 
 const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}) => {
   const [matricMarks, setMatricMarks] = useState('');
-  const [matricTotal, setMatricTotal] = useState('1100');
+  const [matricTotal, setMatricTotal] = useState('1200');
   const [interMarks, setInterMarks] = useState('');
-  const [interTotal, setInterTotal] = useState('1100');
+  const [interTotal, setInterTotal] = useState('1200');
   const [testMarks, setTestMarks] = useState('');
   const [testTotal, setTestTotal] = useState('200');
   const [result, setResult] = useState<number | null>(null);
@@ -250,9 +250,9 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
 
   const calculateMerit = () => {
     const matric = parseFloat(matricMarks) || 0;
-    const mTotal = parseFloat(matricTotal) || 1100;
+    const mTotal = parseFloat(matricTotal) || 1200;
     const inter = parseFloat(interMarks) || 0;
-    const iTotal = parseFloat(interTotal) || 1100;
+    const iTotal = parseFloat(interTotal) || 1200;
     const test = parseFloat(testMarks) || 0;
     const tTotal = parseFloat(testTotal) || 200;
 

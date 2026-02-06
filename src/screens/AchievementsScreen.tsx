@@ -237,6 +237,20 @@ const AddAchievementModal = ({
       Alert.alert('Required Field', `Please fill in "${missing.label}"`);
       return;
     }
+
+    // Validate date format if date field has a value
+    const dateField = template.fields.find(f => f.key === 'date');
+    if (dateField && formData.date && formData.date.trim()) {
+      // Accept formats: DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
+      const dateRegex = /^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/;
+      if (!dateRegex.test(formData.date.trim())) {
+        Alert.alert(
+          'Invalid Date Format', 
+          'Please enter date in DD/MM/YYYY format.\n\nExample: 15/03/2025'
+        );
+        return;
+      }
+    }
     
     onAdd(formData);
   };
@@ -331,11 +345,18 @@ const AddAchievementModal = ({
     }
     
     // Default: Regular text input for other fields
+    // For date fields, add format hint to placeholder
+    const isDateField = fieldKey === 'date';
+    const placeholder = isDateField 
+      ? `${field.placeholder} (DD/MM/YYYY)`
+      : field.placeholder;
+
     return (
       <View>
         <Text style={[styles.fieldLabel, {color: colors.text}]}>
           {field.label}
           {field.required && <Text style={{color: '#EF4444'}}> *</Text>}
+          {isDateField && <Text style={{color: colors.textSecondary, fontSize: 12}}> (e.g., 15/03/2025)</Text>}
         </Text>
         <TextInput
           style={[
@@ -346,10 +367,11 @@ const AddAchievementModal = ({
               borderColor: colors.border,
             },
           ]}
-          placeholder={field.placeholder}
+          placeholder={placeholder}
           placeholderTextColor={colors.textSecondary}
           value={formData[field.key] || ''}
           onChangeText={(text) => setFormData(prev => ({...prev, [field.key]: text}))}
+          keyboardType={isDateField ? 'numbers-and-punctuation' : 'default'}
         />
       </View>
     );

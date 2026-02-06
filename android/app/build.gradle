@@ -109,10 +109,12 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            // Use release keystore for debug too - required for Google Sign-In
+            // Google Cloud Console only has the release SHA-1 registered
+            storeFile file('pakuni-release.keystore')
+            storePassword 'PakUni2026Secure'
+            keyAlias 'pakuni-key'
+            keyPassword 'PakUni2026Secure'
         }
         release {
             // Production keystore for Google Play Store

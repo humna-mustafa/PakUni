@@ -502,20 +502,30 @@ const PremiumUniversitiesScreen = () => {
     if (debouncedSearchQuery.trim()) {
       const query = normalizeSearchTerm(debouncedSearchQuery);
       
-      // Find matching short_names via aliases (e.g., "lums" -> ["LMS"])
+      // Find matching short_names via aliases (e.g., "lums" -> ["LUMS"])
       const aliasMatches = findUniversitiesByAlias(query);
       
       result = result.filter(u => {
-        // Direct match on name, short_name, or city
-        const directMatch = 
-          u.name.toLowerCase().includes(query) ||
-          u.short_name.toLowerCase().includes(query) ||
-          u.city.toLowerCase().includes(query);
+        const nameLower = u.name.toLowerCase();
+        const shortLower = u.short_name.toLowerCase();
+        const cityLower = u.city.toLowerCase();
         
-        // Alias match (e.g., searching "lums" matches university with short_name "LMS")
+        // Prefix match - matches start of any word in name (Google-like)
+        const nameWords = nameLower.split(/[\s,\-()]+/);
+        const prefixMatch = nameWords.some(word => word.startsWith(query));
+        
+        // Direct contains match on name, short_name, or city
+        const directMatch = 
+          nameLower.includes(query) ||
+          shortLower.includes(query) ||
+          shortLower.startsWith(query) ||
+          cityLower.includes(query) ||
+          cityLower.startsWith(query);
+        
+        // Alias match (e.g., searching "lums" matches university with short_name "LUMS")
         const aliasMatch = aliasMatches.includes(u.short_name);
         
-        return directMatch || aliasMatch;
+        return directMatch || aliasMatch || prefixMatch;
       });
     }
 

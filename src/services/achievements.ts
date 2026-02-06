@@ -124,7 +124,7 @@ export const ACHIEVEMENT_TEMPLATES: AchievementTemplate[] = [
     shareTemplate: "Got my {testName} result! 📊\nScore: {score} | {percentage}\n\n#PakUni #Result",
     fields: [
       {key: 'testName', label: 'Exam Name', placeholder: 'e.g., Matric, Inter, ECAT', required: true},
-      {key: 'score', label: 'Marks/Score', placeholder: 'e.g., 1050/1100', required: false},
+      {key: 'score', label: 'Marks/Score', placeholder: 'e.g., 1050/1200', required: false},
       {key: 'percentage', label: 'Percentage/Grade', placeholder: 'e.g., 95.4%, A+', required: false},
       {key: 'date', label: 'Result Date', placeholder: 'When was it announced?', required: false},
     ],
@@ -302,7 +302,26 @@ export const shareQuickCard = async (
     
     switch (type) {
       case 'merit_success':
-        message = `🎯 Merit Calculation Result!\n\n🏛️ ${data.universityName || 'University'}\n📚 ${data.programName || 'Program'}\n📊 Aggregate: ${data.percentage || 'Calculated'}\n\nCalculated using PakUni App! 📱\n\n#PakUni #MeritCalculator`;
+        // Parse percentage for honest messaging
+        const pctValue = parseFloat(data.percentage?.replace('%', '') || '0');
+        let honestPrefix = '';
+        let hashtags = '#PakUni #MeritCalculator';
+        
+        if (pctValue >= 85) {
+          honestPrefix = '🎉 Amazing Result!';
+          hashtags = '#PakUni #Excellence #ProudMoment';
+        } else if (pctValue >= 70) {
+          honestPrefix = '📊 Solid Foundation!';
+          hashtags = '#PakUni #WorkingHard #Determined';
+        } else if (pctValue >= 50) {
+          honestPrefix = '📈 Room to Grow!';
+          hashtags = '#PakUni #NeverGiveUp #KeepTrying';
+        } else {
+          honestPrefix = '🎯 Starting My Journey!';
+          hashtags = '#PakUni #Determined #HardWorkAhead';
+        }
+        
+        message = `${honestPrefix}\n\n🏛️ ${data.universityName || 'University'}\n📚 ${data.programName || 'Program'}\n📊 Aggregate: ${data.percentage || 'Calculated'}\n\nCalculated using PakUni App! 📱\n\n${hashtags}`;
         break;
       case 'acceptance':
         message = `🎉 ADMISSION CONFIRMED!\n\n🏛️ ${data.universityName}\n📚 ${data.programName}\n\nDreams coming true! 🌟\n\n#PakUni #Admission`;

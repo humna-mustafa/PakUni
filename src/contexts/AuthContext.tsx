@@ -478,45 +478,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         throw new Error(playServicesMsg);
       }
       
-      // Sign in with Google natively
-      const userInfo = await GoogleSignin.signIn();
+      // Sign in with Google natively (v16+ returns {type, data} instead of throwing)
+      const signInResult = await GoogleSignin.signIn();
+      
+      // Handle v16+ response format - cancellation is no longer thrown as error
+      if (signInResult.type !== 'success') {
+        throw {code: statusCodes.SIGN_IN_CANCELLED, message: 'Sign in was cancelled'};
+      }
       
       logger.debug('Google sign-in successful, getting ID token...', null, 'Auth');
       
-      // Get the ID token and access token
-      const tokens = await GoogleSignin.getTokens();
-      const idToken = tokens.idToken;
-      const accessToken = tokens.accessToken;
+      // Get the ID token from sign-in result (v16+ provides it in data)
+      let idToken: string | null = signInResult.data?.idToken || null;
+      
+      // Fallback: get tokens separately if not in signIn result
+      if (!idToken) {
+        try {
+          const tokens = await GoogleSignin.getTokens();
+          idToken = tokens.idToken;
+        } catch (tokenError) {
+          logger.debug('getTokens() failed', tokenError, 'Auth');
+        }
+      }
       
       if (!idToken) {
-        throw new Error('No ID token received from Google');
+        throw new Error('No ID token received from Google. Please try again.');
       }
 
-      logger.debug('Signing in to Supabase with Google credentials...', null, 'Auth');
+      logger.debug('Signing in to Supabase with Google ID token...', null, 'Auth');
       
-      // For Supabase, directly create user session from Google tokens
-      // This bypasses the OAuth callback flow and uses native mobile auth
-      const {data, error} = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: '', // Google doesn't provide refresh via native SDK
+      // Use signInWithIdToken - the correct API for native mobile Google auth → Supabase
+      const {data, error} = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: idToken,
       });
-
+      
       if (error) {
-        logger.debug('Direct session method failed, trying signInWithIdToken...', error, 'Auth');
-        
-        // Fallback: Try signInWithIdToken as backup
-        const {data: fallbackData, error: fallbackError} = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: idToken,
-        });
-        
-        if (fallbackError) {
-          throw fallbackError;
-        }
-        
-        if (!fallbackData.user) {
-          throw new Error('Unable to create session with provided token');
-        }
+        logger.error('Supabase signInWithIdToken failed', error, 'Auth');
+        throw error;
       }
 
       if (data.user) {
@@ -525,7 +524,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         return true;
       }
 
-      return false;
+      throw new Error('Sign-in completed but no user data received');
     } catch (error: any) {
       logger.error('Google sign-in error', error, 'Auth');
       
@@ -569,7 +568,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         isLoading: false,
         authError: errorMessage,
       }));
-      return false;
+      // Rethrow so callers (useAuthToast) can catch and display the error
+      // setState is async, so auth.authError may not be available immediately
+      const enrichedError = new Error(errorMessage);
+      (enrichedError as any).code = error.code;
+      throw enrichedError;
     }
   }, []);
 
@@ -601,12 +604,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       return false;
     } catch (error: any) {
       logger.error('Email sign-in error', error, 'Auth');
+      const errorMessage = error.message || 'Invalid email or password';
       setState(prev => ({
         ...prev,
         isLoading: false,
-        authError: error.message || 'Invalid email or password',
+        authError: errorMessage,
       }));
-      return false;
+      // Rethrow so callers (useAuthToast) can catch and display the error
+      throw new Error(errorMessage);
     }
   }, []);
 
@@ -689,12 +694,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       throw new Error('User creation failed: No user returned');
     } catch (error: any) {
       logger.error('Email sign-up error', error, 'Auth');
+      const errorMessage = error.message || 'Failed to create account';
       setState(prev => ({
         ...prev,
         isLoading: false,
-        authError: error.message || 'Failed to create account',
+        authError: errorMessage,
       }));
-      return false;
+      throw new Error(errorMessage);
     }
   }, []);
 

@@ -40,6 +40,9 @@ import {
 } from '../components';
 import NotificationBell, {Notification} from '../components/NotificationBell';
 import {useNotifications, LocalNotification} from '../services/notifications';
+import {findUniversitiesByAlias} from '../utils/universityAliases';
+import {UNIVERSITIES} from '../data/universities';
+import {SCHOLARSHIPS} from '../data/scholarships';
 import type {RootStackParamList, TabParamList} from '../navigation/AppNavigator';
 
 type NavigationProp = CompositeNavigationProp<
@@ -181,11 +184,12 @@ const DeadlineWidget = memo<DeadlineWidgetProps>(({colors, isDark, onNavigate}) 
   if (upcomingDeadlines.length === 0) return null;
 
   const cardBg = isDark ? '#1E2228' : '#FFFFFF';
+  const borderStyle = isDark ? {borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.18)'} : {};
 
   return (
     <View style={deadlineWidgetStyles.container}>
       <TouchableOpacity
-        style={[deadlineWidgetStyles.widget, {backgroundColor: cardBg}]}
+        style={[deadlineWidgetStyles.widget, {backgroundColor: cardBg}, borderStyle]}
         onPress={() => onNavigate('Deadlines')}
         activeOpacity={0.7}>
         
@@ -228,7 +232,7 @@ const DeadlineWidget = memo<DeadlineWidgetProps>(({colors, isDark, onNavigate}) 
         </View>
         
         {/* Footer */}
-        <View style={deadlineWidgetStyles.footer}>
+        <View style={[deadlineWidgetStyles.footer, {borderTopColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)'}]}>
           <Text style={[deadlineWidgetStyles.footerText, {color: colors.primary}]}>View all</Text>
           <Icon name="chevron-forward" family="Ionicons" size={14} color={colors.primary} />
         </View>
@@ -324,6 +328,7 @@ interface StudyProgressWidgetProps {
 
 const StudyProgressWidget = memo<StudyProgressWidgetProps>(({colors, isDark, onNavigate, universitiesCount, scholarshipsCount}) => {
   const cardBg = isDark ? '#1E2228' : '#FFFFFF';
+  const borderStyle = isDark ? {borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.18)'} : {};
   const total = universitiesCount + scholarshipsCount;
 
   const stats = [
@@ -334,7 +339,7 @@ const StudyProgressWidget = memo<StudyProgressWidgetProps>(({colors, isDark, onN
 
   return (
     <View style={statsWidgetStyles.container}>
-      <View style={[statsWidgetStyles.widget, {backgroundColor: cardBg}]}>
+      <View style={[statsWidgetStyles.widget, {backgroundColor: cardBg}, borderStyle]}>
         <View style={statsWidgetStyles.header}>
           <Icon name="heart-outline" family="Ionicons" size={18} color={colors.primary} />
           <Text style={[statsWidgetStyles.title, {color: colors.text}]}>Your Saved Items</Text>
@@ -348,7 +353,7 @@ const StudyProgressWidget = memo<StudyProgressWidgetProps>(({colors, isDark, onN
                 statsWidgetStyles.statItem,
                 index < stats.length - 1 && {
                   borderRightWidth: 1,
-                  borderRightColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'
+                  borderRightColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'
                 }
               ]}
               onPress={() => onNavigate(stat.screen)}
@@ -650,12 +655,26 @@ const PremiumHomeScreen = () => {
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
       
+      // Check if search matches a university by abbreviation/alias
+      const aliasMatches = findUniversitiesByAlias(query);
+      const universityMatch = UNIVERSITIES.some(u => 
+        u.short_name.toLowerCase().includes(query) ||
+        u.name.toLowerCase().includes(query) ||
+        u.name.toLowerCase().split(/[\s,\-()]+/).some(w => w.startsWith(query))
+      ) || aliasMatches.length > 0;
+      
       // Check if search is scholarship-related
       const isScholarshipSearch = SCHOLARSHIP_KEYWORDS.some(keyword => 
         query.includes(keyword)
       );
       
-      if (isScholarshipSearch) {
+      // Check if it matches a scholarship name
+      const scholarshipMatch = typeof SCHOLARSHIPS !== 'undefined' && Array.isArray(SCHOLARSHIPS) && SCHOLARSHIPS.some((s: any) =>
+        s.name?.toLowerCase().includes(query) ||
+        s.short_name?.toLowerCase().includes(query)
+      );
+      
+      if (isScholarshipSearch || (scholarshipMatch && !universityMatch)) {
         // Navigate to Scholarships tab with search query
         navigation.navigate('MainTabs', {
           screen: 'Scholarships',

@@ -112,16 +112,29 @@ export const useUniversities = (
   const filteredUniversities = useMemo(() => {
     let result = [...universities];
 
-    // Apply search filter
+    // Apply search filter with improved matching (abbreviations, prefix, aliases)
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        uni =>
-          uni.name.toLowerCase().includes(query) ||
-          uni.short_name.toLowerCase().includes(query) ||
-          uni.city.toLowerCase().includes(query) ||
-          uni.province.toLowerCase().includes(query),
-      );
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter(uni => {
+        const nameLower = uni.name.toLowerCase();
+        const shortLower = uni.short_name.toLowerCase();
+        const cityLower = uni.city.toLowerCase();
+        const provinceLower = uni.province.toLowerCase();
+        
+        // Direct includes match
+        const directMatch = 
+          nameLower.includes(query) ||
+          shortLower.includes(query) ||
+          shortLower.startsWith(query) ||
+          cityLower.includes(query) ||
+          provinceLower.includes(query);
+        
+        // Word prefix match - match if any word of the name starts with query
+        const nameWords = nameLower.split(/[\s,\-()]+/);
+        const prefixMatch = nameWords.some(word => word.startsWith(query));
+        
+        return directMatch || prefixMatch;
+      });
     }
 
     // Apply province filter

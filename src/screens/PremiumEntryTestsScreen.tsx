@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -22,8 +22,9 @@ import {useTheme} from '../contexts/ThemeContext';
 import {ENTRY_TESTS_DATA, EntryTestData} from '../data';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
-import SearchableDropdown from '../components/SearchableDropdown';
+import {PremiumSearchBar} from '../components/PremiumSearchBar';
 import {getEntryTestBrandColors} from '../data/entryTests';
+import {useDebouncedValue} from '../hooks/useDebounce';
 
 // Storage key for custom test dates
 const CUSTOM_TEST_DATES_KEY = '@pakuni_custom_test_dates';
@@ -126,14 +127,39 @@ const TestCountdownWidget = ({
   );
 };
 
-// Animated test card
+// Helper: get a short field tag from applicable_for
+const getFieldTag = (test: EntryTestData): string => {
+  const fields = test.applicable_for || [];
+  if (fields.some(f => f.toLowerCase().includes('mbbs') || f.toLowerCase().includes('medical'))) return 'Medical';
+  if (fields.some(f => f.toLowerCase().includes('engineering'))) return 'Engineering';
+  if (fields.some(f => f.toLowerCase().includes('computer') || f.toLowerCase().includes('software') || f.toLowerCase().includes('ai'))) return 'CS / IT';
+  if (fields.some(f => f.toLowerCase().includes('business') || f.toLowerCase().includes('bba') || f.toLowerCase().includes('mba'))) return 'Business';
+  if (fields.some(f => f.toLowerCase().includes('law') || f.toLowerCase().includes('llb'))) return 'Law';
+  if (fields.some(f => f.toLowerCase().includes('phd') || f.toLowerCase().includes('ms') || f.toLowerCase().includes('mphil'))) return 'Graduate';
+  return fields[0] || 'General';
+};
+
+// Helper: format test date to short readable form
+const getShortDate = (dateString: string): string => {
+  if (!dateString || dateString === 'TBA') return 'TBA';
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[d.getMonth()]} ${d.getFullYear()}`;
+  } catch {
+    return dateString;
+  }
+};
+
+// Simplified animated test card — shows: name, conducting body, date, one field tag
 const TestCard = ({
   test,
   onPress,
   index,
   colors,
 }: {
-  test: any;
+  test: EntryTestData;
   onPress: () => void;
   index: number;
   colors: any;
@@ -176,6 +202,8 @@ const TestCard = ({
   };
 
   const brandColors = getEntryTestBrandColors(test.name);
+  const fieldTag = getFieldTag(test);
+  const shortDate = getShortDate(test.test_date);
 
   return (
     <Animated.View
@@ -191,53 +219,35 @@ const TestCard = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}>
         <View style={[styles.testCard, {backgroundColor: colors.card}]}>
-          <LinearGradient
-            colors={[brandColors.primary + '15', 'transparent']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={styles.cardGradient}
-          />
           <View style={[styles.categoryStrip, {backgroundColor: brandColors.primary}]} />
           
           <View style={styles.cardContent}>
             <View style={styles.cardHeader}>
               <View style={[styles.iconContainer, {backgroundColor: brandColors.primary + '20'}]}>
-                <Icon name="document-text-outline" family="Ionicons" size={28} color={brandColors.primary} />
+                <Text style={{fontSize: 16, fontWeight: '800', color: brandColors.primary}}>
+                  {test.name.substring(0, 3).toUpperCase()}
+                </Text>
               </View>
               <View style={styles.cardTitleContainer}>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1}}>
-                  <Text style={[styles.testName, {color: colors.text}]}>
-                    {test.name}
-                  </Text>
-                  {test.status_notes && (
-                    <View style={[styles.categoryBadge, {backgroundColor: brandColors.primary + '20'}]}>
-                      <Text style={[styles.categoryText, {color: brandColors.primary, fontSize: 10}]}>
-                        {test.status_notes}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={{color: colors.textSecondary, fontSize: 12}}>{test.conducting_body}</Text>
+                <Text style={[styles.testName, {color: colors.text}]} numberOfLines={1}>
+                  {test.name}
+                </Text>
+                <Text style={{color: colors.textSecondary, fontSize: 12}} numberOfLines={1}>
+                  {test.conducting_body}
+                </Text>
               </View>
             </View>
-
-            <Text
-              style={[styles.testDescription, {color: colors.textSecondary}]}
-              numberOfLines={2}>
-              {test.description}
-            </Text>
 
             <View style={styles.cardFooter}>
               <View style={styles.metaItem}>
                 <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.textSecondary} />
                 <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                  {test.test_date || 'TBA'}
+                  {shortDate}
                 </Text>
               </View>
-              <View style={styles.metaItem}>
-                <Icon name="cash-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-                <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                  Rs. {test.fee?.toLocaleString()}
+              <View style={[styles.categoryBadge, {backgroundColor: brandColors.primary + '18'}]}>
+                <Text style={[styles.categoryText, {color: brandColors.primary}]}>
+                  {fieldTag}
                 </Text>
               </View>
               <View style={[styles.viewBtn, {backgroundColor: brandColors.primary}]}>
@@ -312,6 +322,8 @@ const FilterChip = ({
 const PremiumEntryTestsScreen = () => {
   const {colors, isDark} = useTheme();
   const [activeFilter, setActiveFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [selectedTest, setSelectedTest] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [customDates, setCustomDates] = useState<{[key: string]: string}>({});
@@ -411,9 +423,46 @@ const PremiumEntryTestsScreen = () => {
     }).start();
   }, []);
 
-  const filteredTests = ENTRY_TESTS_DATA.filter(
-    test => activeFilter === 'All' || getTestCategory(test) === activeFilter,
-  );
+  const filteredTests = useMemo(() => {
+    return ENTRY_TESTS_DATA.filter(test => {
+      // Category filter
+      const matchesCategory = activeFilter === 'All' || getTestCategory(test) === activeFilter;
+      if (!matchesCategory) return false;
+
+      // Text search filter
+      const query = debouncedSearchQuery.toLowerCase().trim();
+      if (!query) return true;
+
+      const nameLower = test.name.toLowerCase();
+      const fullNameLower = (test.full_name || '').toLowerCase();
+      const bodyLower = test.conducting_body.toLowerCase();
+      const descLower = (test.description || '').toLowerCase();
+      const applicableLower = (test.applicable_for || []).join(' ').toLowerCase();
+
+      // Direct text match
+      if (
+        nameLower.includes(query) ||
+        fullNameLower.includes(query) ||
+        bodyLower.includes(query) ||
+        descLower.includes(query) ||
+        applicableLower.includes(query)
+      ) return true;
+
+      // Abbreviation / word-prefix match
+      const nameWords = nameLower.split(/[\s,\-()]+/);
+      if (nameWords.some(w => w.startsWith(query))) return true;
+
+      const bodyWords = bodyLower.split(/[\s,\-()]+/);
+      if (bodyWords.some(w => w.startsWith(query))) return true;
+
+      // Build abbreviation from full name words
+      const fullNameWords = fullNameLower.split(/[\s,\-()]+/).filter(w => w.length > 0);
+      const abbr = fullNameWords.map(w => w[0]).join('');
+      if (abbr.startsWith(query)) return true;
+
+      return false;
+    });
+  }, [activeFilter, debouncedSearchQuery]);
 
   const openModal = (test: any) => {
     setSelectedTest(test);
@@ -472,7 +521,19 @@ const PremiumEntryTestsScreen = () => {
         </LinearGradient>
       </Animated.View>
 
-      {/* Filters */}
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <PremiumSearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+          placeholder="Search tests (MDCAT, ECAT, NET, NAT...)"
+          variant="default"
+          size="md"
+        />
+      </View>
+
+      {/* Category Filters */}
       <View style={styles.filtersContainer}>
         <ScrollView
           horizontal
@@ -490,47 +551,11 @@ const PremiumEntryTestsScreen = () => {
         </ScrollView>
       </View>
 
-      {/* Quick Search Dropdown */}
-      <View style={{paddingHorizontal: SPACING.md, marginBottom: SPACING.sm}}>
-        <SearchableDropdown
-          options={ENTRY_TESTS_DATA.map(t => ({
-            label: `${t.name} - ${t.full_name}`,
-            value: t.id,
-            subLabel: t.conducting_body,
-          }))}
-          onSelect={(option) => {
-            const test = ENTRY_TESTS_DATA.find(t => t.id === option.value);
-            if (test) openModal(test);
-          }}
-          placeholder="Search for an entry test (e.g. MDCAT, ECAT)"
-        />
-      </View>
-
-      {/* Stats Bar */}
-      <View style={[styles.statsBar, {backgroundColor: colors.card}]}>
-        <View style={styles.statItem}>
-          <Icon name="library-outline" family="Ionicons" size={20} color={colors.primary} />
-          <Text style={[styles.statValue, {color: colors.text}]}>
-            {filteredTests.length}
-          </Text>
-          <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Tests</Text>
-        </View>
-        <View style={[styles.statDivider, {backgroundColor: colors.border}]} />
-        <View style={styles.statItem}>
-          <Icon name="construct-outline" family="Ionicons" size={20} color={STATUS_COLORS.category.engineering} />
-          <Text style={[styles.statValue, {color: colors.text}]}>
-            {ENTRY_TESTS_DATA.filter(t => getTestCategory(t) === 'Engineering').length}
-          </Text>
-          <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Engineering</Text>
-        </View>
-        <View style={[styles.statDivider, {backgroundColor: colors.border}]} />
-        <View style={styles.statItem}>
-          <Icon name="medkit-outline" family="Ionicons" size={20} color={STATUS_COLORS.category.medical} />
-          <Text style={[styles.statValue, {color: colors.text}]}>
-            {ENTRY_TESTS_DATA.filter(t => getTestCategory(t) === 'Medical').length}
-          </Text>
-          <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Medical</Text>
-        </View>
+      {/* Results count */}
+      <View style={styles.resultsBar}>
+        <Text style={[styles.resultsText, {color: colors.textSecondary}]}>
+          {filteredTests.length} {filteredTests.length === 1 ? 'test' : 'tests'} found
+        </Text>
       </View>
 
       {/* Tests List */}
@@ -867,14 +892,27 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.9)',
     textAlign: 'center',
   },
+  searchContainer: {
+    paddingHorizontal: SPACING.md,
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.xs,
+  },
   filtersContainer: {
-    marginTop: -15,
+    marginTop: SPACING.xs,
     zIndex: 10,
   },
   filtersContent: {
     paddingHorizontal: SPACING.md,
     gap: SPACING.sm,
     flexDirection: 'row',
+  },
+  resultsBar: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+  },
+  resultsText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
   filterChip: {
     paddingHorizontal: SPACING.md,
@@ -890,50 +928,19 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
-  statsBar: {
-    flexDirection: 'row',
-    marginHorizontal: SPACING.md,
-    marginTop: SPACING.md,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  statLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  statDivider: {
-    width: 1,
-    height: '80%',
-    alignSelf: 'center',
-  },
   testsContainer: {
     padding: SPACING.md,
     paddingTop: SPACING.md,
   },
   testCard: {
     borderRadius: RADIUS.lg,
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.sm,
     overflow: 'hidden',
-    elevation: 3,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-  },
-  cardGradient: {
-    ...StyleSheet.absoluteFillObject,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   categoryStrip: {
     height: 4,
@@ -947,12 +954,12 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   iconContainer: {
-    width: 50,
-    height: 50,
+    width: 46,
+    height: 46,
     borderRadius: RADIUS.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: SPACING.md,
+    marginRight: SPACING.sm,
   },
   cardTitleContainer: {
     flex: 1,
@@ -963,19 +970,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   categoryBadge: {
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
     paddingHorizontal: 8,
-    paddingVertical: 2,
+    paddingVertical: 3,
     borderRadius: 10,
+    marginRight: SPACING.sm,
   },
   categoryText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  testDescription: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 20,
-    marginBottom: SPACING.md,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -992,8 +995,10 @@ const styles = StyleSheet.create({
   },
   viewBtn: {
     marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: SPACING.sm,
-    paddingVertical: 6,
+    paddingVertical: 5,
     borderRadius: RADIUS.full,
   },
   viewBtnText: {

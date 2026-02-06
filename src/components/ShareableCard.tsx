@@ -169,13 +169,13 @@ export const MeritSuccessCard = forwardRef<View, MeritSuccessCardProps>(
     const getChanceText = () => {
       switch (chance) {
         case 'high':
-          return 'Excellent Chance';
+          return 'Strong Chances';
         case 'medium':
-          return 'Good Chance';
+          return 'Building Momentum';
         case 'low':
-          return 'Fair Chance';
+          return 'Room to Grow';
         case 'unlikely':
-          return 'Needs Improvement';
+          return 'Focus Area';
       }
     };
 
@@ -2063,20 +2063,20 @@ export const PersonalizedMeritCard = forwardRef<View, PersonalizedMeritCardProps
       switch (chance) {
         case 'high':
           return {
-            text: 'Excellent Chance',
-            emoji: '🎯',
+            text: 'Strong Chances',
+            emoji: '🎉',
             gradient: [brandColor, shadeColor(brandColor, -20), shadeColor(brandColor, -40)] as [string, string, string],
           };
         case 'medium':
           return {
-            text: 'Good Chance',
-            emoji: '📈',
+            text: 'Building Momentum',
+            emoji: '📊',
             gradient: [brandColor, shadeColor(brandColor, -15), shadeColor(brandColor, -30)] as [string, string, string],
           };
         case 'low':
           return {
-            text: 'Fair Chance',
-            emoji: '💪',
+            text: 'Room to Grow',
+            emoji: '📈',
             gradient: ['#F59E0B', '#D97706', '#B45309'] as [string, string, string],
           };
       }

@@ -231,7 +231,8 @@ async function importFromCsv() {
     }
 
     const id = generateUniversityId(name);
-    const short_name = record.short_name?.trim() || generateShortName(name);
+    // CSV column is "Abbreviation" not "short_name" - check both
+    const short_name = (record.Abbreviation || record.abbreviation || record.short_name)?.trim() || generateShortName(name);
     const website = cleanWebsiteUrl(record.official_website || record.website);
     const type = getUniversityType(record.university_type || record.type);
     const city = (record.city || 'Unknown').trim();

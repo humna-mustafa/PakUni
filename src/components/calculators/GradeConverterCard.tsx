@@ -22,6 +22,7 @@ import {
   A_LEVEL_REFERENCE,
 } from '../../utils/gradeConversion';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
+import {useTheme} from '../../contexts';
 
 // ============================================================================
 // TYPES
@@ -109,6 +110,29 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
 // ============================================================================
 
 export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) => {
+  const {colors, isDark} = useTheme();
+  
+  // Dynamic theme colors
+  const themeStyles = {
+    container: { backgroundColor: isDark ? colors.card : '#FFF' },
+    text: { color: isDark ? colors.text : '#1E293B' },
+    subText: { color: isDark ? '#94A3B8' : '#64748B' },
+    inputBg: { backgroundColor: isDark ? colors.background : '#F8FAFC', borderColor: isDark ? colors.border : '#E2E8F0' },
+    tabBg: { backgroundColor: isDark ? colors.background : '#F1F5F9' },
+    breakdownBg: { backgroundColor: isDark ? colors.background : '#F8FAFC' },
+    tabActiveBg: { backgroundColor: isDark ? `${colors.primary}20` : '#EEF2FF' },
+    tabIconColor: isDark ? '#6B7280' : '#94A3B8',
+    tabIconActiveColor: isDark ? colors.primary : '#4573DF',
+    chipBg: { backgroundColor: isDark ? colors.background : '#F1F5F9', borderColor: isDark ? colors.border : '#E2E8F0' },
+    chipText: { color: isDark ? '#9CA3AF' : '#64748B' },
+    borderColor: isDark ? colors.border : '#E2E8F0',
+    secondaryText: { color: isDark ? '#9CA3AF' : '#475569' },
+    accentColor: isDark ? colors.primary : '#4573DF',
+    errorBg: { backgroundColor: isDark ? '#451A1A' : '#FEF2F2' },
+    summaryBg: { backgroundColor: isDark ? colors.background : '#F8FAFC' },
+    addBtnBorder: { borderColor: isDark ? colors.border : '#E2E8F0' },
+  };
+
   // Default O-Level subjects (8 subjects standard)
   const defaultOLevelSubjects: SubjectGrade[] = [
     {id: 1, subjectName: 'English Language', grade: ''},
@@ -257,14 +281,14 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
             setResult(null);
             fadeAnim.setValue(0);
           }}
-          style={[styles.tab, mode === m && styles.tabActive]}
+          style={[styles.tab, themeStyles.tabBg, mode === m && themeStyles.tabActiveBg]}
           activeOpacity={0.7}>
           <Icon
             name={modeConfig[m].icon}
             size={18}
-            color={mode === m ? '#4573DF' : '#94A3B8'}
+            color={mode === m ? themeStyles.tabIconActiveColor : themeStyles.tabIconColor}
           />
-          <Text style={[styles.tabText, mode === m && styles.tabTextActive]}>
+          <Text style={[styles.tabText, themeStyles.subText, mode === m && {color: themeStyles.accentColor, fontWeight: TYPOGRAPHY.weight.semibold}]}>
             {modeConfig[m].title}
           </Text>
         </TouchableOpacity>
@@ -275,23 +299,23 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
   // Render O-Level input with per-subject grade selection
   const renderOLevelInput = () => (
     <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Enter Your O-Level Grades</Text>
-      <Text style={styles.inputHint}>
+      <Text style={[styles.inputLabel, themeStyles.text]}>Enter Your O-Level Grades</Text>
+      <Text style={[styles.inputHint, themeStyles.subText]}>
         Select a grade for each subject (best 8 counted by IBCC)
       </Text>
 
       <View style={styles.subjectsList}>
         {oLevelSubjects.map((subject, index) => (
-          <View key={subject.id} style={styles.subjectGradeRow}>
-            <Text style={styles.subjectNumber}>{index + 1}.</Text>
+          <View key={subject.id} style={[styles.subjectGradeRow, {borderBottomColor: themeStyles.borderColor}]}>
+            <Text style={[styles.subjectNumber, themeStyles.subText]}>{index + 1}.</Text>
             <TextInput
-              style={styles.subjectNameInput}
+              style={[styles.subjectNameInput, themeStyles.inputBg, themeStyles.text]}
               value={subject.subjectName}
               onChangeText={(text) => setOLevelSubjects(prev => 
                 prev.map(s => s.id === subject.id ? {...s, subjectName: text} : s)
               )}
               placeholder="Subject name"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
             />
             <View style={styles.gradePickerContainer}>
               <ScrollView 
@@ -304,10 +328,12 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
                     onPress={() => updateSubjectGrade(subject.id, grade, true)}
                     style={[
                       styles.gradeChip,
+                      themeStyles.chipBg,
                       subject.grade === grade && styles.gradeChipSelected,
                     ]}>
                     <Text style={[
                       styles.gradeChipText,
+                      themeStyles.chipText,
                       subject.grade === grade && styles.gradeChipTextSelected,
                     ]}>
                       {grade}
@@ -328,14 +354,14 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
       </View>
 
       <TouchableOpacity
-        style={styles.addSubjectButton}
+        style={[styles.addSubjectButton, themeStyles.addBtnBorder]}
         onPress={() => addSubject(true)}>
-        <Icon name="add-circle-outline" size={20} color="#4573DF" />
-        <Text style={styles.addSubjectText}>Add Another Subject</Text>
+        <Icon name="add-circle-outline" size={20} color={themeStyles.accentColor} />
+        <Text style={[styles.addSubjectText, {color: themeStyles.accentColor}]}>Add Another Subject</Text>
       </TouchableOpacity>
 
-      <View style={styles.selectedSummary}>
-        <Text style={styles.selectedSummaryLabel}>
+      <View style={[styles.selectedSummary, themeStyles.summaryBg]}>
+        <Text style={[styles.selectedSummaryLabel, themeStyles.subText]}>
           Subjects with grades: {oLevelSubjects.filter(s => s.grade !== '').length} / {oLevelSubjects.length}
         </Text>
       </View>
@@ -359,23 +385,23 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
   // Render A-Level input with per-subject grade selection
   const renderALevelInput = () => (
     <View style={styles.inputSection}>
-      <Text style={styles.inputLabel}>Enter Your A-Level Grades</Text>
-      <Text style={styles.inputHint}>
+      <Text style={[styles.inputLabel, themeStyles.text]}>Enter Your A-Level Grades</Text>
+      <Text style={[styles.inputHint, themeStyles.subText]}>
         Select a grade for each principal subject (typically 3 subjects)
       </Text>
 
       <View style={styles.subjectsList}>
         {aLevelSubjects.map((subject, index) => (
-          <View key={subject.id} style={styles.subjectGradeRow}>
-            <Text style={styles.subjectNumber}>{index + 1}.</Text>
+          <View key={subject.id} style={[styles.subjectGradeRow, {borderBottomColor: themeStyles.borderColor}]}>
+            <Text style={[styles.subjectNumber, themeStyles.subText]}>{index + 1}.</Text>
             <TextInput
-              style={styles.subjectNameInput}
+              style={[styles.subjectNameInput, themeStyles.inputBg, themeStyles.text]}
               value={subject.subjectName}
               onChangeText={(text) => setALevelSubjects(prev => 
                 prev.map(s => s.id === subject.id ? {...s, subjectName: text} : s)
               )}
               placeholder="Subject name"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={isDark ? '#6B7280' : '#94A3B8'}
             />
             <View style={styles.gradePickerContainer}>
               <ScrollView 
@@ -388,10 +414,12 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
                     onPress={() => updateSubjectGrade(subject.id, grade, false)}
                     style={[
                       styles.gradeChip,
+                      themeStyles.chipBg,
                       subject.grade === grade && styles.gradeChipSelectedALevel,
                     ]}>
                     <Text style={[
                       styles.gradeChipText,
+                      themeStyles.chipText,
                       subject.grade === grade && styles.gradeChipTextSelected,
                     ]}>
                       {grade}
@@ -412,14 +440,14 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
       </View>
 
       <TouchableOpacity
-        style={styles.addSubjectButton}
+        style={[styles.addSubjectButton, themeStyles.addBtnBorder]}
         onPress={() => addSubject(false)}>
         <Icon name="add-circle-outline" size={20} color="#10B981" />
         <Text style={[styles.addSubjectText, {color: '#10B981'}]}>Add Another Subject</Text>
       </TouchableOpacity>
 
-      <View style={styles.selectedSummary}>
-        <Text style={styles.selectedSummaryLabel}>
+      <View style={[styles.selectedSummary, themeStyles.summaryBg]}>
+        <Text style={[styles.selectedSummaryLabel, themeStyles.subText]}>
           Subjects with grades: {aLevelSubjects.filter(s => s.grade !== '').length} / {aLevelSubjects.length}
         </Text>
       </View>
@@ -446,7 +474,7 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
 
     if (result.error) {
       return (
-        <View style={styles.errorContainer}>
+        <View style={[styles.errorContainer, themeStyles.errorBg]}>
           <Icon name="alert-circle-outline" size={24} color="#EF4444" />
           <Text style={styles.errorText}>{result.error}</Text>
         </View>
@@ -464,25 +492,25 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
               icon="school-outline"
               colors={modeConfig['o-level'].colors}
             />
-            <View style={styles.breakdownCard}>
-              <Text style={styles.breakdownTitle}>IBCC Calculation</Text>
+            <View style={[styles.breakdownCard, themeStyles.breakdownBg]}>
+              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Calculation</Text>
               <View style={styles.breakdownRow}>
-                <Text style={styles.breakdownLabel}>Total Points:</Text>
-                <Text style={styles.breakdownValue}>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Total Points:</Text>
+                <Text style={[styles.breakdownValue, themeStyles.text]}>
                   {result.totalPoints} / {result.maxPoints}
                 </Text>
               </View>
               <View style={styles.breakdownRow}>
-                <Text style={styles.breakdownLabel}>Subjects:</Text>
-                <Text style={styles.breakdownValue}>{result.grades.length}</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects:</Text>
+                <Text style={[styles.breakdownValue, themeStyles.text]}>{result.grades.length}</Text>
               </View>
               {result.subjects && (
                 <View style={styles.subjectsBreakdown}>
-                  <Text style={styles.breakdownSubtitle}>Subject Grades:</Text>
+                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades:</Text>
                   {result.subjects.map((s: SubjectGrade, i: number) => (
                     <View key={i} style={styles.breakdownRow}>
-                      <Text style={styles.breakdownLabel}>{s.subjectName}:</Text>
-                      <Text style={styles.breakdownValue}>{s.grade}</Text>
+                      <Text style={[styles.breakdownLabel, themeStyles.subText]}>{s.subjectName}:</Text>
+                      <Text style={[styles.breakdownValue, themeStyles.text]}>{s.grade}</Text>
                     </View>
                   ))}
                 </View>
@@ -500,25 +528,25 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
               icon="ribbon-outline"
               colors={modeConfig['a-level'].colors}
             />
-            <View style={styles.breakdownCard}>
-              <Text style={styles.breakdownTitle}>IBCC Calculation</Text>
+            <View style={[styles.breakdownCard, themeStyles.breakdownBg]}>
+              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Calculation</Text>
               <View style={styles.breakdownRow}>
-                <Text style={styles.breakdownLabel}>Total Points:</Text>
-                <Text style={styles.breakdownValue}>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Total Points:</Text>
+                <Text style={[styles.breakdownValue, themeStyles.text]}>
                   {result.totalPoints} / {result.maxPoints}
                 </Text>
               </View>
               <View style={styles.breakdownRow}>
-                <Text style={styles.breakdownLabel}>Subjects:</Text>
-                <Text style={styles.breakdownValue}>{result.grades.length}</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects:</Text>
+                <Text style={[styles.breakdownValue, themeStyles.text]}>{result.grades.length}</Text>
               </View>
               {result.subjects && (
                 <View style={styles.subjectsBreakdown}>
-                  <Text style={styles.breakdownSubtitle}>Subject Grades:</Text>
+                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades:</Text>
                   {result.subjects.map((s: SubjectGrade, i: number) => (
                     <View key={i} style={styles.breakdownRow}>
-                      <Text style={styles.breakdownLabel}>{s.subjectName}:</Text>
-                      <Text style={styles.breakdownValue}>{s.grade}</Text>
+                      <Text style={[styles.breakdownLabel, themeStyles.subText]}>{s.subjectName}:</Text>
+                      <Text style={[styles.breakdownValue, themeStyles.text]}>{s.grade}</Text>
                     </View>
                   ))}
                 </View>
@@ -531,19 +559,19 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
           style={styles.clearButton}
           onPress={handleClear}
           activeOpacity={0.7}>
-          <Icon name="refresh-outline" size={18} color="#64748B" />
-          <Text style={styles.clearButtonText}>Clear & Start Over</Text>
+          <Icon name="refresh-outline" size={18} color={isDark ? '#9CA3AF' : '#64748B'} />
+          <Text style={[styles.clearButtonText, themeStyles.subText]}>Clear & Start Over</Text>
         </TouchableOpacity>
       </Animated.View>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themeStyles.container]}>
       {/* Header */}
       <View style={styles.header}>
-        <Icon name="swap-horizontal-outline" size={24} color="#4573DF" />
-        <Text style={styles.headerTitle}>Grade Converter</Text>
+        <Icon name="swap-horizontal-outline" size={24} color={isDark ? colors.primary : '#4573DF'} />
+        <Text style={[styles.headerTitle, themeStyles.text]}>Grade Converter</Text>
       </View>
 
       {/* Mode Tabs */}

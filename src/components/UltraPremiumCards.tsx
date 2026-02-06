@@ -16,7 +16,7 @@
  * @version 1.0.1 (Internal Fix)
  */
 
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyAchievement} from '../services/achievements';
 import {Icon} from './icons';
@@ -44,6 +45,38 @@ import {
   captureAndSaveCard,
 } from '../services/cardCapture';
 import {launchImageLibrary} from 'react-native-image-picker';
+
+// ============================================================================
+// IMAGE PERSISTENCE - Save and load card images by achievement ID
+// ============================================================================
+const CARD_IMAGES_KEY_PREFIX = '@pakuni_card_images_';
+
+const getCardImagesKey = (achievementId: string) => 
+  `${CARD_IMAGES_KEY_PREFIX}${achievementId}`;
+
+const saveCardImages = async (achievementId: string, images: CardCustomImages): Promise<void> => {
+  try {
+    // Only save if there are actual images
+    const hasImages = Object.values(images).some(val => val && val.trim && val.trim() !== '');
+    if (hasImages) {
+      await AsyncStorage.setItem(getCardImagesKey(achievementId), JSON.stringify(images));
+    }
+  } catch (error) {
+    console.error('Failed to save card images:', error);
+  }
+};
+
+const loadCardImages = async (achievementId: string): Promise<CardCustomImages | null> => {
+  try {
+    const saved = await AsyncStorage.getItem(getCardImagesKey(achievementId));
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (error) {
+    console.error('Failed to load card images:', error);
+  }
+  return null;
+};
 
 // Custom images type (previously from CardImageCustomizer)
 export interface CardCustomImages {
@@ -291,6 +324,27 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [images, setImages] = useState<CardCustomImages>(customImages);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Load saved images on mount
+  useEffect(() => {
+    if (achievement?.id && !imagesLoaded) {
+      loadCardImages(achievement.id).then((saved) => {
+        if (saved) {
+          setImages(prev => ({...prev, ...saved}));
+        }
+        setImagesLoaded(true);
+      });
+    }
+  }, [achievement?.id, imagesLoaded]);
+
+  // Save images when they change (after initial load)
+  const handleImagesChange = useCallback((newImages: CardCustomImages) => {
+    setImages(newImages);
+    if (achievement?.id) {
+      saveCardImages(achievement.id, newImages);
+    }
+  }, [achievement?.id]);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -299,7 +353,28 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `🏆 MERIT SUCCESS!\n\n🏛️ ${achievement.universityName || 'University'}\n📊 Aggregate: ${achievement.percentage || 'Calculated'}\n\n✨ Calculated with PakUni Merit Calculator!\n\n#PakUni #MeritList #Pakistan #2026\n\n📱 Made with PakUni App`;
+      // Parse percentage for honest messaging
+      const percentageStr = achievement.percentage?.replace('%', '') || '0';
+      const percentageNum = parseFloat(percentageStr) || 0;
+      
+      // Honest message based on actual score
+      let honestMessage: string;
+      let hashtag: string;
+      if (percentageNum >= 85) {
+        honestMessage = `🎉 Great achievement! Scored ${achievement.percentage || 'calculated'} at ${achievement.universityName || 'University'}!`;
+        hashtag = '#Achievement #Dream';
+      } else if (percentageNum >= 70) {
+        honestMessage = `📊 ${achievement.percentage || 'calculated'} at ${achievement.universityName || 'University'}. Strong foundation, working towards my goals!`;
+        hashtag = '#Progress #Focused';
+      } else if (percentageNum >= 50) {
+        honestMessage = `📈 ${achievement.percentage || 'calculated'} at ${achievement.universityName || 'University'}. Room for growth - time to work harder!`;
+        hashtag = '#JourneyToExcellence';
+      } else {
+        honestMessage = `🎯 Starting my journey at ${achievement.universityName || 'University'}. Hard work ahead!`;
+        hashtag = '#NeverGiveUp';
+      }
+      
+      const message = `🏆 MERIT CALCULATION!\n\n${honestMessage}\n\n✨ Calculated with PakUni Merit Calculator!\n\n${hashtag} #PakUni\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Merit Success', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -526,7 +601,7 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
         visible={showImagePicker}
         onClose={() => setShowImagePicker(false)}
         images={images}
-        onImagesChange={setImages}
+        onImagesChange={handleImagesChange}
         cardType="merit"
       />
     </View>
@@ -550,6 +625,27 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [images, setImages] = useState<CardCustomImages>(customImages);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Load saved images on mount
+  useEffect(() => {
+    if (achievement?.id && !imagesLoaded) {
+      loadCardImages(achievement.id).then((saved) => {
+        if (saved) {
+          setImages(prev => ({...prev, ...saved}));
+        }
+        setImagesLoaded(true);
+      });
+    }
+  }, [achievement?.id, imagesLoaded]);
+
+  // Save images when they change (after initial load)
+  const handleImagesChange = useCallback((newImages: CardCustomImages) => {
+    setImages(newImages);
+    if (achievement?.id) {
+      saveCardImages(achievement.id, newImages);
+    }
+  }, [achievement?.id]);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -558,7 +654,7 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Dreams becoming reality! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 Made with PakUni App`;
+      const message = `🎓 ADMISSION SECURED! 🎉\n\n🏛️ ${achievement.universityName || 'University'}\n📚 ${achievement.programName || 'Program'}\n\nAlhamdulillah! Hard work paid off! ✨\n\n#PakUni #Admission #Success #2026\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Admission', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -768,7 +864,7 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
         visible={showImagePicker}
         onClose={() => setShowImagePicker(false)}
         images={images}
-        onImagesChange={setImages}
+        onImagesChange={handleImagesChange}
         cardType="admission"
       />
     </View>
@@ -792,6 +888,27 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [images, setImages] = useState<CardCustomImages>(customImages);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Load saved images on mount
+  useEffect(() => {
+    if (achievement?.id && !imagesLoaded) {
+      loadCardImages(achievement.id).then((saved) => {
+        if (saved) {
+          setImages(prev => ({...prev, ...saved}));
+        }
+        setImagesLoaded(true);
+      });
+    }
+  }, [achievement?.id, imagesLoaded]);
+
+  // Save images when they change (after initial load)
+  const handleImagesChange = useCallback((newImages: CardCustomImages) => {
+    setImages(newImages);
+    if (achievement?.id) {
+      saveCardImages(achievement.id, newImages);
+    }
+  }, [achievement?.id]);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -800,7 +917,9 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
     }
     setIsSharing(true);
     try {
-      const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!\n\n${achievement.score ? `📊 Score: ${achievement.score}\n` : ''}🎯 One step closer to my dream university!\n\n#PakUni #EntryTest #Success\n\n📱 Made with PakUni App`;
+      // Honest message based on having score or not
+      const scoreText = achievement.score ? `\n📊 Score: ${achievement.score}` : '';
+      const message = `✅ ${achievement.testName || 'Entry Test'} COMPLETED!${scoreText}\n\n🎯 One step completed in my university journey!\n\n#PakUni #EntryTest #Progress\n\n📱 Made with PakUni App`;
       const result = await captureAndShareCard(cardRef, 'Test Complete', message);
       onShareComplete?.(result.shared);
       if (!result.success && result.error) {
@@ -1009,7 +1128,7 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
         visible={showImagePicker}
         onClose={() => setShowImagePicker(false)}
         images={images}
-        onImagesChange={setImages}
+        onImagesChange={handleImagesChange}
         cardType="test"
       />
     </View>
@@ -1033,6 +1152,27 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [images, setImages] = useState<CardCustomImages>(customImages);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Load saved images on mount
+  useEffect(() => {
+    if (achievement?.id && !imagesLoaded) {
+      loadCardImages(achievement.id).then((saved) => {
+        if (saved) {
+          setImages(prev => ({...prev, ...saved}));
+        }
+        setImagesLoaded(true);
+      });
+    }
+  }, [achievement?.id, imagesLoaded]);
+
+  // Save images when they change (after initial load)
+  const handleImagesChange = useCallback((newImages: CardCustomImages) => {
+    setImages(newImages);
+    if (achievement?.id) {
+      saveCardImages(achievement.id, newImages);
+    }
+  }, [achievement?.id]);
 
   const handleShare = async () => {
     if (!cardRef.current) {
@@ -1257,7 +1397,7 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
         visible={showImagePicker}
         onClose={() => setShowImagePicker(false)}
         images={images}
-        onImagesChange={setImages}
+        onImagesChange={handleImagesChange}
         cardType="scholarship"
       />
     </View>

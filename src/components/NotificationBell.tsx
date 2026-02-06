@@ -436,17 +436,12 @@ const NotificationBell: React.FC<NotificationBellProps> = ({
         }),
       ]);
 
-      // Ring every 30 seconds if panel is closed
-      const interval = setInterval(() => {
-        if (!showPanel) {
-          ringAnimation.start();
-        }
-      }, 30000);
-
-      // Initial ring
+      // Initial ring (disabled periodic ring to prevent re-render loops)
       ringAnimation.start();
 
-      return () => clearInterval(interval);
+      return () => {
+        // Cleanup animation
+      };
     }
   }, [unreadCount, showPanel]);
 

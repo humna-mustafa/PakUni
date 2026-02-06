@@ -14,6 +14,7 @@ import {
   Easing,
   Dimensions,
   Modal,
+  Share,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
@@ -371,19 +372,23 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
     if (diff >= 2) {
       resultType = 'admitted';
       chancePercent = Math.min(95, 80 + diff * 3);
-      message = `Congratulations! 🎉 You're very likely to get into ${selectedUniversity.shortName} ${selectedProgram}!`;
+      message = `🎉 Strong chances at ${selectedUniversity.shortName} ${selectedProgram}! Your hard work is paying off!`;
     } else if (diff >= 0) {
       resultType = 'admitted';
       chancePercent = 65 + diff * 7;
-      message = `Looking good! 👍 You have a strong chance at ${selectedUniversity.shortName} ${selectedProgram}!`;
+      message = `📊 Good progress! Solid foundation for ${selectedUniversity.shortName} ${selectedProgram}. Keep pushing!`;
     } else if (diff >= -3) {
       resultType = 'waitlist';
       chancePercent = 30 + (diff + 3) * 10;
-      message = `It's close! 🤞 You might make it in later rounds or waitlist for ${selectedUniversity.shortName}.`;
+      message = `📈 Room to grow for ${selectedUniversity.shortName}. Focus on improving scores - you can do this!`;
+    } else if (diff >= -8) {
+      resultType = 'not-admitted';
+      chancePercent = Math.max(10, 20 + diff * 2);
+      message = `🎯 Needs improvement for ${selectedUniversity.shortName}. Consider backup options while working harder!`;
     } else {
       resultType = 'not-admitted';
-      chancePercent = Math.max(5, 20 + diff * 3);
-      message = `This might be tough 💪 Consider backup options, but miracles do happen!`;
+      chancePercent = Math.max(5, 15 + diff * 2);
+      message = `📚 Significant work needed. Focus on fundamentals and explore alternative paths. Every expert started somewhere!`;
     }
 
     const predictionResult: PredictionResult = {
@@ -665,6 +670,38 @@ export const ResultPredictionGame: React.FC<ResultPredictionGameProps> = ({
                     styles.shareButton,
                     {backgroundColor: selectedUniversity?.color},
                   ]}
+                  onPress={async () => {
+                    if (result) {
+                      // Honest share message based on actual chances
+                      let honestMessage: string;
+                      let hashtag: string;
+                      
+                      if (result.chancePercent >= 70) {
+                        honestMessage = `🎉 Strong ${result.chancePercent}% chances at ${result.university} ${result.program}! Hard work paying off!`;
+                        hashtag = '#StrongChances';
+                      } else if (result.chancePercent >= 50) {
+                        honestMessage = `📊 ${result.chancePercent}% at ${result.university} ${result.program}. Building momentum, staying focused!`;
+                        hashtag = '#KeepWorking';
+                      } else if (result.chancePercent >= 30) {
+                        honestMessage = `📈 ${result.chancePercent}% for ${result.university} ${result.program}. Room to grow - working harder!`;
+                        hashtag = '#GrowthMindset';
+                      } else {
+                        honestMessage = `🎯 ${result.chancePercent}% at ${result.university}. Challenge accepted - improvement journey started!`;
+                        hashtag = '#NeverGiveUp';
+                      }
+                      
+                      const shareMessage = `${honestMessage}\n\n🎮 Just used PakUni's Admission Predictor!\n\n${hashtag} #PakUni\n\n📱 Made with PakUni App`;
+                      
+                      try {
+                        await Share.share({
+                          message: shareMessage,
+                          title: 'My Admission Prediction - PakUni',
+                        });
+                      } catch (error) {
+                        // User cancelled
+                      }
+                    }
+                  }}
                   activeOpacity={0.8}>
                   <Icon name="share-social-outline" size={20} color="#FFF" />
                   <Text style={styles.shareText}>Share Result</Text>

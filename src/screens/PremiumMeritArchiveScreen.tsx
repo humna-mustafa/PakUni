@@ -116,7 +116,7 @@ const MeritRow: React.FC<MeritRowProps> = ({
           </Text>
         </View>
 
-        {/* Trend */}
+        {/* Trend - green for increase (good), red for decrease */}
         <View style={styles.rowTrend}>
           {yearlyChange !== null ? (
             <View style={styles.trendContainer}>
@@ -124,12 +124,12 @@ const MeritRow: React.FC<MeritRowProps> = ({
                 name={yearlyChange >= 0 ? 'trending-up' : 'trending-down'}
                 family="Ionicons"
                 size={14}
-                color={yearlyChange >= 0 ? colors.error : colors.success}
+                color={yearlyChange >= 0 ? colors.success : colors.error}
               />
               <Text
                 style={[
                   styles.trendText,
-                  {color: yearlyChange >= 0 ? colors.error : colors.success},
+                  {color: yearlyChange >= 0 ? colors.success : colors.error},
                 ]}>
                 {yearlyChange >= 0 ? '+' : ''}{yearlyChange.toFixed(1)}
               </Text>
@@ -196,24 +196,46 @@ interface TrendChartProps {
 const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
   if (data.length === 0) return null;
 
-  const maxMerit = Math.max(...data.map(d => d.merit), 100);
-  const minMerit = Math.min(...data.map(d => d.merit), 0);
-  const range = maxMerit - minMerit || 1;
+  // Ensure data is sorted by year ascending (oldest to newest, left to right)
+  const sortedData = [...data].sort((a, b) => a.year - b.year);
   
-  // Normalize to 60-100 range for better visualization
-  const normalizedMin = Math.floor(Math.min(...data.map(d => d.merit)) - 5);
-  const normalizedMax = Math.ceil(Math.max(...data.map(d => d.merit)) + 5);
-  const chartRange = normalizedMax - normalizedMin;
+  // Normalize to range for better visualization
+  const normalizedMin = Math.floor(Math.min(...sortedData.map(d => d.merit)) - 5);
+  const normalizedMax = Math.ceil(Math.max(...sortedData.map(d => d.merit)) + 5);
+  const chartRange = normalizedMax - normalizedMin || 1;
+  
+  // Calculate overall trend for the header indicator
+  const latestMerit = sortedData[sortedData.length - 1]?.merit || 0;
+  const previousMerit = sortedData.length >= 2 ? sortedData[sortedData.length - 2]?.merit : null;
+  const yearOverYearChange = previousMerit !== null ? latestMerit - previousMerit : null;
   
   return (
     <View style={[styles.trendChartContainer, {backgroundColor: colors.card}]}>
       <View style={styles.trendChartHeader}>
         <Icon name="trending-up" family="Ionicons" size={18} color={colors.primary} />
         <Text style={[styles.trendChartTitle, {color: colors.text}]}>Merit Trend</Text>
-        <Text style={[styles.trendChartSubtitle, {color: colors.textSecondary}]}>
-          Average closing merit by year
-        </Text>
+        {/* Year-over-year trend indicator */}
+        {yearOverYearChange !== null && (
+          <View style={styles.trendIndicatorBadge}>
+            <Icon
+              name={yearOverYearChange >= 0 ? 'arrow-up' : 'arrow-down'}
+              family="Ionicons"
+              size={12}
+              color={yearOverYearChange >= 0 ? colors.success : colors.error}
+            />
+            <Text
+              style={[
+                styles.trendIndicatorText,
+                {color: yearOverYearChange >= 0 ? colors.success : colors.error},
+              ]}>
+              {yearOverYearChange >= 0 ? '+' : ''}{yearOverYearChange.toFixed(1)}% vs last year
+            </Text>
+          </View>
+        )}
       </View>
+      <Text style={[styles.trendChartSubtitle, {color: colors.textSecondary, marginBottom: SPACING.sm}]}>
+        Average closing merit by year (oldest → newest)
+      </Text>
       
       <View style={styles.chartArea}>
         {/* Y-axis labels */}
@@ -223,12 +245,13 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
           <Text style={[styles.axisLabel, {color: colors.textSecondary}]}>{normalizedMin}%</Text>
         </View>
         
-        {/* Bars */}
+        {/* Bars - sorted oldest to newest (left to right) */}
         <View style={styles.barsContainer}>
-          {data.map((item, index) => {
+          {sortedData.map((item, index) => {
+            // Higher merit = taller bar
             const height = ((item.merit - normalizedMin) / chartRange) * 120;
-            const isLatest = index === data.length - 1;
-            const prevItem = index > 0 ? data[index - 1] : null;
+            const isLatest = index === sortedData.length - 1;
+            const prevItem = index > 0 ? sortedData[index - 1] : null;
             const change = prevItem ? item.merit - prevItem.merit : null;
             
             return (
@@ -253,18 +276,19 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
                       <View style={[styles.barGlow, {backgroundColor: colors.primary}]} />
                     )}
                   </Animated.View>
+                  {/* Change indicator: green for increase (good), red for decrease */}
                   {change !== null && (
                     <View style={styles.changeIndicator}>
                       <Icon
                         name={change >= 0 ? 'caret-up' : 'caret-down'}
                         family="Ionicons"
                         size={10}
-                        color={change >= 0 ? colors.error : colors.success}
+                        color={change >= 0 ? colors.success : colors.error}
                       />
                       <Text
                         style={[
                           styles.changeText,
-                          {color: change >= 0 ? colors.error : colors.success},
+                          {color: change >= 0 ? colors.success : colors.error},
                         ]}>
                         {change >= 0 ? '+' : ''}{change.toFixed(1)}
                       </Text>
@@ -281,10 +305,11 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
       </View>
       
       {/* Trend summary */}
-      {data.length >= 2 && (
+      {sortedData.length >= 2 && (
         <View style={[styles.trendSummary, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'}]}>
           {(() => {
-            const totalChange = data[data.length - 1].merit - data[0].merit;
+            // Compare newest vs oldest (sortedData is ascending)
+            const totalChange = sortedData[sortedData.length - 1].merit - sortedData[0].merit;
             const isIncreasing = totalChange > 0;
             return (
               <>
@@ -292,20 +317,28 @@ const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
                   name={isIncreasing ? 'trending-up' : 'trending-down'}
                   family="Ionicons"
                   size={16}
-                  color={isIncreasing ? colors.error : colors.success}
+                  color={isIncreasing ? colors.success : colors.error}
                 />
                 <Text style={[styles.trendSummaryText, {color: colors.textSecondary}]}>
                   Merit has {isIncreasing ? 'increased' : 'decreased'} by{' '}
-                  <Text style={{color: isIncreasing ? colors.error : colors.success, fontWeight: TYPOGRAPHY.weight.bold}}>
+                  <Text style={{color: isIncreasing ? colors.success : colors.error, fontWeight: TYPOGRAPHY.weight.bold}}>
                     {Math.abs(totalChange).toFixed(1)}%
                   </Text>{' '}
-                  over {data.length} years
+                  over {sortedData.length} years
                 </Text>
               </>
             );
           })()}
         </View>
       )}
+      
+      {/* Data disclaimer */}
+      <View style={styles.disclaimerContainer}>
+        <Icon name="information-circle-outline" family="Ionicons" size={14} color={colors.textSecondary} />
+        <Text style={[styles.disclaimerText, {color: colors.textSecondary}]}>
+          Last updated: Feb 2026. Merit data is approximate and may vary by seat category. Please verify with official university sources.
+        </Text>
+      </View>
     </View>
   );
 };
@@ -1152,6 +1185,33 @@ const styles = StyleSheet.create({
   trendSummaryText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  trendIndicatorBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    borderRadius: RADIUS.sm,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    gap: 2,
+  },
+  trendIndicatorText: {
+    fontSize: 11,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  disclaimerContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: SPACING.md,
+    paddingTop: SPACING.sm,
+    gap: SPACING.xs,
+  },
+  disclaimerText: {
+    fontSize: 10,
+    fontStyle: 'italic',
+    flex: 1,
+    lineHeight: 14,
   },
 });
 

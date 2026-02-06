@@ -10,6 +10,7 @@ import {useAuth} from '../contexts/AuthContext';
 import {useToast} from '../components/PremiumToast';
 import {logger} from '../utils/logger';
 import {Haptics} from '../utils/haptics';
+import {statusCodes} from '@react-native-google-signin/google-signin';
 
 // ============================================================================
 // TYPES
@@ -239,9 +240,20 @@ export const useAuthToast = (): AuthToastHook => {
         return true;
       }
       
-      // If auth returned false with an error, show it
-      if (auth.authError) {
-        const errorInfo = getGoogleErrorInfo({message: auth.authError});
+      // If auth returned false without throwing (shouldn't happen now, but safety net)
+      Haptics.error();
+      toast.error('Could not complete sign in. Please try again.', 'Sign In Failed');
+      return false;
+    } catch (error: any) {
+      logger.error('Google sign-in toast error', error, 'AuthToast');
+      const errorInfo = getGoogleErrorInfo(error);
+      
+      // Don't show error toast for user-initiated cancellations
+      const isCancelled = error.code === statusCodes?.SIGN_IN_CANCELLED || 
+                          error.code === '12501' ||
+                          error.message?.toLowerCase().includes('cancel');
+      
+      if (!isCancelled) {
         Haptics.error();
         toast.show({
           type: 'error',
@@ -251,24 +263,9 @@ export const useAuthToast = (): AuthToastHook => {
             : errorInfo.message,
           duration: 5000,
         });
-        auth.clearError();
       }
       
-      return false;
-    } catch (error: any) {
-      logger.error('Google sign-in toast error', error, 'AuthToast');
-      const errorInfo = getGoogleErrorInfo(error);
-      
-      Haptics.error();
-      toast.show({
-        type: 'error',
-        title: errorInfo.title,
-        message: errorInfo.hint 
-          ? `${errorInfo.message}\n💡 ${errorInfo.hint}`
-          : errorInfo.message,
-        duration: 5000,
-      });
-      
+      auth.clearError();
       return false;
     }
   }, [auth, toast]);
@@ -305,21 +302,9 @@ export const useAuthToast = (): AuthToastHook => {
         return true;
       }
       
-      // Handle auth error
-      if (auth.authError) {
-        const errorInfo = getEmailErrorInfo({message: auth.authError});
-        Haptics.error();
-        toast.show({
-          type: 'error',
-          title: errorInfo.title,
-          message: errorInfo.hint 
-            ? `${errorInfo.message}\n💡 ${errorInfo.hint}`
-            : errorInfo.message,
-          duration: 5000,
-        });
-        auth.clearError();
-      }
-      
+      // If auth returned false without throwing
+      Haptics.error();
+      toast.error('Could not sign in. Please check your credentials.', 'Sign In Failed');
       return false;
     } catch (error: any) {
       logger.error('Email sign-in toast error', error, 'AuthToast');
@@ -335,6 +320,7 @@ export const useAuthToast = (): AuthToastHook => {
         duration: 5000,
       });
       
+      auth.clearError();
       return false;
     }
   }, [auth, toast, validateEmail]);
@@ -409,6 +395,7 @@ export const useAuthToast = (): AuthToastHook => {
         duration: 5000,
       });
       
+      auth.clearError();
       return false;
     }
   }, [auth, toast, validateEmail, validatePassword, validateName]);

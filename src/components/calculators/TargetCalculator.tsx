@@ -4,7 +4,7 @@
  * Calculates required scores to achieve target aggregate
  */
 
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
+import {useTheme} from '../../contexts';
 
 // ============================================================================
 // TYPES
@@ -65,7 +66,7 @@ const UNIVERSITY_FORMULAS: UniversityFormula[] = [
     interWeight: 15,
     testWeight: 75,
     testName: 'NET',
-    minAggregate: 60,
+    minAggregate: 75,
     icon: 'school-outline',
     color: '#4573DF',
   },
@@ -77,7 +78,7 @@ const UNIVERSITY_FORMULAS: UniversityFormula[] = [
     interWeight: 40,
     testWeight: 50,
     testName: 'FAST Test',
-    minAggregate: 50,
+    minAggregate: 65,
     icon: 'flash-outline',
     color: '#DC2626',
   },
@@ -160,6 +161,8 @@ const UNIVERSITY_FORMULAS: UniversityFormula[] = [
 // ============================================================================
 
 export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate}) => {
+  const {colors, isDark} = useTheme();
+
   // State
   const [selectedUniversity, setSelectedUniversity] = useState<UniversityFormula | null>(null);
   const [matricPercent, setMatricPercent] = useState('');
@@ -171,6 +174,84 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
   // Animation
   const slideAnim = React.useRef(new Animated.Value(0)).current;
   const pulseAnim = React.useRef(new Animated.Value(1)).current;
+
+  // Dark mode styles
+  const themeStyles = useMemo(() => ({
+    container: {
+      backgroundColor: colors.card,
+    },
+    headerTitle: {
+      color: colors.text,
+    },
+    headerSubtitle: {
+      color: colors.textSecondary,
+    },
+    sectionTitle: {
+      color: colors.textSecondary,
+    },
+    uniCardUnselected: {
+      colors: isDark ? [colors.surfaceContainer, colors.surfaceContainerHigh] : ['#F1F5F9', '#E2E8F0'],
+    },
+    uniName: {
+      color: colors.textSecondary,
+    },
+    uniTest: {
+      color: colors.textMuted,
+    },
+    inputLabel: {
+      color: colors.textSecondary,
+    },
+    textInput: {
+      backgroundColor: colors.inputBackground,
+      borderColor: colors.inputBorder,
+      color: colors.inputText,
+    },
+    weightLabel: {
+      color: colors.textMuted,
+    },
+    targetSuffix: {
+      color: colors.textSecondary,
+    },
+    hintText: {
+      color: colors.success,
+    },
+    messageCard: {
+      backgroundColor: isDark ? colors.surfaceContainer : '#F8FAFC',
+    },
+    messageText: {
+      color: colors.textSecondary,
+    },
+    breakdownSection: {
+      backgroundColor: isDark ? colors.surfaceContainer : '#F8FAFC',
+    },
+    breakdownTitle: {
+      color: colors.text,
+    },
+    breakdownLabel: {
+      color: colors.textMuted,
+    },
+    breakdownValue: {
+      color: colors.textSecondary,
+    },
+    breakdownValueBold: {
+      color: colors.text,
+    },
+    totalRow: {
+      borderTopColor: colors.divider,
+    },
+    totalLabel: {
+      color: colors.text,
+    },
+    formulaBox: {
+      backgroundColor: isDark ? colors.primaryLight : '#EEF2FF',
+    },
+    formulaTitle: {
+      color: colors.primary,
+    },
+    formulaText: {
+      color: isDark ? '#93C5FD' : '#4338CA',
+    },
+  }), [colors, isDark]);
 
   // Pulse animation for achievable result
   useEffect(() => {
@@ -194,7 +275,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
     }
   }, [result, pulseAnim]);
 
-  // Calculate required test score
+  // Calculate required test score - only called on button press
   const calculateTarget = useCallback(() => {
     if (!selectedUniversity) {
       return;
@@ -202,12 +283,17 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
 
     const matric = parseFloat(matricPercent);
     const inter = parseFloat(interPercent);
-    const target = parseFloat(targetAggregate) || selectedUniversity.minAggregate || 60;
 
-    if (isNaN(matric) || isNaN(inter)) {
+    // Validate inputs properly
+    if (isNaN(matric) || isNaN(inter) || matric < 0 || matric > 100 || inter < 0 || inter > 100) {
       setResult(null);
       return;
     }
+
+    const target = parseFloat(targetAggregate) || selectedUniversity.minAggregate || 60;
+
+    // Clamp target to valid range
+    const clampedTarget = Math.min(100, Math.max(0, target));
 
     // Calculate current contribution from matric and inter
     const matricContribution = (matric * selectedUniversity.matricWeight) / 100;
@@ -215,32 +301,36 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
     const currentWithoutTest = matricContribution + interContribution;
 
     // Calculate required test contribution
-    const requiredTestContribution = target - currentWithoutTest;
-    const requiredTestScore = (requiredTestContribution * 100) / selectedUniversity.testWeight;
+    const requiredTestContribution = clampedTarget - currentWithoutTest;
+    const requiredTestScore = selectedUniversity.testWeight > 0
+      ? (requiredTestContribution * 100) / selectedUniversity.testWeight
+      : 0;
 
-    // Determine if achievable
+    // Determine if achievable (need between 0 and 100 in test)
     const achievable = requiredTestScore >= 0 && requiredTestScore <= 100;
 
-    // Generate message
+    // Generate accurate message based on the math
     let message = '';
+    const maxPossibleAggregate = currentWithoutTest + selectedUniversity.testWeight;
+    
     if (requiredTestScore > 100) {
-      message = `Even with 100% in ${selectedUniversity.testName}, you can only reach ${(currentWithoutTest + selectedUniversity.testWeight).toFixed(1)}% aggregate. Consider improving your intermediate score or targeting a different program.`;
+      message = `Even with 100% in ${selectedUniversity.testName}, your max aggregate is ${maxPossibleAggregate.toFixed(1)}%. Target ${clampedTarget}% is not reachable with current academic scores. Consider improving intermediate marks.`;
     } else if (requiredTestScore < 0) {
-      message = `Great news! You've already exceeded your target with your academic scores. Any score in ${selectedUniversity.testName} will give you ${target}%+ aggregate!`;
-    } else if (requiredTestScore <= 50) {
-      message = `Very achievable! A moderate score of ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName} will get you to ${selectedUniversity.shortName}! 🎯`;
-    } else if (requiredTestScore <= 70) {
-      message = `Challenging but doable! Focus on ${selectedUniversity.testName} preparation. You need a strong ${Math.ceil(requiredTestScore)}%. 💪`;
-    } else if (requiredTestScore <= 85) {
-      message = `Tough target! You'll need an excellent ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName}. Intensive prep recommended! 📚`;
+      message = `Great news! Your academic scores alone give you ${currentWithoutTest.toFixed(1)}% aggregate — already above your ${clampedTarget}% target! Any score in ${selectedUniversity.testName} adds more.`;
+    } else if (requiredTestScore <= 40) {
+      message = `Very achievable! You only need ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName}. Your strong academics carry most of the weight.`;
+    } else if (requiredTestScore <= 60) {
+      message = `Achievable with focused preparation. You need ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName} — a solid, realistic target.`;
+    } else if (requiredTestScore <= 80) {
+      message = `Challenging but possible. ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName} requires dedicated preparation. Start early!`;
     } else {
-      message = `Very challenging! ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName} is required. Consider backup options too. 🎯`;
+      message = `Tough target. You need ${Math.ceil(requiredTestScore)}% in ${selectedUniversity.testName}. Consider intensive prep and also apply to backup universities.`;
     }
 
     const targetResult: TargetResult = {
       requiredTestScore: Math.max(0, Math.min(100, requiredTestScore)),
       currentAggregate: currentWithoutTest,
-      targetAggregate: target,
+      targetAggregate: clampedTarget,
       achievable,
       message,
       breakdown: {
@@ -263,17 +353,18 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
     }).start();
   }, [selectedUniversity, matricPercent, interPercent, targetAggregate, slideAnim, onCalculate]);
 
-  // Auto-calculate when inputs change
+  // Clear result when university changes
   useEffect(() => {
-    if (selectedUniversity && matricPercent && interPercent) {
-      calculateTarget();
-    }
-  }, [selectedUniversity, matricPercent, interPercent, targetAggregate, calculateTarget]);
+    setResult(null);
+  }, [selectedUniversity]);
+
+  // Check if calculate button should be enabled
+  const canCalculate = selectedUniversity && matricPercent.trim() !== '' && interPercent.trim() !== '';
 
   // Render university selector
   const renderUniversitySelector = () => (
     <View style={styles.selectorSection}>
-      <Text style={styles.sectionTitle}>Select University</Text>
+      <Text style={[styles.sectionTitle, {color: themeStyles.sectionTitle.color}]}>Select University</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -287,7 +378,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
               colors={
                 selectedUniversity?.id === uni.id
                   ? [uni.color, uni.color + 'DD']
-                  : ['#F1F5F9', '#E2E8F0']
+                  : themeStyles.uniCardUnselected.colors
               }
               style={[
                 styles.universityCard,
@@ -301,6 +392,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
               <Text
                 style={[
                   styles.universityName,
+                  {color: themeStyles.uniName.color},
                   selectedUniversity?.id === uni.id && styles.universityNameSelected,
                 ]}>
                 {uni.shortName}
@@ -308,6 +400,7 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
               <Text
                 style={[
                   styles.universityTest,
+                  {color: themeStyles.uniTest.color},
                   selectedUniversity?.id === uni.id && styles.universityTestSelected,
                 ]}>
                 {uni.testName}
@@ -322,40 +415,40 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
   // Render input section
   const renderInputSection = () => (
     <View style={styles.inputSection}>
-      <Text style={styles.sectionTitle}>Your Academic Scores</Text>
+      <Text style={[styles.sectionTitle, {color: themeStyles.sectionTitle.color}]}>Your Academic Scores</Text>
       
       <View style={styles.inputRow}>
         <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Matric %</Text>
+          <Text style={[styles.inputLabel, {color: themeStyles.inputLabel.color}]}>Matric %</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, themeStyles.textInput]}
             value={matricPercent}
             onChangeText={setMatricPercent}
             placeholder="e.g., 92"
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.placeholder}
             keyboardType="decimal-pad"
             maxLength={5}
           />
           {selectedUniversity && (
-            <Text style={styles.weightLabel}>
+            <Text style={[styles.weightLabel, {color: themeStyles.weightLabel.color}]}>
               Weight: {selectedUniversity.matricWeight}%
             </Text>
           )}
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Inter %</Text>
+          <Text style={[styles.inputLabel, {color: themeStyles.inputLabel.color}]}>Inter %</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, themeStyles.textInput]}
             value={interPercent}
             onChangeText={setInterPercent}
             placeholder="e.g., 85"
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.placeholder}
             keyboardType="decimal-pad"
             maxLength={5}
           />
           {selectedUniversity && (
-            <Text style={styles.weightLabel}>
+            <Text style={[styles.weightLabel, {color: themeStyles.weightLabel.color}]}>
               Weight: {selectedUniversity.interWeight}%
             </Text>
           )}
@@ -363,25 +456,39 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
       </View>
 
       <View style={styles.targetRow}>
-        <Text style={styles.inputLabel}>Target Aggregate</Text>
+        <Text style={[styles.inputLabel, {color: themeStyles.inputLabel.color}]}>Target Aggregate</Text>
         <View style={styles.targetInputRow}>
           <TextInput
-            style={[styles.textInput, styles.targetInput]}
+            style={[styles.textInput, styles.targetInput, themeStyles.textInput]}
             value={targetAggregate}
             onChangeText={setTargetAggregate}
             placeholder={selectedUniversity?.minAggregate?.toString() || '60'}
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.placeholder}
             keyboardType="decimal-pad"
             maxLength={5}
           />
-          <Text style={styles.targetSuffix}>%</Text>
+          <Text style={[styles.targetSuffix, {color: themeStyles.targetSuffix.color}]}>%</Text>
         </View>
         {selectedUniversity?.minAggregate && (
-          <Text style={styles.hintText}>
+          <Text style={[styles.hintText, {color: themeStyles.hintText.color}]}>
             Min. for {selectedUniversity.shortName}: {selectedUniversity.minAggregate}%
           </Text>
         )}
       </View>
+
+      {/* Calculate Button */}
+      <TouchableOpacity
+        onPress={calculateTarget}
+        disabled={!canCalculate}
+        activeOpacity={0.8}
+        style={styles.calculateButton}>
+        <LinearGradient
+          colors={canCalculate ? [colors.primary, colors.primaryDark] : [colors.textMuted, colors.textMuted]}
+          style={styles.calculateButtonGradient}>
+          <Icon name="calculator-outline" size={20} color="#FFF" />
+          <Text style={styles.calculateButtonText}>Calculate Required Score</Text>
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   );
 
@@ -446,13 +553,13 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
         </Animated.View>
 
         {/* Message Card */}
-        <View style={styles.messageCard}>
+        <View style={[styles.messageCard, themeStyles.messageCard]}>
           <Icon
             name="bulb-outline"
             size={20}
-            color={result.achievable ? '#10B981' : '#EF4444'}
+            color={result.achievable ? colors.success : colors.error}
           />
-          <Text style={styles.messageText}>{result.message}</Text>
+          <Text style={[styles.messageText, {color: themeStyles.messageText.color}]}>{result.message}</Text>
         </View>
 
         {/* Breakdown Toggle */}
@@ -463,26 +570,26 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
           <Icon
             name={showDetails ? 'chevron-up' : 'chevron-down'}
             size={20}
-            color="#4573DF"
+            color={colors.primary}
           />
-          <Text style={styles.detailsToggleText}>
+          <Text style={[styles.detailsToggleText, {color: colors.primary}]}>
             {showDetails ? 'Hide' : 'Show'} Calculation Breakdown
           </Text>
         </TouchableOpacity>
 
         {/* Detailed Breakdown */}
         {showDetails && (
-          <View style={styles.breakdownSection}>
-            <Text style={styles.breakdownTitle}>Aggregate Breakdown</Text>
+          <View style={[styles.breakdownSection, themeStyles.breakdownSection]}>
+            <Text style={[styles.breakdownTitle, {color: themeStyles.breakdownTitle.color}]}>Aggregate Breakdown</Text>
             
             <View style={styles.breakdownItem}>
               <View style={styles.breakdownLabelRow}>
-                <Icon name="school-outline" size={16} color="#64748B" />
-                <Text style={styles.breakdownLabel}>Matric Contribution</Text>
+                <Icon name="school-outline" size={16} color={colors.textMuted} />
+                <Text style={[styles.breakdownLabel, {color: themeStyles.breakdownLabel.color}]}>Matric Contribution</Text>
               </View>
-              <Text style={styles.breakdownValue}>
+              <Text style={[styles.breakdownValue, {color: themeStyles.breakdownValue.color}]}>
                 {matricPercent}% × {selectedUniversity?.matricWeight}% ={' '}
-                <Text style={styles.breakdownValueBold}>
+                <Text style={[styles.breakdownValueBold, {color: themeStyles.breakdownValueBold.color}]}>
                   {result.breakdown.matricContribution.toFixed(2)}
                 </Text>
               </Text>
@@ -490,12 +597,12 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
 
             <View style={styles.breakdownItem}>
               <View style={styles.breakdownLabelRow}>
-                <Icon name="book-outline" size={16} color="#64748B" />
-                <Text style={styles.breakdownLabel}>Inter Contribution</Text>
+                <Icon name="book-outline" size={16} color={colors.textMuted} />
+                <Text style={[styles.breakdownLabel, {color: themeStyles.breakdownLabel.color}]}>Inter Contribution</Text>
               </View>
-              <Text style={styles.breakdownValue}>
+              <Text style={[styles.breakdownValue, {color: themeStyles.breakdownValue.color}]}>
                 {interPercent}% × {selectedUniversity?.interWeight}% ={' '}
-                <Text style={styles.breakdownValueBold}>
+                <Text style={[styles.breakdownValueBold, {color: themeStyles.breakdownValueBold.color}]}>
                   {result.breakdown.interContribution.toFixed(2)}
                 </Text>
               </Text>
@@ -503,29 +610,29 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
 
             <View style={styles.breakdownItem}>
               <View style={styles.breakdownLabelRow}>
-                <Icon name="create-outline" size={16} color="#4573DF" />
-                <Text style={[styles.breakdownLabel, {color: '#4573DF'}]}>
+                <Icon name="create-outline" size={16} color={colors.primary} />
+                <Text style={[styles.breakdownLabel, {color: colors.primary}]}>
                   Required Test Contribution
                 </Text>
               </View>
-              <Text style={styles.breakdownValue}>
+              <Text style={[styles.breakdownValue, {color: themeStyles.breakdownValue.color}]}>
                 {Math.ceil(result.requiredTestScore)}% × {selectedUniversity?.testWeight}% ={' '}
-                <Text style={[styles.breakdownValueBold, {color: '#4573DF'}]}>
+                <Text style={[styles.breakdownValueBold, {color: colors.primary}]}>
                   {result.breakdown.testContribution.toFixed(2)}
                 </Text>
               </Text>
             </View>
 
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Target Aggregate</Text>
-              <Text style={styles.totalValue}>
+            <View style={[styles.totalRow, {borderTopColor: themeStyles.totalRow.borderTopColor}]}>
+              <Text style={[styles.totalLabel, {color: themeStyles.totalLabel.color}]}>Target Aggregate</Text>
+              <Text style={[styles.totalValue, {color: colors.primary}]}>
                 {result.targetAggregate.toFixed(1)}%
               </Text>
             </View>
 
-            <View style={styles.formulaBox}>
-              <Text style={styles.formulaTitle}>Formula Used:</Text>
-              <Text style={styles.formulaText}>
+            <View style={[styles.formulaBox, themeStyles.formulaBox]}>
+              <Text style={[styles.formulaTitle, {color: themeStyles.formulaTitle.color}]}>Formula Used:</Text>
+              <Text style={[styles.formulaText, {color: themeStyles.formulaText.color}]}>
                 Aggregate = (Matric × {selectedUniversity?.matricWeight}%) + 
                 (Inter × {selectedUniversity?.interWeight}%) + 
                 ({selectedUniversity?.testName} × {selectedUniversity?.testWeight}%)
@@ -538,17 +645,17 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themeStyles.container]}>
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#4573DF', '#3660C9']}
+          colors={[colors.primary, colors.primaryDark]}
           style={styles.headerIcon}>
           <Icon name="trophy-outline" size={24} color="#FFF" />
         </LinearGradient>
         <View style={styles.headerText}>
-          <Text style={styles.headerTitle}>Target Calculator</Text>
-          <Text style={styles.headerSubtitle}>
+          <Text style={[styles.headerTitle, {color: themeStyles.headerTitle.color}]}>Target Calculator</Text>
+          <Text style={[styles.headerSubtitle, {color: themeStyles.headerSubtitle.color}]}>
             Find out what you need to score
           </Text>
         </View>
@@ -707,6 +814,22 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#10B981',
     marginTop: 4,
+  },
+  calculateButton: {
+    marginTop: SPACING.lg,
+  },
+  calculateButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.lg,
+    gap: SPACING.sm,
+  },
+  calculateButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.bold,
+    color: '#FFF',
   },
   resultSection: {
     marginTop: SPACING.md,

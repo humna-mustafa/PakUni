@@ -419,20 +419,16 @@ const RoadmapCard = ({
               </View>
             </View>
 
-            {/* Meta badges */}
+            {/* Meta badges - show only duration and demand level on card preview */}
             <View style={styles.roadmapMeta}>
               <View style={[styles.metaBadge, {backgroundColor: colors.background, flexDirection: 'row', alignItems: 'center', gap: 4}]}>
                 <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
                 <Text style={[styles.metaText, {color: colors.textSecondary}]}>{roadmap.totalYears}</Text>
               </View>
-              <View style={[styles.metaBadge, {backgroundColor: getDifficultyColor(roadmap.difficulty) + '20'}]}>
-                <Text style={[styles.metaText, {color: getDifficultyColor(roadmap.difficulty)}]}>
-                  {roadmap.difficulty}
-                </Text>
-              </View>
-              <View style={[styles.metaBadge, {backgroundColor: getDemandColor(roadmap.demandLevel) + '20'}]}>
+              <View style={[styles.metaBadge, {backgroundColor: getDemandColor(roadmap.demandLevel) + '20', flexDirection: 'row', alignItems: 'center', gap: 4}]}>
+                <View style={{width: 6, height: 6, borderRadius: 3, backgroundColor: getDemandColor(roadmap.demandLevel)}} />
                 <Text style={[styles.metaText, {color: getDemandColor(roadmap.demandLevel)}]}>
-                  {roadmap.demandLevel}
+                  {roadmap.demandLevel} Demand
                 </Text>
               </View>
             </View>

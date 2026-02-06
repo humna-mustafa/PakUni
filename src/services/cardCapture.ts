@@ -201,6 +201,16 @@ export const captureAndShareCard = async (
   shareTitle?: string,
   shareMessage?: string,
 ): Promise<ShareCardResult> => {
+  // Validate viewRef before capture
+  if (!viewRef || !viewRef.current) {
+    logger.warn('Share attempted with null view reference', undefined, 'CardCapture');
+    return {
+      success: false,
+      shared: false,
+      error: 'Card view not ready. Please wait and try again.',
+    };
+  }
+
   const captureResult = await captureCard(viewRef);
   
   if (!captureResult.success || !captureResult.uri) {
@@ -211,9 +221,42 @@ export const captureAndShareCard = async (
     };
   }
 
+  // Validate URI exists and is a valid string
+  const uri = captureResult.uri;
+  if (!uri || typeof uri !== 'string' || uri.trim() === '') {
+    logger.error('Invalid URI returned from capture', {uri}, 'CardCapture');
+    return {
+      success: false,
+      shared: false,
+      error: 'Failed to create shareable image. Please try again.',
+    };
+  }
+
   try {
+    // Verify file exists before reading
+    const fileExists = await RNFS.exists(uri);
+    if (!fileExists) {
+      logger.error('Captured file does not exist', {uri}, 'CardCapture');
+      return {
+        success: false,
+        shared: false,
+        error: 'Card image was not saved properly. Please try again.',
+      };
+    }
+
     // Read the image file and convert to base64 for sharing
-    const base64Image = await RNFS.readFile(captureResult.uri, 'base64');
+    const base64Image = await RNFS.readFile(uri, 'base64');
+    
+    // Validate base64 content
+    if (!base64Image || base64Image.trim() === '') {
+      logger.error('Empty base64 image from file', {uri}, 'CardCapture');
+      return {
+        success: false,
+        shared: false,
+        error: 'Failed to process card image. Please try again.',
+      };
+    }
+
     const imageUrl = `data:image/png;base64,${base64Image}`;
 
     // Use react-native-share for proper image sharing
@@ -230,7 +273,7 @@ export const captureAndShareCard = async (
     
     // Clean up temp file
     try {
-      await RNFS.unlink(captureResult.uri);
+      await RNFS.unlink(uri);
     } catch {
       // Ignore cleanup errors
     }
@@ -244,9 +287,27 @@ export const captureAndShareCard = async (
     if (error?.message?.includes('User did not share') || 
         error?.message?.includes('cancelled') ||
         error?.dismissedAction) {
+      // Clean up temp file on cancel too
+      try {
+        await RNFS.unlink(uri);
+      } catch {
+        // Ignore
+      }
       return {
         success: true,
         shared: false,
+      };
+    }
+    
+    // Handle null URI error specifically
+    if (error?.message?.includes('getScheme') || 
+        error?.message?.includes('null object reference') ||
+        error?.message?.includes('NullPointerException')) {
+      logger.error('Null URI error during share', error, 'CardCapture');
+      return {
+        success: false,
+        shared: false,
+        error: 'Unable to share card. Please save it first, then share from gallery.',
       };
     }
     

@@ -23,7 +23,7 @@ import {Icon} from '../components/icons';
 import {useTheme} from '../contexts/ThemeContext';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
 import {ANIMATION_SCALES} from '../constants/ui';
-import {shareResultPrediction} from '../services/share';
+import {shareResultPrediction, shareContent} from '../services/share';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -197,34 +197,34 @@ const calculateAdmissionChance = (
     recommendations.push('You do not meet minimum requirements for this program.');
   } else if (ratio >= 1.15) {
     percentage = 90;
-    status = 'Excellent Chance';
+    status = 'Strong Chances';
     color = '#10B981';
     recommendations.push('Your profile is very strong! Focus on interview prep.');
   } else if (ratio >= 1.05) {
     percentage = 75;
-    status = 'Good Chance';
+    status = 'Building Momentum';
     color = '#22C55E';
-    recommendations.push('Strong candidate. Keep documents ready!');
+    recommendations.push('Good progress. Keep documents ready!');
   } else if (ratio >= 0.98) {
     percentage = 55;
-    status = 'Fair Chance';
+    status = 'Room to Grow';
     color = '#84CC16';
-    recommendations.push('Competitive profile. Consider backup options too.');
+    recommendations.push('Competitive but needs work. Consider backup options too.');
   } else if (ratio >= 0.92) {
     percentage = 35;
-    status = 'Low Chance';
+    status = 'Needs Improvement';
     color = '#F59E0B';
-    recommendations.push('Borderline case. Apply to similar-tier universities as backup.');
+    recommendations.push('Borderline case. Focus on improving scores and apply to backup universities.');
   } else if (ratio >= 0.85) {
     percentage = 20;
-    status = 'Very Low Chance';
+    status = 'Significant Work Needed';
     color = '#EF4444';
-    recommendations.push('Consider easier programs or other universities.');
+    recommendations.push('Consider easier programs or focus on improving your marks significantly.');
   } else {
     percentage = 10;
-    status = 'Unlikely';
+    status = 'Major Improvement Required';
     color = '#EF4444';
-    recommendations.push('Focus on backup options. Consider improving your marks.');
+    recommendations.push('Focus on fundamentals and backup options. Hard work can change outcomes!');
   }
   
   // Difficulty adjustment
@@ -552,13 +552,37 @@ const ResultGameScreen: React.FC = () => {
                 <TouchableOpacity
                   style={[styles.shareBtn, {backgroundColor: '#4573DF'}]}
                   onPress={() => {
-                    const topResult = results[0];
-                    if (topResult) {
-                      shareResultPrediction(
-                        `${topResult.university.name} - ${topResult.program.name}`,
-                        topResult.university.shortName,
-                        topResult.percentage
-                      );
+                    if (results.length > 0) {
+                      // Share ALL results with HONEST messaging
+                      const resultLines = results.map((r, i) => {
+                        const emoji = r.percentage >= 80 ? '🟢' : r.percentage >= 50 ? '🟡' : '🔴';
+                        return `${emoji} ${r.university.shortName} - ${r.program.name}: ${r.percentage}%`;
+                      }).join('\n');
+                      
+                      // Get honest message based on top result
+                      const topPercentage = results[0].percentage;
+                      let honestPrefix: string;
+                      let honestHashtag: string;
+                      if (topPercentage >= 80) {
+                        honestPrefix = '🎉 Strong admission chances!';
+                        honestHashtag = '#StrongChances';
+                      } else if (topPercentage >= 60) {
+                        honestPrefix = '📊 Building momentum on my journey!';
+                        honestHashtag = '#KeepWorking';
+                      } else if (topPercentage >= 40) {
+                        honestPrefix = '📈 Room to grow - working harder!';
+                        honestHashtag = '#GrowthMindset';
+                      } else {
+                        honestPrefix = '🎯 Starting my improvement journey!';
+                        honestHashtag = '#NeverGiveUp';
+                      }
+                      
+                      const message = `${honestPrefix}\n\n${resultLines}\n\nCalculated on PakUni App! 🎮\n\n${honestHashtag} #PakUni\n\n📱 Made with PakUni App`;
+                      
+                      shareContent({
+                        title: 'My Admission Journey - PakUni',
+                        message,
+                      });
                     }
                   }}>
                   <Icon name="share-social-outline" size={20} color="#FFF" />

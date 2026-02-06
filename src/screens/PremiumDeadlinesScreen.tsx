@@ -405,13 +405,14 @@ const PremiumDeadlinesScreen = () => {
     }
   }, []);
 
-  // Stats
-  const stats = useMemo(() => {
+  // Stats - Dynamically calculated based on current date
+  // No memoization so stats update correctly when screen is revisited
+  const stats = (() => {
     const openCount = ADMISSION_DEADLINES.filter(d => getDeadlineStatus(d) === 'open').length;
     const closingSoonCount = ADMISSION_DEADLINES.filter(d => getDeadlineStatus(d) === 'closing-soon').length;
     const upcomingCount = ADMISSION_DEADLINES.filter(d => getDeadlineStatus(d) === 'upcoming').length;
     return {openCount, closingSoonCount, upcomingCount};
-  }, []);
+  })();
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -874,6 +875,7 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.md,
     gap: SPACING.xs,
+    marginLeft: 'auto', // Always position on right side
   },
   applyBtnText: {
     color: '#FFFFFF',

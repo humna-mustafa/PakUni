@@ -649,10 +649,10 @@ export const schemas = {
    * Merit calculator form
    */
   meritCalculator: {
-    matricMarks: [rules.required('Matric marks are required'), rules.marks(1100)],
-    matricTotal: [rules.required('Total marks are required'), rules.marks(1100)],
-    fscMarks: [rules.required('FSc marks are required'), rules.marks(1100)],
-    fscTotal: [rules.required('Total marks are required'), rules.marks(1100)],
+    matricMarks: [rules.required('Matric marks are required'), rules.marks(1200)],
+    matricTotal: [rules.required('Total marks are required'), rules.marks(1200)],
+    fscMarks: [rules.required('FSc marks are required'), rules.marks(1200)],
+    fscTotal: [rules.required('Total marks are required'), rules.marks(1200)],
     entryTestMarks: [rules.marks(400)],
     entryTestTotal: [rules.marks(400)],
     hafizQuran: [],
