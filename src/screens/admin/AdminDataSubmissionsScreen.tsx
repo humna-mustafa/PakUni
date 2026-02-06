@@ -28,6 +28,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
 import { TYPOGRAPHY } from '../../constants/design';
 import { useAuth } from '../../contexts/AuthContext';
@@ -759,7 +760,7 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <UniversalHeader
           title="Data Submissions"
           showBack
@@ -768,12 +769,12 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <UniversalHeader
         title={bulkActionMode ? `${selectedIds.size} Selected` : "Data Submissions"}
         showBack={bulkActionMode}
@@ -832,7 +833,7 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
       </ScrollView>
       
       {renderReviewPanel()}
-    </View>
+    </SafeAreaView>
   );
 };
 

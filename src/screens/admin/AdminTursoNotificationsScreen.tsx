@@ -924,7 +924,7 @@ const AdminTursoNotificationsScreen: React.FC = () => {
   // ============================================================================
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       {renderHeader()}
       {renderStats()}
       {renderFilters()}

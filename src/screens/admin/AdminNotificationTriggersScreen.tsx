@@ -23,6 +23,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
 import { TYPOGRAPHY } from '../../constants/design';
 import { UniversalHeader } from '../../components';
@@ -505,7 +506,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <UniversalHeader
           title="Notification Triggers"
           showBack
@@ -514,12 +515,12 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <UniversalHeader
         title="Notification Triggers"
         showBack
@@ -562,7 +563,7 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
       </ScrollView>
       
       {renderEditModal()}
-    </View>
+    </SafeAreaView>
   );
 };
 

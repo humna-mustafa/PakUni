@@ -22,6 +22,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { TYPOGRAPHY } from '../../constants/design';
@@ -148,29 +149,29 @@ export const AdminApprovalAnalyticsScreen: React.FC<{ navigation: any }> = ({ na
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <UniversalHeader title="Approval Analytics" showBack onBack={() => navigation.goBack()} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (!metrics) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <UniversalHeader title="Approval Analytics" showBack onBack={() => navigation.goBack()} />
         <View style={styles.errorContainer}>
           <Icon name="alert-circle" size={48} color={colors.primary} />
           <Text style={[styles.errorText, { color: colors.text }]}>Failed to load analytics</Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <UniversalHeader title="Approval Analytics" showBack onBack={() => navigation.goBack()} />
       
       <ScrollView
@@ -321,7 +322,7 @@ export const AdminApprovalAnalyticsScreen: React.FC<{ navigation: any }> = ({ na
 
         <View style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

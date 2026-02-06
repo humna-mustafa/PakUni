@@ -677,7 +677,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
@@ -693,7 +693,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
   // ============================================================================
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       {/* Header */}
       <LinearGradient
         colors={isDark ? ['#1D2127', '#272C34'] : ['#00D4AA', '#00A388']}

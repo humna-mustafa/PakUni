@@ -260,17 +260,19 @@ const UniversityCard = ({
                 <Text style={[styles.shortName, {color: getUniversityBrandColor(item.name) || colors.primary, fontWeight: TYPOGRAPHY.weight.bold}]}>
                   {item.short_name}
                 </Text>
-                <View style={[
-                  styles.typeBadgeSmall, 
-                  {backgroundColor: item.type === 'public' ? `${colors.success}15` : `${colors.primary}15`}
-                ]}>
-                  <Text style={[
-                    styles.typeBadgeText, 
-                    {color: item.type === 'public' ? colors.success : colors.primary}
+                {item.type ? (
+                  <View style={[
+                    styles.typeBadgeSmall, 
+                    {backgroundColor: item.type === 'public' ? `${colors.success}15` : `${colors.primary}15`}
                   ]}>
-                    {item.type.toUpperCase()}
-                  </Text>
-                </View>
+                    <Text style={[
+                      styles.typeBadgeText, 
+                      {color: item.type === 'public' ? colors.success : colors.primary}
+                    ]}>
+                      {item.type.toUpperCase()}
+                    </Text>
+                  </View>
+                ) : null}
                 {item.is_hec_recognized && (
                   <View style={[styles.hecBadge, {backgroundColor: `${colors.success}15`}]}>
                     <Icon name="checkmark-circle" family="Ionicons" size={10} color={colors.success} />
@@ -311,19 +313,23 @@ const UniversityCard = ({
 
           {/* Compact Details Row */}
           <View style={styles.cardDetailsCompact}>
-            <View style={styles.detailItem}>
-              <Icon name="location" family="Ionicons" size={12} color={colors.primary} />
-              <Text style={[styles.detailText, {color: colors.text}]}>
-                {item.city}
-              </Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Icon name="calendar" family="Ionicons" size={12} color={colors.primary} />
-              <Text style={[styles.detailText, {color: colors.text}]}>
-                {item.established_year}
-              </Text>
-            </View>
-            {item.campuses.length > 1 && (
+            {item.city ? (
+              <View style={styles.detailItem}>
+                <Icon name="location" family="Ionicons" size={12} color={colors.primary} />
+                <Text style={[styles.detailText, {color: colors.text}]}>
+                  {item.city}
+                </Text>
+              </View>
+            ) : null}
+            {item.established_year ? (
+              <View style={styles.detailItem}>
+                <Icon name="calendar" family="Ionicons" size={12} color={colors.primary} />
+                <Text style={[styles.detailText, {color: colors.text}]}>
+                  {item.established_year}
+                </Text>
+              </View>
+            ) : null}
+            {item.campuses && item.campuses.length > 1 && (
               <View style={styles.detailItem}>
                 <Icon name="business" family="Ionicons" size={12} color={colors.primary} />
                 <Text style={[styles.detailText, {color: colors.text}]}>
@@ -491,9 +497,14 @@ const PremiumUniversitiesScreen = () => {
   const viewabilityConfig = useRef({itemVisiblePercentThreshold: 50});
 
   const filteredUniversities = useMemo(() => {
-    // Filter out blank/invalid items first
+    // Filter out blank/invalid items - ensure all required card fields exist
     const validUniversities = universities.filter(
-      u => u && u.name && u.name.trim() !== '' && u.short_name && u.short_name.trim() !== ''
+      u => u && 
+        u.name && u.name.trim() !== '' && 
+        u.short_name && u.short_name.trim() !== '' &&
+        u.city && u.city.trim() !== '' &&
+        u.type && u.type.trim() !== '' &&
+        u.province
     );
     
     let result = [...validUniversities];
@@ -593,44 +604,6 @@ const PremiumUniversitiesScreen = () => {
   // This prevents the entire header from re-rendering on each keystroke
   const renderHeader = useCallback(() => (
     <View style={styles.listHeader}>
-      {/* Top Header Row with Profile */}
-      <View style={styles.topHeaderRow}>
-        <View style={styles.headerLeft}>
-          <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
-          <View style={[styles.countBadgeInline, {backgroundColor: colors.primaryLight}]}>
-            <Text style={[styles.countTextInline, {color: colors.primary}]}>
-              {filteredUniversities.length}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity
-            style={[styles.filterIconBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
-            onPress={() => setShowFilters(!showFilters)}
-            accessibilityLabel="Toggle filter options">
-            <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.profileBtn,
-              !user?.avatarUrl && {backgroundColor: colors.primary}
-            ]}
-            onPress={() => navigation.navigate('Profile')}
-            accessibilityRole="button"
-            accessibilityLabel="View your profile">
-            {user?.avatarUrl ? (
-              <Image
-                source={{uri: user.avatarUrl}}
-                style={styles.profileImage}
-                accessibilityIgnoresInvertColors
-              />
-            ) : (
-              <Text style={styles.profileInitials}>{getUserInitials()}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-
       {/* Collapsible Filters */}
       {showFilters && (
         <>
@@ -734,10 +707,10 @@ const PremiumUniversitiesScreen = () => {
           </TouchableOpacity>
         ))}
           </View>
-        </>
+        </>      
       )}
     </View>
-  ), [colors, showFilters, filteredUniversities.length, sortBy, selectedProvince, selectedType, user?.avatarUrl, navigation]);
+  ), [colors, showFilters, sortBy, selectedProvince, selectedType]);
 
   // Handle compare action from swipe
   const handleCompare = useCallback((universityId: string) => {
@@ -769,7 +742,50 @@ const PremiumUniversitiesScreen = () => {
       />
       
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Search Bar - Positioned outside FlashList to prevent keyboard dismissal */}
+        {/* Compact Header - Consistent with Scholarships */}
+        <View style={styles.compactHeader}>
+          <View style={styles.topHeaderRow}>
+            <View style={styles.headerLeft}>
+              <Text style={[styles.screenTitle, {color: colors.text}]}>Universities</Text>
+              <View style={[styles.countBadgeInline, {backgroundColor: colors.primaryLight}]}>
+                <Text style={[styles.countTextInline, {color: colors.primary}]}>
+                  {filteredUniversities.length}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.headerRight}>
+              <TouchableOpacity
+                style={[styles.filterIconBtn, {backgroundColor: showFilters ? colors.primary : colors.card}]}
+                onPress={() => setShowFilters(!showFilters)}
+                accessibilityLabel="Toggle filter options">
+                <Icon name="options-outline" family="Ionicons" size={20} color={showFilters ? '#FFFFFF' : colors.primary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileBtn,
+                  !user?.avatarUrl && {backgroundColor: colors.primary}
+                ]}
+                onPress={() => navigation.navigate('Profile')}
+                accessibilityRole="button"
+                accessibilityLabel="View your profile">
+                {user?.avatarUrl ? (
+                  <Image
+                    source={{uri: user.avatarUrl}}
+                    style={styles.profileImage}
+                    accessibilityIgnoresInvertColors
+                  />
+                ) : (
+                  <Text style={styles.profileInitials}>{getUserInitials()}</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={[styles.headerSubtitle, {color: colors.textSecondary}]}>
+            Explore Pakistani universities
+          </Text>
+        </View>
+
+        {/* Search Bar - Consistent position with Scholarships */}
         <View style={styles.searchContainer}>
           <PremiumSearchBar
             value={searchQuery}
@@ -853,9 +869,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.sm,
+    marginBottom: 4,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -871,6 +885,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingTop: SPACING.md,
     paddingBottom: SPACING.sm,
+  },
+  headerSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.regular,
   },
   titleRow: {
     flexDirection: 'row',
@@ -906,8 +924,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.06)',
   },
   profileBtn: {
-    width: 44, // WCAG 2.1 minimum touch target
-    height: 44,
+    width: 38,
+    height: 38,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -918,9 +936,9 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
   },
   headerCard: {
     margin: SPACING.lg,
@@ -954,11 +972,11 @@ const styles = StyleSheet.create({
   },
   // Unified search container style
   searchContainer: {
-    paddingHorizontal: SPACING.lg,
-    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
   },
   sortSection: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     marginBottom: SPACING.md,
   },
   sortLabel: {
@@ -990,7 +1008,7 @@ const styles = StyleSheet.create({
   },
   typeFilter: {
     flexDirection: 'row',
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     gap: SPACING.sm,
   },
   typeBtn: {
@@ -1189,7 +1207,7 @@ const styles = StyleSheet.create({
   },
   // NEW: Enhanced filter styles
   filterRow: {
-    paddingHorizontal: SPACING.lg,
+    paddingHorizontal: SPACING.md,
     marginBottom: SPACING.md,
   },
   filterDropdownContainer: {

@@ -21,6 +21,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { useTheme } from '../../contexts/ThemeContext';
 import { UniversalHeader } from '../../components';
 import { TYPOGRAPHY } from '../../constants/design';
@@ -770,7 +771,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         <UniversalHeader
           title="Merit & Deadlines"
           showBack
@@ -779,12 +780,12 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <UniversalHeader
         title="Merit & Deadlines"
         showBack
@@ -835,7 +836,7 @@ export const AdminMeritDeadlinesScreen: React.FC<{ navigation: any }> = ({ navig
       </ScrollView>
       
       {renderModal()}
-    </View>
+    </SafeAreaView>
   );
 };
 

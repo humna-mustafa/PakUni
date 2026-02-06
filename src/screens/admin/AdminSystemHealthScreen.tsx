@@ -512,7 +512,7 @@ const AdminSystemHealthScreen: React.FC = () => {
 
   if (loading && !health) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
         {renderHeader()}
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
@@ -529,7 +529,7 @@ const AdminSystemHealthScreen: React.FC = () => {
   // ============================================================================
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       {renderHeader()}
       <ScrollView
         style={styles.content}
