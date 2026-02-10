@@ -288,6 +288,109 @@ export { ExternalLinksCard, AddToCalendarButton } from './integrations/ExternalL
 
 export { default as EntryTestCountdown } from './widgets/EntryTestCountdown';
 export { default as SpecialOccasionCard } from './widgets/SpecialOccasionCard';
+
+// =============================================================================
+// POLLS
+// =============================================================================
+
+export {
+  PollCard,
+  PollOptionItem,
+  PollHeader,
+  PollCategoryFilter,
+  PollLoginNotice,
+  PollEmptyState,
+} from './polls';
+
+// =============================================================================
+// CONTRIBUTE (Data Correction Wizard)
+// =============================================================================
+
+export {
+  AnimatedPressable as ContributeAnimatedPressable,
+  SkeletonBox,
+  ConfettiExplosion,
+  VerificationBadge,
+  AnimatedProgressBar,
+  StepIndicator,
+  CategorySelectionStep,
+  EntitySelectionStep,
+  UpdateDetailsStep,
+  ReviewSubmitStep,
+  SuccessModal as ContributeSuccessModal,
+  ContributionHistoryTab,
+} from './contribute';
+
+// =============================================================================
+// GOALS (Goal Setting & Tracking)
+// =============================================================================
+
+export {
+  ProgressCircle,
+  GoalCard,
+  TemplateCard,
+  GoalDetailModal,
+  AddGoalModal,
+  EditGoalModal,
+  TemplateDeadlineModal,
+  GoalStatsCard,
+  EmptyGoalsState,
+} from './goals';
+
+// =============================================================================
+// CALCULATOR (Merit Calculator)
+// =============================================================================
+
+export {
+  InputCard,
+  ResultCard,
+  CalculatorHeader,
+  FormulaSelectionModal,
+  ShareResultModal,
+} from './calculator';
+
+// =============================================================================
+// UNIVERSITY DETAIL
+// =============================================================================
+
+export {
+  AnimatedTab,
+  FactCard,
+  TimelineItem,
+  OverviewTab,
+  ProgramsTab,
+  AdmissionTab,
+  MeritsTab,
+  ScholarshipsTab,
+  DetailHeader,
+} from './university-detail';
+
+// =============================================================================
+// SCHOLARSHIPS
+// =============================================================================
+
+export {
+  FilterChip,
+  ScholarshipCard,
+  ScholarshipDetailModal,
+  ScholarshipsHeader,
+  ScholarshipsFilters,
+  EmptyState as ScholarshipsEmptyState,
+} from './scholarships';
+
+// =============================================================================
+// GUIDES (Detailed Guides)
+// =============================================================================
+
+export {
+  CategoryCard,
+  GuideListItem,
+  GuideDetail,
+  GuidesHeader,
+  EmptyState as GuidesEmptyState,
+  SuggestCard,
+  CategoryBackHeader,
+} from './guides';
 // =============================================================================
 // MODERN GESTURE COMPONENTS (React Native Reanimated)
 // =============================================================================

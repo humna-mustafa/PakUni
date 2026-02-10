@@ -19,7 +19,7 @@ import {SPACING, FONTS} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS, ANIMATION, STATUS_COLORS, getUrgencyColor} from '../constants/design';
 import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
-import {ENTRY_TESTS_DATA, EntryTestData} from '../data';
+import {ENTRY_TESTS_DATA, EntryTestData, EntryTestVariant} from '../data';
 import {Icon} from '../components/icons';
 import {logger} from '../utils/logger';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
@@ -609,6 +609,12 @@ const PremiumEntryTestsScreen = () => {
                 <LinearGradient
                   colors={getEntryTestBrandColors(selectedTest.name).gradient}
                   style={styles.modalHeader}>
+                  <TouchableOpacity
+                    style={styles.modalBackButton}
+                    onPress={closeModal}
+                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+                    <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+                  </TouchableOpacity>
                   <Icon name="document-text-outline" family="Ionicons" size={60} color="#FFFFFF" />
                   <Text style={styles.modalTitle}>{selectedTest.name}</Text>
                   <Text style={styles.modalSubtitle}>
@@ -735,6 +741,67 @@ const PremiumEntryTestsScreen = () => {
                         </Text>
                       </View>
                     ))}
+                  </View>
+                )}
+
+                {/* Test Variants */}
+                {selectedTest.variants && selectedTest.variants.length > 0 && (
+                  <View style={styles.section}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
+                      <Icon name="git-branch-outline" family="Ionicons" size={18} color={colors.text} />
+                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>
+                        Test Variants ({selectedTest.variants.length})
+                      </Text>
+                    </View>
+                    <Text style={[styles.sectionText, {color: colors.textSecondary, marginBottom: SPACING.sm}]}>
+                      This test has multiple variants. Choose based on your field of study:
+                    </Text>
+                    {selectedTest.variants.map((variant: EntryTestVariant, vi: number) => {
+                      const variantBrandColors = getEntryTestBrandColors(variant.name);
+                      return (
+                        <View
+                          key={variant.id}
+                          style={[styles.variantCard, {backgroundColor: colors.background, borderLeftColor: variantBrandColors.primary}]}>
+                          <View style={styles.variantHeader}>
+                            <View style={[styles.variantBadge, {backgroundColor: variantBrandColors.primary + '20'}]}>
+                              <Text style={[styles.variantBadgeText, {color: variantBrandColors.primary}]}>
+                                {variant.name}
+                              </Text>
+                            </View>
+                          </View>
+                          <Text style={[styles.variantTitle, {color: colors.text}]}>
+                            {variant.full_name}
+                          </Text>
+                          <Text style={[styles.variantDescription, {color: colors.textSecondary}]}>
+                            {variant.description}
+                          </Text>
+                          <Text style={[styles.variantFieldLabel, {color: colors.textSecondary}]}>
+                            For: {variant.applicable_for.join(', ')}
+                          </Text>
+                          {variant.eligibility && variant.eligibility.length > 0 && (
+                            <View style={{marginTop: 6}}>
+                              {variant.eligibility.map((e: string, ei: number) => (
+                                <View key={ei} style={{flexDirection: 'row', marginBottom: 2}}>
+                                  <Text style={{color: variantBrandColors.primary, marginRight: 6}}>•</Text>
+                                  <Text style={[{fontSize: 12, color: colors.textSecondary, flex: 1}]}>{e}</Text>
+                                </View>
+                              ))}
+                            </View>
+                          )}
+                          <View style={styles.variantSections}>
+                            <Text style={[styles.variantSectionsTitle, {color: colors.text}]}>Question Pattern:</Text>
+                            {variant.test_format.sections.map((sec, si: number) => (
+                              <View key={si} style={styles.variantSectionRow}>
+                                <View style={[styles.formatDot, {backgroundColor: variantBrandColors.primary}]} />
+                                <Text style={[{fontSize: 12, color: colors.textSecondary, flex: 1}]}>
+                                  {sec.name}: {sec.questions}Q ({sec.marks} marks)
+                                </Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      );
+                    })}
                   </View>
                 )}
 
@@ -1032,6 +1099,19 @@ const styles = StyleSheet.create({
   modalHeader: {
     padding: SPACING.xl,
     alignItems: 'center',
+    position: 'relative',
+  },
+  modalBackButton: {
+    position: 'absolute',
+    top: SPACING.md,
+    left: SPACING.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
   },
   modalTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
@@ -1271,6 +1351,57 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#FFFFFF',
+  },
+  // Variant card styles
+  variantCard: {
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.sm,
+    borderLeftWidth: 4,
+  },
+  variantHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  variantBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+  },
+  variantBadgeText: {
+    fontSize: 12,
+    fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  variantTitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+    marginBottom: 4,
+  },
+  variantDescription: {
+    fontSize: 12,
+    lineHeight: 18,
+    marginBottom: 4,
+  },
+  variantFieldLabel: {
+    fontSize: 11,
+    fontStyle: 'italic',
+  },
+  variantSections: {
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  variantSectionsTitle: {
+    fontSize: 12,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+    marginBottom: 4,
+  },
+  variantSectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 3,
   },
 });
 

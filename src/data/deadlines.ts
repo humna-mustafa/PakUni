@@ -113,7 +113,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     entryTestDate: "2026-02-20",
     fee: 0,
     link: "https://iba.edu.pk/talent-hunt-program.php",
-    status: "closing-soon" as AdmissionDeadline['status'],
+    status: "closed" as AdmissionDeadline['status'],
   },
   {
     id: "lums-ug-2026",
@@ -123,15 +123,15 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     programType: "undergraduate" as AdmissionDeadline['programType'],
     programCategory: "general",
     title: "Undergraduate Admissions Fall 2026",
-    description: "Apply for BSc, BA, BS programs across all schools - Early Action deadline passed",
+    description: "Apply for BSc, BA, BS programs across all schools - Application deadline Jan 27",
     applicationStartDate: "2025-10-01",
-    applicationDeadline: "2026-02-15",
-    entryTestDate: "2026-03-10",
-    resultDate: "2026-04-20",
+    applicationDeadline: "2026-01-27",
+    entryTestDate: "2026-02-15",
+    resultDate: "2026-04-15",
     classStartDate: "2026-08-25",
     fee: 6000,
-    link: "https://lums.edu.pk/admissions",
-    status: "closing-soon" as AdmissionDeadline['status'],
+    link: "https://admission.lums.edu.pk/",
+    status: "closed" as AdmissionDeadline['status'],
   },
   {
     id: "nust-net-1-2026",
@@ -144,8 +144,8 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     description: "First NET test series - Computer based at Islamabad only",
     applicationStartDate: "2025-10-05",
     applicationDeadline: "2025-11-25",
-    entryTestDate: "2025-11-22",
-    fee: 3000,
+    entryTestDate: "2025-12-06",
+    fee: 5000,
     link: "https://ugadmissions.nust.edu.pk/",
     status: "closed" as AdmissionDeadline['status'],
   },
@@ -228,9 +228,9 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: "2025-12-14",
     applicationDeadline: "2026-01-25",
     entryTestDate: "2026-01-31",
-    fee: 3000,
+    fee: 5000,
     link: "https://ugadmissions.nust.edu.pk/",
-    status: "closing-soon" as AdmissionDeadline['status'],
+    status: "closed" as AdmissionDeadline['status'],
   },
   {
     id: "nust-ms-phd-2026",
@@ -309,7 +309,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: "2026-02-01",
     applicationDeadline: "2026-04-03",
     entryTestDate: "2026-04-15",
-    fee: 3000,
+    fee: 5000,
     link: "https://ugadmissions.nust.edu.pk/",
     status: "upcoming" as AdmissionDeadline['status'],
   },
@@ -325,7 +325,7 @@ export const ADMISSION_DEADLINES: AdmissionDeadline[] = [
     applicationStartDate: "2026-04-15",
     applicationDeadline: "2026-06-30",
     entryTestDate: "2026-07-01",
-    fee: 3000,
+    fee: 5000,
     link: "https://ugadmissions.nust.edu.pk/",
     status: "upcoming" as AdmissionDeadline['status'],
   },
@@ -836,10 +836,13 @@ export const PROGRAM_CATEGORIES = [
 ];
 
 // Helper function to get upcoming deadlines sorted by date
+// Uses dynamic status calculation (not static status field) to filter out past deadlines
 export const getUpcomingDeadlines = (limit?: number): AdmissionDeadline[] => {
-  const now = new Date();
   const upcoming = ADMISSION_DEADLINES
-    .filter(d => new Date(d.applicationDeadline) >= now || d.status !== 'closed')
+    .filter(d => {
+      const dynamicStatus = getDeadlineStatus(d);
+      return dynamicStatus !== 'closed';
+    })
     .sort((a, b) => new Date(a.applicationDeadline).getTime() - new Date(b.applicationDeadline).getTime());
   return limit ? upcoming.slice(0, limit) : upcoming;
 };
@@ -851,7 +854,10 @@ export const getDeadlinesByUniversity = (universityId: string): AdmissionDeadlin
 
 // Helper function to get highlighted/important deadlines
 export const getHighlightedDeadlines = (): AdmissionDeadline[] => {
-  return ADMISSION_DEADLINES.filter(d => d.isHighlighted || d.status === 'closing-soon');
+  return ADMISSION_DEADLINES.filter(d => {
+    const dynamicStatus = getDeadlineStatus(d);
+    return d.isHighlighted || dynamicStatus === 'closing-soon';
+  });
 };
 
 // Helper function to get deadline status based on dates

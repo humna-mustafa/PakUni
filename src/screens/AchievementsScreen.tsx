@@ -57,6 +57,7 @@ import {
   loadMyAchievements,
   addAchievement,
   deleteAchievement,
+  updateAchievement,
   shareAchievement,
   getAchievementStats,
 } from '../services/achievements';
@@ -193,12 +194,16 @@ const AddAchievementModal = ({
   onClose,
   onAdd,
   colors,
+  initialData,
+  isEditing,
 }: {
   visible: boolean;
   template: AchievementTemplate | null;
   onClose: () => void;
   onAdd: (data: Record<string, string>) => void;
   colors: any;
+  initialData?: Record<string, string>;
+  isEditing?: boolean;
 }) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const modalAnim = useRef(new Animated.Value(0)).current;
@@ -211,7 +216,7 @@ const AddAchievementModal = ({
 
   useEffect(() => {
     if (visible) {
-      setFormData({});
+      setFormData(initialData || {});
       Animated.spring(modalAnim, {
         toValue: 1,
         tension: 50,
@@ -430,12 +435,12 @@ const AddAchievementModal = ({
             ))}
           </ScrollView>
 
-          {/* Add Button */}
+          {/* Add/Save Button */}
           <TouchableOpacity
             style={[styles.addButton, {backgroundColor: template.gradientColors[0]}]}
             onPress={handleAdd}>
-            <Icon name="add-circle" family="Ionicons" size={20} color="#FFF" />
-            <Text style={styles.addButtonText}>Add Achievement</Text>
+            <Icon name={isEditing ? "checkmark-circle" : "add-circle"} family="Ionicons" size={20} color="#FFF" />
+            <Text style={styles.addButtonText}>{isEditing ? 'Save Changes' : 'Add Achievement'}</Text>
           </TouchableOpacity>
         </Animated.View>
       </KeyboardAvoidingView>
@@ -455,6 +460,7 @@ const AchievementsScreen = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<AchievementTemplate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingAchievement, setEditingAchievement] = useState<MyAchievement | null>(null);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const floatAnim = useRef(new Animated.Value(0)).current;
@@ -568,6 +574,51 @@ const AchievementsScreen = () => {
         },
       ]
     );
+  };
+
+  const handleEditAchievement = (achievement: MyAchievement) => {
+    // Find the matching template for this achievement type
+    const template = ACHIEVEMENT_TEMPLATES.find(t => t.type === achievement.type) || ACHIEVEMENT_TEMPLATES[ACHIEVEMENT_TEMPLATES.length - 1]; // fallback to custom
+    
+    // Build formData from the achievement's existing fields
+    const formData: Record<string, string> = {};
+    if (achievement.title) formData.title = achievement.title;
+    if (achievement.description) formData.description = achievement.description;
+    if (achievement.universityName) formData.universityName = achievement.universityName;
+    if (achievement.programName) formData.programName = achievement.programName;
+    if (achievement.testName) formData.testName = achievement.testName;
+    if (achievement.scholarshipName) formData.scholarshipName = achievement.scholarshipName;
+    if (achievement.score) formData.score = achievement.score;
+    if (achievement.percentage) formData.percentage = achievement.percentage;
+    if (achievement.date) formData.date = achievement.date;
+    
+    setEditingAchievement(achievement);
+    setSelectedTemplate(template);
+    setShowAddModal(true);
+  };
+
+  const handleSaveEdit = async (data: Record<string, string>) => {
+    if (!editingAchievement) return;
+    try {
+      await updateAchievement(editingAchievement.id, {
+        title: data.title || editingAchievement.title,
+        description: data.description || '',
+        universityName: data.universityName,
+        programName: data.programName,
+        testName: data.testName,
+        scholarshipName: data.scholarshipName,
+        score: data.score,
+        percentage: data.percentage,
+        date: data.date || editingAchievement.date,
+      });
+      await loadData();
+      setShowAddModal(false);
+      setSelectedTemplate(null);
+      setEditingAchievement(null);
+      Alert.alert('Updated!', 'Your achievement has been updated.');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update achievement');
+    }
   };
 
   const handleShareAchievement = async (achievement: MyAchievement) => {
@@ -745,13 +796,21 @@ const AchievementsScreen = () => {
                     />
                   )}
                   
-                  {/* Delete button */}
-                  <TouchableOpacity
-                    style={[styles.deleteBtn, {backgroundColor: colors.error || '#EF4444'}]}
-                    onPress={() => handleDeleteAchievement(achievement.id)}>
-                    <Icon name="trash-outline" family="Ionicons" size={18} color="#FFF" />
-                    <Text style={styles.deleteBtnText}>Delete</Text>
-                  </TouchableOpacity>
+                  {/* Edit & Delete buttons */}
+                  <View style={styles.cardActions}>
+                    <TouchableOpacity
+                      style={[styles.editBtn, {backgroundColor: colors.primary || '#4573DF'}]}
+                      onPress={() => handleEditAchievement(achievement)}>
+                      <Icon name="create-outline" family="Ionicons" size={18} color="#FFF" />
+                      <Text style={styles.editBtnText}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.deleteBtn, {backgroundColor: colors.error || '#EF4444'}]}
+                      onPress={() => handleDeleteAchievement(achievement.id)}>
+                      <Icon name="trash-outline" family="Ionicons" size={18} color="#FFF" />
+                      <Text style={styles.deleteBtnText}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))}
             </View>
@@ -776,16 +835,31 @@ const AchievementsScreen = () => {
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
-      {/* Add Achievement Modal */}
+      {/* Add/Edit Achievement Modal */}
       <AddAchievementModal
         visible={showAddModal}
         template={selectedTemplate}
         onClose={() => {
           setShowAddModal(false);
           setSelectedTemplate(null);
+          setEditingAchievement(null);
         }}
-        onAdd={handleAddAchievement}
+        onAdd={editingAchievement ? handleSaveEdit : handleAddAchievement}
         colors={colors}
+        initialData={editingAchievement ? (() => {
+          const d: Record<string, string> = {};
+          if (editingAchievement.title) d.title = editingAchievement.title;
+          if (editingAchievement.description) d.description = editingAchievement.description;
+          if (editingAchievement.universityName) d.universityName = editingAchievement.universityName;
+          if (editingAchievement.programName) d.programName = editingAchievement.programName;
+          if (editingAchievement.testName) d.testName = editingAchievement.testName;
+          if (editingAchievement.scholarshipName) d.scholarshipName = editingAchievement.scholarshipName;
+          if (editingAchievement.score) d.score = editingAchievement.score;
+          if (editingAchievement.percentage) d.percentage = editingAchievement.percentage;
+          if (editingAchievement.date) d.date = editingAchievement.date;
+          return d;
+        })() : undefined}
+        isEditing={!!editingAchievement}
       />
     </SafeAreaView>
   );
@@ -878,6 +952,7 @@ const styles = StyleSheet.create({
   },
   statItem: {
     alignItems: 'center',
+    flex: 1,
   },
   statNumber: {
     fontSize: TYPOGRAPHY.sizes.xl,
@@ -906,7 +981,9 @@ const styles = StyleSheet.create({
   },
   templateCard: {
     width: 100,
+    minHeight: 110,
     alignItems: 'center',
+    justifyContent: 'flex-start',
     padding: SPACING.sm,
     borderRadius: RADIUS.lg,
   },
@@ -1156,13 +1233,32 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#fff',
   },
-  deleteBtn: {
+  cardActions: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  editBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: SPACING.xs,
-    marginHorizontal: SPACING.md,
-    marginBottom: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.md,
+  },
+  editBtnText: {
+    color: '#fff',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+  },
+  deleteBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.xs,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.md,
   },

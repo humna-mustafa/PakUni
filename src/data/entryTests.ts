@@ -3,6 +3,22 @@
 
 
 
+export interface EntryTestVariant {
+  id: string;
+  name: string;
+  full_name: string;
+  applicable_for: string[];
+  description: string;
+  test_format: {
+    total_marks: number;
+    total_questions: number;
+    duration_minutes: number;
+    negative_marking: boolean;
+    sections: {name: string; questions: number; marks: number}[];
+  };
+  eligibility?: string[];
+}
+
 export interface EntryTestData {
   id: string;
   name: string;
@@ -36,6 +52,8 @@ export interface EntryTestData {
 
     gradient: string[];
   };
+  // Variants for tests with multiple types (e.g., NAT-IE, NAT-IM)
+  variants?: EntryTestVariant[];
 }
 
 export const ENTRY_TEST_BRAND_COLORS: Record<string, { primary: string; secondary: string; gradient: string[] }> = {
@@ -71,13 +89,13 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     id: 'mdcat-2026',
     name: 'MDCAT',
     full_name: 'Medical and Dental College Admission Test',
-    conducting_body: 'Pakistan Medical Commission (PMC)',
+    conducting_body: 'Pakistan Medical & Dental Council (PMDC)',
     description: 'National level entrance test for admission to MBBS and BDS programs in all medical and dental colleges of Pakistan. Single national test for all provinces.',
     applicable_for: ['MBBS', 'BDS', 'Medical', 'Dental'],
     registration_start: '2026-06-15',
-    registration_deadline: '2026-07-31',
-    test_date: '2026-08-27',
-    result_date: '2026-09-20',
+    registration_deadline: '2026-08-25',
+    test_date: '2026-10-04',
+    result_date: '2026-10-25',
     website: 'https://www.pmc.gov.pk/',
     fee: 9000,
     eligibility: [
@@ -108,7 +126,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Practice MCQs daily - aim for 200+ per day',
     ],
     provinces: ['all-pakistan'],
-    status_notes: 'Registration Expected June 2026 | Fee Rs. 9,000 (Late: Rs. 13,000) | Check PMC website',
+    status_notes: 'PMDC conducts MDCAT from 2025 | Reg deadline ~Aug 25 | Test first Sunday of Oct | Fee Rs. 9,000 (Late: Rs. 13,000)',
     application_steps: [
       'Create profile on PMC Online Portal (pmc.gov.pk)',
       'Upload Scanned Documents (Form-B/CNIC, FSc Result/Hope Certificate)',
@@ -181,7 +199,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     registration_deadline: '2026-03-22',
     test_date: '2026-03-30',
     result_date: '2026-04-17',
-    website: 'https://admission.uet.edu.pk/ecat/',
+    website: 'https://ecat.uet.edu.pk/',
     fee: 3000,
     eligibility: [
       'FSc Pre-Engineering with minimum 60% marks',
@@ -223,12 +241,12 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     brand_colors: ENTRY_TEST_BRAND_COLORS.ecat,
   },
   {
-    id: 'etea-engineering-2026',
-    name: 'ETEA Engineering',
-    full_name: 'Educational Testing & Evaluation Agency (Engineering)',
+    id: 'etea-2026',
+    name: 'ETEA',
+    full_name: 'Educational Testing & Evaluation Agency',
     conducting_body: 'ETEA KPK',
-    description: 'KPK provincial entrance test for engineering programs in UET Peshawar, UET Mardan and other KPK engineering universities.',
-    applicable_for: ['Engineering', 'BSc Engineering', 'Technology'],
+    description: 'KPK provincial entrance test for both engineering and medical programs. Required for admission to UET Peshawar, UET Mardan, and other KPK universities. Has separate variants for Engineering and Medical streams.',
+    applicable_for: ['Engineering', 'BSc Engineering', 'Technology', 'MBBS', 'BDS', 'Allied Health'],
     registration_start: '2026-06-01',
     registration_deadline: '2026-07-15',
     test_date: '2026-07-28',
@@ -236,8 +254,8 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     website: 'https://etea.edu.pk/',
     fee: 2500,
     eligibility: [
-      'FSc Pre-Engineering with minimum 60% marks',
-      'A-Levels with Physics, Chemistry, Math',
+      'FSc Pre-Engineering (for Engineering) or FSc Pre-Medical (for Medical) with minimum 60% marks',
+      'A-Levels with relevant subjects (equivalence required)',
       'KPK domicile required for government seats',
     ],
     test_format: {
@@ -246,112 +264,64 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       duration_minutes: 150,
       negative_marking: false,
       sections: [
-        {name: 'Mathematics', questions: 80, marks: 160},
-        {name: 'Physics', questions: 60, marks: 120},
-        {name: 'Chemistry', questions: 40, marks: 80},
+        {name: 'Core Subject 1', questions: 80, marks: 160},
+        {name: 'Core Subject 2', questions: 60, marks: 120},
+        {name: 'Supporting Subject', questions: 40, marks: 80},
         {name: 'English', questions: 20, marks: 40},
       ],
     },
     tips: [
       'No negative marking - attempt all questions',
-      'Math and Physics combined are 70% of paper',
+      'Engineering: Math and Physics combined are 70% of paper',
+      'Medical: Biology is the most weighted section',
       'ETEA past papers available on website',
       'Time management crucial - practice speed',
     ],
     provinces: ['KPK'],
     status_notes: 'Registration Expected June 2026',
     brand_colors: ENTRY_TEST_BRAND_COLORS.etea,
-  },
-  {
-    id: 'etea-medical-2026',
-    name: 'ETEA Medical',
-    full_name: 'Educational Testing & Evaluation Agency (Medical)',
-    conducting_body: 'ETEA KPK',
-    description: 'KPK provincial entrance test for medical programs - used alongside MDCAT for provincial merit.',
-    applicable_for: ['MBBS', 'BDS', 'Allied Health'],
-    registration_start: '2026-07-01',
-    registration_deadline: '2026-08-15',
-    test_date: '2026-08-30',
-    result_date: '2026-09-15',
-    website: 'https://etea.edu.pk/',
-    fee: 2500,
-    eligibility: [
-      'FSc Pre-Medical with minimum 65% marks',
-      'KPK domicile required',
-      'MDCAT also required for MBBS/BDS',
+    variants: [
+      {
+        id: 'etea-engineering',
+        name: 'ETEA Engineering',
+        full_name: 'ETEA - Engineering Stream',
+        applicable_for: ['Engineering', 'BSc Engineering', 'Technology'],
+        description: 'For engineering programs at UET Peshawar, UET Mardan, and other KPK engineering universities.',
+        test_format: {
+          total_marks: 400,
+          total_questions: 200,
+          duration_minutes: 150,
+          negative_marking: false,
+          sections: [
+            {name: 'Mathematics', questions: 80, marks: 160},
+            {name: 'Physics', questions: 60, marks: 120},
+            {name: 'Chemistry', questions: 40, marks: 80},
+            {name: 'English', questions: 20, marks: 40},
+          ],
+        },
+        eligibility: ['FSc Pre-Engineering with minimum 60% marks'],
+      },
+      {
+        id: 'etea-medical',
+        name: 'ETEA Medical',
+        full_name: 'ETEA - Medical Stream',
+        applicable_for: ['MBBS', 'BDS', 'Allied Health'],
+        description: 'For medical programs. Used alongside MDCAT for provincial merit in KPK.',
+        test_format: {
+          total_marks: 200,
+          total_questions: 200,
+          duration_minutes: 150,
+          negative_marking: false,
+          sections: [
+            {name: 'Biology', questions: 80, marks: 80},
+            {name: 'Chemistry', questions: 60, marks: 60},
+            {name: 'Physics', questions: 40, marks: 40},
+            {name: 'English', questions: 20, marks: 20},
+          ],
+        },
+        eligibility: ['FSc Pre-Medical with minimum 65% marks', 'MDCAT also required for MBBS/BDS'],
+      },
     ],
-    test_format: {
-      total_marks: 200,
-      total_questions: 200,
-      duration_minutes: 150,
-      negative_marking: false,
-      sections: [
-        {name: 'Biology', questions: 80, marks: 80},
-        {name: 'Chemistry', questions: 60, marks: 60},
-        {name: 'Physics', questions: 40, marks: 40},
-        {name: 'English', questions: 20, marks: 20},
-      ],
-    },
-    tips: [
-      'Prepare alongside MDCAT - similar syllabus',
-      'No negative marking - attempt everything',
-      'Practice ETEA specific past papers',
-    ],
-    provinces: ['KPK'],
-    status_notes: 'Registration Expected July 2026',
-    brand_colors: ENTRY_TEST_BRAND_COLORS.etea,
-  },
-  {
-    id: 'net-2026',
-    name: 'NET',
-    full_name: 'NUST Entry Test',
-    conducting_body: 'National University of Sciences and Technology',
-    description: 'Computer-based entrance test for admission to all undergraduate programs at NUST. Multiple series conducted - best score counts.',
-    applicable_for: ['Engineering', 'Computer Science', 'Business', 'Social Sciences', 'Medical', 'Architecture'],
-    registration_start: '2026-01-15',
-    registration_deadline: '2026-06-30',
-    test_date: '2026-02-01',
-    result_date: '2026-07-10',
-    website: 'https://nust.edu.pk/admissions/',
-    fee: 3500,
-    eligibility: [
-      'Minimum 60% in Matric',
-      'Appearing/passed FSc or equivalent',
-      'No age limit',
-      'SAT/ACT scores also accepted as alternative',
-    ],
-    test_format: {
-      total_marks: 200,
-      total_questions: 200,
-      duration_minutes: 180,
-      negative_marking: false,
-      sections: [
-        {name: 'Mathematics', questions: 80, marks: 80},
-        {name: 'Physics', questions: 60, marks: 60},
-        {name: 'Chemistry', questions: 30, marks: 30},
-        {name: 'English', questions: 20, marks: 20},
-        {name: 'Intelligence', questions: 10, marks: 10},
-      ],
-    },
-    tips: [
-      'Take NET multiple times - best score counts',
-      'Computer-based - practice on CBT platform',
-      'Focus on FSc Part 1 & 2 equally',
-      'English vocabulary is important',
-      'Intelligence section includes logical reasoning',
-      'NET-1 in Feb, NET-2 in Apr, NET-3 in Jun, NET-4 in Aug',
-    ],
-    provinces: ['All Pakistan'],
-    status_notes: 'NET-1 2026 Registration OPEN (Jan 15 - Feb 28)',
-    application_steps: [
-      'Create account on NUST Admission Portal',
-      'Complete Profile with Matric/FSc marks (expected marks for appearing students)',
-      'Select Series (NET-1, 2, 3, or 4) and Program choices',
-      'Pay fee online or via bank challan at HBL',
-      'Select Test Center (Islamabad, Karachi, Quetta, Lahore, Peshawar) and Date',
-      'Download admit card 3 days before test',
-    ],
-    brand_colors: ENTRY_TEST_BRAND_COLORS.nust,
   },
   {
     id: 'nums-2026',
@@ -502,10 +472,10 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     description: 'LUMS own admission test for students who do not have SAT scores. Tests quantitative, verbal and analytical writing skills.',
     applicable_for: ['Business', 'Computer Science', 'Engineering', 'Social Sciences', 'Law', 'Humanities'],
     registration_start: '2025-10-01',
-    registration_deadline: '2026-02-15',
-    test_date: '2026-03-01',
-    result_date: '2026-03-20',
-    website: 'https://lums.edu.pk/admissions',
+    registration_deadline: '2026-01-27',
+    test_date: '2026-02-15',
+    result_date: '2026-03-15',
+    website: 'https://admission.lums.edu.pk/',
     fee: 6000,
     eligibility: [
       'Minimum 70% in Matric and Inter',
@@ -532,7 +502,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Very competitive - high scores needed',
     ],
     provinces: ['All Pakistan'],
-    status_notes: 'Round 1 Deadline Passed - Round 2 Open until Feb 15, 2026',
+    status_notes: 'UG App Deadline: Jan 27, 2026 | LCAT: Feb 15 | SAT deadline: Mar 14 | Decisions: Apr 15 - Jul 31',
     application_steps: [
       'Complete online application form on LUMS portal',
       'Identify two referees for recommendation letters',
@@ -591,12 +561,12 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     ],
   },
   {
-    id: 'nat-ie-2026',
-    name: 'NAT-IE',
-    full_name: 'National Aptitude Test (Science/Engineering)',
+    id: 'nat-2026',
+    name: 'NAT',
+    full_name: 'National Aptitude Test',
     conducting_body: 'National Testing Service (NTS)',
-    description: 'General aptitude test accepted by many universities for engineering, science and IT programs. 12 tests conducted monthly throughout 2026.',
-    applicable_for: ['Engineering', 'Sciences', 'IT', 'Computer Science'],
+    description: 'General aptitude test accepted by 32+ universities including COMSATS, FAST, Bahria, UoG. Available in multiple variants for different fields. 12 tests conducted monthly throughout 2026.',
+    applicable_for: ['Engineering', 'Sciences', 'IT', 'Computer Science', 'Business', 'Management', 'Commerce', 'Economics'],
     registration_start: '2026-01-01',
     registration_deadline: '2026-12-31',
     test_date: '2026-01-26',
@@ -604,7 +574,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     website: 'https://portal.nts.org.pk/',
     fee: 1510,
     eligibility: [
-      'FSc or equivalent qualification',
+      'FSc/FA/ICom or equivalent qualification',
       'No minimum marks required for test',
       'Score valid for 1 year',
     ],
@@ -617,73 +587,68 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
         {name: 'Verbal', questions: 20, marks: 20},
         {name: 'Quantitative', questions: 20, marks: 20},
         {name: 'Analytical', questions: 20, marks: 20},
-        {name: 'Subject (Physics/Math/Chem)', questions: 40, marks: 40},
+        {name: 'Subject-Specific', questions: 40, marks: 40},
       ],
     },
     tips: [
       'Score valid for 1 year - take early',
       'Accepted by 32+ universities including COMSATS, FAST, Bahria, UoG',
-      'Good option for COMSATS, Bahria, AU',
       'Practice NTS past papers',
       '12 monthly tests in 2026: Jan 26, Feb 23, Mar 23, Apr 13, May 18, Jun 27, Jul 27, Aug 24, Sep 21, Oct 19, Nov 23, Dec 14',
       'Late fee Rs. 2010 (Regular Rs. 1510)',
+      'Choose the right variant: NAT-IE for Science/Engineering, NAT-IM for Business/Management',
     ],
     provinces: ['All Pakistan'],
     status_notes: 'Next Test: Jan 26, 2026 | 12 tests throughout year | Fee Rs. 1510 (Late: Rs. 2010)',
     application_steps: [
-      'Visit portal.nts.org.pk and select NAT-IE',
-      'Register with CNIC and contact details',
-      'Pay fee Rs. 1510 at any 1Link ATM, HBL, MCB, UBL or online',
-      'Late registration with Rs. 2010 fee available',
-      'Download roll number slip',
-      'Appear at test center with original CNIC',
-    ],
-  },
-  {
-    id: 'nat-im-2026',
-    name: 'NAT-IM',
-    full_name: 'National Aptitude Test (Management)',
-    conducting_body: 'National Testing Service (NTS)',
-    description: 'General aptitude test for business and management programs. 12 tests conducted monthly. Accepted by COMSATS, FAST, UoG and 30+ universities.',
-    applicable_for: ['Business', 'Management', 'Commerce', 'Economics'],
-    registration_start: '2026-01-01',
-    registration_deadline: '2026-12-31',
-    test_date: '2026-01-26',
-    result_date: '2026-02-05',
-    website: 'https://portal.nts.org.pk/',
-    fee: 1510,
-    eligibility: [
-      'FA/FSc/ICom or equivalent',
-      'No minimum marks required',
-      'Score valid for 1 year',
-    ],
-    test_format: {
-      total_marks: 100,
-      total_questions: 100,
-      duration_minutes: 120,
-      negative_marking: false,
-      sections: [
-        {name: 'Verbal', questions: 20, marks: 20},
-        {name: 'Quantitative', questions: 20, marks: 20},
-        {name: 'Analytical', questions: 20, marks: 20},
-        {name: 'Subject (Business/General)', questions: 40, marks: 40},
-      ],
-    },
-    tips: [
-      'Required for many business programs',
-      'Useful for COMSATS, Bahria, AIOU, FAST',
-      'Practice general knowledge questions',
-      '12 monthly tests: Jan 26, Feb 23, Mar 23, Apr 13, May 18, Jun 27, Jul 27, Aug 24, Sep 21, Oct 19, Nov 23, Dec 14',
-      'Late fee Rs. 2010 available',
-    ],
-    provinces: ['All Pakistan'],
-    status_notes: 'Next Test: Jan 26, 2026 | Fee Rs. 1510 (Late: Rs. 2010)',
-    application_steps: [
       'Visit portal.nts.org.pk and create account',
-      'Select NAT-IM and preferred test date',
-      'Pay Rs. 1510 (or Rs. 2010 late) via bank/ATM',
+      'Select NAT variant (IE for Engineering/Science, IM for Management/Business)',
+      'Choose preferred test date from 12 monthly sessions',
+      'Pay Rs. 1510 (or Rs. 2010 late) via bank/ATM/online',
       'Download roll number slip 5 days before test',
       'Bring original CNIC on test day',
+    ],
+    variants: [
+      {
+        id: 'nat-ie',
+        name: 'NAT-IE',
+        full_name: 'NAT - Science & Engineering',
+        applicable_for: ['Engineering', 'Sciences', 'IT', 'Computer Science'],
+        description: 'For students applying to engineering, science, IT and computer science programs.',
+        test_format: {
+          total_marks: 100,
+          total_questions: 100,
+          duration_minutes: 120,
+          negative_marking: false,
+          sections: [
+            {name: 'Verbal', questions: 20, marks: 20},
+            {name: 'Quantitative', questions: 20, marks: 20},
+            {name: 'Analytical', questions: 20, marks: 20},
+            {name: 'Subject (Physics/Math/Chemistry)', questions: 40, marks: 40},
+          ],
+        },
+        eligibility: ['FSc Pre-Engineering or equivalent'],
+      },
+      {
+        id: 'nat-im',
+        name: 'NAT-IM',
+        full_name: 'NAT - Management & Business',
+        applicable_for: ['Business', 'Management', 'Commerce', 'Economics'],
+        description: 'For students applying to business, management, commerce and economics programs.',
+        test_format: {
+          total_marks: 100,
+          total_questions: 100,
+          duration_minutes: 120,
+          negative_marking: false,
+          sections: [
+            {name: 'Verbal', questions: 20, marks: 20},
+            {name: 'Quantitative', questions: 20, marks: 20},
+            {name: 'Analytical', questions: 20, marks: 20},
+            {name: 'Subject (Business/General Knowledge)', questions: 40, marks: 40},
+          ],
+        },
+        eligibility: ['FA/FSc/ICom or equivalent'],
+      },
     ],
   },
   {
@@ -695,10 +660,10 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
     applicable_for: ['MS', 'MPhil', 'MBA', 'Graduate Programs'],
     registration_start: '2026-01-01',
     registration_deadline: '2026-12-31',
-    test_date: '2026-02-15',
-    result_date: '2026-02-25',
-    website: 'https://nts.org.pk/',
-    fee: 2000,
+    test_date: '2026-03-15',
+    result_date: '2026-03-25',
+    website: 'https://portal.nts.org.pk/',
+    fee: 1810,
     eligibility: [
       "Bachelor's degree or equivalent",
       'Minimum 50 score required for most universities',
@@ -723,7 +688,7 @@ export const ENTRY_TESTS_DATA: EntryTestData[] = [
       'Practice analogies and reading comprehension',
     ],
     provinces: ['All Pakistan'],
-    status_notes: 'Conducted Quarterly - Feb, May, Aug, Nov',
+    status_notes: '8 tests in 2026: Jan 18, Mar 15, May 10, Jun 14, Jul 19, Sep 6, Oct 18, Dec 6 | Fee Rs. 1,810 (Late: Rs. 2,510)',
   },
   {
     id: 'hec-lat-2026',

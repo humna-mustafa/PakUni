@@ -1,0 +1,2572 @@
+[
+  {
+    "university_id": 1,
+    "university_name": "Lahore University of Management Sciences",
+    "abbreviation": "LUMS",
+    "official_website": "https://lums.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/Lahore_University_of_Management_Sciences#/media/File:Lahore_University_of_Management_Sciences_Logo.svg",
+    "university_type": "Private (non-profit)",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 2,
+    "university_name": "Aga Khan University",
+    "abbreviation": "AKU",
+    "official_website": "https://www.aku.edu",
+    "logo_url": "https://en.wikipedia.org/wiki/Aga_Khan_University#/media/File:Aga_Khan_University_Logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 3,
+    "university_name": "University of the Punjab",
+    "abbreviation": "PU",
+    "official_website": "https://pu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/c8/University_of_the_Punjab_logo.png",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 4,
+    "university_name": "National University of Sciences and Technology",
+    "abbreviation": "NUST",
+    "official_website": "https://nust.edu.pk",
+    "logo_url": " https://upload.wikimedia.org/wikipedia/en/thumb/2/22/NUST_Vector.svg/330px-NUST_Vector.svg.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 5,
+    "university_name": "COMSATS University Islamabad",
+    "abbreviation": "COMSATS",
+    "official_website": "https://www.comsats.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/COMSATS_new_logo.jpg",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 6,
+    "university_name": "Institute of Business Administration",
+    "abbreviation": "IBA",
+    "official_website": "https://www.iba.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/Institute_of_Business_Administration%2C_Karachi_%28logo%29.png/250px-Institute_of_Business_Administration%2C_Karachi_%28logo%29.png",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 7,
+    "university_name": "University of Central Punjab",
+    "abbreviation": "UCP",
+    "official_website": "https://www.ucp.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/e/eb/University_of_Central_Punjab_%28logo%29.jpg",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 8,
+    "university_name": "National University of Computer and Emerging Sciences",
+    "abbreviation": "NU",
+    "official_website": "https://nu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/e/e4/National_University_of_Computer_and_Emerging_Sciences_logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 9,
+    "university_name": "University of Management and Technology",
+    "abbreviation": "UMT",
+    "official_website": "https://www.umt.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Management_and_Technology_%28Pakistan%29#/media/File:Umt_logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 10,
+    "university_name": "Quaid-i-Azam University",
+    "abbreviation": "QAU",
+    "official_website": "https://qau.edu.pk",
+    "logo_url": "https://www.validate-network.org/sites/default/files/styles/mt_image_small/public/validate/images/media/quaid-i-azam_university_islamabad.jpg?itok=3eu4d_7a",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 11,
+    "university_name": "Bahria University",
+    "abbreviation": "BAHRIA",
+    "official_website": "https://www.bahria.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2022/06/bahria-university-logo.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 12,
+    "university_name": "University of Engineering and Technology, Lahore",
+    "abbreviation": "UET",
+    "official_website": "https://uet.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Engineering_and_Technology,_Lahore#/media/File:University_of_Engineering_and_Technology_Lahore_logo.svg",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 13,
+    "university_name": "International Islamic University, Islamabad",
+    "abbreviation": "IIU",
+    "official_website": "https://iiu.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/International_Islamic_University#/media/File:International_Islamic_University,_Islamabad_(crest).png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 14,
+    "university_name": "University of Health Sciences, Lahore",
+    "abbreviation": "UHS",
+    "official_website": "https://www.uhs.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Health_Sciences,_Lahore#/media/File:University_of_Health_Sciences_Lahore_Logo.svg",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 15,
+    "university_name": "The University of Lahore",
+    "abbreviation": "UOL",
+    "official_website": "https://www.uol.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Lahore#/media/File:University_of_Lahore_(logo).png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 16,
+    "university_name": "University of Sindh",
+    "abbreviation": "USINDH",
+    "official_website": "https://usindh.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Sindh#/media/File:University_of_Sindh_(logo).png",
+    "university_type": "Public",
+    "city": "Jamshoro",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 17,
+    "university_name": "Government College University, Lahore",
+    "abbreviation": "GCU",
+    "official_website": "https://gcu.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/Government_College_University,_Lahore#/media/File:Government_College_University,Logo.png",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 18,
+    "university_name": "Riphah International University",
+    "abbreviation": "RIPHAH",
+    "official_website": "https://www.riphah.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/Riphah_International_University#/media/File:Riphah-Logo.jpg",
+    "university_type": "Private (non-profit)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 19,
+    "university_name": "University of Peshawar",
+    "abbreviation": "UOP",
+    "official_website": "https://uop.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Peshawar#/media/File:University_of_Peshawar_logo.png",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 20,
+    "university_name": "NED University of Engineering and Technology",
+    "abbreviation": "NEDUET",
+    "official_website": "https://www.neduet.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/NED_University_of_Engineering_and_Technology#/media/File:NEDUET_logo.svg",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 21,
+    "university_name": "University of Agriculture, Faisalabad",
+    "abbreviation": "UAF",
+    "official_website": "https://www.uaf.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/University_of_Agriculture,_Faisalabad#/media/File:Agriculture_University_Faisalabad_emblem.png",
+    "university_type": "Public",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 22,
+    "university_name": "Bahauddin Zakariya University",
+    "abbreviation": "BZU",
+    "official_website": "https://bzu.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/Bahauddin_Zakariya_University#/media/File:BZU-Multan.png",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 23,
+    "university_name": "Pakistan Institute of Development Economics",
+    "abbreviation": "PIDE",
+    "official_website": "https://pide.org.pk",
+    "logo_url": "https://file.pide.org.pk/uploads/pide-logo-green-300x171.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 24,
+    "university_name": "National University of Modern Languages",
+    "abbreviation": "NUML",
+    "official_website": "https://numl.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/National_University_of_Modern_Languages#/media/File:National_University_of_Modern_Languages_(logo).jpg",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 25,
+    "university_name": "The Islamia University of Bahawalpur",
+    "abbreviation": "IUB",
+    "official_website": "https://www.iub.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2024/10/IUB-logo.png",
+    "university_type": "Public",
+    "city": "Bahawalpur",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 26,
+    "university_name": "Iqra University",
+    "abbreviation": "IQRA",
+    "official_website": "https://iqra.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2025/07/Iqra-University-Logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 27,
+    "university_name": "Mehran University of Engineering and Technology",
+    "abbreviation": "MUET",
+    "official_website": "https://www.muet.edu.pk",
+    "logo_url": "https://en.wikipedia.org/wiki/Mehran_University_of_Engineering_%26_Technology#/media/File:Mehran_University_of_Engineering_and_Technology_logo.svg",
+    "university_type": "Public",
+    "city": "Jamshoro",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 28,
+    "university_name": "University of Sargodha",
+    "abbreviation": "UOS",
+    "official_website": "https://uos.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/c3/University_of_Sargodha.png",
+    "university_type": "Public",
+    "city": "Sargodha",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 29,
+    "university_name": "Ghulam Ishaq Khan Institute of Engineering Sciences and Technology",
+    "abbreviation": "GIKI",
+    "official_website": "https://giki.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8e/Ghulam_Ishaq_Khan_Institute_of_Engineering_Sciences_and_Technology_%28insignia%29.png/316px-Ghulam_Ishaq_Khan_Institute_of_Engineering_Sciences_and_Technology_%28insignia%29.png",
+    "university_type": "Private (non-profit)",
+    "city": "Topi",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 30,
+    "university_name": "Khyber Medical University",
+    "abbreviation": "KMU",
+    "official_website": "https://kmu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/KMU_Peshawar.jpg/404px-KMU_Peshawar.jpg",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 31,
+    "university_name": "Government College University, Faisalabad",
+    "abbreviation": "GCUF",
+    "official_website": "https://gcuf.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/0/01/Government_College_University_Logo.jpg",
+    "university_type": "Public",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 32,
+    "university_name": "Liaquat University of Medical and Health Sciences",
+    "abbreviation": "LUMHS",
+    "official_website": "https://www.lumhs.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/7/7c/Liaquat_University_of_Medical_and_Health_Sciences_%28crest%29.jpg",
+    "university_type": "Public",
+    "city": "Jamshoro",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 33,
+    "university_name": "Forman Christian College",
+    "abbreviation": "FCCOLLEGE",
+    "official_website": "https://www.fccollege.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/9/97/Forman_Christian_College_logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 34,
+    "university_name": "University of Education",
+    "abbreviation": "UE",
+    "official_website": "https://ue.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/2/26/University_of_Education_Lahore_Logo.png",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 35,
+    "university_name": "DOW University of Health Sciences",
+    "abbreviation": "DUHS",
+    "official_website": "https://www.duhs.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/b/bf/Logo_of_Dow_University_of_Health_Sciences.gif",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 36,
+    "university_name": "University of Karachi",
+    "abbreviation": "UOK",
+    "official_website": "https://uok.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/d/d9/Karachi_University_logo.png",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 37,
+    "university_name": "Superior University",
+    "abbreviation": "SUPERIOR",
+    "official_website": "https://www.superior.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/University_logo-01.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 38,
+    "university_name": "Sukkur Institute of Business Administration",
+    "abbreviation": "IBA-SUK",
+    "official_website": "https://www.iba-suk.edu.pk/",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/SIBA_Logo.jpg/250px-SIBA_Logo.jpg",
+    "university_type": "Public",
+    "city": "Sukkur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 39,
+    "university_name": "Karachi Institute of Economics and Technology",
+    "abbreviation": "KIET",
+    "official_website": "https://kiet.edu.pk/ ",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvEvhLgRu1zylhRkAGk0Gpjn1xG5ufzz7jcA&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 40,
+    "university_name": "Institute of Business Management",
+    "abbreviation": "IOBM",
+    "official_website": "https://iobm.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/ca/This_is_the_logo_for_the_Institute_of_Business_Management.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 41,
+    "university_name": "Shifa Tameer-e-Millat University",
+    "abbreviation": "STMU",
+    "official_website": "https://stmu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZI8dt_7VZFO3PZgBEnMCxgJT8W2A64u5iZg&s",
+    "university_type": "Private",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 42,
+    "university_name": "Sir Syed University of Engineering and Technology",
+    "abbreviation": "SSUET",
+    "official_website": "https://www.ssuet.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/8/8d/SSUET_Logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 43,
+    "university_name": "Shaheed Zulfiqar Ali Bhutto Institute of Science and Technology",
+    "abbreviation": "SZABIST",
+    "official_website": "https://szabist.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/SZABIST%20University%20karachi.png",
+    "university_type": "Private (non-profit)",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 44,
+    "university_name": "Pakistan Institute of Engineering and Applied Sciences",
+    "abbreviation": "PIEAS",
+    "official_website": "https://www.pieas.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxZAY0u9-eIi62zUsuUnNa-Dg6SLM1-sN0hg&s",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 45,
+    "university_name": "Pir Mehr Ali Shah Arid Agriculture University",
+    "abbreviation": "UAAR",
+    "official_website": "https://www.uaar.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlnvE3_Y75_LvQsXLfhO3xC8yOT72b33qiGw&s",
+    "university_type": "Public",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 46,
+    "university_name": "Air University",
+    "abbreviation": "AU",
+    "official_website": "https://www.au.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxpoT2MLyu14PovsouBxQzhN96Xpj8Cho5Hg&s",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 47,
+    "university_name": "Information Technology University",
+    "abbreviation": "ITU",
+    "official_website": "https://itu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiC1MNVCzruN_18NAUEUPumv2KxT5r37X5hw&s",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 48,
+    "university_name": "Hazara University",
+    "abbreviation": "HU",
+    "official_website": "https://hu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg38UAZ0mV1AYawnN2QJ_SpMDg370239DFeg&s",
+    "university_type": "Public",
+    "city": "Mansehra",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 49,
+    "university_name": "Habib University",
+    "abbreviation": "HABIB",
+    "official_website": "https://habib.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2025/09/habib-university-logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 50,
+    "university_name": "University of Veterinary and Animal Sciences",
+    "abbreviation": "UVAS",
+    "official_website": "https://www.uvas.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa4U9alNOknpfmSE68cDA-EkSPNshbZsxBwA&s",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 51,
+    "university_name": "University of Gujrat",
+    "abbreviation": "UOG",
+    "official_website": "https://uog.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/c4/University_of_Gujrat_Logo.png",
+    "university_type": "Public",
+    "city": "Gujrat",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 52,
+    "university_name": "Balochistan University of Information Technology, Engineering and Management Sciences",
+    "abbreviation": "BUITMS",
+    "official_website": "https://www.buitms.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/f/fd/BUITEMS_logo.png",
+    "university_type": "Public",
+    "city": "Quetta",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 53,
+    "university_name": "Fatima Jinnah Women University",
+    "abbreviation": "FJWU",
+    "official_website": "https://fjwu.edu.pk",
+    "logo_url": "https://www.fjwu.edu.pk/images_v2/fjwu_logo.png",
+    "university_type": "Public",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 54,
+    "university_name": "University of Engineering and Technology, Taxila",
+    "abbreviation": "UETTAXILA",
+    "official_website": "https://www.uettaxila.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1w5Fp2H3lKxmtaOF019ts_HGFpXSWqUK-qQ&s",
+    "university_type": "Public",
+    "city": "Taxila",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 55,
+    "university_name": "Ziauddin University",
+    "abbreviation": "ZU",
+    "official_website": "https://zu.edu.pk",
+    "logo_url": "https://media.licdn.com/dms/image/v2/C510BAQEmDXwWSacWxg/company-logo_400_400/company-logo_400_400/0/1630575383072/ziauddin_university_logo?e=2147483647&v=beta&t=FFpl6AXSQRTdSHeahqwBtkiIzrgFEo7YNxcC8ceZGk0",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 56,
+    "university_name": "Sindh Madresatul Islam University",
+    "abbreviation": "SMIU",
+    "official_website": "https://www.smiu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQsxbIyrekUatLZpc_aBlrJYBqe8aHw2fCeA&s",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 57,
+    "university_name": "National Textile University",
+    "abbreviation": "NTU",
+    "official_website": "https://ntu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/e/e4/National_Textile_University_Logo.png",
+    "university_type": "Public",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 58,
+    "university_name": "Institute of Space Technology",
+    "abbreviation": "IST",
+    "official_website": "https://ist.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_IST.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 59,
+    "university_name": "Federal Urdu University of Arts, Sciences and Technology",
+    "abbreviation": "FUUAST",
+    "official_website": "https://www.fuuast.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvAIO9tyaNPL_kZ3bO_pPVGSfOK7OC5nEhtQ&s",
+    "university_type": "Public (Federal)",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 60,
+    "university_name": "King Edward Medical University",
+    "abbreviation": "KEMU",
+    "official_website": "https://kemu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/King_Edward_Medical_University.png/231px-King_Edward_Medical_University.png",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 61,
+    "university_name": "The University of Agriculture, Peshawar",
+    "abbreviation": "AUP",
+    "official_website": "https://aup.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/4/44/Agricultural_University_Peshawar_logo.png",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 62,
+    "university_name": "Lahore College for Women University",
+    "abbreviation": "LCWU",
+    "official_website": "https://lcwu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsgAMRf63IIi4u5TNwu6vc1pd6s_7XCQWkvA&s",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 63,
+    "university_name": "Lahore Garrison University",
+    "abbreviation": "LGU",
+    "official_website": "https://lgu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cb/Lahore_Garrison_University.png/250px-Lahore_Garrison_University.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 64,
+    "university_name": "Jinnah University for Women",
+    "abbreviation": "JUW",
+    "official_website": "https://juw.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/9/94/Jinnah_University_for_Women_%28emblem%29.jpg",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 65,
+    "university_name": "DHA Suffa University",
+    "abbreviation": "DSU",
+    "official_website": "https://www.dsu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzshkTTLdamvMFWJf1DpU47P427ywh8sasOg&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 66,
+    "university_name": "National Defence University",
+    "abbreviation": "NDU",
+    "official_website": "https://ndu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/4/4f/National_Defence_University%2C_Pakistan_Logo.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 67,
+    "university_name": "Hamdard University",
+    "abbreviation": "HAMDARD",
+    "official_website": "https://hamdard.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2025/07/Hamdard-University-Logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 68,
+    "university_name": "Foundation University Islamabad",
+    "abbreviation": "FUI",
+    "official_website": "https://www.fui.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/5/5d/Logo_Foundation_University.png",
+    "university_type": "Private (non-profit)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 69,
+    "university_name": "Qurtaba University of Science and Information Technology",
+    "abbreviation": "QURTUBA",
+    "official_website": "https://qurtuba.edu.pk",
+    "logo_url": "https://media.licdn.com/dms/image/v2/D4D0BAQGinBkRz46BDA/company-logo_200_200/company-logo_200_200/0/1690885526197/qurtuba_schools_colleges_peshawar_d_i_khan_islamabad_logo?e=2147483647&v=beta&t=8woJw-SNMywVAt_byOIaKXSBg20p9oL0xnzjk8esGf8",
+    "university_type": "Private",
+    "city": "Dera Ismail Khan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 70,
+    "university_name": "Capital University of Science and Technology",
+    "abbreviation": "CUST",
+    "official_website": "https://cust.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/5/51/Capital_University_of_Science_%26_Technology_-_Islamabad_-_Pakistan.png/250px-Capital_University_of_Science_%26_Technology_-_Islamabad_-_Pakistan.png",
+    "university_type": "Private",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 71,
+    "university_name": "University of Azad Jammu and Kashmirs",
+    "abbreviation": "UAJK",
+    "official_website": "https://www.uajk.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/4/49/University_Of_Azad_Jammu_And_Kashmir_Logo.png",
+    "university_type": "Public",
+    "city": "Muzaffarabad",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 72,
+    "university_name": "University of Balochistan",
+    "abbreviation": "UOB",
+    "official_website": "https://www.uob.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCIFguRXDWEwiCh6LlmXl9j1h-nIUHFyu5Xw&s",
+    "university_type": "Public",
+    "city": "Quetta",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 73,
+    "university_name": "National University of Medical Sciences",
+    "abbreviation": "NUMS",
+    "official_website": "https://www.nums.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/1/17/National_University_of_Medical_Sciences_logo.svg",
+    "university_type": "Public (Federal)",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 74,
+    "university_name": "Lahore University of Biological and Applied Sciences",
+    "abbreviation": "UBAS",
+    "official_website": "https://ubas.edu.pk/",
+    "logo_url": "https://play-lh.googleusercontent.com/6IyxAbVQpZCQDHhCKJymvYLACmkucq3S_1VKxBbGOz6e16-EPX8P1q3HId5Icv70jV_ool1O1PxDnFgsujFS2g",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 75,
+    "university_name": "Minhaj University",
+    "abbreviation": "MUL",
+    "official_website": "https://mul.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Minhaj-University-Lahore.jpeg",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 76,
+    "university_name": "University of Baltistan, Skardu",
+    "abbreviation": "UOBS",
+    "official_website": "https://uobs.edu.pk/",
+    "logo_url": "https://uobs.edu.pk/images/logo/logo.png",
+    "university_type": "Public",
+    "city": "Skardu",
+    "province": "Gilgit-Baltistan"
+  },
+  {
+    "university_id": 77,
+    "university_name": "The University of Faisalabad",
+    "abbreviation": "TUF",
+    "official_website": "https://tuf.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQKQhxOP0vkHG5XokqfnUtUmlPG-bWH8nweA&s",
+    "university_type": "Private",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 78,
+    "university_name": "National College of Arts",
+    "abbreviation": "NCA",
+    "official_website": "https://nca.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/f/f5/National_College_of_Arts_%28emblem%29.jpg",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 79,
+    "university_name": "Mohammad Ali Jinnah University",
+    "abbreviation": "JINNAH",
+    "official_website": "https://jinnah.edu/",
+    "logo_url": "https://en.wikipedia.org/wiki/Mohammad_Ali_Jinnah_University#/media/File:MAJU-LOGO.jpg",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 80,
+    "university_name": "Institute of Management Sciences",
+    "abbreviation": "IMSCIENCES",
+    "official_website": "https://imsciences.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3wgonjmgg0jBniDlXe3e2Do0DycAENcwdsg&s",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 81,
+    "university_name": "Kinnaird College for Women",
+    "abbreviation": "KINNAIRD",
+    "official_website": "https://www.kinnaird.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/1/1f/Kinnaird-College-for-Women_logo.jpg",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 82,
+    "university_name": "GIFT University",
+    "abbreviation": "GIFT",
+    "official_website": "https://www.gift.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThBJUYQwkeoH15C0V4Nxl8XN_YKfV3nYKZIQ&s",
+    "university_type": "Private",
+    "city": "Gujranwala",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 83,
+    "university_name": "Abdul Wali Khan University Mardan",
+    "abbreviation": "AWKUM",
+    "official_website": "https://awkum.edu.pk",
+    "logo_url": "https://media.licdn.com/dms/image/v2/C510BAQHgiMDUYnPr7g/company-logo_200_200/company-logo_200_200/0/1630619049858?e=2147483647&v=beta&t=cV1pZ5xUN1t0VdvPiJ2KXnSgTym6eNfEnimxkXmu5qE",
+    "university_type": "Public",
+    "city": "Mardan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 84,
+    "university_name": "Isra University",
+    "abbreviation": "ISRA",
+    "official_website": "https://www.isra.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/a/a5/Isra_University_logo.png",
+    "university_type": "Private",
+    "city": "Hyderabad",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 85,
+    "university_name": "Sindh Institute of Medical Sciences",
+    "abbreviation": "SIMS",
+    "official_website": "https://sims.siut.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBQY4XFQIVJ4on3tnPrOm3_Z5AnKz17ws0yg&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 86,
+    "university_name": "Jinnah Sindh Medical University",
+    "abbreviation": "JSMU",
+    "official_website": "https://www.jsmu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/3/3a/Jinnah_Sindh_Medical_University_%28logo%29.jpg",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 87,
+    "university_name": "Quaid-e-Awam University of Engineering, Science and Technology",
+    "abbreviation": "QUEST",
+    "official_website": "https://quest.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Logo_of_Quaid-e-Awam_university_of_engineering_science_and_technology.jpg/250px-Logo_of_Quaid-e-Awam_university_of_engineering_science_and_technology.jpg",
+    "university_type": "Public",
+    "city": "Nawabshah",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 88,
+    "university_name": "Beaconhouse National University",
+    "abbreviation": "BNU",
+    "official_website": "https://www.bnu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/9/9c/Beaconhouse_National_University_logo.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 89,
+    "university_name": "Shah Abdul Latif University",
+    "abbreviation": "SALU",
+    "official_website": "https://www.salu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/a/aa/Shah_Abdul_Latif_University_logo.png",
+    "university_type": "Public",
+    "city": "Khairpur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 90,
+    "university_name": "University of Engineering and Technology, Peshawar",
+    "abbreviation": "UETPESHAWAR",
+    "official_website": "https://www.uetpeshawar.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSGbxDilSvwxffnYHSqG6oy2qpzODxrZH70w&s",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 91,
+    "university_name": "ILMA University",
+    "abbreviation": "ILMA",
+    "official_website": "https://ilma.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Ilmaunilogo.jpg",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 92,
+    "university_name": "Karakurum International University",
+    "abbreviation": "KIU",
+    "official_website": "https://www.kiu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/a/a8/Karakoram_International_University_%28logo%29.jpg",
+    "university_type": "Public",
+    "city": "Gilgit",
+    "province": "Gilgit-Baltistan"
+  },
+  {
+    "university_id": 93,
+    "university_name": "Lahore School of Economics",
+    "abbreviation": "LAHORESCHOOL",
+    "official_website": "https://lahoreschool.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/c4/Lahore_School_of_Economics_%28emblem%29.jpg",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 94,
+    "university_name": "University of Chitral",
+    "abbreviation": "UOCH",
+    "official_website": "https://uoch.edu.pk/",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/0/09/Universityofchitrallogo.jpg",
+    "university_type": "Public",
+    "city": "Chitral",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 95,
+    "university_name": "Abbottabad University of Science and Technology",
+    "abbreviation": "AUST",
+    "official_website": "https://aust.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/2/25/Abbottabad_University_of_Science_and_Technology.png",
+    "university_type": "Public",
+    "city": "Abbottabad",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 96,
+    "university_name": "University of Malakand",
+    "abbreviation": "UOM",
+    "official_website": "https://www.uom.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/a/a3/University_of_Malakand_%28crest%29.jpg",
+    "university_type": "Public",
+    "city": "Chakdara",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 97,
+    "university_name": "Shaheed Zulfiqar Ali Bhutto Medical University",
+    "abbreviation": "SZABMU",
+    "official_website": "https://szabmu.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/SZABMU%20Islamabad.jpg",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 98,
+    "university_name": "University of Haripur",
+    "abbreviation": "UOH",
+    "official_website": "https://uoh.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/6/63/University_of_Haripur_%28logo%29.jpg",
+    "university_type": "Public",
+    "city": "Haripur",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 99,
+    "university_name": "Kohat University of Science and Technology",
+    "abbreviation": "KUST",
+    "official_website": "https://www.kust.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/0/06/KUST.png",
+    "university_type": "Public",
+    "city": "Kohat",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 100,
+    "university_name": "University of Southern Punjab",
+    "abbreviation": "USP",
+    "official_website": "https://usp.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6JdN40KSx86RmXWDcmlTTjJzf1ExY2ilrIQ&s",
+    "university_type": "Private",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 101,
+    "university_name": "University of South Asia",
+    "abbreviation": "USA",
+    "official_website": "https://www.usa.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJro6Zo3uXD2e-srKhTLLS1n3x9sbpUWPx7A&s",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 102,
+    "university_name": "Indus University, Pakistan",
+    "abbreviation": "INDUS",
+    "official_website": "https://www.indus.edu.pk/",
+    "logo_url": "https://media.licdn.com/dms/image/v2/C4D0BAQHUO0u2pc5zfA/company-logo_200_200/company-logo_200_200/0/1654893785254?e=2147483647&v=beta&t=x4UUR3IQSbB91U1UKdStgKL_3KPMi_eQamVCyS87J4U",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 103,
+    "university_name": "Balochistan University of Engineering and Technology",
+    "abbreviation": "BUETK",
+    "official_website": "http://www.buetk.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUPQckUd9rtNqVY03HQwFvixWDWf_UJPMQOA&s",
+    "university_type": "Public",
+    "city": "Khuzdar",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 104,
+    "university_name": "Mirpur University of Science and Technology",
+    "abbreviation": "MUST",
+    "official_website": "https://must.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdXEkG8E7rlFXBCTJerqUkNnowZlyHVIz5pg&s",
+    "university_type": "Public",
+    "city": "Mirpur",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 105,
+    "university_name": "Sarhad University of Science and Information Technology",
+    "abbreviation": "SUIT",
+    "official_website": "https://www.suit.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4C472Exo0DXxatWtb8ukPvx6YvvoYt5VqkQ&s",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 106,
+    "university_name": "Faisalabad Medical University",
+    "abbreviation": "PMC",
+    "official_website": "https://pmc.edu.pk/",
+    "logo_url": "Not have logo",
+    "university_type": "Public",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 107,
+    "university_name": "Khwaja Fareed University of Engineering & Information Technology",
+    "abbreviation": "KFUEIT",
+    "official_website": "https://www.kfueit.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM4LOkMdbyBeuXHaluup9n1m97Q2bOJqLeiw&s",
+    "university_type": "Public",
+    "city": "Rahim Yar Khan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 108,
+    "university_name": "Indus Valley School of Art and Architecture",
+    "abbreviation": "INDUSVALLEY",
+    "official_website": "https://www.indusvalley.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXwtgB1VeDK9_W-3g7WHg3Rek1_nF9h7d1bA&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 109,
+    "university_name": "City University of Science and Information Technology",
+    "abbreviation": "CITYUNIVERSITY",
+    "official_website": "https://cityuniversity.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqdU9owhkdj2Wfh5aAtm4M5GY9B-8SxQeO7A&s",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 110,
+    "university_name": "Shaheed Benazir Bhutto Women University",
+    "abbreviation": "SBBWU",
+    "official_website": "https://sbbwu.edu.pk/sbbwu/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_GCKelZH0uUNqup6lSLbAkK89G2LjyITKqg&s",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 111,
+    "university_name": "CECOS University",
+    "abbreviation": "CECOS",
+    "official_website": "https://www.cecos.edu.pk",
+    "logo_url": "https://cecos.edu.pk/wp-content/uploads/2024/07/CECOS-1.png",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 112,
+    "university_name": "Gomal University",
+    "abbreviation": "GOMAL",
+    "official_website": "https://gomal.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/5/57/Gomal_University_logo.png",
+    "university_type": "Public",
+    "city": "Dera Ismail Khan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 113,
+    "university_name": "Sindh Agriculture University",
+    "abbreviation": "SAU",
+    "official_website": "https://www.sau.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/7/72/Tandojam.JPG",
+    "university_type": "Public",
+    "city": "Tandojam",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 114,
+    "university_name": "Rawalpindi Medical University",
+    "abbreviation": "RMUR",
+    "official_website": "https://rmur.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/5/58/Rawalpindi_Medical_University_logo.png",
+    "university_type": "Public",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 115,
+    "university_name": "Namal University",
+    "abbreviation": "NAMAL",
+    "official_website": "https://namal.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/c4/Namal_Institute_Logo.png",
+    "university_type": "Private (non-profit)",
+    "city": "Mianwali",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 116,
+    "university_name": "Hajvery University",
+    "abbreviation": "HAJVERY",
+    "official_website": "https://hajvery.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/e/e9/Hajvery_University_Logo.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 117,
+    "university_name": "University of Swat",
+    "abbreviation": "USWAT",
+    "official_website": "https://uswat.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/7/7f/University_of_Swat_logo.jpg",
+    "university_type": "Public",
+    "city": "Mingora",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 118,
+    "university_name": "Sardar Bahadur Khan Women's University",
+    "abbreviation": "SBKWU",
+    "official_website": "https://sbkwu.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/0/01/SBKWU-Logo.jpg",
+    "university_type": "Public",
+    "city": "Quetta",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 119,
+    "university_name": "Muhammad Nawaz Shareef University of Agriculture, Multan",
+    "abbreviation": "MNSUAM",
+    "official_website": "https://mnsuam.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/4/4b/Muhammad_Nawaz_Shareef_University_of_Agriculture_logo.png",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 120,
+    "university_name": "Baqai Medical University",
+    "abbreviation": "BAQAI",
+    "official_website": "https://www.baqai.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/9/91/Baqai_Medical_University_logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 121,
+    "university_name": "National University of Technology",
+    "abbreviation": "NUTEC",
+    "official_website": "https://nutec.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/1/17/NUTECH_logo.png",
+    "university_type": "nan",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 122,
+    "university_name": "Government College Women University, Faisalabad",
+    "abbreviation": "GCWUF",
+    "official_website": "https://gcwuf.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/2/23/Government_College_Women_University%2C_Faisalabad_logo.png",
+    "university_type": "Public",
+    "city": "Faisalabad",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 123,
+    "university_name": "KASB Institute of Technology",
+    "abbreviation": "KASBIT",
+    "official_website": "https://kasbit.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/e/e8/KASBIT_Logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 124,
+    "university_name": "University of Okara",
+    "abbreviation": "UO",
+    "official_website": "https://uo.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/4/4e/University_of_the_Okara_Logo.jpg",
+    "university_type": "Public",
+    "city": "Okara",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 125,
+    "university_name": "Sir Syed CASE Institute of Technology",
+    "abbreviation": "SSCASE",
+    "official_website": "https://sscase.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdOArnGkFSJoJPh3d5EKwKSJnD3JibObRFWA&s",
+    "university_type": "Private",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 126,
+    "university_name": "National College of Business Administration and Economics",
+    "abbreviation": "NCBAE",
+    "official_website": "https://www.ncbae.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2024/09/ncbae-university-logo.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 127,
+    "university_name": "Lahore Leads University",
+    "abbreviation": "LEADS",
+    "official_website": "https://leads.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr0SrzkRB-pYnBDYna-AezMSVNc4YQh7eFug&s",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 128,
+    "university_name": "Textile Institute of Pakistan",
+    "abbreviation": "TIP",
+    "official_website": "https://www.tip.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt-lskC8hvVbl2Mf_yyCM96UzJ-d55T6D9HQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 129,
+    "university_name": "Pak-Austria Fachhochschule Institute of Applied Sciences and Technology",
+    "abbreviation": "PAF-IAST",
+    "official_website": "https://www.paf-iast.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWVHa-bYs_3JR5I9s6AYdJJvSUWv6AqrQW-w&s",
+    "university_type": "Public",
+    "city": "Haripur",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 130,
+    "university_name": "Pakistan Institute of Fashion and Design",
+    "abbreviation": "PIFD",
+    "official_website": "https://pifd.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/a/a7/Pakistan_Institute_of_Fashion_and_Design_%28logo%29.png",
+    "university_type": "Public (Federal)",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 131,
+    "university_name": "Preston University",
+    "abbreviation": "PRESTON",
+    "official_website": "https://preston.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdLfAUUfyILUqXP1DrCIjXiLu1tFhvvRqEcQ&s",
+    "university_type": "Private",
+    "city": "Kohat",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 132,
+    "university_name": "Gandhara University",
+    "abbreviation": "GANDHARA",
+    "official_website": "https://gandhara.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlDtBX3oLFr3nl7sbMc7CzO8FMczWHvhQi8Q&s",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 133,
+    "university_name": "Abasyn University",
+    "abbreviation": "ABASYN",
+    "official_website": "https://www.abasyn.edu.pk",
+    "logo_url": "https://crystalpng.com/wp-content/uploads/2023/09/Abasyn-University-Logo.png",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 134,
+    "university_name": "University of Wah",
+    "abbreviation": "UOW",
+    "official_website": "https://www.uow.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShrzm47os72qil3kZD5TMuCc9S35Aqpl0dvA&s",
+    "university_type": "Private",
+    "city": "Wah Cantt",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 135,
+    "university_name": "Islamia College Peshawar",
+    "abbreviation": "ICP",
+    "official_website": "https://www.icp.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDaI1hkfeEL10UuEya1hZZtMOUF5HjEdJaw&s",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 136,
+    "university_name": "Bacha Khan University",
+    "abbreviation": "BKUC",
+    "official_website": "https://bkuc.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/ur/0/05/BKUC-Logo.jpeg",
+    "university_type": "Public",
+    "city": "Charsadda",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 137,
+    "university_name": "HITEC University",
+    "abbreviation": "HITECUNI",
+    "official_website": "https://hitecuni.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/b/b3/HITEC_University_Logo.jpg",
+    "university_type": "Private",
+    "city": "Taxila",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 138,
+    "university_name": "Greenwich University",
+    "abbreviation": "GREENWICH",
+    "official_website": "https://greenwich.edu.pk",
+    "logo_url": "https://greenwich.university/images/GULogo.jpg",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 139,
+    "university_name": "Al-Hamd Islamic University",
+    "abbreviation": "AIU",
+    "official_website": "http://www.aiu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0gdDrgKo66GjRHZILf6GAQnOUkSXIn_vgJQ&s",
+    "university_type": "Private",
+    "city": "Quetta",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 140,
+    "university_name": "University of Sialkot",
+    "abbreviation": "USKT",
+    "official_website": "https://uskt.edu.pk",
+    "logo_url": "https://uskt.edu.pk/USKTLogo.webp",
+    "university_type": "Private",
+    "city": "Sialkot",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 141,
+    "university_name": "Northern University",
+    "abbreviation": "NORTHERN",
+    "official_website": "https://northern.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0JV0vejA0nrlgTV26f5f65neUXYiWItb8Og&s",
+    "university_type": "Private",
+    "city": "Nowshera",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 142,
+    "university_name": "Dawood University of Engineering and Technology",
+    "abbreviation": "DUET",
+    "official_website": "https://duet.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3Lgt40bucjE5Q2Gdbk6irF5AbZ_grSmM_vg&s",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 143,
+    "university_name": "The Women University Multan",
+    "abbreviation": "WUM",
+    "official_website": "https://wum.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcVuruOumpO4FsksMBTcUhmZP0i61EpNW6Fg&s",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 144,
+    "university_name": "University of Science and Technology, Bannu",
+    "abbreviation": "USTB",
+    "official_website": "https://www.ustb.edu.pk/",
+    "logo_url": "      https://www.ustb.edu.pk/assets/img/logo.png",
+    "university_type": "Public",
+    "city": "Bannu",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 145,
+    "university_name": "Lasbela University of Agriculture, Water and Marine Sciences",
+    "abbreviation": "LUAWMS",
+    "official_website": "https://www.luawms.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPYBMX8XapMHgh5351IrQb9IBdSgxlpNDIgg&s",
+    "university_type": "Public",
+    "city": "Lasbela",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 146,
+    "university_name": "National Skills University",
+    "abbreviation": "NSU",
+    "official_website": "https://nsu.edu.pk",
+    "logo_url": "https://ums.nsu.edu.pk/ums/images/nsu-logo.jpg",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 147,
+    "university_name": "Shaheed Benazir Bhutto University",
+    "abbreviation": "SBBU",
+    "official_website": "https://sbbu.edu.pk",
+    "logo_url": "https://sbbusba.edu.pk/images/logo-icon.png",
+    "university_type": "Public",
+    "city": "Sheringal",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 148,
+    "university_name": "Karachi School for Business and Leadership",
+    "abbreviation": "KSBL",
+    "official_website": "https://ksbl.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_ay2GsAGYkrfI-tC5CjwzAqDpNuRfD6GTMw&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 149,
+    "university_name": "Government College Women University, Sialkot",
+    "abbreviation": "GCWUS",
+    "official_website": "https://gcwus.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtKzSJKsU_2sm17L-TTRKK5tSz17zI8E9O6Q&s",
+    "university_type": "Public",
+    "city": "Sialkot",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 150,
+    "university_name": "Mohi-ud-Din Islamic University",
+    "abbreviation": "MIU",
+    "official_website": "https://miu.edu.pk",
+    "logo_url": "https://miu.edu.pk/Alumni_portal/assets/images/logo-light.png",
+    "university_type": "Private",
+    "city": "Trarkhal",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 151,
+    "university_name": "The Green International University",
+    "abbreviation": "GIU",
+    "official_website": "https://giu.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Green%20International%20University.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 152,
+    "university_name": "Nishtar Medical University",
+    "abbreviation": "NMU",
+    "official_website": "https://nmu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXdC7MLBSzKZVEGpUJ0pAInG2z8Ym0N7SOSw&s",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 153,
+    "university_name": "Ghazi University",
+    "abbreviation": "MAIL",
+    "official_website": "https://mail.gudgk.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Ghazi%20University.jpg",
+    "university_type": "nan",
+    "city": "Dera Ghazi Khan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 154,
+    "university_name": "Peoples University of Medical and Health Sciences for Women",
+    "abbreviation": "PUMHS",
+    "official_website": "https://www.pumhs.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOSy37DwtQLkVz0qx0zBHfry1ql0SRuwvPdQ&s",
+    "university_type": "Public",
+    "city": "Nawabshah",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 155,
+    "university_name": "Dadabhoy Institute of Higher Education",
+    "abbreviation": "DADABHOY",
+    "official_website": "https://www.dadabhoy.edu.pk",
+    "logo_url": "https://media.licdn.com/dms/image/v2/D4E0BAQEmJ2b08-CGoA/company-logo_200_200/company-logo_200_200/0/1719257493237?e=2147483647&v=beta&t=yMdyANTr5I9xOIUPVk1ndy50aBNsrNbfsET1a-Xohck",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 156,
+    "university_name": "Rawalpindi Women University",
+    "abbreviation": "RWU",
+    "official_website": "https://rwu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAMwdPkWI86xf2ubXToGUbCJfk3_gfI_YU8w&s",
+    "university_type": "Public",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 157,
+    "university_name": "Shaheed Mohtarma Benazir Bhutto Medical University",
+    "abbreviation": "SMBBMU",
+    "official_website": "https://smbbmu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCX-4d517nvVxiDNgRGPMEj0hZegLICk59fg&s",
+    "university_type": "Public",
+    "city": "Larkana",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 158,
+    "university_name": "University of Turbat",
+    "abbreviation": "UOTURBAT",
+    "official_website": "https://uoturbat.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/c/cd/University_of_Turbat_%28logo%29.jpg",
+    "university_type": "Public",
+    "city": "Turbat",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 159,
+    "university_name": "University of Engineering and Applied Sciences Swat",
+    "abbreviation": "UEAS",
+    "official_website": "https://www.ueas.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5K-4ueqZkI0VmOvFfQVpC429UA3c80aP9rw&s",
+    "university_type": "Public",
+    "city": "Kanju",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 160,
+    "university_name": "Benazir Bhutto Shaheed University Lyari",
+    "abbreviation": "BBSUL",
+    "official_website": "http://www.bbsul.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4KuG_jGn2zuljrJq089lFGU3ZCce1QwDThQ&s",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 161,
+    "university_name": "Iqra National University",
+    "abbreviation": "INU",
+    "official_website": "https://inu.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQlymkZhMULVvU_z0VuUZzCC0qWjW-EmkIWA&s",
+    "university_type": "nan",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 162,
+    "university_name": "Bolan University of Medical and Health Sciences",
+    "abbreviation": "BUMHS",
+    "official_website": "https://www.bumhs.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Bolan%20University%20Quetta.png",
+    "university_type": "Public",
+    "city": "Quetta",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 163,
+    "university_name": "The Government Sadiq College Women University",
+    "abbreviation": "GSCWU",
+    "official_website": "https://www.gscwu.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Govt.%20Sadiq%20Women%20University.png",
+    "university_type": "Public",
+    "city": "Bahawalpur",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 164,
+    "university_name": "University of Poonch Rawalakot",
+    "abbreviation": "UPR",
+    "official_website": "https://www.upr.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdLbEvXzdaP58V6a5VMFUwrD75nMwTdRV2ug&s",
+    "university_type": "nan",
+    "city": "Rawalakot",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 165,
+    "university_name": "Salim Habib University",
+    "abbreviation": "SHU",
+    "official_website": "https://shu.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Salim%20Habib%20University.jpg",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 166,
+    "university_name": "Newports Institute of Communications and Economics",
+    "abbreviation": "NEWPORTS",
+    "official_website": "https://www.newports.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/9/95/Newports-Institute-of-Communications-and-Economic.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 167,
+    "university_name": "Fatima Jinnah Medical University",
+    "abbreviation": "FJMU",
+    "official_website": "https://fjmu.edu.pk",
+    "logo_url": "https://elog.fjmu.edu.pk/Images/FjIcon.png",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 168,
+    "university_name": "Imperial College of Business Studies",
+    "abbreviation": "IMPERIAL",
+    "official_website": "https://www.imperial.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuHtC1Ki0gCxdx-E5SGgAvowCh6LCOcdI1SA&s",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 169,
+    "university_name": "Institute for Art and Culture",
+    "abbreviation": "IAC",
+    "official_website": "https://iac.edu.pk",
+    "logo_url": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT7NvLhDhebvssw1wd2MfRiOqfHIBLanCP9qsiLFA4l1CO98PE1",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 170,
+    "university_name": "Ibadat International University",
+    "abbreviation": "IIU",
+    "official_website": "https://iiu.edu.pk",
+    "logo_url": "https://images.seeklogo.com/logo-png/36/2/international-islamic-university-islamabad-logo-png_seeklogo-364249.png",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 171,
+    "university_name": "Emerson University, Multan",
+    "abbreviation": "EUM",
+    "official_website": "https://eum.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0NhrK4H2NIrpMU_5Cog50vz0srnF46hrrhg&s",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 172,
+    "university_name": "University of Child Health Sciences",
+    "abbreviation": "UCHS",
+    "official_website": "https://uchs.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4M1nuUCvaOI4_8kApuQYWfQyeS9dVlOT9cw&s",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 173,
+    "university_name": "University of Lakki Marwat",
+    "abbreviation": "ULM",
+    "official_website": "https://ulm.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX-d_WbzaPASH7O9UyjL11C9AG-OlH2WOOjQ&s",
+    "university_type": "Public",
+    "city": "Lakki Marwat",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 174,
+    "university_name": "University of Loralai",
+    "abbreviation": "UOL",
+    "official_website": "https://uol.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/2/20/University_of_Lahore_%28logo%29.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 175,
+    "university_name": "Women University Mardan",
+    "abbreviation": "WUMARDAN",
+    "official_website": "https://wumardan.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh7rmUEfug8p_9OS-ID7qmmo11H8Zh41YGZw&s",
+    "university_type": "nan",
+    "city": "Mardan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 176,
+    "university_name": "The Grand Asian University",
+    "abbreviation": "TAG-GU",
+    "official_website": "https://www.tag-gu.global/",
+    "logo_url": "https://images.wuzzuf-data.net/files/company_logo/8381429956583e11f1f781-og.jpeg",
+    "university_type": "nan",
+    "city": "Sialkot",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 177,
+    "university_name": "The Institute of Management Sciences",
+    "abbreviation": "IMSCIENCES",
+    "official_website": "https://imsciences.edu.pk",
+    "logo_url": "https://imsciences.edu.pk/wp-content/uploads/2023/05/Logo-for-Website-Footer-original-color.png",
+    "university_type": "Public",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 178,
+    "university_name": "University of Sahiwal",
+    "abbreviation": "UOSAHIWAL",
+    "official_website": "https://www.uosahiwal.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/University%20of%20Sahiwal.jpg",
+    "university_type": "Public",
+    "city": "Sahiwal",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 179,
+    "university_name": "University of Engineering and Technology, Mardan",
+    "abbreviation": "UETMARDAN",
+    "official_website": "https://uetmardan.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScdHBlFIpfvwKQJh4gPKISI5g0XkXcj1jkig&s",
+    "university_type": "Public",
+    "city": "Mardan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 180,
+    "university_name": "NFC Institute of Engineering and Technology",
+    "abbreviation": "NFCIET",
+    "official_website": "https://www.nfciet.edu.pk",
+    "logo_url": "https://nfciet.edu.pk/images/preload.png",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 181,
+    "university_name": "Muhammad Nawaz Sharif University of Engineering and Technology",
+    "abbreviation": "MNSUET",
+    "official_website": "https://mnsuet.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa6QNdkPo0qtaAANpyIb5OcHHo_XKdp-VUAg&s",
+    "university_type": "nan",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 182,
+    "university_name": "University of Buner",
+    "abbreviation": "UO-BUNER",
+    "official_website": "https://www.uo-buner.edu.pk",
+    "logo_url": "https://i0.wp.com/www.ubuner.edu.pk/wp-content/uploads/2021/10/uoblogogog.png?ssl=1",
+    "university_type": "nan",
+    "city": "Buner",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 183,
+    "university_name": "University of Home Economics",
+    "abbreviation": "UHE",
+    "official_website": "https://www.uhe.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/University%20of%20Home%20Economics%20Lahore.jpg",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 184,
+    "university_name": "University of Swabi",
+    "abbreviation": "UOSWABI",
+    "official_website": "https://uoswabi.edu.pk",
+    "logo_url": "https://www.edarabia.com/wp-content/uploads/2018/07/university-swabi-pakistan.jpg",
+    "university_type": "Public",
+    "city": "Swabi",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 185,
+    "university_name": "Gambat Institute of Medical Sciences",
+    "abbreviation": "GIMS",
+    "official_website": "https://gims.edu.pk",
+    "logo_url": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT3xgwX5EvzpQwT_aooGnK_U_naUyMzqijOmvstoC-R7GnPbjh6",
+    "university_type": "Public",
+    "city": "Khairpur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 186,
+    "university_name": "Nur International University",
+    "abbreviation": "NIU",
+    "official_website": "https://niu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBtqIynguIBxJjRZSoDCeG4wpauEJCmZyrkQ&s",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 187,
+    "university_name": "Muslim Youth University",
+    "abbreviation": "MYUNIVERSITY",
+    "official_website": "https://myuniversity.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ62GfwaGrxACJKi2bU1lBnlKiD20wAzPrjJg&s",
+    "university_type": "nan",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 188,
+    "university_name": "University of Kotli Azad Jammu and Kashmir",
+    "abbreviation": "UOKAJK",
+    "official_website": "https://uokajk.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/University%20of%20Kotli.png",
+    "university_type": "Public",
+    "city": "Kotli",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 189,
+    "university_name": "University of Mianwali",
+    "abbreviation": "UMW",
+    "official_website": "https://www.umw.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXZudyxhdWKkhyyrFYJw97VY-L7G-QgpPM3w&s",
+    "university_type": "Public",
+    "city": "Mianwali",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 190,
+    "university_name": "Shaheed Benazir Bhutto University Shaheed Benazirabad",
+    "abbreviation": "SBBU",
+    "official_website": "https://www.sbbu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ8gwVStZIvOOEwi2EwoSBsYrE7hKHSMHiVA&s",
+    "university_type": "Public",
+    "city": "Nawabshah",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 191,
+    "university_name": "Baba Guru Nanak University",
+    "abbreviation": "BGNU",
+    "official_website": "https://bgnu.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Baba%20Guru%20Nanak%20University.png",
+    "university_type": "Public",
+    "city": "Nankana Sahib",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 192,
+    "university_name": "Al-Khair University",
+    "abbreviation": "AKU",
+    "official_website": "https://aku.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/6/64/Aga_Khan_University_Logo.png",
+    "university_type": "nan",
+    "city": "Bhimber",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 193,
+    "university_name": "University of Chenab",
+    "abbreviation": "UOC",
+    "official_website": "https://uoc.edu.pk",
+    "logo_url": "https://www.uoc.edu.pk/images/logo.png",
+    "university_type": "Private",
+    "city": "Gujrat",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 194,
+    "university_name": "University of Gwadar",
+    "abbreviation": "UOG",
+    "official_website": "https://uog.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgKTbV5uYO16XDMOLrMx34P9syN1PB1WizzQ&s",
+    "university_type": "Public",
+    "city": "Gwadar",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 195,
+    "university_name": "Kohsar University Murree",
+    "abbreviation": "KUM",
+    "official_website": "https://kum.edu.pk",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Kohsar%20University%20Logo.jfif",
+    "university_type": "Public",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 196,
+    "university_name": "Qarshi University",
+    "abbreviation": "QARSHI",
+    "official_website": "https://www.qarshi.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Qarshi_University_logo.png/250px-Qarshi_University_logo.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 197,
+    "university_name": "Shaheed Allah Buksh Soomro University of Arts, Design and Heritages",
+    "abbreviation": "SABSU",
+    "official_website": "https://sabsu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSudokjbJZlmvxGfwwvFVSS1id_bzar4BRZQA&s",
+    "university_type": "Public",
+    "city": "Jamshoro",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 198,
+    "university_name": "The Shaikh Ayaz University Shikarpur",
+    "abbreviation": "SAUS",
+    "official_website": "https://saus.edu.pk/",
+    "logo_url": "https://saus.edu.pk/wp-content/uploads/2023/02/Shaikh-Ayaz-Uni-Logo.jpg",
+    "university_type": "Public",
+    "city": "Shikarpur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 199,
+    "university_name": "UIT University, Karachi",
+    "abbreviation": "UIT",
+    "official_website": "https://uit.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY9xlFS_X3A_9awwfyDpu_a1goeZCXrgNsKg&s",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 200,
+    "university_name": "Ali Institute of Education",
+    "abbreviation": "AIE",
+    "official_website": "https://aie.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNd3TjAvVzLB9s6gtUiCat0NnMjjY6uDOsvQ&s",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 201,
+    "university_name": "Government College University, Hyderabad",
+    "abbreviation": "GCUH",
+    "official_website": "https://gcuh.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_StJF_0mcsc8ss7WhQ5IhSJoOyxX7r3fUlA&s",
+    "university_type": "Public",
+    "city": "Hyderabad",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 202,
+    "university_name": "Commecs Institute of Business and Emerging Sciences",
+    "abbreviation": "CIBES",
+    "official_website": "https://cibes.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFehpp9MYWx3GJQ0oONEFn2TPse2LnXB7qrQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 203,
+    "university_name": "Women University Swabi",
+    "abbreviation": "WUS",
+    "official_website": "https://wus.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTy6P-7lpu4WR6GrvL1T7Vqrn5pYVl8lvPmQ&s",
+    "university_type": "Public",
+    "city": "Swabi",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 204,
+    "university_name": "Cholistan University of Veterinary and Animal Sciences",
+    "abbreviation": "CUVAS",
+    "official_website": "https://cuvas.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtWx6lF-N2PJGuW4HwLb4AQeomPfJ13ui02A&s",
+    "university_type": "Public",
+    "city": "Bahawalpur",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 205,
+    "university_name": "Aror University of Art, Architecture, Design and Heritage",
+    "abbreviation": "ARORUNIVERSITY",
+    "official_website": "https://aroruniversity.edu.pk",
+    "logo_url": "data:image/jpeg;base64,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",
+    "university_type": "Public",
+    "city": "Sukkur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 206,
+    "university_name": "Millennium Institute of Technology and Entrepreneurship",
+    "abbreviation": "MITE",
+    "official_website": "https://mite.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMMNVJk3i-oZJjQ5WOt6y03RYuMBMMEaHVrQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 207,
+    "university_name": "Khushal Khan Khattak University",
+    "abbreviation": "KKKUK",
+    "official_website": "https://kkkuk.edu.pk",
+    "logo_url": "data:image/jpeg;base64,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",
+    "university_type": "Public",
+    "city": "Karak",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 208,
+    "university_name": "Nazeer Hussain University",
+    "abbreviation": "NHU",
+    "official_website": "https://nhu.edu.pk",
+    "logo_url": "https://nhu.edu.pk/wp-content/uploads/2022/01/nhu-logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 209,
+    "university_name": "Shaheed Zulfiqar Ali Bhutto University of Law",
+    "abbreviation": "SZABUL",
+    "official_website": "https://szabul.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/3/3d/SZABUL_Logo.png",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 210,
+    "university_name": "University of Narowal",
+    "abbreviation": "UON",
+    "official_website": "https://uon.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcoUdm6asNx8h_w973SEk0YDxkFFw41QWUrQ&s",
+    "university_type": "Public",
+    "city": "Narowal",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 211,
+    "university_name": "University of Jhang",
+    "abbreviation": "UOJ",
+    "official_website": "https://uoj.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCsSrGrQC5v3m77Z6q5NMQ1QXSseAiRy6uaw&s",
+    "university_type": "Public",
+    "city": "Jhang",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 212,
+    "university_name": "Thal University",
+    "abbreviation": "THALUNIVERSITY",
+    "official_website": "https://thaluniversity.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd6kw4ZDMIc6GkIAOGcxXdZ7TfyOajWoPukA&s",
+    "university_type": "Public",
+    "city": "Bhakkar",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 213,
+    "university_name": "Sohail University",
+    "abbreviation": "SOHAIL",
+    "official_website": "https://sohail.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdmbNrJyETZeWY6yFM7mJvYzu77MLvJcaVLw&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 214,
+    "university_name": "University of Chakwal",
+    "abbreviation": "UOC",
+    "official_website": "https://www.uoc.edu.pk/",
+    "logo_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxQTEhUTEhIVFRUXFxcaGBcYGBgdHRceGBgbHR0dGRoeHSgiGB0lGxUVITEhJSsrLi4uGB8zODMsNygtLisBCgoKDg0OGxAQGyslICUtLTIvLzUtNS8tLS8rLi0tLS0tKy0rLi8rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOQA3QMBIgACEQEDEQH/xAAcAAEAAwEBAQEBAAAAAAAAAAAABQYHBAMCAQj/xABMEAACAQIDBQQFCAYGCQUBAAABAgADEQQSIQUGMUFREyJhcTKBkaGxBxQjQlJigsFjcpLR0vAVFlNUorIkM0ODo8Lh4vFkc5PD0xf/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAQIDBAX/xAAoEQACAgICAgEEAgMBAAAAAAAAAQIRAyExQRITBCJRYYHB8DJxoRT/2gAMAwEAAhEDEQA/ANxiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAifjMALk2A5mVjeffOlhUsoNSqw7i6geZPTy4yspKO2Q2lyWiedauqC7sqjqSB8ZQd6N/HootGmo+cZV7RiBlQka5Rc3Pnw8ZQsDhK+PxATMalRrks5JCgcSeg8B4CZSzpOlso8nSN6oYlH9B1a3HKQbeyeshN093UwVHs1OZmOZ3tbMbW0HIDkJNzZXWy6EREkkREQBERAEREA8cRikp2zuqX4ZmAv5Xn1Rrq4ujKw6qQfhIfezdtMbSCMcrqbo9r2NtQRzB0v5CY5jcLXwGIKZjTqLazISMwPAjqD0PiJjkyOD40UlJx6N/iZ9uxv41am9KrYYgIxptlJWoQDa6jgeF+uvCTm6++NHFJ3vo6o9NDew8Qenwlo5YvslTTLLE/FYEXBuOon7NCwiIgCIiAIiIAnnXrBFLHgP5sJ6SK2vUuyp0GY+vQf80rJ0rIbpEVj8exFSq+q01Jy37q5RcknmeV+OhtMkr7RNWv21a7XcFgOgPojoLaSz43bDVkxyoSKaUVAUH0i1dM7nqTwHQWlSOHOfLTDMwtfKCdedrdDp6pxZHZzydlmG7i1G7bGYyjh2qkv2ZOZwG1FwSLadZoe5eyMLQpE4aotUn06oIJPhp6I8JmGx9z8XiX1pvTUm7VKoI9djqxmybG2XTw1JaVJQAo1NtWPNm6kzbDHd0aY13R2xETpNRERAEREASPr7XRWYalUsKjjVaZPAN+duGl7SA3n3ma5w+Eu9XgzLrk8B97x5ec7cNgXoYMUz3qj2BANgC51ueJGpLNxOvhYD52tvOA60MNarWY2uNVS/Mn61hra/LWSeDrlGFKo+Yn0HNu8bXKm2gYXuOo8jI/YWwlp01bIFcur3sAdPL0RlJsvK/M3jeV8tSldWy1CEZltdWvemyjiWU3Og4XvIJLDK3vrsnCVqYOKqLRI9CoSAR1GvpDwncm0npXGJTKAP9cuqN4kcUPgdPGV3eXaBxSvTFH/R1AzMws7FtFNIHgw1YdbDrrElaoq1aKdV2JToMMRhsZTxApMrsi2V8oPeIFzm0veQtHH9hiDVoE2Dkr95SeDeY0M7MdutiadnSm1amRdKlIFgR4gaqeoM4sJgrlqTqyVCL08wIJYfVIP2uA8bTgkndVRzs1vA482SrTvlcAlDzzC4PgeV/GWajVDKGXgZkeF2q1H5kGYhXoWI+yVrPkNvUB/4mlbIq2Zk5HvD4H4qfbOnFPdGsJdErEROg0EREAREQBKjvjjDTpYioOKqFB6XCge9yZbpm29uO7XFYjBg3DUQVH6QBXt+yomWZ/SUnwUvY1Y0qWIqW0amKQ/Wdgw9YCM3qE9cFvLWo0hRw1qV/SZQDUqMTzYjyAAn0aDPTw+FXIlw1Z2dsou4Ni5PDLTQe2XH5P8Ad7C9o1RXbEPSI7+TLSVj9i+rsBz4cJywi20kZRTfBc926FRMNSWszNVyguWJJzHUgk9L29U7cTiFpqWc2A95PAAcyTpaeW0cfToUzUqtlUe0+AHMyr7BxlXG4ntmXLRp+gDwBPTkXIPHkDpxvO5a0dCRZqm1KS0zVZwqDQk6EEfVI45vDjIihvEzI2JyWw6nLYg52H2xysDbTpc30tOHEbKXE4ssykoGN+QbIStyBwFwRfi1jwAnTvNspTs9qBFl7RALclNdbW/C1oZaKTaTPJ9/qA4Kx/FS/jktsXeKjifQNmFu6be4gkGYn8xTOwy6BiBqeU5vm2UF0Z0IudD428xMVlZ6UvhQrTZvGP3jwtFstXEU1bpm1HmBwkPtDezCVO4MYtND6TLmzN4Kbd3z49OsxGiGa/fPjw1uLz9F7+mfYJHuY/8ABFcs3Ld/aez85p4Z6eY5QORbiQBfU2ykk9TPbbm9VLD1AjKW9K5FhlYBbC5IGoY+yYQ4ZSvfPHytYXnThsP2oDVHdj4sTyHEnUyVlZD+BFO29Gu0vlBok602AsLHNTvfW+mfpb3ySpbeWqFrU6DMuoWo7U0A1sbXa44dJjKYNNe715nlNZ3A2VSTDkBBfOe8dSLqp0J4cZaE22ZfJ+PDHG42euK20jsvaLSYA3CdupF+pGWzEcuk/K23VZyrUvo2CXsUY3zWLd0k6LYg/dk8+zaRFmphv1tfjPRMFTC5Agy9DqPfNThK3tPAMuErDB1DqCy5GIKsDm0sdL6gjxHjfL8fvHXrUxTrsHKMGRyLOhHRhx8j0HSblSwFNTdVCnw0/keEoO/272EFRXZ2wzVb9/JmpMw5MBqhPXhxmGaLatGeRPkp+8tbtVw1cCytS7Ow4K9NjmHhfMG/FNJ3UxhqUsNUPFhY+OhU+8AzOFplaWJwjFXKFa1MocwJFg2UjiGpvf8ADLXuvjjTxVDBHglJb+FTWofc1vVMIP6kzOPJpURE7joEREAREQBML3uqum0a7gkMtW4PqFvdabpMh232eLxGHxdIdx6tOlWX7DhgBf7rJax8JhnVpGeTgid8doCpXdUACrYNb6zAWufAcAPA9ZfPk5q9jg1DKb1GZ1tzzWAB6XCg3OkziiKXa1XrkkK7fRi96hLHS/IDmeM1LZlYVKFNsoUMinKOAuBoPKYY3UrM4vdnXjNjLVIq4twwuoVATkQMQAB9okkAsfUBJapXpUaZYZQgBItbWwJsPUp9kjE2cldCjM6lSp7rWvY3VrcL3GunETxxuwKS0lSviqgpKdAzIoub/Wygniec7U7VnQtklV2pRpU1qEgBlDjxDMuvtqD2mRm9O2qBoMBVViHpE5bsAFqoTcjQaA8Z+0KOzlC3qUXyiy9pVD2HQBmIHqnDvlisO+EdVrUm1p5aastj9Io4A3OhMhvRpCP1KzOTbOWvxJPPnOWoO41iDx4frSWw6izaD/afV6WtrynHiKS9gWyjMFuDaxvntx56Tmo9vyV/sjt38AK1QoSQLE6C57qA2lo/qXTte9Xjb/Z/at9qV7dLGJSrFqhsuVlv4sgAl8O8OFyW7dfS6n7V/hLQSrZh8mU1P6TPdvYEUaopgkgWOosdUv8AnP3ZxtTBJt0vz0HCeu9WMSriM6G6nKAetksffPbYdJTSzEAtZhci50pi1jy4yq5Zu2/CLZ+qo1168jz9U1ncSqGwxZTcZzr5IgPvBmZ0h9Fw+q/1fvfal7+T3F0aeGOZ6SMahJBYAnQa2J8ZfFycnzKcP2XSJzUdoUnOVKtNj0V1J9gM6Z0HliUz5UVD4QqurI6ubcgLg36aNf1S1Y/E5F09I6L59fIcZWtr1xToVXID2RiQ319OB8+Exyy1RSb1RnO5u0BSrgMoIa4U21ViNLHoeFvLpPrcqo77RoMSSxdix/C15zGlT7WjUoNZWqoOzJ71Nsw0+8vQ+qTm7ZTB1quKqjQVXo0F5uxezN+qq8T42nLBbRiuTX4iJ6B0iIiAIiIAImGbCxZweNKOL0+07Oqp4EB9D5qQGB8JucyT5StmJ85epRIL5VNWn9YaaVAPrLawNuBGvGYZ1pSXRnk+5W956gbF4gqAB2rAAfdNvymo7IwxpUadJhZkRVYeIAmcbDSm2IqYisR2dEdsV51DcZVHmzLLlunt84oOah+luxI5Zb923lcr+ETnjXJmiz4KqFqAkgCxBJNhyOvs98qPyiYmpXr0qdJS1Kmpcsuqs7XAGnGwH+KSu8iXwtc8lRfa1RfyB9soVHZtVqZrLQY0Re9SwtobGwvcgE8bW0PQzXyfjR63wMSr2Nrmtn1/R9T+yP7InPjqLU1DOhAzJyFz3hoPGe+B2ZVrFhRpGoVAJtYWubC5OnXTwM58XhyjZHXKyuoII1BDiUX7PVb5Wj7o4sgECkxPe+sLC/XynLW2gvYshVw1rA8VNnv++deG4t5t/lkc/wDq2/F/mljPTf7PHZeDao9OmAQapABZhb0b8gSNBLGNxKv2qX7TfwyH2arGrhQl8xdQLcdUPCa3V3df5uLO/bjUnO1j93jb1yYxu9GebI4+L8kr/t/6MUr0zndcpPZO6khhYlbg8eI0nXsraKJRy2ZmN7AcNVA19hn4yEVMUCCCKtS9+N9b38b3nzsv/Vj+fqiVRrLen9yRp4k5MvZngwvm01NzpaeeFXPmyoTYgG4uR3R+6etD0T+L4meVFLmwFySoAAuSSqgADmSTaQyYbb19/wCDqoirSdKtNGzU3V7BdWCnVeHMXHrmzUdp0mVW7RBcA2LAEXHAi+hmO47ZFaiAa1E08xIF7G9vIm3WedLZtVqZrCgxoi/0lhbumx0ve1762toZeE3G1RjnwRzU7S/k1jaFcO4ysGAXiCCLsTfh+qJE7dw5qYeqg4sjBQOZtoPbacW6CWwyHq1Qfst/3H2Tm3w282GNHsz9Jmz25ELoQfA3t/4kSd7Z4WeHhNxfRSt0KirjcOXAI7QAg/e0HsJB9U6Np4s4zHKqCyGqEpqOCrn1PmdWJ8Z57fppTrpXokdnWArKvNO8cynydWEn/kz2YgxKvWIFTKxpU+dubt9kWNhfje8zim34fkwS6NYiInedIiIgCIiAJlXyrYZ6eKpYhCVzIAGHJkJ5+TD2GarIzeLYtPF0TSqac1YcVYcCPhboZnkj5RorJWjDNqY7tWD5QjFAHCgBWI+sANBfum3USy/JvROerUtoFC+ZJvYeOnvEgtp7CqUmYApWVSQWpHNa3HMvpIfMT1OOC4FKdNirduzVLGx0AyEeH5rOLads5+9mp70YfJs+sD6RylvPOvwFh6p77tUgdmUF4XwyD20xfz4yE2Hjqm0tm1KWZe3UqhZr2axVgxsOYBHmJ14DZu06VFKK1MHlRAguKt7KLC/jYTsi+1xR6MHGWFK63f8AxHN8lS/Q1je/0g/yL++Vj5S7pjGbjpTYCwsDbn+zLVu9sLH4RGSm2EYM2Y5u16AcgOk4N4Nzcbi6hqO+FUkAd3tbWF+o8ZVp+CVHXGcFnlNy0yjI1Tkyi9z6P89ZwVHfvL3TqRzHOX4fJ/i/7TDf4/4ZzN8mmL1+mw+pJ+vz/DM1CX2Ot/Iw9SX9/RUPk5p32jhteDnr9hv3T+hplWwfk3xeGxFOuKuHc02vlOcX0I4hehPWX3Pjv7PC/wDyVf8A85tjTitnB8yUck04tPRhe/FK2PxAB41XPPm5njhKjhBbKBa/U8P+kvW1/kzxdevUrGth1NR2e3fNsxJ4lfGflP5McUFC9th9Bb6/8MzcJXwdsfkY/BJyRW1z2AzLrf6vl++Sm4gLY6lm5VDy0OWm1j/hk5/UDF/2mG/x/wAPhPXY24+Mw9Vaq1MMzKzMAe0t3gRrZfEyIwlfAyZ8Lg0pK6ZN/Kap+aA3taovIdD7JI7LpAbOpqBp81XTzpf9ZF7d2RtDFUuyqHBqtwbr2t9L9Qes+qOztprRWiKmDyqgQaVb2C5fbabb8m6PPpetR8lab/g+dyMPnwAA9IO5XzB/PUeuUz5SEPa0n5FGHkVbUeessG18RV2Zs4Uc69tUdwrJeyqdSRccQLDzMpYxQbAMrtdlrgpc3PeBLerifMzmyNUo90cnzJxllk19yO2fjjSbPlDFVITMAQhP1rHQ2uSB1Mu3yT4VnxFbEMSbLlzHmzkE69bL75VNlbBes6qzJRDEANUNi1zYZF9JzryFvGbZsDY9PCUVo0+A1LHixPEn+eknDBt2+EYY4tskYiJ2G4iIgCIiAIiIBlPymbvNSq/O6VwjkZ7cUfr5N8b9ZQ2a5ueJn9AbcUFVUgEFtQeB7rTNd5d2MLSUVO2ehnZgBkZ0uOVxqvlrOLLj+p0YTjvR47jbVbDYfHVkAJRaJAPC5crr7Zpe7O8FPGUs9PRho6Hih/MdDMk2DjqVP5xhqjA0sQoXthmshW5RiCActzrpcWnju/tCpgcWrHu2YLUHJkPHzFjmB8BJx5PGvsIyqjeIlOxO/tOjiqmHr0yqqwAqKbixAILDiBryvLBjdrItMOjBgy5lINxl+0T0nUpxZsmmdWKxapx4ngBxP89ZG1toOeBCDwsT6ydPd65C/wBIFmLKj1FIINUW1IPBQdCOhGk+u1cnKUcKw46dy6fWt6RvfQTGWRvghpne2vEsfNifznx2K/ZEjqeKqKhzA5ie4LeAsOGmtyL9NZ9VK7m1qdTMLG7KLaCx4G/WZkeDJNGI9FmHrPwOk6aW0nGjWcexv3H3SDo4kogFQMpNgqjLfQKCF5HUn1Qa4ZmJVwApDZgO7my6C1zyJMspNEqLRbcNilf0TqOIPEeYnvKZg8Q2dBYgntCCD6IBFiRa9j4+yWKjtVQjGqyplF2JNgQOY/dNo5L5J40yRkLvRvFTwdLO/ec3CIOLH8gNLmRGC39p18UlChTJQls1RjbRVJJVeNtOdpnG18XV2hjCVuxdstNeSqDp5C2pPnKTzJL6Skp60Sm/e02xFLA1XABenVJA4XzgG37MqOY6a8OEsm9mLoscPhqLXTDp2bVfqsWIzEAakAg+clt2d18LVRqvavWyMgIKFEuWGmuraHrznPJOUmZNWz1+THd41KnzyqO6l+zvxZvteQHvPhNTkZsQABwBYAiwHLuj90k514opRN4KkIiJoWEREAREQBERAODbQ+jzWJykGw6cD7A1/VOLDYSliaNSjUAZCeHS4FiOhDA+yTbqCCDqDoZAtSai9xoToG5OBwDeI9vSZT07KvmzOtv/ACf4mixNFTXp8itsw/WXn5j3SJq4CtTQfOsPVFIaB8pDJfkpOlvunTpabVS2qPrqV8R3h7tfdKhvpsepiGzYfE1LNYPSYuE8xpb1azGeOKVxM5RXKIPbGyVxlCjWw1ZatVESlVX0WYDRWKngwHH3E2lq2HsxcPRWmupGrHqTxPlecm7m7qYUX9KoR3n/ACXoJ97w7aGHphgAS3okmwPW3NvULdSJX8kfkli3Dx4DmfIc50UsDUbkFH3uPsH5kSobP2jtDFD/AEKkKNM8a9SxZtftWtbwVfXJBdz8cdX2nUDfdzW/zD4S8VfTZZFnXY45uevdAH77z7bZCEWLMfWP3SoVqW18H3ldcZTvqCLt7NG9hMk9pb80sPTHbIRiCNaCsrFT95hovx8JonDtUWtdk0dkAXyuwv1Cn4ATwqbPqDhlby0PsOnvlEXbW1NoH/R1NKlfitlHrqNqT+r7J009x9onvHHWb/3Kp98ral/jFlbT4Rab62Nweh0P8+M5tpYFK9NqdQXVvaDyI8RK9jhtTCrasPnNK47yG7rqODZcwvw1Bkxs7aDmyYhBSq5Q2XMp0PC4Bup8CJmyCA2ZsBMJRxNSviER2VqSHiQrcSq8Wdl4AcOvGVjDYetUV1wdGqafBiouzeDsNPwjTrfjND3h2GmKp5W7rrfI/wBnw8QdLieG5GxGwpzV8S4tfLSUv2ev1jyJ8JCjbS6Iq9Fb3e+T7EVmBrg0KfO9s58FXl5n2GaVicLTw9BKVNQiAiw8u8ST6tT4zrqbUQejdj4D8zYSNqK1dxyy9OCXtqftNoLfyZsoxiqjyXSS4O3YZujNrZmNr/d7vxBklPijSCqFXgBYT7m0VSouuBERJJEREAREQBERAE+alMMCGAIPIz6kdtbaZogWpM976gqAPMsRaQ3S2Q3R+Vdlgaq5UdG1A+B98gsXtjC0/TxlHTkoLH2KxnNtPex7HvpTHSn9I/7R7i++UY7UZnY0aaqSbmo4DufEsRYeoCc8pR6MnKPRYNp74XBGFovUP9pUW4H6tNeP4vZO3Ym5z1h87xVQV6zLdEe+QG2gqaXsPsiwHjIbY+NqCopq1XfzY2HkvCadsVr0/WfyiCUmIVJlAbbu1cGzCvQ7VL8luoHRGT0R4MJ7f/1E2t80Ob9f/tvNIiaeuS4kX8X0zK6+3dqY7uUaLUkPNQV08ajflaSexPk4FNTUrMtStYlUIJpBuWfgX18vXJ/euugNNDiDRdvQANuDobi2pawKheBz6i15BfPXyWxFY0g1GmGuxAGIbtw4zcVy2RtLWyJbjqWJXctjw+5w4jaO18G7F6Yq0+QVM1MAfZyWZBbrPRPlQbg2DObwc/AreTe71eua9MMzOLYntCeaq1L5uxH1SyEt+J5bo9clxIeL6Zmz7w7Uxndw2G7FT9exBH43sPYLzowO5nzWnUxVVxWxKqWTNmKB+p+s7TQZH7ba1P1j84ePtuw49szfZm9VVBbFUKlvtotvahsp/CVliwW8GGqejiqSnpUDIffofUZVtr4t2qMadR6f6rEA+YvaRjbTYOvbolSxuHACuLHiHH5gzBNGSkjXsPs4MAxqZlOoyaA+u5PstJGlTCiygADkJSNmb1vYWqI46Ve437Y7p9YEtOx9pNWBJpFALa5lYN5FTN4Sj0axlF8EjERNS4iIgCIiAIiIAiIgCeWJw61FKOoZTxBnrOLae0lormcHXgbG34iAcvmZDqtkP8lS3i3LprTeolfslAJOfVR6xr8ZQt28SEq95A4ZSLEkajW+nkZYN7cbWxTAPWoU6QOiioD6yFuzH1TkwW7bKO1C1mCi+coKaD1Oc7DXkJzNK/pRg0ukdGPxVG1zhz+Gow/KRlPeBV0VsYg6LidPeskcXkslwpGUBgdLnOSb9O7peQooUL8QQWQAkkFQ61PSF/qt2dzw08ZAO9d6f0+PH++Q/FZ9jew/3nHftUT+UjMLgqTdncek5VrNwUFRm46X73Ln4T7pbLpMVGY65CdbXDBL5DY8Cx7ra+wybYtkn/W0/wB6x3/B/dH9bT/esd/wf3SEoYOm3ZCzg1QwBzAhSGKi4y6i4F55YXCI+U3IBqZTqO4LA5m08T+yY8mLZPnew/3rHe2j+6fJ3p/9Tj/26Q/KQ9bA0+0NNSbhC3H0jkBC8Brx69OM+k2ehQEXDGmTYn6wqhenCxJtxi2LZIvvKD/t9oH/AHyj4Cc9bblNtGOLcdGxP/bPBsBSysVIN8pp5m43puSDqCCGS3rHWfNWnQsCuXjfKSfRYA248UKuPHMsWxs7cHtChywxP61Vj+QkdtjEK9S6oKYAAygk+vXznUadK30bL6Ttx1ylUKqfEHOvqkhU3XZqa1TTrqGUNnULUX9lTnX2GRTZFMtu7m5tE00qNW7ZSARl7qnz5/CXOhQVFCooVRwAFgJlW6mMq4ViKeIotTJ1RmK/4WAZT6vbNN2ZtAVlzKrAdSCAf1SQMw8bTbG49LZrDx6OyIiamgiIgCIiAIiIAiIgCDEQDnTA0g2YUkDfaCrf22nntfCGrRamDbNb4g/lOyJFCjOto7qPa1qvqRW+D3lWxG6zAm7VR54av8QDNuiZ+pGfrRhDbA/Sj10q4+NOeZ2H+mpesVR/yTe4j1IetGB/0N+no+1/4I/ob9PR/ab+Gb3l8IyjpI9SHrME/oX9PR9r/wAE/RsP9NT9Qqn4JN6yz9k+pD1owddg/pCf1aGIP/1zopbru3Dtj5Yar/zWm4RHqQ9aMl2buNVJ1WsB1KU1+NS/umm7GwZo0UpE3yi1/XO2JeMFHgsopHk2GQnMUUnrYX9s9YiWLCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAf/9k=",
+    "university_type": "Private",
+    "city": "Chakwal",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 215,
+    "university_name": "Al-Ghazali University",
+    "abbreviation": "AGU",
+    "official_website": "https://agu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbmktckzimScmjdWIMuHOsetJ26GzWHYgsBQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 216,
+    "university_name": "Multan University of Science and Technology",
+    "abbreviation": "MUST",
+    "official_website": "https://must.edu.pk",
+    "logo_url": "https://talloiresnetwork.tufts.edu/wp-content/uploads/MUST-Logo.png",
+    "university_type": "Public",
+    "city": "Multan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 217,
+    "university_name": "Begum Nustrat Bhutto Women University",
+    "abbreviation": "BNBWU",
+    "official_website": "https://bnbwu.edu.pk",
+    "logo_url": "https://bnbwu.edu.pk/wp-content/uploads/2020/12/FINAL-e1606897051765.png",
+    "university_type": "Public",
+    "city": "Sukkur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 218,
+    "university_name": "Al-Kawthar University",
+    "abbreviation": "ALKAWTHAR",
+    "official_website": "https://alkawthar.edu.pk/",
+    "logo_url": "https://media.licdn.com/dms/image/v2/D4D0BAQEIcotJF92Iag/company-logo_200_200/company-logo_200_200/0/1719222700400/al_kawthar_university_logo?e=2147483647&v=beta&t=1BEyHBbA5zrKMyMxya29XtcC9S8C_aMT8WLmJk7RgUA",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 219,
+    "university_name": "Punjab Tianjin University of Technology",
+    "abbreviation": "PTUT",
+    "official_website": "https://ptut.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVkxmtE4K5QGbf2_fSOZZkYtlxCu1WbHekGA&s",
+    "university_type": "Public",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 220,
+    "university_name": "Benazir Bhutto Shaheed University of Technology and Skill Development",
+    "abbreviation": "BBSUTSD",
+    "official_website": "https://bbsutsd.edu.pk",
+    "logo_url": "https://admissions.bbsutsd.edu.pk/assets/images/logo.png",
+    "university_type": "Public",
+    "city": "Khairpur",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 221,
+    "university_name": "Punjab University of Technology-Rasul",
+    "abbreviation": "PUTRASUL",
+    "official_website": "https://putrasul.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVd6Yowm2_AGfnS8KKthLy1maKT40R601z6A&s",
+    "university_type": "Public",
+    "city": "Mandi Bahauddin",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 222,
+    "university_name": "International Institute of Science, Arts and Technology",
+    "abbreviation": "IISAT",
+    "official_website": "https://iisat.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR3-fx9uchM2qnz5Q8GDEgL7D9gbTkGela-A&s",
+    "university_type": "Private",
+    "city": "Gujranwala",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 223,
+    "university_name": "Rashid Latif Khan University",
+    "abbreviation": "RLKU",
+    "official_website": "https://rlku.edu.pk",
+    "logo_url": "https://rlku.edu.pk/images/rlku.png",
+    "university_type": "Private",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 224,
+    "university_name": "FATA University",
+    "abbreviation": "FU",
+    "official_website": "https://www.fu.edu.pk/",
+    "logo_url": "https://www.hec.gov.pk/english/universities/PublishingImages/Fata%20University.jfif",
+    "university_type": "Public",
+    "city": "Darra Adam Khel",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 225,
+    "university_name": "Karachi Institute of Technology and Entrepreneurship",
+    "abbreviation": "KIET",
+    "official_website": "https://kiet.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvEvhLgRu1zylhRkAGk0Gpjn1xG5ufzz7jcA&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 226,
+    "university_name": "Emaan Institute of Management and Sciences",
+    "abbreviation": "EMAAN",
+    "official_website": "https://www.emaan.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeDmWlpORM4Lzyo-lK2uVvPjlBJawTkNfPAg&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 227,
+    "university_name": "Women University of Azad Jammu and Kashmir Bagh",
+    "abbreviation": "WUAJK",
+    "official_website": "https://wuajk.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcAU1zmxa6jZYYY8rJC7J0Jkd4zWBOQKNxGQ&s",
+    "university_type": "Public",
+    "city": "Kotli",
+    "province": "Azad Jammu and Kashmir"
+  },
+  {
+    "university_id": 228,
+    "university_name": "Shaheed Benazir Bhutto University of Veterinary and Animal Sciences",
+    "abbreviation": "SBBUVAS",
+    "official_website": "https://www.sbbuvas.edu.pk/index.php",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtHqm9WHzbN6D-frUAcbdbmovpOnpJ6xtCog&s",
+    "university_type": "Public",
+    "city": "Sakrand",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 229,
+    "university_name": "University of Layyah",
+    "abbreviation": "UL",
+    "official_website": "https://ul.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRosXrqWIVrYpKzs6G6mi9GsaBvlXTeJtjbkQ&s",
+    "university_type": "Public",
+    "city": "Layyah",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 230,
+    "university_name": "Metropolitan University Karachi",
+    "abbreviation": "MUK",
+    "official_website": "https://muk.edu.pk/",
+    "logo_url": "https://muk.edu.pk/wp-content/uploads/2021/08/logo.png",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 231,
+    "university_name": "Lahore Institute of Science and Technology",
+    "abbreviation": "LIST",
+    "official_website": "https://list.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUYuNXoTfVCJO-b7MBjP7i76IQcW7pAY2MnQ&s",
+    "university_type": "nan",
+    "city": "Lahore",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 232,
+    "university_name": "The University of Agriculture, D. I. Khan",
+    "abbreviation": "UAD",
+    "official_website": "https://www.uad.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsqzyBm9KbFin9HWZRDRBbKtJyVqnEZWiauA&s",
+    "university_type": "Public",
+    "city": "Dera Ismail Khan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 233,
+    "university_name": "University of Sufism and Modern Sciences",
+    "abbreviation": "USMS",
+    "official_website": "https://www.usms.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4NtRAjHCnfl9YyMtbfXzI3EX4kSRbOQm-zg&s",
+    "university_type": "Public",
+    "city": "Bhit Shah",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 234,
+    "university_name": "Ghazi National Institute of Engineering and Sciences",
+    "abbreviation": "GNIES",
+    "official_website": "https://gnies.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrY-2JL3Xxl3vM0AzC_Ow-PqCeREVv4k1kSw&s",
+    "university_type": "Private",
+    "city": "Dera Ghazi Khan",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 235,
+    "university_name": "The University of Modern Sciences",
+    "abbreviation": "UMS",
+    "official_website": "https://ums.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7aeVaVpytTdA42_7XVvanUSxZmdg5Xpt7kA&s",
+    "university_type": "Private",
+    "city": "Tando Muhammad Khan",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 236,
+    "university_name": "Shaheed Benazir Bhutto City University",
+    "abbreviation": "SBBCU",
+    "official_website": "https://sbbcu.edu.pk",
+    "logo_url": "https://www.sbbusba.edu.pk/images/logo-icon.png",
+    "university_type": "nan",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 237,
+    "university_name": "Malir University of Science and Technology",
+    "abbreviation": "MALIRUNIVERSITY",
+    "official_website": "https://maliruniversity.edu.pk/",
+    "logo_url": "https://pbs.twimg.com/profile_images/1554359996632137729/QGCViz8k_400x400.jpg",
+    "university_type": "nan",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 238,
+    "university_name": "Sindh Institute of Management and Technology",
+    "abbreviation": "SIMAT",
+    "official_website": "https://simat.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiJscyZ_boXS95xuMU5ErMrpLr2beJkIPwdg&s",
+    "university_type": "nan",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 239,
+    "university_name": "University of Art and Culture, Jamshoro",
+    "abbreviation": "UAC",
+    "official_website": "https://uac.edu.pk",
+    "logo_url": "Dangerous Website",
+    "university_type": "Public",
+    "city": "Jamshoro",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 240,
+    "university_name": "Dar-ul-Madina International University",
+    "abbreviation": "DMIU",
+    "official_website": "https://dmiu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuvQ_bufPmg3shptYrUdYrBoGnmq835_m4jA&s",
+    "university_type": "Private",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 241,
+    "university_name": "Pakistan Global Institute",
+    "abbreviation": "MYPGI",
+    "official_website": "https://mypgi.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxqBuSB4S3mDnk_rzhNmGWHzv2n4ifTFo5xg&s",
+    "university_type": "Private",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 242,
+    "university_name": "Al-Karam International Institute",
+    "abbreviation": "AKII",
+    "official_website": "https://akii.edu.pk",
+    "logo_url": "https://lms.akii.edu.pk/uploads/setting/logo_1690201473.png",
+    "university_type": "Private",
+    "city": "Bhera",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 243,
+    "university_name": "The University of Agriculture, Swat",
+    "abbreviation": "UOAS",
+    "official_website": "https://uoas.edu.pk/",
+    "logo_url": "https://uoas.edu.pk/wp-content/uploads/2024/01/UOAS-Logox250.png",
+    "university_type": "Public",
+    "city": "Mingora",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 244,
+    "university_name": "Hands-Institute of Development Studies",
+    "abbreviation": "HANDS-IDS",
+    "official_website": "https://hands-ids.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfIxNGR8ogJCQo9CQ_Od8-LpGRMXwoownCZQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 245,
+    "university_name": "National University of Pakistan",
+    "abbreviation": "NUP",
+    "official_website": "https://nup.edu.pk",
+    "logo_url": "data:image/png;base64,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",
+    "university_type": "Public (Federal)",
+    "city": "Rawalpindi",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 246,
+    "university_name": "Shaheed Benazir Bhutto Dewan University",
+    "abbreviation": "SBBDEWANUNIVERSITY",
+    "official_website": "https://sbbdewanuniversity.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL1DZhuZXMIEjxplpfuAyhsInEoeaPpYbXMQ&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 247,
+    "university_name": "Ibn-e-Sina University",
+    "abbreviation": "ISU",
+    "official_website": "https://isu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFh4ZK8r_Gs2avCxHUbNXJ4i6r2fjgN5koXg&s",
+    "university_type": "Private",
+    "city": "Mirpur Khas",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 248,
+    "university_name": "Saifee Burhani University",
+    "abbreviation": "SBU",
+    "official_website": "https://sbu.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEfP7kP22_nEIOjxSL6Fi-lebjJQeYgzTTwg&s",
+    "university_type": "Public",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 249,
+    "university_name": "University of Makran",
+    "abbreviation": "UOMAKRAN",
+    "official_website": "https://uomakran.edu.pk",
+    "logo_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAQEhAQEBAQERUVFxUXFxUXFxcQEBsVGBUXGBgXGBgYHSghHR4lHhcYITEiJikrLi4uHR8zODMtNygtLisBCgoKDg0OFxAQGy0dIB0rLS0tLS4rLSstLi0tLSstLS0rMSstLS0tLi0uLy0tLSs3LSs3LS0tLS0tLTEtMi0rLf/AABEIAJwAuAMBIgACEQEDEQH/xAAcAAACAgMBAQAAAAAAAAAAAAAABgQFAQMHAgj/xABHEAACAQIDBAYGBQkHBAMAAAABAgMAEQQSIQUGMUETIlFhcYEUMlKRobEjQmJywQc1gpKys9Hh8BUWM0NzosI0U9PxJCXS/8QAGwEAAgMBAQEAAAAAAAAAAAAAAAMCBAUBBgf/xAAwEQABAwMDAgQGAQUBAAAAAAABAAIDBBEhEjFRBUETImFxIzKBkaHBsTNC0eHwFP/aAAwDAQACEQMRAD8A7jRRRQhFFFFCEUUUUIWK8SSBQSxAA4k6D31X7V2vHhwL3d20SNdXY/gO08BVBO0sxzTkHsjH+Gv/AOj3nyqLbvOlmeT2Ci94YMq4n3gj/wAtWk7/AFE8idT5Con9p4iTgVTwF/iajwwEmrBpI4Mhe63+uR9GDpZXb6t76E6d9WRE1gu43P4VbW95xgKDiZJxxkf32+VQ+kf2m95q2ObOYZTcnM0T6AsBqyMBpnX/AHLrxDVGGG61qdG5pGwSZI3A7krGGknPCR/n86kDak6etlfysfhXsZs4giNiLNK+hyKdVjW+mdrforrzWvayRT5yhLW+uB9GTrdUb61uZFx33pTixxsR9sJoY9ouDlSMNtuNtGBTx1X31Zo4YXBBHaNRSnNAQa8xSSR6xNb7J1Q+IqvJFIzzN8w47/7TI5rmz8HnsnCs1TbK22kxyMOjk9k8D4H8PnVxUGPa8XCs2WaKKKmuIooooQiiiihCKKKKEIooooQsVR7w7dXDrZRnkbREHEk6e7+vCTtvaa4dCx48hzvyH9d9KWwIWndsZLqTdY+wDgWHyHcD21Vc8vk8Jn1PCnYNbqP0UzBYJgTLMc8z+s3ID2E7FHxqXkqRRWlGAwBrcWVFwLjcrfhwI0aQ20HMhQTyGY6C501qsbaUyBiytJGb3EqKRY8R02Hzx2++o7zVhKkUsbQzxpLG1ro4DIbG4uD3gGqs7o7LvdMN0De1C74Zx4FGFQeCSmssBZavSoyhWJyIxZ1DWaTDOp6sikEh4L6HKSFBIvlJC2/py9D6Tk61svR316bNk6O/bn6t+zWlraW5Ex6+Dx7hwbqJgHYH/VQBv1g1xoaWBDt3N/ZvoyZs/T57j0fJk6P1+GW+uXjytUBcJhAKdfSYwmWVyYyS7BbLJiXY9ZySQEguLAsQGCgXygBpK7SmcKUVo4xawiRbWHAdNiMkdvuKe41UbM3ImHXxmPcudWEACNf/AFGBb9ULYaCrMbo7LBu+H6dvamd8S5PeXY0AE7IJCtsQBIiyC2o1AIcA8xmXQ2OmlQclS4kiijWGCNIo1vZEAVBc3NgO8k14p7SQLFV3tBN1WbQwHSC66OOB4eRP48qmbubwlyMPObONFY6FiPqt9r5+Nb6Xt58Fa069we2h+y/iDp7qo1MZYfFZ9RyFYgdfyO+nouhUUu7o7c9IQxyH6WO1/tLyb8D3+NMVSY8PAcO6mRY2WaKKKmuIooooQiiiihCxXiWQKCx4DWvdL29+P6OMIp1b5Dh8dfKkzy+HGXcKTG6iAlTb2MfFTBF5sEXxOhPkPlTTBCEVUUWCgAeApX3ehzTgnhGjN5nqj8aahIpUvmGUX15acaX01nwy87uKKojUG9gs2otVdPtqFVZlzvbhlUnMxvZQe3T3a0p4nfqY2EUSKWzXzXJUXAGt7Hn2VolwCoOlY1Ne2NtQ4ZSXOZ9bIurm3yHeagQb2QhUOIVoSe4ul/Ea/CufYjbkmfrKhIJBZfWsWu2Um41N9bGmDY74LFyWkw4j0JLM7OxIAPWY2sfC3CoayThI8ck4IC6Dh5wwDIwYHmpuvvrzhtvxSqxRwygkFrjJccda5rvNthBfC4MMkehLIxCO1usO3L7r2qFBhVOVIc7IV6+ayIzcylvZvwPYeVBddSNSb2AXVcXjkjRpZHUIouTe4t+NKcm/cbM6RJlAvZ5DlB7wvnwJqj2VvBPhsmGIjmiRtc4GcJ7AOo4m44+6rfb+2lRIpsMi9cMSxjUjwK8PHTsoLj2UXz3FwbW35U/Y28jaRYtSG1tIo6jBRckjlz4aaUzIQQCDcHgeItXFZNrzl2ZSqXPqoMkd+0DlerjD7wYyBggmZltZQ2UdYqCpvrz8qA/lDKgbHK6navE0IdWRhcMCD4Gl/BbxSLCJMVGqkWzNfItjf6pFwwNgQe29WuB2xBNH0iOLa6cW07udTwRZWmyNOxylHDzPhJg41aJiCPaXgV8x+FdWw06yIsiG6sAQe4i9c23gjBmEgFhIgbvuND8hTJuFjLxyQHjGcy/cfW3k1/eKyIHeHM6I7dlov8zA9NlFFFaCQiiiihCKKKKELFIG9WIzzsOSWX3DX4k0/wBc0xj55ZG7XY/7jWX1R9owOSn04811O3YTXEnnaMftGoO2pAoMbx3Qk3yko1jx14d1W+6i64gf6fuswqXtDZYfiKuUOadluFTq2FzzZIo2lBhrDDREobZ1cknsNu3TyqGmzFxMkk0LupOoiOjlswyqltMo/DhTVNu32CsYXYzxNmX5A/OrllmmJ98jCTcXsyOPEMk50B1C9ZszC4F+Q14nvpo2BsX6M5URARbMTrrzBNtayu6jO5ZuJN+fHtpli2EeiEUsSTJocrC4uOBt26moG4TYYBq8wwqQbnYe6jMlhxOdePba+nZ4VbQ7GhXKbxMUJCglLBGNyBrx76Wvyg7Ggw8ELR4eKFjLY5VykjITb30h5R2Uh8xabWW9TdIilYHgkX9F1GbdqEuWUQAEnqko62ItbU1V7Z2LJCn0TDJdiF6rqCeN+N+A40fk52Lh8RDK0sEcpEoW7LmIXIDpTBsvYz+jyRlI4/ppSojXIuQkZdO21Ta8usbbqjVUEUeprbkj0tuuZuYnMYKZMtldhorgtqSBwsOY7OFXW1diQw9dh0rXJW3ViZCotfhYgjlV1JunY1MOwiwAYkgd9x7qaByssQGxxlLMW2ZmcNMgdAABHYZLW4639xq02VNI7HIiQqfqoAoq4i3eA5VaYTZYTgK6mRwvBuSqXeKGywH74/ZNeN2JejxUXY4KHzFx8Vqw3pSwhH3vwqmhbI8b+y8Z9zCvP1cuisFuQtyEfBt7rplFFFbqqoooooQqXYe8WHxmcQuCyWzLfWx4MO0Ht7dDarWSZVsWIFyAPEmwFcE9KlwGMd4jlaKR1twUqG1Ru4j+NO+099I8RNgEivlM0LPcWKm9st+ZueWmnfXLhUoqsEEOwQbLpBrmajj4n510yudyxZXdex2HuY1i9ZNmNPutam3Kn7ttlmZfbT4qb/Imma1KGHk6N45PYYE+B0b4GnQDsp3RakSwlt8gpNUyz78rSUrHRjsqRai1bN1WsvOHQDlXHt/cVIuOxQWSRQCugdlH+GvIGuzRCuK7/D/5+K8V/drVaoOAtXpTR4hvwnrHbEGOR4SxVhBhXRjcgP8ASjUdhGh/lSX/AHE2jnydCv3865Ldt73+F6at1ttGSKKdQZHhQRYiMf4pjBvHKg+sV1055m5gXaRvFgsuf0qG3ZmGfwy+tfuteuaGOF1IVE0BLW7e2xVBgdiDARpEGLMYMUzsLgF/ouA7ANB/OkncLFStjsKGkkYEtoXZh/htxBNNm9e2jHFLMwMbzIYcPGerIIybvKw+qTpYcRlXmTZP3B/6/C+Lfu2qDyA5oCswBxhke7Nwf2uy4iMXrXlqTKK8Wq4DhYBGVptRat1qCO2uk2XNKVt5mu6DsX4k3/hVNKOr7vmKn7Tlzysf6/q1q0CPMUX2nQe9xXiZqjxam47ux7XWqxumMDgLodeEkDXsb2JHmDYivRpIwW8LR4qYPrE7t+iQSA3eCAL+F69a+UR21d1mueGkX7pq2ttFcPG0ja2tpwJJNgKKSdo41sVNGtzlMiAcr3YXY+Q07BRVXxnSZbslGQk+VKO/+F6PaGJHJirjwZBf4g1SIStmXipDDxBuPlT7+V3AWkw+IA0ZTG3ipzL8C3upFjFWXmxWTUNLJj73X0FgMUJYo5V4OqsPBgD+NKe2YMs8nY1mHmNfiDWz8me0OkwvQk9aBsv6B6yH5j9GrLebDepKOXVbwPD4/Os/rERlpSW7jK9DSyXIPKo0jvV/sHE3Xom9ZOHenI+XD3VTotew7IwdPWHuI5qe415LpdeaWcE/KcH/ACr00Wtvqmu1Fq04LFLMoZfMcweYNSbV9CZIHtDmm4KzC0g2KxGK4lv9+cMT4r+7Wu3gVxDf784YnxX92tKn2Wp0r+qfb9qnwWMkgcSRO0bjgRobdh5Edxpg/v3i/WyYbP8A9zoxn8b3t8Khbn7KGLxUcTC62dm8Apt/uK1VDCv0nQ26+fo/0s2X51XBcBgrXe2J7yHAEgfjK9Y7GyzuZZnaRj9Y66dg5Adwq53B/OGF8W/dtWjfDZYwmKkiUWWyMv3Sov8A7g1btwfzhhfFv3bUC+sX5UXlppyW7EG32XbXFebVsIrFqvgryxGVrtUDbGKEcZ7T/X9edT5pAoJP8KTtp4wzPf6o4fxrI6tWiGIsByf4ToI9TrnYKIBzPGpuyYc+IhXsJc+CjT4kVHRau91cPcyzHn1F8F9Y+bfKvN9LYZ6tp7DKuTOswq7xkwjR3P1VJ9wrlfEk/wBX50+b34vJDl5sfgNfnYUixCvTVz7uDR2WJUG7gOFZbvxZ8Vhx2FnPgqm3xIoq03Hw+aWaX2QsY8T1m/40U+kZaIeqZEPKrPfnZXpWDlRRdltIn3k1t5i4864xERX0PShvHutAIJJMLhoVlXr2CA5gL5l8wSR3gVZkbcJNVTeJ5huEkbpbYOEnzizBxkZb2vzU+N9POuk7C2muPw7FlCt1kdRyPIi/dY/+q5fBtF9CBH+ovxq23e222HxBmc3WTSWwsACdHsNBY/AmqjZB8jtilU0xaQ1M2UqSjespsfwPgRrWt2q723g86iePUga21zJx07SOIpdMl9RXiupUDqaYgDynIK9HFJqHqtmHxjwvnT9JT6rDsPf301bO2lHOLqbEcVOjD+XfSU7Vp6QqQykqw4EaGtPpddJA3S7LeOPZQlhDsjddIFcQ3+/OGJ8V/drXRNl7zt6s4v8AaXRvNeHu91eMZuzs3GSvOzMXe17SFeAAHV8BXpRMydoLD90Ukgp3kvB2thUf5IsFricQfsxr+03/ABrH9h//AHlrdX/qO7h/5Ke9ibHhwcfRQghbltSWNzxNz4VJ9DTpent18mS/2c2a3vp4ZgA9lx9WTI9w/uFlzz8ruC1w0455o2/aX/lS1uD+cML4t+7auvbb2RDjI+inBK5g2hKm44G48aqNnbn4HCypPHnDJe13JGoINx4E0t7QH6iQAnQ1jRAYyDexH3TTWmedUBLEADyqp2hvBGmidc93D3/+6XsVjZJjdzp7I0X+Z7zVGr6oyIEMyfwqbIC7JwFL2rtQzHKtwnuJ/l3VCRawgrdcKCzaAV46pqHzPJOSVcDQ0YWCjMVRPXc5V/Fj3AXNMuMxUeBgXS4UAKOZP8z8TUfYOByA4iUWZh1Qfqx8dewnifIUsb2bVMsuRTohB77jUDx5nyHKvU9Npv8AxwanfM78LNq5wNlq2/tX0ho7lbhRmAPVDa3UdtQA4UEk6CsnGkDMwTQeyDTlu/u9EYUfEQxtI3X1UArfVV07BbzvTmRGdxN1QY0yEm6n7rYEw4eMMOs13b7z628hYeVFW9Fa7QGgBXgLLNFFFSQuW727CGGxAfVYJXBJAvkYm7qPK7DzHKpeLwT/AOFePD4Yt1An0ss9jdWAUlpGOh1sB5U9bTwCYiN4ZBdWHmDyIPIg61zzD4V8HP6PIUjDsLz2ysYeYV/qA2sba3PG1VXsDTe2Cqrow117YKu929pvhX9DxPVGnRsbHLm1VGsSBflrodOFqmbf2SVvNCLg6ug4jtZR8x51R41Y52mkHqZyz4hwT3LHGg46WFuJsCbaVabF228B6DFXsthmvmK6A2YjiNRry4Gq0zI5WeHJt2PCfFKWH0VKZAdQbitLtTXtjd5Zby4YqrHUr/lv36cD3jQ8+2k7FB42ySo0beydPMHgR3ismSgfCeRytJkocF4kkrQ8p7TWHavFTaLBTUmLHzJ6sjjwZh8jUxNt4n/vP+s38arFFb40rrpHAYJXNI4ViNqznjIfn86wZnb1nZvEk1pjSpCLVGSTKkAF6QVuRa8otbI+s2RFMjeyNT4k8FHeaznl8jtLASTwukgDK93Ci5NgKttj7KMhWaZSFBuiEWJPJ3HyHma37N2GEIlxBVmGoX/KU9uvrN3nyqFvRvOsIaOIZ3A15qo7XPL7vPnbnv8ATukCC0s+T2HCoz1NgQCpG8G0yT0EJGYguW4qka6tI9uQ5DmbeaW+CQoZYZumAsXupjkGY2DWJN1J5g89at8DAkRWY41GWY36bK0ciyAcnsy9xjewI5VHRGxEj4XDpEGYjpsRHcxFAbgqp0Uk8VHFh2A1sSs1jPf/ALCz3jUM7r1utsr0mXMw+iiIJ00aQaqveBxPkOddHqJs7Ax4eNIoxZVFu0ntJPMk6mpdPhiEbbBOjYGiyzRRRTkxFFFFCFiq7bOyo8UhRx3qw9ZW7R/DnVlWK4QCLFcIvgrnawPhpoIsWT0aElGALRkC7CwAvcta97nyr3HEJ26OJWZmJZpn1kte7MEGiDW1tSbgU8Y7BRzIY5FDA++/aDyPfSnjdjy4YOArTwPbNl6s6hTdTpxt4EHmBxqjJCR6t79z7JRYR7KLhdovhLGKQSRkkZGujA8SGQ6q3eND8KvY9qYPGr0cyqCfqyWGvarfwINUGy8SpYytKTIxEMbdVpVDadIw7gQNSdSdTasYjCxSM63ZniU9KI41V5GDkFkjJA6o9a3G4sK5HqA8uQex/SASMtP0U3aG4/PDTFfsSddfJxqPO9UOJ3fxkXrQMw7YyJB7uPwqVg5sZEWGFl6aNWVRYhkYsmcKqudDbiAbg1OG+s8Ry4nCkeTRH3MCD7646KJ+4I/hNbWFvzXCXSCvro6feRl+YrbHMntCmmLf/Cn1klXyUj9qtv8AfrAdr/qj+NJd09jtnJgr2dyPuluJs3qh2+6jN8hVlhtmYl/VgZR2uRGPdx+FS5/yiYJeGc/q/gTVe/5RukuuGw8kpAJ6qs5Cjix4WHfXB0iK/mJP4UHdRZ2I+mVd4XdknWeX9CPqjzc6nytU2fH4TBR6GONe7S58eLH3mue7Q3k2lNh/SguSAtlzi0jDW1ygsAL6XI489ap9sQPh8QpkkM4HRypI3B4zZlIBvYaEW7quxwRQD4bQFUlrXHYG2Mn1Tbj958RjBIuDUqqZczaCWzNlzInGw5nUjuo2Xhnw2LxGGHTQpKCqSMA5LJ1gbsMrZrOLfatXrbuPw8GIMpl6PEKSyukbdG0bKGSKYX6xYG2ZRoLX1FZ2XsXFYwyM7T4XCyMW6JmLSsGOYgA+qL317LaHjTCM85QAb3vc3UPDs+Od4sHD0AcjpWvmhCcVLJbKJPuEHlw1p92LsmLCxiOMX5sx9Zm5sx/DlW/Z+Aiw6LHEgRRyHxJPM95qWam1lsnKsMZbJyVmiiimKaKKKKEIooooQiiiihCKKKKEKj2pu3DOS4vFJ7adU37WHA/Pvqhn2Zi8OQzQjGBHMiOjNFMHYgsSo4g2FwL08g1ilmJpyMKGkHZcrmx8crYaCb6H6VpZ846IZ3e5sDyCjKD31t2ftJsViJo5XcwTLNdSxIRQCysgOgZcq8uddHxmDilGWSNJB2MoYfGqLFbk4B+ETRntR3T4Xt8KX4ZB3SXMdfdIWzuhxmMhQxLHFY5Y1srMEQsqu3FmYjU8eQqZsGKLF9fEYSCHo54EXJH0St0jlGhdSeva4N+OmtG827MWFIaKSe41BLLcEHiCFBvS1ito4mVkMmJncxuMhLXKkHRhp63fUoxyqzfLfVmxW/e2eMOqxPhmMbvdYsP6MFKsAFZj6/C3Zp30+f2hho5HxwCxt0GHzLoFeGV0Icd62kU/dFLe7+6cGLJeeSdmYksQygkljcnq8accJuBs1LFoDKQNDI7yWHYATa3damhThDtTjhKMW24cNHFhsMi411fFIUVndOhebQMiAh8ygWvwtfnVrszZGPlCKkEWDjS4iknCz4xI2N8ijgLG9idbWHi+YTAxQjLDFHGOxFCD4VIJo0qyIuxVBsbdTD4dulbNPNp9LKc76eyOC+XvpgooFdtZNAAWaKKKF1FFFFCEUUUUIX//2Q==",
+    "university_type": "Public",
+    "city": "Panjgur",
+    "province": "Balochistan"
+  },
+  {
+    "university_id": 250,
+    "university_name": "Abbottabad University of Science and Technology (AUST)",
+    "abbreviation": "AUST",
+    "official_website": "http://aust.edu.pk",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/en/2/25/Abbottabad_University_of_Science_and_Technology.png",
+    "university_type": "Public",
+    "city": "Abbottabad",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 251,
+    "university_name": "ABDUL WALI KHAN UNIVERSITY",
+    "abbreviation": "AWKUM",
+    "official_website": "http://www.awkum.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK-njYoS70zssDQtxwiST1fLu_nXuFq3z7A&s",
+    "university_type": "Public",
+    "city": "Mardan",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 252,
+    "university_name": "ALLAMA IQBAL OPEN UNIVERSITY",
+    "abbreviation": "AIOU",
+    "official_website": "http://www.aiou.edu.pk",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8Kpqp_2ZuYixgK95O06zMrULaYHlVqVap7Q&s",
+    "university_type": "Public (Federal)",
+    "city": "Islamabad",
+    "province": "Islamabad Capital Territory"
+  },
+  {
+    "university_id": 253,
+    "university_name": "CECOS UNIVERSITY OF INFORMATION TECHNOLOGY & EMERGING SCIENCES",
+    "abbreviation": "CECOS",
+    "official_website": "http://www.cecos.edu.pk",
+    "logo_url": "https://cecos.edu.pk/wp-content/uploads/2024/07/CECOS-1.png",
+    "university_type": "Private",
+    "city": "Peshawar",
+    "province": "Khyber Pakhtunkhwa"
+  },
+  {
+    "university_id": 254,
+    "university_name": "GOVERNMENT COLLEGE FOR WOMEN UNIVERSITY, SIALKOT",
+    "abbreviation": "GCWUS",
+    "official_website": "http://www.gcwus.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhfzEdH1OmJbdD09GUoj6k9S0qTR1RiK8MyA&s",
+    "university_type": "Public",
+    "city": "Sialkot",
+    "province": "Punjab"
+  },
+  {
+    "university_id": 255,
+    "university_name": "INDUS UNIVERSITY",
+    "abbreviation": "INDUS",
+    "official_website": "http://www.indus.edu.pk",
+    "logo_url": "https://media.licdn.com/dms/image/v2/C4D0BAQHUO0u2pc5zfA/company-logo_200_200/company-logo_200_200/0/1654893785254?e=2147483647&v=beta&t=x4UUR3IQSbB91U1UKdStgKL_3KPMi_eQamVCyS87J4U",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 256,
+    "university_name": "INSTITUTE OF BUSINESS & TECHNOLOGY",
+    "abbreviation": "IBITPU",
+    "official_website": "https://www.ibitpu.edu.pk/",
+    "logo_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFNDwvU1e1kz_Li_iAW3-gUznLjqii9gq6ug&s",
+    "university_type": "Private",
+    "city": "Karachi",
+    "province": "Sindh"
+  },
+  {
+    "university_id": 257,
+    "university_name": "INSTITUTE OF SOUTHERN PUNJAB",
+    "abbreviation": "ISP",
+    "official_website": "http://isp.edu.pk/",
+    "logo_url": "https://portal.isp.edu.pk/Theme/USPlogos/USP_RL.png",
+    "university_type": "Private",
+    "city": "Multan",
+    "province": "Punjab"
+  }
+]

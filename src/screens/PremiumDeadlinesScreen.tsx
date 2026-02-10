@@ -292,7 +292,15 @@ const PremiumDeadlinesScreen = () => {
       try {
         const saved = await AsyncStorage.getItem(FOLLOWED_UNIVERSITIES_KEY);
         if (saved) {
-          setFollowedUniversities(JSON.parse(saved));
+          const parsed: string[] = JSON.parse(saved);
+          // Validate: only keep IDs that exist in current deadline data
+          const validIds = new Set(ADMISSION_DEADLINES.map(d => d.universityId));
+          const validated = parsed.filter(id => validIds.has(id));
+          setFollowedUniversities(validated);
+          // Clean up stale entries if any were removed
+          if (validated.length !== parsed.length) {
+            await AsyncStorage.setItem(FOLLOWED_UNIVERSITIES_KEY, JSON.stringify(validated));
+          }
         }
       } catch (error) {
         logger.debug('Failed to load followed universities', error, 'Deadlines');

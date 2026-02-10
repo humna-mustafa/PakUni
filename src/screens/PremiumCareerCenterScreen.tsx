@@ -269,9 +269,9 @@ const PremiumCareerCenterScreen: React.FC = () => {
     navigation.navigate(screen as any);
   };
 
-  const handleCareerPress = (_career: any) => {
-    // Navigate to career guidance - career selection happens on that screen
-    navigation.navigate('CareerGuidance');
+  const handleCareerPress = (career: any) => {
+    // Navigate to specific career detail page
+    navigation.navigate('CareerDetail', {careerId: career.id});
   };
 
   return (

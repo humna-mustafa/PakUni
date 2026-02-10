@@ -493,20 +493,20 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
               colors={modeConfig['o-level'].colors}
             />
             <View style={[styles.breakdownCard, themeStyles.breakdownBg]}>
-              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Calculation</Text>
+              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Equivalence (Best 8 Subjects)</Text>
               <View style={styles.breakdownRow}>
-                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Total Points:</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>IBCC Marks:</Text>
                 <Text style={[styles.breakdownValue, themeStyles.text]}>
                   {result.totalPoints} / {result.maxPoints}
                 </Text>
               </View>
               <View style={styles.breakdownRow}>
-                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects:</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects Entered:</Text>
                 <Text style={[styles.breakdownValue, themeStyles.text]}>{result.grades.length}</Text>
               </View>
               {result.subjects && (
                 <View style={styles.subjectsBreakdown}>
-                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades:</Text>
+                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades (IBCC Marks):</Text>
                   {result.subjects.map((s: SubjectGrade, i: number) => (
                     <View key={i} style={styles.breakdownRow}>
                       <Text style={[styles.breakdownLabel, themeStyles.subText]}>{s.subjectName}:</Text>
@@ -529,20 +529,20 @@ export const GradeConverterCard: React.FC<GradeConverterProps> = ({onConvert}) =
               colors={modeConfig['a-level'].colors}
             />
             <View style={[styles.breakdownCard, themeStyles.breakdownBg]}>
-              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Calculation</Text>
+              <Text style={[styles.breakdownTitle, themeStyles.subText]}>IBCC Equivalence (Best 3 Subjects)</Text>
               <View style={styles.breakdownRow}>
-                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Total Points:</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>IBCC Marks:</Text>
                 <Text style={[styles.breakdownValue, themeStyles.text]}>
                   {result.totalPoints} / {result.maxPoints}
                 </Text>
               </View>
               <View style={styles.breakdownRow}>
-                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects:</Text>
+                <Text style={[styles.breakdownLabel, themeStyles.subText]}>Subjects Entered:</Text>
                 <Text style={[styles.breakdownValue, themeStyles.text]}>{result.grades.length}</Text>
               </View>
               {result.subjects && (
                 <View style={styles.subjectsBreakdown}>
-                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades:</Text>
+                  <Text style={[styles.breakdownSubtitle, themeStyles.subText]}>Subject Grades (IBCC Marks):</Text>
                   {result.subjects.map((s: SubjectGrade, i: number) => (
                     <View key={i} style={styles.breakdownRow}>
                       <Text style={[styles.breakdownLabel, themeStyles.subText]}>{s.subjectName}:</Text>

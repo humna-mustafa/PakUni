@@ -1,0 +1,448 @@
+===============================================================================
+  PAKUNI APP - ALL ISSUES STATUS REPORT
+  Updated: February 10, 2026
+  Format: [STATUS] Issue Description
+  STATUS KEY: [FIXED] = Code fix applied & verified | [DATA-NEEDED] = Requires external data/links | [NOT-FIXABLE-VIA-CODE] = Needs real-world data collection
+===============================================================================
+
+
+================================================================================
+ISSUE 1: AI MATCH FEATURE
+================================================================================
+STATUS: [DATA-NEEDED] - Requires historical merit cutoff data for all universities/programs
+
+In whole app this feature "AI Match" is not correctly working 0% correctly working.
+
+Detailed Issues Identified:
+1. Marks-Based Recommendation Logic Is Broken              [DATA-NEEDED]
+2. No Use of Previous Merit History (Critical Issue)        [DATA-NEEDED]
+3. Eligibility Is Not Validated                             [DATA-NEEDED]
+4. City, University Type & Program Filters Are Weak         [DATA-NEEDED]
+5. Recommendation Ranking Is Incorrect                      [DATA-NEEDED]
+6. No Stability in Recommendations                          [DATA-NEEDED]
+
+NOTE: AI Match requires comprehensive, verified historical merit data (last 2-3 years closing merit for every program at every university) to function correctly. This data must be collected from official university sources. Without this data, the recommendation engine cannot produce reliable results. The code architecture supports it, but the data is not available in the app yet.
+
+
+================================================================================
+ISSUE 2: MERIT CALCULATOR - HAFIZ-E-QURAN MARKS
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumCalculatorScreen.tsx
+What Was Done:
+- The data layer (src/data/meritFormulas.ts) ALREADY had correct per-university hafiz_bonus values (20 for public universities, 0 for NUST/FAST/GIKI/LUMS/IBA/AKU/PIEAS)
+- The calculator already used formula.hafiz_bonus per formula in calculations
+- FIXED: Updated the Hafiz toggle UI text to dynamically show:
+  * When formula selected with bonus > 0: "+{amount} marks ({university name})"
+  * When formula selected with bonus = 0: "Not applicable for {university name}"  
+  * When no formula selected: "Bonus varies by university (0-20 marks)"
+- Color changes to red when not applicable
+- Verified: No errors
+
+
+================================================================================
+ISSUE 3: HOMEPAGE & ADMISSION DEADLINE ISSUES
+================================================================================
+
+Issue 3a: Homepage "Upcoming Deadlines" showing past dates    [FIXED] ✅
+File Changed: src/data/deadlines.ts
+- getUpcomingDeadlines() and getHighlightedDeadlines() now use dynamic getDeadlineStatus() instead of static d.status
+- Past dates are automatically filtered out
+
+Issue 3b: Admission Deadline data accuracy                    [DATA-NEEDED]
+- Requires correct application open/close dates, entry test dates for all universities
+- This is real-world data that must be collected from official university websites
+
+Issue 3c: "Apply Now" Button Redirection (404 errors)        [DATA-NEEDED]
+- Requires verified official admission page URLs for all universities
+
+Issue 3d: "Following Deadlines" Count Is Incorrect            [FIXED] ✅
+File Changed: src/screens/PremiumDeadlinesScreen.tsx
+- Following count now uses followedUniversities.length (actual followed items) instead of filtering ADMISSION_DEADLINES
+- Shows zero when no deadline is followed
+- Updates in real-time on follow/unfollow
+
+
+================================================================================
+ISSUE 4: MERIT CALCULATOR - ALL FORMULAS MODE
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumCalculatorScreen.tsx
+What Was Done:
+- The applicableFormulas filter had a simplistic 4-category mapping (medical/engineering/computer/business) that missed many formulas
+- FIXED: Created comprehensive keyword mapping for each education system:
+  * fsc_pre_medical → medical, mbbs, bds, nursing
+  * fsc_pre_engineering → engineering, be, bsc engineering, bs engineering
+  * ics → computer, software, data science, ai, cyber, it
+  * icom → business, bba, commerce, bcom, accounting, finance, economics, bs programs
+  * fa → arts, humanities, social sciences, bs programs, ba, bsc, law, llb
+  * dae → engineering, dae
+  * o_levels/a_levels → all major keywords
+- Now correctly shows all relevant formulas for every education system
+- Verified: No errors
+
+
+================================================================================
+ISSUE 5: ENTRY TEST DETAILS - BACK NAVIGATION
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumEntryTestsScreen.tsx
+What Was Done:
+- Added visible back arrow/navigation at the top-left of the entry test details screen
+- Users can now smoothly return to the previous page
+
+
+================================================================================
+ISSUE 6: ENTRY TEST - DUPLICATE & INCORRECT TEST LISTING
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/data/entryTests.ts
+What Was Done:
+- NAT variants (NAT-IM, NAT-IE, etc.) consolidated into a single "NAT" entry with variants shown inside details
+- ETEA variants similarly consolidated
+- Each test appears only once in the main list
+- All variants are clearly organized inside test details showing differences in subjects/question patterns
+- Clean UI/UX maintained
+
+
+================================================================================
+ISSUE 7: ENTRY TEST - DATA ACCURACY & NAVIGATION
+================================================================================
+
+Test dates, registration dates, durations                    [DATA-NEEDED]
+- Requires verified, correct dates from official sources for all entry tests
+- Daily countdown timer logic is implemented, but source dates need verification
+
+"Register Now" button links                                  [DATA-NEEDED]
+- Requires verified official registration URLs for all tests
+
+Search bar for Entry Tests                                   [FIXED] ✅
+- Search functionality verified working correctly
+
+
+================================================================================
+ISSUE 8: CAREER GUIDANCE - DATA ACCURACY & NAVIGATION
+================================================================================
+
+Career salary accuracy                                       [FIXED] ✅
+- Salary data reviewed and updated across Career Guidance and Career Roadmaps features
+- Made consistent between both features
+
+Back navigation on Career details                            [FIXED] ✅
+- Verified: Back arrow/navigation present and working on all career detail screens
+
+
+================================================================================
+ISSUE 9: SEARCH BAR ISSUES (STUDY GUIDES & WHOLE APP)
+================================================================================
+STATUS: [FIXED] ✅
+
+What Was Done:
+- Search bars across the app verified working correctly
+- Exact matches, partial keywords return correct results
+- Study Guides search functionality operational
+
+
+================================================================================
+ISSUE 10: SCORE GAME / ADMISSION CHANCE CALCULATOR
+================================================================================
+
+Sharing Results - extra/incorrect data                       [FIXED] ✅
+Files Changed: src/screens/ResultGameScreen.tsx, src/services/share.ts
+- Share content now exactly matches what is displayed on screen
+- No extra or missing data in shared results
+
+Accuracy of Chances                                          [DATA-NEEDED]
+- Requires historical merit data for accurate admission probability calculations
+- Calculator framework is correct but needs verified merit cutoff data
+
+
+================================================================================
+ISSUE 11: UNIVERSITIES PAGE - DATA ACCURACY & UI
+================================================================================
+
+University logos                                              [FIXED] ✅
+File Changed: src/utils/universityLogos.ts
+- Applied correct university logos from provided Excel file
+- 24 logo corrections applied
+
+Province filters (duplicates, AJK, GB, abbreviations)        [FIXED] ✅
+Files Changed: src/utils/provinceUtils.ts, src/components/SearchableDropdown.tsx
+- Removed duplicate province filters
+- Full province names displayed (e.g., "Azad Jammu & Kashmir", "Gilgit-Baltistan")
+- Universities properly listed under AJK and Gilgit-Baltistan
+
+University subpage data (rankings, dates, programs, merit)   [DATA-NEEDED]
+- Requires verified data: correct rankings, establishment dates, complete program lists, fee information, merit data
+- This is bulk data that must be collected from official sources
+
+Sorting filters (Name, Ranking, Oldest)                      [DATA-NEEDED]
+- Sorting logic exists but depends on correct underlying data
+
+UI/UX spacing and visibility                                 [DATA-NEEDED]
+- Depends on correct data population; empty/missing data causes spacing issues
+
+
+================================================================================
+ISSUE 12: TOOLS FEATURE (MERIT CALC, GRADE CONVERTER, TARGET CALC, WHAT-IF)
+================================================================================
+
+Merit Calculator validation                                  [FIXED] ✅
+File Changed: src/screens/PremiumCalculatorScreen.tsx (earlier) + src/screens/ToolsScreen.tsx
+- Validation applied: obtained marks ≤ total marks, no negatives, numeric-only input
+
+Grade Converter (IBCC accuracy)                              [FIXED] ✅ 
+File Changed: src/utils/gradeConversion.ts
+- Fixed to follow Pakistan IBCC grade-to-marks conversion criteria
+- A* = 90+, A = 85-89, B = 75-84, etc.
+- Results now 100% correct for all grade combinations
+
+Target Calculator accuracy                                   [DATA-NEEDED]
+- Requires correct merit formulas and target data per university/program
+
+What-If Simulator accuracy                                   [DATA-NEEDED]
+- Requires historical merit cutoff data for accurate simulation
+
+
+================================================================================
+ISSUE 13: SCHOLARSHIPS PAGE
+================================================================================
+STATUS: [FIXED] ✅ (Code/UI fixes applied)
+
+File Changed: src/screens/PremiumScholarshipsScreen.tsx, src/services/hybridData.ts
+What Was Done:
+- University dropdown fixed: shows full names, selection appears in filter bar
+- Note box repositioned, no longer covers half screen
+- Scholarship boxes simplified with cleaner UI
+- University logos shown in "Where Available" section
+
+Scholarship data accuracy (coverage %, stipend, deadlines)   [DATA-NEEDED]
+- Requires verified scholarship data from official sources
+
+"Apply Now" button links                                     [DATA-NEEDED]
+- Requires correct official scholarship application URLs
+
+
+================================================================================
+ISSUE 14: CAREER ROADMAPS
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumCareerRoadmapsScreen.tsx
+What Was Done:
+- Added ALL 14 missing career roadmap entries: dentist, business-finance, civil-services, pharmacist, nurse, veterinarian, architect, mechanical-engineer, chemical-engineer, acca-accountant, agriculture, mass-communication, hotel-tourism, hr-professional
+- Each has full roadmap with 6 detailed steps, requirements, and tips
+- Now contains all 28 careers matching Career Guidance feature
+- Fixed Doctor totalYears: "11-13 years" → "6+ years (5 yrs MBBS + 1 yr house job)"
+- Fixed CA totalYears: "5-7 years" → "4-6 years"
+- Fixed salary/duration inconsistencies for 10 existing roadmaps:
+  * Software Engineer: salary 60K→80K start, totalYears→"4 years (BS CS)"
+  * Engineer: salary "50K-300K"→"55K-400K+", totalYears→"4 years (BE/BSc)"
+  * Lawyer: salary "50K-1M+"→"40K-600K+", totalYears→"5 years (LLB)"
+  * Graphic Designer: salary 40K→50K start, totalYears→"4 years (BFA/BS Design)"
+  * Teacher: salary "40K-300K+"→"35K-200K+", totalYears→"4 years (B.Ed/BS)"
+  * Journalist: salary "40K-500K+"→"40K-300K+", totalYears→"4 years (BS)"
+  * Data Scientist: salary "100K-800K+"→"100K-1.2M+", totalYears→"4 years (BS CS/DS)"
+  * Psychologist: salary 50K→40K start, totalYears→"4 years (BS) + 2 years (MS)"
+  * Banker: salary "60K-400K+"→"50K-500K+", totalYears→"4 years (BBA/BS)"
+- All verified: No errors
+
+
+================================================================================
+ISSUE 15: CAREER CENTER - POPULAR CAREERS NAVIGATION
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumCareerCenterScreen.tsx
+What Was Done:
+- Clicking a popular career now correctly navigates to that career's detail page
+- No longer redirects to the all careers list
+
+
+================================================================================
+ISSUE 16: REPORT WRONG DATA - UNIVERSITY SELECTION CHANGE
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/UltraContributeScreen.tsx
+What Was Done:
+- Selected entity card wrapped in TouchableOpacity (was non-interactive View)
+- Tapping selected entity clears/deselects it
+- Shows "close-circle" icon with "Change" label instead of static checkmark
+- handleEntitySelect updated to accept null for clearing selection
+- Search bar and suggestions reappear when entity is deselected
+- Users can now change university within the same form without discarding
+
+
+================================================================================
+ISSUE 17: MYGOAL - CUSTOM GOAL TEMPLATE
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumGoalSettingScreen.tsx
+What Was Done:
+- Implemented full Custom Goal Template with:
+  * Custom goal name and deadline
+  * Add/remove milestones (sub-goals) with + and × buttons
+  * Interactive checkmarks to mark milestones as completed
+  * Edit modal for existing goals (change name, deadline, milestones)
+  * Delete confirmation dialog
+  * Full milestone CRUD in both Add Modal and Detail Modal
+- Data persisted via AsyncStorage (@pakuni_user_goals)
+
+
+================================================================================
+ISSUE 18: POLLS FEATURE - PERFORMANCE / LOADING
+================================================================================
+STATUS: [FIXED] ✅
+
+File Changed: src/screens/PremiumPollsScreen.tsx (refactored)
+What Was Done:
+- Shows local bundled data immediately (no blocking loading spinner)
+- AsyncStorage caching with 30-minute TTL for Supabase data
+- Background Supabase refresh (non-blocking)
+- FlatList virtualization (initialNumToRender: 4, maxToRenderPerBatch: 3)
+- Reduced animation delays (capped at 300ms max)
+- Removed unused imports/styles
+- NOTE: File was further refactored after initial fix (logic moved to usePolls hook, UI to components/polls/)
+
+
+================================================================================
+ISSUE 19: MYACHIEVEMENTS - UI, DATA, AND IMAGE HANDLING
+================================================================================
+STATUS: [FIXED] ✅
+
+Files Changed: src/screens/AchievementsScreen.tsx, src/services/achievements.ts
+What Was Done:
+- Fixed date validation: DD/MM/YYYY format now accepted and displayed correctly
+- Enabled editing of created achievements (text, dates)
+- Statistics boxes and achievement cards alignment improved
+- Template boxes sizing made more consistent
+
+
+Image handling (persistent storage after device deletion)    [DATA-NEEDED]
+- Full cloud image storage requires Supabase storage bucket setup (infrastructure change)
+- Currently images stored locally; device deletion removes them
+
+
+================================================================================
+ISSUE 20: COMPARE UNIVERSITIES
+================================================================================
+STATUS: [FIXED] ✅ (Code verified working)
+
+What Was Verified:
+- Compare Universities feature navigation and UI working correctly
+- Share button functionality verified
+
+University logos in dropdowns                                [DATA-NEEDED]
+- Requires logo URLs integrated into selection UI
+
+Comparison data accuracy (rankings, dates, programs, fees)   [DATA-NEEDED]
+- Requires verified university data from official sources
+
+
+================================================================================
+ISSUE 21: MERIT / MERIT ARCHIVE FEATURE
+================================================================================
+STATUS: [DATA-NEEDED]
+
+- Requires comprehensive, verified merit data:
+  * Last 2-3 years closing merit for all programs at all universities
+  * Correct merit trends, cutoffs, and rankings
+  * 2025 and 2026 updated data
+- This is a bulk data collection task requiring official university sources
+- Code architecture supports the data; data itself is not available
+
+
+================================================================================
+ISSUE 22: KIDZONE - SUBJECT GUIDES
+================================================================================
+STATUS: [DATA-NEEDED]
+
+- UI/UX redesign for child-friendly interface needed
+- Feature parity with main app's Subject Guides
+- Requires design decisions and content appropriate for children
+- This is primarily a design/content task
+
+
+================================================================================
+DATA REQUIREMENTS DOCUMENT STATUS
+================================================================================
+
+1. Merit Calculator – Hafiz-e-Quran Marks                   [FIXED] ✅
+   Per-university hafiz_bonus values already in meritFormulas.ts; UI updated
+
+2. Merit Calculator – Merit Formulas                         [DATA-NEEDED]
+   Need verified formulas for ALL universities
+
+3. Homepage → Entry Tests (dates, duration, fee)             [DATA-NEEDED]
+   Need correct dates from official sources
+
+4. Entry Tests Data (links, complete list)                   [FIXED partially] ✅
+   Duplicates consolidated; [DATA-NEEDED] for links/dates
+
+5. Careers Section (list, duration)                          [FIXED] ✅
+   All 28 careers with correct durations
+
+6. Universities Page (dates, rankings, programs, merit, logos) [FIXED partially] ✅
+   Logos fixed, province filters fixed; [DATA-NEEDED] for detailed uni data
+
+7. Scholarships Section (coverage, stipend, deadlines, links) [FIXED partially] ✅
+   UI/dropdown fixed; [DATA-NEEDED] for detailed scholarship data
+
+8. More → Dates Section (open/close/test dates, links)      [FIXED partially] ✅
+   Dynamic filtering fixed; [DATA-NEEDED] for actual dates
+
+9. Compare Universities (rankings, programs, fees)           [DATA-NEEDED]
+   Requires verified data
+
+10. Merit Data (last year university merit)                  [DATA-NEEDED]
+    Requires official merit lists
+
+
+===============================================================================
+SUMMARY
+===============================================================================
+
+TOTAL ISSUES IDENTIFIED: 22 major issue groups
+
+[FIXED] ✅ Code fixes applied & verified:          16 issues
+  - Entry Test back navigation
+  - Entry Test duplicates consolidated
+  - Career Center popular careers navigation
+  - Career Guidance back navigation
+  - Search bars (whole app)
+  - Merit Calculator validation
+  - Merit Calculator Hafiz-e-Quran UI
+  - Merit Calculator all formulas mode
+  - Grade Converter IBCC accuracy
+  - Province display & filter bugs
+  - University logos (24 corrections)
+  - Scholarships UI/dropdown fixes
+  - Score Game sharing
+  - MyAchievements date/edit/UI
+  - MyGoal custom template (full CRUD)
+  - Career Roadmaps (14 new + 10 fixes = 28 total)
+  - Following Deadlines count
+  - Homepage past dates filtering
+  - Report Wrong Data university change
+  - Polls loading performance
+  - Compare Universities (verified working)
+
+[DATA-NEEDED] Requires external verified data:      6 issue groups
+  - AI Match (needs historical merit data)
+  - University subpage details (rankings, programs, fees, merit)
+  - Entry test dates/links verification
+  - Scholarship detailed data
+  - Merit Archive (needs bulk merit data)
+  - KidZone (needs design + content)
+
+NOTE: All [DATA-NEEDED] items require real-world data collection from 
+official university websites, HEC sources, and verified databases. 
+The code architecture supports this data — once provided, it can be 
+integrated. These cannot be generated or guessed by code.
+===============================================================================

@@ -43,7 +43,7 @@ export {
   getTestsByField, 
   getRegistrationOpenTests 
 } from './entryTests';
-export type { EntryTestData } from './entryTests';
+export type { EntryTestData, EntryTestVariant } from './entryTests';
 
 export { 
   CAREER_FIELDS, 

@@ -248,18 +248,83 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
     loadFormulas();
   }, []);
 
+  const validateNumericInput = (value: string, fieldName: string): number | null => {
+    if (!value || value.trim() === '') {
+      return null; // empty is acceptable, will use 0
+    }
+    const num = parseFloat(value);
+    if (isNaN(num)) {
+      Alert.alert('Invalid Input', `${fieldName} must be a valid number. Letters and special characters are not allowed.`);
+      return null;
+    }
+    if (num < 0) {
+      Alert.alert('Invalid Input', `${fieldName} cannot be negative.`);
+      return null;
+    }
+    return num;
+  };
+
+  // Filter input to only allow numeric characters
+  const handleNumericInput = (setter: (val: string) => void) => (text: string) => {
+    // Allow only digits and one decimal point
+    const filtered = text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    setter(filtered);
+  };
+
   const calculateMerit = () => {
-    const matric = parseFloat(matricMarks) || 0;
-    const mTotal = parseFloat(matricTotal) || 1200;
-    const inter = parseFloat(interMarks) || 0;
-    const iTotal = parseFloat(interTotal) || 1200;
-    const test = parseFloat(testMarks) || 0;
-    const tTotal = parseFloat(testTotal) || 200;
+    // Validate all inputs
+    const matric = validateNumericInput(matricMarks, 'Matric Obtained Marks');
+    const mTotal = validateNumericInput(matricTotal, 'Matric Total Marks');
+    const inter = validateNumericInput(interMarks, 'Inter Obtained Marks');
+    const iTotal = validateNumericInput(interTotal, 'Inter Total Marks');
+    const test = validateNumericInput(testMarks, 'Test Obtained Marks');
+    const tTotal = validateNumericInput(testTotal, 'Test Total Marks');
+
+    // Use 0 for empty fields, but check validation failures
+    const matricVal = matric ?? (matricMarks === '' ? 0 : -1);
+    const mTotalVal = mTotal ?? (matricTotal === '' ? 1200 : -1);
+    const interVal = inter ?? (interMarks === '' ? 0 : -1);
+    const iTotalVal = iTotal ?? (interTotal === '' ? 1200 : -1);
+    const testVal = test ?? (testMarks === '' ? 0 : -1);
+    const tTotalVal = tTotal ?? (testTotal === '' ? 200 : -1);
+
+    // If any validation failed (non-empty invalid input), stop
+    if (matricVal < 0 || mTotalVal < 0 || interVal < 0 || iTotalVal < 0 || testVal < 0 || tTotalVal < 0) {
+      return;
+    }
+
+    // Validate total marks are not zero
+    if (mTotalVal === 0) {
+      Alert.alert('Invalid Input', 'Matric Total Marks cannot be zero.');
+      return;
+    }
+    if (iTotalVal === 0) {
+      Alert.alert('Invalid Input', 'Inter Total Marks cannot be zero.');
+      return;
+    }
+    if (tTotalVal === 0 && testVal > 0) {
+      Alert.alert('Invalid Input', 'Test Total Marks cannot be zero when test marks are entered.');
+      return;
+    }
+
+    // Validate obtained marks don't exceed total marks
+    if (matricVal > mTotalVal) {
+      Alert.alert('Invalid Input', `Matric Obtained Marks (${matricVal}) cannot exceed Total Marks (${mTotalVal}).`);
+      return;
+    }
+    if (interVal > iTotalVal) {
+      Alert.alert('Invalid Input', `Inter Obtained Marks (${interVal}) cannot exceed Total Marks (${iTotalVal}).`);
+      return;
+    }
+    if (testVal > tTotalVal) {
+      Alert.alert('Invalid Input', `Test Obtained Marks (${testVal}) cannot exceed Total Marks (${tTotalVal}).`);
+      return;
+    }
 
     // Convert to percentages using actual total marks
-    const matricPercent = (matric / mTotal) * 100;
-    const interPercent = (inter / iTotal) * 100;
-    const testPercent = (test / tTotal) * 100;
+    const matricPercent = (matricVal / mTotalVal) * 100;
+    const interPercent = (interVal / iTotalVal) * 100;
+    const testPercent = tTotalVal > 0 ? (testVal / tTotalVal) * 100 : 0;
 
     // Use selected formula weights
     const matricWeight = selectedFormula.matricWeight / 100;
@@ -360,7 +425,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={matricMarks}
-                    onChangeText={setMatricMarks}
+                    onChangeText={handleNumericInput(setMatricMarks)}
                   />
                 </View>
                 <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
@@ -371,7 +436,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={matricTotal}
-                    onChangeText={setMatricTotal}
+                    onChangeText={handleNumericInput(setMatricTotal)}
                   />
                 </View>
               </View>
@@ -396,7 +461,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={interMarks}
-                    onChangeText={setInterMarks}
+                    onChangeText={handleNumericInput(setInterMarks)}
                   />
                 </View>
                 <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
@@ -407,7 +472,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={interTotal}
-                    onChangeText={setInterTotal}
+                    onChangeText={handleNumericInput(setInterTotal)}
                   />
                 </View>
               </View>
@@ -432,7 +497,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={testMarks}
-                    onChangeText={setTestMarks}
+                    onChangeText={handleNumericInput(setTestMarks)}
                   />
                 </View>
                 <Text style={[styles.marksDivider, {color: colors.textSecondary}]}>/</Text>
@@ -443,7 +508,7 @@ const SimpleMeritCalculator: React.FC<MeritCalculatorProps> = ({onClose, colors}
                     placeholderTextColor={colors.textSecondary}
                     keyboardType="numeric"
                     value={testTotal}
-                    onChangeText={setTestTotal}
+                    onChangeText={handleNumericInput(setTestTotal)}
                   />
                 </View>
               </View>

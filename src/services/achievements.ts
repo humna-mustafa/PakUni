@@ -175,6 +175,19 @@ export const saveMyAchievements = async (achievements: MyAchievement[]): Promise
 // CRUD FUNCTIONS
 // ============================================================================
 
+/**
+ * Parse DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY → YYYY-MM-DD (ISO format)
+ * JavaScript Date constructor doesn't support DD/MM/YYYY natively
+ */
+const parseDateInput = (dateStr: string): string => {
+  const match = dateStr.trim().match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+  if (match) {
+    const [, day, month, year] = match;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  }
+  return dateStr; // Already ISO or other format
+};
+
 export const addAchievement = async (
   template: AchievementTemplate,
   data: Record<string, string>
@@ -193,7 +206,7 @@ export const addAchievement = async (
     scholarshipName: data.scholarshipName,
     score: data.score,
     percentage: data.percentage,
-    date: data.date || new Date().toLocaleDateString('en-PK'),
+    date: data.date ? parseDateInput(data.date) : new Date().toISOString().split('T')[0],
     createdAt: new Date().toISOString(),
     gradientColors: template.gradientColors,
   };

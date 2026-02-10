@@ -174,12 +174,18 @@ const O_LEVEL_GRADES: OLevelGrade[] = [
 ];
 
 /**
- * Convert O-Level grades to Pakistani Matric equivalent
- * Using IBCC (Inter Board Committee of Chairmen) formula
+ * Convert O-Level grades to Pakistani Matric (SSC) equivalent
+ * Using official IBCC (Inter Board Committee of Chairmen) formula
+ * 
+ * IBCC Grade → Marks mapping (per subject out of 100):
+ *   A* = 90, A = 85, B = 75, C = 65, D = 55, E = 45, F/G/U = Fail
+ * 
+ * Best 8 subjects are considered
+ * Matric (SSC) total = 1100 marks
+ * Equivalent = (Sum of grade marks / Max possible) × 1100
  */
 export const convertOLevelToMatric = (
   grades: string[],
-  subjects: number = 8
 ): {
   totalPoints: number;
   maxPoints: number;
@@ -188,32 +194,38 @@ export const convertOLevelToMatric = (
   totalMarks: number;
   grade: string;
 } => {
-  let totalPoints = 0;
-  let validGrades = 0;
+  // Convert each grade to IBCC marks (out of 100 per subject)
+  const gradeMarks: number[] = [];
 
   for (const gradeStr of grades) {
     const gradeInfo = O_LEVEL_GRADES.find(
       g => g.grade.toLowerCase() === gradeStr.toLowerCase()
     );
     if (gradeInfo) {
-      totalPoints += gradeInfo.points;
-      validGrades++;
+      gradeMarks.push(gradeInfo.percentage); // percentage = IBCC marks out of 100
     }
   }
 
-  // IBCC Formula for O-Level to Matric:
-  // Best 8 subjects considered
-  // Maximum points = 8 × 8 = 64
-  // Equivalent marks = (Total Points / 64) × 1200
-  
-  const maxPoints = subjects * 8;
-  const percentage = (totalPoints / maxPoints) * 100;
-  const totalMarks = 1200; // Updated Matric total (2025 onwards)
-  const equivalentMarks = Math.round((totalPoints / maxPoints) * totalMarks);
+  if (gradeMarks.length === 0) {
+    return { totalPoints: 0, maxPoints: 0, percentage: 0, equivalentMarks: 0, totalMarks: 1100, grade: 'F' };
+  }
 
-  // Determine grade
+  // IBCC considers best 8 subjects for O-Level → Matric equivalence
+  // Sort descending to pick best grades first
+  gradeMarks.sort((a, b) => b - a);
+  const bestGrades = gradeMarks.slice(0, 8);
+
+  const totalMarksEarned = bestGrades.reduce((sum, m) => sum + m, 0);
+  const maxPossible = bestGrades.length * 100; // Each subject out of 100
+  const percentage = (totalMarksEarned / maxPossible) * 100;
+
+  // IBCC Matric (SSC) total = 1100 marks
+  const totalMarks = 1100;
+  const equivalentMarks = Math.round((totalMarksEarned / maxPossible) * totalMarks);
+
+  // Pakistani board grading
   let grade = 'F';
-  if (percentage >= 80) grade = 'A+';
+  if (percentage >= 80) grade = 'A-1';
   else if (percentage >= 70) grade = 'A';
   else if (percentage >= 60) grade = 'B';
   else if (percentage >= 50) grade = 'C';
@@ -221,8 +233,8 @@ export const convertOLevelToMatric = (
   else if (percentage >= 33) grade = 'E';
 
   return {
-    totalPoints,
-    maxPoints,
+    totalPoints: totalMarksEarned,
+    maxPoints: maxPossible,
     percentage: Math.round(percentage * 100) / 100,
     equivalentMarks,
     totalMarks,
@@ -246,12 +258,18 @@ const A_LEVEL_GRADES: ALevelGrade[] = [
 ];
 
 /**
- * Convert A-Level grades to Pakistani Intermediate equivalent
- * Using IBCC formula
+ * Convert A-Level grades to Pakistani Intermediate (HSSC) equivalent
+ * Using official IBCC formula
+ * 
+ * IBCC Grade → Marks mapping (per subject out of 100):
+ *   A* = 90, A = 85, B = 75, C = 65, D = 55, E = 45, U = Fail
+ * 
+ * Best 3 principal subjects are considered
+ * Inter (HSSC) total = 1100 marks
+ * Equivalent = (Sum of grade marks / Max possible) × 1100
  */
 export const convertALevelToInter = (
   grades: string[],
-  subjects: number = 3
 ): {
   totalPoints: number;
   maxPoints: number;
@@ -260,32 +278,38 @@ export const convertALevelToInter = (
   totalMarks: number;
   grade: string;
 } => {
-  let totalPoints = 0;
-  let validGrades = 0;
+  // Convert each grade to IBCC marks (out of 100 per subject)
+  const gradeMarks: number[] = [];
 
   for (const gradeStr of grades) {
     const gradeInfo = A_LEVEL_GRADES.find(
       g => g.grade.toLowerCase() === gradeStr.toLowerCase()
     );
     if (gradeInfo) {
-      totalPoints += gradeInfo.points;
-      validGrades++;
+      gradeMarks.push(gradeInfo.percentage); // percentage = IBCC marks out of 100
     }
   }
 
-  // IBCC Formula for A-Level to Inter:
-  // Usually 3 principal subjects
-  // Maximum points = 3 × 8 = 24
-  // Equivalent marks = (Total Points / 24) × 1200
-  
-  const maxPoints = subjects * 8;
-  const percentage = (totalPoints / maxPoints) * 100;
-  const totalMarks = 1200; // Updated Inter total (2025 onwards)
-  const equivalentMarks = Math.round((totalPoints / maxPoints) * totalMarks);
+  if (gradeMarks.length === 0) {
+    return { totalPoints: 0, maxPoints: 0, percentage: 0, equivalentMarks: 0, totalMarks: 1100, grade: 'F' };
+  }
 
-  // Determine grade
+  // IBCC considers best 3 principal subjects for A-Level → Inter equivalence
+  // Sort descending to pick best grades first
+  gradeMarks.sort((a, b) => b - a);
+  const bestGrades = gradeMarks.slice(0, 3);
+
+  const totalMarksEarned = bestGrades.reduce((sum, m) => sum + m, 0);
+  const maxPossible = bestGrades.length * 100; // Each subject out of 100
+  const percentage = (totalMarksEarned / maxPossible) * 100;
+
+  // IBCC Inter (HSSC) total = 1100 marks
+  const totalMarks = 1100;
+  const equivalentMarks = Math.round((totalMarksEarned / maxPossible) * totalMarks);
+
+  // Pakistani board grading
   let grade = 'F';
-  if (percentage >= 80) grade = 'A+';
+  if (percentage >= 80) grade = 'A-1';
   else if (percentage >= 70) grade = 'A';
   else if (percentage >= 60) grade = 'B';
   else if (percentage >= 50) grade = 'C';
@@ -293,8 +317,8 @@ export const convertALevelToInter = (
   else if (percentage >= 33) grade = 'E';
 
   return {
-    totalPoints,
-    maxPoints,
+    totalPoints: totalMarksEarned,
+    maxPoints: maxPossible,
     percentage: Math.round(percentage * 100) / 100,
     equivalentMarks,
     totalMarks,

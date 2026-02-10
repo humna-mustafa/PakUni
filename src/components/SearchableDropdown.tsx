@@ -896,6 +896,7 @@ const styles = StyleSheet.create({
 // ============================================================================
 
 import { UNIVERSITIES, UniversityData } from '../data/universities';
+import { formatProvinceName } from '../utils/provinceUtils';
 
 export function createUniversityOptions(): DropdownOption<string>[] {
   return UNIVERSITIES.map(uni => ({
@@ -919,7 +920,7 @@ export function createUniversityOptionsWithFullNames(): DropdownOption<string>[]
     id: uni.short_name,
     label: uni.name,
     value: uni.short_name,
-    subtitle: `${uni.short_name} • ${uni.city}, ${uni.province.charAt(0).toUpperCase() + uni.province.slice(1)}`,
+    subtitle: `${uni.short_name} • ${uni.city}, ${formatProvinceName(uni.province)}`,
     universityShortName: uni.short_name,
     metadata: {
       province: uni.province,
@@ -1046,11 +1047,11 @@ export const PROVINCE_OPTIONS: DropdownOption<string>[] = [
   { id: 'all', label: 'All Provinces', value: 'all', icon: 'globe-outline' },
   { id: 'punjab', label: 'Punjab', value: 'punjab', icon: 'location-outline' },
   { id: 'sindh', label: 'Sindh', value: 'sindh', icon: 'location-outline' },
-  { id: 'kpk', label: 'KPK', value: 'kpk', icon: 'location-outline' },
+  { id: 'kpk', label: 'Khyber Pakhtunkhwa', value: 'kpk', icon: 'location-outline' },
   { id: 'balochistan', label: 'Balochistan', value: 'balochistan', icon: 'location-outline' },
-  { id: 'islamabad', label: 'Islamabad', value: 'islamabad', icon: 'location-outline' },
-  { id: 'ajk', label: 'AJK', value: 'ajk', icon: 'location-outline' },
-  { id: 'gilgit-baltistan', label: 'Gilgit-Baltistan', value: 'gilgit-baltistan', icon: 'location-outline' },
+  { id: 'islamabad', label: 'Islamabad Capital Territory', value: 'islamabad', icon: 'location-outline' },
+  { id: 'azad_kashmir', label: 'Azad Jammu & Kashmir', value: 'azad_kashmir', icon: 'location-outline' },
+  { id: 'gilgit_baltistan', label: 'Gilgit-Baltistan', value: 'gilgit_baltistan', icon: 'location-outline' },
 ];
 
 // ============================================================================

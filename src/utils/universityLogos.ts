@@ -11,7 +11,7 @@
 
 // Map of University ID -> Logo URL (exact from CSV)
 export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
-  1: "https://upload.wikimedia.org/wikipedia/en/1/1b/Lahore_University_of_Management_Sciences.png",
+  1: "https://upload.wikimedia.org/wikipedia/en/3/38/Lahore_University_of_Management_Sciences_Logo.svg",
   2: "https://upload.wikimedia.org/wikipedia/en/c/c1/Aga_Khan_University_Logo.png",
   3: "https://upload.wikimedia.org/wikipedia/en/c/c8/University_of_the_Punjab_logo.png",
   4: "https://upload.wikimedia.org/wikipedia/en/thumb/2/22/NUST_Vector.svg/330px-NUST_Vector.svg.png",
@@ -19,22 +19,22 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   6: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/Institute_of_Business_Administration%2C_Karachi_%28logo%29.png/250px-Institute_of_Business_Administration%2C_Karachi_%28logo%29.png",
   7: "https://upload.wikimedia.org/wikipedia/en/e/eb/University_of_Central_Punjab_%28logo%29.jpg",
   8: "https://upload.wikimedia.org/wikipedia/en/e/e4/National_University_of_Computer_and_Emerging_Sciences_logo.png",
-  9: "https://upload.wikimedia.org/wikipedia/en/2/2e/UMT_Lahore_logo.png",
+  9: "https://talloiresnetwork.tufts.edu/wp-content/uploads/UMT-Logo.jpg",
   10: "https://www.validate-network.org/sites/default/files/styles/mt_image_small/public/validate/images/media/quaid-i-azam_university_islamabad.jpg?itok=3eu4d_7a",
   11: "https://crystalpng.com/wp-content/uploads/2022/06/bahria-university-logo.png",
   12: "https://upload.wikimedia.org/wikipedia/en/8/8d/University_of_Engineering_and_Technology_Lahore_logo.svg",
-  13: "https://upload.wikimedia.org/wikipedia/en/9/9d/International_Islamic_University_Islamabad_logo.png",
-  14: "https://upload.wikimedia.org/wikipedia/en/1/1e/UHS_Lahore_Logo.png",
-  15: "https://upload.wikimedia.org/wikipedia/en/5/52/University_of_Lahore_Logo.png",
+  13: "https://upload.wikimedia.org/wikipedia/en/1/1e/International_Islamic_University%2C_Islamabad_%28crest%29.png",
+  14: "https://upload.wikimedia.org/wikipedia/en/3/3c/University_of_Health_Sciences_Lahore_Logo.svg",
+  15: "https://upload.wikimedia.org/wikipedia/en/2/20/University_of_Lahore_%28logo%29.png",
   16: "https://upload.wikimedia.org/wikipedia/en/6/63/University_of_Sindh_logo.png",
-  17: "https://upload.wikimedia.org/wikipedia/en/5/51/Government_College_University_Lahore_Logo.png",
-  18: "https://upload.wikimedia.org/wikipedia/en/2/2a/Riphah_International_University_Logo.jpg",
-  19: "https://upload.wikimedia.org/wikipedia/en/1/10/University_of_Peshawar_Logo.png",
-  20: "https://upload.wikimedia.org/wikipedia/en/e/e4/NED_University_logo.svg",
-  21: "https://upload.wikimedia.org/wikipedia/en/1/14/University_of_Agriculture_Faisalabad_Logo.png",
-  22: "https://upload.wikimedia.org/wikipedia/en/4/47/Bahauddin_Zakariya_University_logo.png",
+  17: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Government_College_University%2CLogo.png",
+  18: "https://upload.wikimedia.org/wikipedia/en/4/41/Riphah-Logo.jpg",
+  19: "https://upload.wikimedia.org/wikipedia/en/thumb/d/de/University_of_Peshawar_logo.png/315px-University_of_Peshawar_logo.png",
+  20: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDpfAR1vUV0KcKyOONGqO2bqQD9bL_aT5F-w&s",
+  21: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCX94SxwQzOwxWn9oPmHw8QgL19QjdTpjHVA&s",
+  22: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSr4ZiSt6phGB7BNoAPnC9kNNOjQV4BOLXOd9rl9Mo_EVF5X0kiOnm8wp3tmfSKDTxtTkNYGPpszTZ4Cs1MRGY5f0&s&ec=121528441",
   23: "https://file.pide.org.pk/uploads/pide-logo-green-300x171.png",
-  24: "https://upload.wikimedia.org/wikipedia/en/8/80/NUML_Pakistan_Logo.png",
+  24: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d5/National_University_of_Modern_Languages_%28logo%29.jpg/225px-National_University_of_Modern_Languages_%28logo%29.jpg",
   25: "https://crystalpng.com/wp-content/uploads/2024/10/IUB-logo.png",
   26: "https://crystalpng.com/wp-content/uploads/2025/07/Iqra-University-Logo.png",
   27: "https://upload.wikimedia.org/wikipedia/en/3/3f/Mehran_University_of_Engineering_and_Technology_Logo.svg",
@@ -89,7 +89,7 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   76: "https://uobs.edu.pk/images/logo/logo.png",
   77: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQKQhxOP0vkHG5XokqfnUtUmlPG-bWH8nweA&s",
   78: "https://upload.wikimedia.org/wikipedia/en/f/f5/National_College_of_Arts_%28emblem%29.jpg",
-  79: "https://upload.wikimedia.org/wikipedia/en/9/91/Mohammad_Ali_Jinnah_University_logo.jpg",
+  79: "https://upload.wikimedia.org/wikipedia/en/8/81/MAJU-LOGO.jpg",
   80: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3wgonjmgg0jBniDlXe3e2Do0DycAENcwdsg&s",
   81: "https://upload.wikimedia.org/wikipedia/en/1/1f/Kinnaird-College-for-Women_logo.jpg",
   82: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThBJUYQwkeoH15C0V4Nxl8XN_YKfV3nYKZIQ&s",
@@ -116,7 +116,7 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   103: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUPQckUd9rtNqVY03HQwFvixWDWf_UJPMQOA&s",
   104: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdXEkG8E7rlFXBCTJerqUkNnowZlyHVIz5pg&s",
   105: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4C472Exo0DXxatWtb8ukPvx6YvvoYt5VqkQ&s",
-  106: "", // "Not have logo" in CSV
+  106: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWpxv1WZzNCOGzcgTAwPvuZgR4NjHUDeFLVw&s", // Faisalabad Medical University
   107: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM4LOkMdbyBeuXHaluup9n1m97Q2bOJqLeiw&s",
   108: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXwtgB1VeDK9_W-3g7WHg3Rek1_nF9h7d1bA&s",
   109: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqdU9owhkdj2Wfh5aAtm4M5GY9B-8SxQeO7A&s",
@@ -180,7 +180,7 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   167: "https://elog.fjmu.edu.pk/Images/FjIcon.png",
   168: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuHtC1Ki0gCxdx-E5SGgAvowCh6LCOcdI1SA&s",
   169: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT7NvLhDhebvssw1wd2MfRiOqfHIBLanCP9qsiLFA4l1CO98PE1",
-  170: "https://images.seeklogo.com/logo-png/36/2/international-islamic-university-islamabad-logo-png_seeklogo-364249.png",
+  170: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-czSvJe9ZFW3dBUQOObMwJLrDRwI4RzFKw&s", // Ibadat International University
   171: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0NhrK4H2NIrpMU_5Cog50vz0srnF46hrrhg&s",
   172: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4M1nuUCvaOI4_8kApuQYWfQyeS9dVlOT9cw&s",
   173: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX-d_WbzaPASH7O9UyjL11C9AG-OlH2WOOjQ&s",
@@ -192,7 +192,7 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   179: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScdHBlFIpfvwKQJh4gPKISI5g0XkXcj1jkig&s",
   180: "https://nfciet.edu.pk/images/preload.png",
   181: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa6QNdkPo0qtaAANpyIb5OcHHo_XKdp-VUAg&s",
-  182: "https://i0.wp.com/www.ubuner.edu.pk/wp-content/uploads/2021/10/uoblogogog.png?ssl=1",
+  182: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyP3m1Op_Cb6j39TBnsA_mwwOAfjahAuCESw&s", // University of Buner
   183: "https://www.hec.gov.pk/english/universities/PublishingImages/University%20of%20Home%20Economics%20Lahore.jpg",
   184: "https://www.edarabia.com/wp-content/uploads/2018/07/university-swabi-pakistan.jpg",
   185: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT3xgwX5EvzpQwT_aooGnK_U_naUyMzqijOmvstoC-R7GnPbjh6",
@@ -203,7 +203,7 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   190: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ8gwVStZIvOOEwi2EwoSBsYrE7hKHSMHiVA&s",
   191: "https://www.hec.gov.pk/english/universities/PublishingImages/Baba%20Guru%20Nanak%20University.png",
   192: "https://upload.wikimedia.org/wikipedia/en/6/64/Aga_Khan_University_Logo.png",
-  193: "https://www.uoc.edu.pk/images/logo.png",
+  193: "https://cdn.moawin.pk/images/branches/2024/12/13/323215454545_U0bNi.png", // University of Chenab
   194: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgKTbV5uYO16XDMOLrMx34P9syN1PB1WizzQ&s",
   195: "https://www.hec.gov.pk/english/universities/PublishingImages/Kohsar%20University%20Logo.jfif",
   196: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Qarshi_University_logo.png/250px-Qarshi_University_logo.png",
@@ -215,9 +215,9 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   202: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFehpp9MYWx3GJQ0oONEFn2TPse2LnXB7qrQ&s",
   203: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTy6P-7lpu4WR6GrvL1T7Vqrn5pYVl8lvPmQ&s",
   204: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtWx6lF-N2PJGuW4HwLb4AQeomPfJ13ui02A&s",
-  205: "", // Data URI in CSV - too long
+  205: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhcmtEzF7Josmljle-h_XHz_Mit71cKXIl3z38DJDbNsp5CwwfcCWyUvlIy943_W6oA0C57kpPN5-f_s1U45cq7Dk&s&ec=121528441", // Aror University
   206: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMMNVJk3i-oZJjQ5WOt6y03RYuMBMMEaHVrQ&s",
-  207: "", // Data URI in CSV - too long
+  207: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnkNK2H2J-0UAntwUwE1Yu8WV9euBYjnKKkH7BqHxoc0s0Bj8CVeX5AB7sVIwbtkdKzh4PYj27U38DZUOJdTPBJEY&s&ec=121528441", // Khushal Khan Khattak University
   208: "https://nhu.edu.pk/wp-content/uploads/2022/01/nhu-logo.png",
   209: "https://upload.wikimedia.org/wikipedia/en/3/3d/SZABUL_Logo.png",
   210: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcoUdm6asNx8h_w973SEk0YDxkFFw41QWUrQ&s",
@@ -255,11 +255,11 @@ export const UNIVERSITY_LOGOS_BY_ID: Record<number, string> = {
   242: "https://lms.akii.edu.pk/uploads/setting/logo_1690201473.png",
   243: "https://uoas.edu.pk/wp-content/uploads/2024/01/UOAS-Logox250.png",
   244: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfIxNGR8ogJCQo9CQ_Od8-LpGRMXwoownCZQ&s",
-  245: "", // Data URI in CSV - too long
+  245: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSARyPIxfShwJmGGjyQ6Vl6Vg-O9eIsmlgnCA&s", // National University of Pakistan
   246: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL1DZhuZXMIEjxplpfuAyhsInEoeaPpYbXMQ&s",
   247: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFh4ZK8r_Gs2avCxHUbNXJ4i6r2fjgN5koXg&s",
   248: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEfP7kP22_nEIOjxSL6Fi-lebjJQeYgzTTwg&s",
-  249: "", // Data URI in CSV - too long
+  249: "https://uomp.edu.pk/logo.png", // University of Makran
   250: "https://upload.wikimedia.org/wikipedia/en/2/25/Abbottabad_University_of_Science_and_Technology.png",
   251: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaK-njYoS70zssDQtxwiST1fLu_nXuFq3z7A&s",
   252: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8Kpqp_2ZuYixgK95O06zMrULaYHlVqVap7Q&s",

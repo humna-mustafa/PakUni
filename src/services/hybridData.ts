@@ -280,16 +280,44 @@ class HybridDataService {
    * Get all scholarships
    * @param forceRefresh - Bypass cache for pull-to-refresh
    */
-  async getScholarships(forceRefresh: boolean = false): Promise<(TursoScholarship | ScholarshipData)[]> {
+  async getScholarships(forceRefresh: boolean = false): Promise<ScholarshipData[]> {
     if (this.dataSource === 'turso') {
       try {
         const data = await turso.fetchScholarships(forceRefresh);
-        if (data.length > 0) return data;
+        if (data.length > 0) return data.map(this.normalizeTursoScholarship);
       } catch (error) {
         logger.warn('Turso scholarships fetch failed', error, 'HybridData');
       }
     }
     return SCHOLARSHIPS.filter(s => s.status !== 'closed');
+  }
+
+  /**
+   * Normalize TursoScholarship to ScholarshipData format
+   * Maps snake_case DB fields to camelCase app fields with sensible defaults
+   */
+  private normalizeTursoScholarship(ts: TursoScholarship): ScholarshipData {
+    return {
+      id: ts.id,
+      name: ts.name,
+      provider: ts.provider,
+      description: ts.description,
+      type: (ts.type as ScholarshipData['type']) || 'government',
+      coverageType: ts.coverage_percentage >= 100 ? 'full' : ts.coverage_percentage > 0 ? 'partial' : 'tuition',
+      tuitionCoverage: ts.coverage_percentage ?? null,
+      coverageLabel: ts.coverage_percentage >= 100 ? 'Full Funding' : ts.coverage_percentage > 0 ? `${ts.coverage_percentage}% Tuition` : 'See details',
+      monthlyStipend: ts.monthly_stipend ?? null,
+      otherBenefits: [],
+      eligibility: ts.eligibility || [],
+      requiredDocuments: [],
+      applicationProcess: ts.how_to_apply || [],
+      applicationMethod: 'online',
+      website: ts.website || '',
+      deadline: ts.deadline ?? null,
+      status: 'upcoming',
+      targetAudience: ts.applicable_universities || [],
+      provinces: ['All'],
+    };
   }
 
   /**
@@ -305,10 +333,11 @@ class HybridDataService {
   async searchScholarships(query: string, filters?: {
     type?: string;
     minCoverage?: number;
-  }): Promise<(TursoScholarship | ScholarshipData)[]> {
+  }): Promise<ScholarshipData[]> {
     if (this.dataSource === 'turso' && query) {
       try {
-        return await turso.searchScholarships(query, filters);
+        const data = await turso.searchScholarships(query, filters);
+        return data.map(this.normalizeTursoScholarship);
       } catch (error) {
         logger.warn('Turso scholarship search failed', error, 'HybridData');
       }

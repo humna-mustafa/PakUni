@@ -21,8 +21,9 @@ import {PROGRAMS} from '../data/programs';
 import {Icon} from '../components/icons';
 import {ComparisonCard} from '../components/ShareableCard';
 import {SearchableDropdown} from '../components/SearchableDropdown';
-import {shareComparison, CompareShareData} from '../services/share';
+import {shareComparison, CompareShareData, CompareUniversityData} from '../services/share';
 import {Haptics} from '../utils/haptics';
+import {formatProvinceName} from '../utils/provinceUtils';
 
 const {width} = Dimensions.get('window');
 const SLOT_WIDTH = (width - SPACING.md * 2 - SPACING.sm * 2) / 3;
@@ -197,16 +198,7 @@ const ComparisonRow = ({
       case 'province': {
         // Format province name properly
         if (!uni.province) return 'N/A';
-        const provinceMap: {[key: string]: string} = {
-          'punjab': 'Punjab',
-          'sindh': 'Sindh',
-          'kpk': 'KPK',
-          'balochistan': 'Balochistan',
-          'islamabad': 'ICT',
-          'ajk': 'AJK',
-          'gilgit_baltistan': 'GB',
-        };
-        return provinceMap[uni.province?.toLowerCase()] || uni.province;
+        return formatProvinceName(uni.province);
       }
       case 'ranking':
         // Show national ranking clearly
@@ -355,6 +347,42 @@ const PremiumCompareScreen = () => {
   const hasComparison = selectedUniversities.some(u => u !== null);
   const canShare = selectedUniversities.filter(u => u !== null).length >= 2;
 
+  // Helper to build share data for a university (mirrors ComparisonRow getValue logic)
+  const buildShareUniData = (uni: UniversityData): CompareUniversityData => {
+    const programCount = PROGRAMS.filter(p => p.universities.includes(uni.short_name)).length;
+    const campusCount = uni.campuses?.length || 0;
+    
+    // Fee range
+    const uniPrograms = PROGRAMS.filter(p => p.universities.includes(uni.short_name));
+    const fees = uniPrograms.map(p => p.avg_fee_per_semester).filter(f => f > 0);
+    let feeRange: string | null = null;
+    if (fees.length > 0) {
+      const minFee = Math.min(...fees);
+      const maxFee = Math.max(...fees);
+      const formatFee = (fee: number) => {
+        if (fee >= 1000000) return `${(fee/1000000).toFixed(1)}M`;
+        return `${(fee/1000).toFixed(0)}K`;
+      };
+      feeRange = minFee === maxFee
+        ? `PKR ${formatFee(minFee)}/sem`
+        : `PKR ${formatFee(minFee)}-${formatFee(maxFee)}`;
+    }
+
+    return {
+      name: uni.name,
+      shortName: uni.short_name,
+      type: uni.type,
+      city: uni.city,
+      ranking: uni.ranking_national && uni.ranking_national > 0 ? uni.ranking_national.toString() : null,
+      province: uni.province ? formatProvinceName(uni.province) : null,
+      hecCategory: uni.ranking_hec || null,
+      established: uni.established_year ? uni.established_year.toString() : null,
+      programs: programCount > 0 ? `${programCount} Programs` : null,
+      campuses: campusCount > 0 ? (campusCount > 1 ? `${campusCount} Campuses` : '1 Campus') : null,
+      feeRange,
+    };
+  };
+
   // Handle sharing comparison (supports 2 or 3 universities)
   const handleShareComparison = async () => {
     const selected = selectedUniversities.filter(u => u !== null) as UniversityData[];
@@ -363,31 +391,13 @@ const PremiumCompareScreen = () => {
     Haptics.light();
     
     const shareData: CompareShareData = {
-      university1: {
-        name: selected[0].name,
-        shortName: selected[0].short_name,
-        type: selected[0].type,
-        city: selected[0].city,
-        ranking: selected[0].ranking_national?.toString() || null,
-      },
-      university2: {
-        name: selected[1].name,
-        shortName: selected[1].short_name,
-        type: selected[1].type,
-        city: selected[1].city,
-        ranking: selected[1].ranking_national?.toString() || null,
-      },
+      university1: buildShareUniData(selected[0]),
+      university2: buildShareUniData(selected[1]),
     };
     
     // Add third university if present
     if (selected.length >= 3) {
-      shareData.university3 = {
-        name: selected[2].name,
-        shortName: selected[2].short_name,
-        type: selected[2].type,
-        city: selected[2].city,
-        ranking: selected[2].ranking_national?.toString() || null,
-      };
+      shareData.university3 = buildShareUniData(selected[2]);
     }
     
     const success = await shareComparison(shareData);
@@ -538,6 +548,7 @@ const PremiumCompareScreen = () => {
           placeholder="Search for a university..."
           visible={modalVisible}
           options={universityOptions}
+          showLogos={true}
           onSelect={(option, value) => selectUniversity(value)}
           onClose={closeModal}
         />

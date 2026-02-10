@@ -553,38 +553,34 @@ const ResultGameScreen: React.FC = () => {
                   style={[styles.shareBtn, {backgroundColor: '#4573DF'}]}
                   onPress={() => {
                     if (results.length > 0) {
-                      // Share ALL results with HONEST messaging
-                      const resultLines = results.map((r, i) => {
+                      // Share only top 10 results (matches what's displayed on screen)
+                      const displayedResults = results.slice(0, 10);
+                      const resultLines = displayedResults.map((r, i) => {
                         const emoji = r.percentage >= 80 ? '🟢' : r.percentage >= 50 ? '🟡' : '🔴';
-                        return `${emoji} ${r.university.shortName} - ${r.program.name}: ${r.percentage}%`;
-                      }).join('\n');
+                        return `${emoji} #${i + 1} ${r.university.shortName} - ${r.program.name}: ${r.percentage}% (${r.status})\n   Cutoff: ${r.program.lastYearCutoff} | ~${r.program.seats} seats | ${r.program.difficulty}`;
+                      }).join('\n\n');
                       
                       // Get honest message based on top result
-                      const topPercentage = results[0].percentage;
+                      const topPercentage = displayedResults[0].percentage;
                       let honestPrefix: string;
-                      let honestHashtag: string;
                       if (topPercentage >= 80) {
                         honestPrefix = '🎉 Strong admission chances!';
-                        honestHashtag = '#StrongChances';
                       } else if (topPercentage >= 60) {
                         honestPrefix = '📊 Building momentum on my journey!';
-                        honestHashtag = '#KeepWorking';
                       } else if (topPercentage >= 40) {
                         honestPrefix = '📈 Room to grow - working harder!';
-                        honestHashtag = '#GrowthMindset';
                       } else {
                         honestPrefix = '🎯 Starting my improvement journey!';
-                        honestHashtag = '#NeverGiveUp';
                       }
                       
-                      const message = `${honestPrefix}\n\n${resultLines}\n\nCalculated on PakUni App! 🎮\n\n${honestHashtag} #PakUni\n\n📱 Made with PakUni App`;
+                      const message = `${honestPrefix}\n\n${resultLines}\n\nCalculated on PakUni App`;
                       
                       shareContent({
-                        title: 'My Admission Journey - PakUni',
+                        title: 'My Admission Chances - PakUni',
                         message,
                       });
                     }
-                  }}>
+                  }}}>
                   <Icon name="share-social-outline" size={20} color="#FFF" />
                   <Text style={styles.shareBtnText}>Share Results</Text>
                 </TouchableOpacity>

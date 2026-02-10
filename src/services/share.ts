@@ -52,28 +52,24 @@ export interface MeritShareData {
   };
 }
 
+export interface CompareUniversityData {
+  name: string;
+  shortName: string;
+  type: string;
+  city: string;
+  ranking: string | null;
+  province: string | null;
+  hecCategory: string | null;
+  established: string | null;
+  programs: string | null;
+  campuses: string | null;
+  feeRange: string | null;
+}
+
 export interface CompareShareData {
-  university1: {
-    name: string;
-    shortName: string;
-    type: string;
-    city: string;
-    ranking: string | null;
-  };
-  university2: {
-    name: string;
-    shortName: string;
-    type: string;
-    city: string;
-    ranking: string | null;
-  };
-  university3?: {
-    name: string;
-    shortName: string;
-    type: string;
-    city: string;
-    ranking: string | null;
-  };
+  university1: CompareUniversityData;
+  university2: CompareUniversityData;
+  university3?: CompareUniversityData;
 }
 
 export interface PollShareData {
@@ -301,10 +297,10 @@ export const shareMeritSuccessCard = async (
   const honest = getHonestMessage();
   
   const breakdownText = data.breakdown 
-    ? `\n\n📊 Score Breakdown:\n• Matric: ${data.breakdown.matricContribution.toFixed(1)}\n• Inter: ${data.breakdown.interContribution.toFixed(1)}${data.breakdown.testContribution > 0 ? `\n• Test: ${data.breakdown.testContribution.toFixed(1)}` : ''}`
+    ? `\n\n📊 Score Breakdown:\n• Matric: ${data.breakdown.matricContribution.toFixed(1)}\n• Inter: ${data.breakdown.interContribution.toFixed(1)}${data.breakdown.testContribution > 0 ? `\n• Test: ${data.breakdown.testContribution.toFixed(1)}` : ''}${(data as any).hafizBonus ? `\n• Hafiz Bonus: +${(data as any).hafizBonus}` : ''}`
     : '';
   
-  const message = `${honest.emoji} ${honest.text}\n\n🎓 ${data.universityName}${breakdownText}\n\n${honest.hashtag} #PakUni\n\n📱 Calculate your merit on PakUni App!`;
+  const message = `${honest.emoji} ${honest.text}\n\n🎓 ${data.universityName}${breakdownText}\n\nCalculated with PakUni App`;
   
   return shareContent({
     title: `My ${data.universityShortName} Journey`,
@@ -318,27 +314,30 @@ export const shareMeritSuccessCard = async (
 export const shareComparison = async (
   data: CompareShareData
 ): Promise<boolean> => {
-  const uni1 = data.university1;
-  const uni2 = data.university2;
-  const uni3 = data.university3;
-  
-  const ranking1 = uni1.ranking ? ` (Rank #${uni1.ranking})` : '';
-  const ranking2 = uni2.ranking ? ` (Rank #${uni2.ranking})` : '';
-  
-  let message = `🏛️ University Comparison\n\n${uni1.shortName}${ranking1}\n• ${uni1.type} | ${uni1.city}\n\n🆚\n\n${uni2.shortName}${ranking2}\n• ${uni2.type} | ${uni2.city}`;
-  
-  // Add third university if present
-  if (uni3) {
-    const ranking3 = uni3.ranking ? ` (Rank #${uni3.ranking})` : '';
-    message += `\n\n🆚\n\n${uni3.shortName}${ranking3}\n• ${uni3.type} | ${uni3.city}`;
-  }
-  
+  const unis: CompareUniversityData[] = [data.university1, data.university2];
+  if (data.university3) unis.push(data.university3);
+
+  const formatUni = (uni: CompareUniversityData): string => {
+    const lines: string[] = [];
+    lines.push(`📌 ${uni.name} (${uni.shortName})`);
+    lines.push(`• Type: ${uni.type.charAt(0).toUpperCase() + uni.type.slice(1)}`);
+    lines.push(`• City: ${uni.city}`);
+    if (uni.province) lines.push(`• Province: ${uni.province}`);
+    if (uni.ranking) lines.push(`• National Rank: #${uni.ranking}`);
+    if (uni.hecCategory) lines.push(`• HEC Category: ${uni.hecCategory}`);
+    if (uni.established) lines.push(`• Established: ${uni.established}`);
+    if (uni.programs) lines.push(`• Programs: ${uni.programs}`);
+    if (uni.campuses) lines.push(`• Campuses: ${uni.campuses}`);
+    if (uni.feeRange) lines.push(`• Fee Range: ${uni.feeRange}`);
+    return lines.join('\n');
+  };
+
+  let message = `🏛️ University Comparison\n\n`;
+  message += unis.map(formatUni).join('\n\n🆚\n\n');
   message += '\n\nCompare more universities on PakUni App! 📚';
-  
-  const title = uni3 
-    ? `${uni1.shortName} vs ${uni2.shortName} vs ${uni3.shortName}`
-    : `${uni1.shortName} vs ${uni2.shortName}`;
-  
+
+  const title = unis.map(u => u.shortName).join(' vs ');
+
   return shareContent({
     title,
     message,
