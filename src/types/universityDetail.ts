@@ -23,8 +23,16 @@ export interface MeritProgramData {
   years: MeritYearData[];
 }
 
+/** Campus-level grouping of programs and their merit data */
+export interface MeritCampusData {
+  campus: string;
+  programs: MeritProgramData[];
+}
+
 export interface MeritSummary {
   programs: MeritProgramData[];
+  /** Campus-based grouping: Campus → Programs → Years */
+  campuses: MeritCampusData[];
   years: number[];
   totalRecords: number;
   trend: 'increasing' | 'decreasing' | 'stable' | null;

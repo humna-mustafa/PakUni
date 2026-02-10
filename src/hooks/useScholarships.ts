@@ -8,7 +8,7 @@ import {SCHOLARSHIPS, ScholarshipData} from '../data/scholarships';
 
 export type {ScholarshipData} from '../data/scholarships';
 
-export type ScholarshipType = 'all' | 'need_based' | 'merit_based' | 'government' | 'private' | 'hafiz_e_quran' | 'sports' | 'disabled';
+export type ScholarshipType = 'all' | 'need_based' | 'merit_based' | 'government' | 'private' | 'hafiz_e_quran' | 'sports' | 'disabled' | 'international' | 'institutional' | 'special';
 
 interface UseScholarshipsOptions {
   initialSearch?: string;
@@ -43,7 +43,9 @@ export const useScholarships = (
     {value: 'all', label: 'All Types'},
     {value: 'need_based', label: 'Need-Based'},
     {value: 'merit_based', label: 'Merit-Based'},
+    {value: 'international', label: 'International'},
     {value: 'government', label: 'Government'},
+    {value: 'institutional', label: 'University'},
     {value: 'private', label: 'Private'},
     {value: 'hafiz_e_quran', label: 'Hafiz-e-Quran'},
     {value: 'sports', label: 'Sports'},

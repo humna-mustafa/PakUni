@@ -176,17 +176,17 @@ export const useUniversityDetail = () => {
 
   const meritSummary: MeritSummary = useMemo(() => {
     if (!university?.short_name)
-      return {programs: [], years: [], totalRecords: 0, trend: null};
+      return {programs: [], years: [], totalRecords: 0, trend: null, campuses: []};
     try {
       return (
         getUniversityMeritSummaryByShortName(
           MERIT_RECORDS,
           university.short_name,
-        ) || {programs: [], years: [], totalRecords: 0, trend: null}
+        ) || {programs: [], years: [], totalRecords: 0, trend: null, campuses: []}
       );
     } catch (error) {
       logger.error('Error computing merit summary', error, 'UniversityDetail');
-      return {programs: [], years: [], totalRecords: 0, trend: null};
+      return {programs: [], years: [], totalRecords: 0, trend: null, campuses: []};
     }
   }, [university?.short_name]);
 

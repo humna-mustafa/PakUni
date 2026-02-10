@@ -580,7 +580,7 @@ const ResultGameScreen: React.FC = () => {
                         message,
                       });
                     }
-                  }}}>
+                  }}>
                   <Icon name="share-social-outline" size={20} color="#FFF" />
                   <Text style={styles.shareBtnText}>Share Results</Text>
                 </TouchableOpacity>

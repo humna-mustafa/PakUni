@@ -15,7 +15,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'school-outline',
     color: '#4573DF',
     description: 'University application process & requirements',
-    guideCount: 12,
+    guideCount: 4,
   },
   {
     id: 'test-prep',
@@ -23,7 +23,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'document-text-outline',
     color: '#10B981',
     description: 'Entry test preparation strategies',
-    guideCount: 8,
+    guideCount: 3,
   },
   {
     id: 'career',
@@ -31,7 +31,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'briefcase-outline',
     color: '#F59E0B',
     description: 'Career paths & job market insights',
-    guideCount: 10,
+    guideCount: 3,
   },
   {
     id: 'study-tips',
@@ -39,7 +39,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'bulb-outline',
     color: '#4573DF',
     description: 'Effective study techniques & habits',
-    guideCount: 15,
+    guideCount: 3,
   },
   {
     id: 'scholarships',
@@ -47,7 +47,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'ribbon-outline',
     color: '#4573DF',
     description: 'Finding & applying for scholarships',
-    guideCount: 7,
+    guideCount: 2,
   },
   {
     id: 'uni-life',
@@ -55,7 +55,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'people-outline',
     color: '#0891B2',
     description: 'Campus life, hostels & activities',
-    guideCount: 9,
+    guideCount: 2,
   },
   {
     id: 'financial',
@@ -63,7 +63,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'wallet-outline',
     color: '#059669',
     description: 'Budgeting, loans & financial planning',
-    guideCount: 6,
+    guideCount: 3,
   },
   {
     id: 'mental-health',
@@ -71,7 +71,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'heart-outline',
     color: '#DC2626',
     description: 'Stress management & wellbeing tips',
-    guideCount: 8,
+    guideCount: 4,
   },
   {
     id: 'parents',
@@ -79,7 +79,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'people-circle-outline',
     color: '#3660C9',
     description: 'Guidance for supporting your child',
-    guideCount: 5,
+    guideCount: 2,
   },
   {
     id: 'international',
@@ -87,7 +87,7 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     icon: 'globe-outline',
     color: '#4573DF',
     description: 'Foreign university admission guide',
-    guideCount: 7,
+    guideCount: 2,
   },
 ];
 

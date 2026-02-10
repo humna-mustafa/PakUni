@@ -109,7 +109,10 @@ export type ScholarshipType =
   | 'hafiz_e_quran'
   | 'disabled'
   | 'government'
-  | 'private';
+  | 'private'
+  | 'international'
+  | 'institutional'
+  | 'special';
 
 export interface University {
   id: string;

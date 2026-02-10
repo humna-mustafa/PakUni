@@ -1,0 +1,1674 @@
+{
+  "aku": {
+    "universityId": "aku",
+    "shortName": "AKU",
+    "status": "available",
+    "admissionUrl": "https://www.aku.edu/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/akaborni",
+      "youtube": "https://youtube.com/@AKUGlobal",
+      "linkedin": "https://linkedin.com/school/aga-khan-university"
+    }
+  },
+  "comsats": {
+    "universityId": "comsats",
+    "shortName": "COMSATS",
+    "status": "available",
+    "admissionUrl": "https://www.cuonline.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/COMSATSIslamabad",
+      "youtube": "https://youtube.com/@comsatsuniversity"
+    }
+  },
+  "dow": {
+    "universityId": "dow",
+    "shortName": "DOW",
+    "status": "available",
+    "admissionUrl": "https://www.duhs.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/DowUniversityOfficial"
+    }
+  },
+  "fast": {
+    "universityId": "fast",
+    "shortName": "FAST",
+    "status": "portal_only",
+    "portalUrl": "https://nu.edu.pk/Admissions/MeritList",
+    "admissionUrl": "https://nu.edu.pk/Admissions",
+    "note": "FAST-NUCES publishes merit lists through their internal portal. Merit data shown here is approximate. Visit the portal for official current merit lists.",
+    "socialLinks": {
+      "facebook": "https://facebook.com/ABORNI.nuces",
+      "youtube": "https://youtube.com/@FASTNationalUniversity",
+      "linkedin": "https://linkedin.com/school/fast-nuces"
+    }
+  },
+  "giki": {
+    "universityId": "giki",
+    "shortName": "GIKI",
+    "status": "available",
+    "admissionUrl": "https://giki.edu.pk/admissions/",
+    "socialLinks": {
+      "facebook": "https://facebook.com/gaborniki.official",
+      "linkedin": "https://linkedin.com/school/ghulam-ishaq-khan-institute"
+    }
+  },
+  "iba": {
+    "universityId": "iba",
+    "shortName": "IBA",
+    "status": "available",
+    "admissionUrl": "https://iba.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/IBAKarachi.official",
+      "linkedin": "https://linkedin.com/school/iba-karachi",
+      "youtube": "https://youtube.com/@IBAKarachi"
+    }
+  },
+  "kemu": {
+    "universityId": "kemu",
+    "shortName": "KEMU",
+    "status": "available",
+    "admissionUrl": "https://www.kemu.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/kaborni.official"
+    }
+  },
+  "lums": {
+    "universityId": "lums",
+    "shortName": "LUMS",
+    "status": "portal_only",
+    "portalUrl": "https://lums.edu.pk/admissions/merit",
+    "admissionUrl": "https://lums.edu.pk/admissions",
+    "note": "LUMS uses a holistic admission process. The merit figures shown are aggregate score estimates. Visit LUMS admissions for details.",
+    "socialLinks": {
+      "facebook": "https://facebook.com/LUMSOfficial",
+      "instagram": "https://instagram.com/laborni_official",
+      "youtube": "https://youtube.com/@LUMS",
+      "linkedin": "https://linkedin.com/school/lums"
+    }
+  },
+  "nust": {
+    "universityId": "nust",
+    "shortName": "NUST",
+    "status": "available",
+    "admissionUrl": "https://ugadmissions.nust.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/naborni.edu.pk",
+      "youtube": "https://youtube.com/@NUST_Official",
+      "linkedin": "https://linkedin.com/school/nust-islamabad"
+    }
+  },
+  "uet": {
+    "universityId": "uet",
+    "shortName": "UET",
+    "status": "available",
+    "admissionUrl": "https://admissions.uet.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UETLahore.Official"
+    }
+  },
+  "uet-peshawar": {
+    "universityId": "uet-peshawar",
+    "shortName": "UET-P",
+    "status": "available",
+    "admissionUrl": "https://www.uetpeshawar.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UETPeshawarOfficial"
+    }
+  },
+  "au": {
+    "universityId": "au",
+    "shortName": "AU",
+    "status": "available",
+    "admissionUrl": "https://www.au.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/AirUniversity.Islamabad"
+    }
+  },
+  "aimc": {
+    "universityId": "aimc",
+    "shortName": "AIMC",
+    "status": "available",
+    "admissionUrl": "https://www.aimc.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/AIMC.Lahore"
+    }
+  },
+  "bzu": {
+    "universityId": "bzu",
+    "shortName": "BZU",
+    "status": "available",
+    "admissionUrl": "https://www.bzu.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/BZUMultan"
+    }
+  },
+  "bahria": {
+    "universityId": "bahria",
+    "shortName": "BAHRIA",
+    "status": "available",
+    "admissionUrl": "https://www.bahria.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/BahriaUniv"
+    }
+  },
+  "fjmc": {
+    "universityId": "fjmc",
+    "shortName": "FJMC",
+    "status": "available",
+    "admissionUrl": "https://www.fjmu.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/FJMU.Official"
+    }
+  },
+  "gcu": {
+    "universityId": "gcu",
+    "shortName": "GCU",
+    "status": "available",
+    "admissionUrl": "https://www.gcu.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/GCULahoreOfficial"
+    }
+  },
+  "itu": {
+    "universityId": "itu",
+    "shortName": "ITU",
+    "status": "available",
+    "admissionUrl": "https://itu.edu.pk/admissions/",
+    "socialLinks": {
+      "facebook": "https://facebook.com/aborni.itu",
+      "linkedin": "https://linkedin.com/school/information-technology-university"
+    }
+  },
+  "kmu": {
+    "universityId": "kmu",
+    "shortName": "KMU",
+    "status": "available",
+    "admissionUrl": "https://www.kmu.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/KMUPeshawar"
+    }
+  },
+  "muet": {
+    "universityId": "muet",
+    "shortName": "MUET",
+    "status": "available",
+    "admissionUrl": "https://www.muet.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/muaborni.official"
+    }
+  },
+  "ned": {
+    "universityId": "ned",
+    "shortName": "NED",
+    "status": "available",
+    "admissionUrl": "https://www.neduet.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/NEDUniversityOfficial"
+    }
+  },
+  "nmc": {
+    "universityId": "nmc",
+    "shortName": "NMC",
+    "status": "available",
+    "admissionUrl": "https://nmu.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/NishtarMedicalUniversityMultan"
+    }
+  },
+  "pieas": {
+    "universityId": "pieas",
+    "shortName": "PIEAS",
+    "status": "available",
+    "admissionUrl": "https://pieas.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/PIEASOfficial"
+    }
+  },
+  "pucit": {
+    "universityId": "pucit",
+    "shortName": "PUCIT",
+    "status": "available",
+    "admissionUrl": "https://pucit.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/pucitOfficial"
+    }
+  },
+  "qau": {
+    "universityId": "qau",
+    "shortName": "QAU",
+    "status": "available",
+    "admissionUrl": "https://www.qau.edu.pk/admissions/",
+    "socialLinks": {
+      "facebook": "https://facebook.com/QAUIslamabad"
+    }
+  },
+  "rmc": {
+    "universityId": "rmc",
+    "shortName": "RMC",
+    "status": "available",
+    "admissionUrl": "https://www.rmur.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/RawalpindiMedicalUniversity"
+    }
+  },
+  "szabist": {
+    "universityId": "szabist",
+    "shortName": "SZABIST",
+    "status": "available",
+    "admissionUrl": "https://szabist.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/SZABIST.edu.pk"
+    }
+  },
+  "smc": {
+    "universityId": "smc",
+    "shortName": "SIMS",
+    "status": "available",
+    "admissionUrl": "https://sims.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/SIMSLahore"
+    }
+  },
+  "smu": {
+    "universityId": "smu",
+    "shortName": "SMU",
+    "status": "available",
+    "admissionUrl": "https://smu.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/ServicesMedicalUniversity"
+    }
+  },
+  "ucp": {
+    "universityId": "ucp",
+    "shortName": "UCP",
+    "status": "available",
+    "admissionUrl": "https://www.ucp.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UCPOfficial",
+      "linkedin": "https://linkedin.com/school/university-of-central-punjab"
+    }
+  },
+  "umt": {
+    "universityId": "umt",
+    "shortName": "UMT",
+    "status": "available",
+    "admissionUrl": "https://www.umt.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UMTOfficial"
+    }
+  },
+  "uok": {
+    "universityId": "uok",
+    "shortName": "UOK",
+    "status": "available",
+    "admissionUrl": "https://www.uok.edu.pk/admissions",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UniversityofKarachi"
+    }
+  },
+  "uop": {
+    "universityId": "uop",
+    "shortName": "UOP",
+    "status": "available",
+    "admissionUrl": "https://www.uop.edu.pk",
+    "socialLinks": {
+      "facebook": "https://facebook.com/UniversityOfPeshawar"
+    }
+  },
+  "abasyn": {
+    "universityId": "abasyn",
+    "shortName": "ABASYN",
+    "status": "available",
+    "admissionUrl": "https://www.abasyn.edu.pk/admissions"
+  },
+  "agu": {
+    "universityId": "agu",
+    "shortName": "AGU",
+    "status": "available",
+    "admissionUrl": "https://agu.edu.pk/admissions"
+  },
+  "aie": {
+    "universityId": "aie",
+    "shortName": "AIE",
+    "status": "available",
+    "admissionUrl": "https://aie.edu.pk/admissions"
+  },
+  "aiou": {
+    "universityId": "aiou",
+    "shortName": "AIOU",
+    "status": "available",
+    "admissionUrl": "http://www.aiou.edu.pk/admissions"
+  },
+  "aiu": {
+    "universityId": "aiu",
+    "shortName": "AIU",
+    "status": "available",
+    "admissionUrl": "http://www.aiu.edu.pk/admissions"
+  },
+  "akii": {
+    "universityId": "akii",
+    "shortName": "AKII",
+    "status": "available",
+    "admissionUrl": "https://akii.edu.pk/admissions"
+  },
+  "alkawthar": {
+    "universityId": "alkawthar",
+    "shortName": "ALKAWTHAR",
+    "status": "available",
+    "admissionUrl": "https://alkawthar.edu.pk/admissions"
+  },
+  "alkhair": {
+    "universityId": "alkhair",
+    "shortName": "ALKHAIR",
+    "status": "available",
+    "admissionUrl": "https://aku.edu.pk/admissions"
+  },
+  "aroruniversity": {
+    "universityId": "aroruniversity",
+    "shortName": "ARORUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://aroruniversity.edu.pk/admissions"
+  },
+  "aup": {
+    "universityId": "aup",
+    "shortName": "AUP",
+    "status": "available",
+    "admissionUrl": "https://aup.edu.pk/admissions"
+  },
+  "aust": {
+    "universityId": "aust",
+    "shortName": "AUST",
+    "status": "available",
+    "admissionUrl": "https://aust.edu.pk/admissions"
+  },
+  "awkum": {
+    "universityId": "awkum",
+    "shortName": "AWKUM",
+    "status": "available",
+    "admissionUrl": "http://www.awkum.edu.pk/admissions"
+  },
+  "baqai": {
+    "universityId": "baqai",
+    "shortName": "BAQAI",
+    "status": "available",
+    "admissionUrl": "https://www.baqai.edu.pk/admissions"
+  },
+  "bbsul": {
+    "universityId": "bbsul",
+    "shortName": "BBSUL",
+    "status": "available",
+    "admissionUrl": "http://www.bbsul.edu.pk/admissions"
+  },
+  "bbsutsd": {
+    "universityId": "bbsutsd",
+    "shortName": "BBSUTSD",
+    "status": "available",
+    "admissionUrl": "https://bbsutsd.edu.pk/admissions"
+  },
+  "bgnu": {
+    "universityId": "bgnu",
+    "shortName": "BGNU",
+    "status": "available",
+    "admissionUrl": "https://bgnu.edu.pk/admissions"
+  },
+  "bkuc": {
+    "universityId": "bkuc",
+    "shortName": "BKUC",
+    "status": "available",
+    "admissionUrl": "https://bkuc.edu.pk/admissions"
+  },
+  "bnbwu": {
+    "universityId": "bnbwu",
+    "shortName": "BNBWU",
+    "status": "available",
+    "admissionUrl": "https://bnbwu.edu.pk/admissions"
+  },
+  "bnu": {
+    "universityId": "bnu",
+    "shortName": "BNU",
+    "status": "available",
+    "admissionUrl": "https://www.bnu.edu.pk/admissions"
+  },
+  "buetk": {
+    "universityId": "buetk",
+    "shortName": "BUETK",
+    "status": "available",
+    "admissionUrl": "http://www.buetk.edu.pk/admissions"
+  },
+  "buitms": {
+    "universityId": "buitms",
+    "shortName": "BUITMS",
+    "status": "available",
+    "admissionUrl": "https://www.buitms.edu.pk/admissions"
+  },
+  "bumhs": {
+    "universityId": "bumhs",
+    "shortName": "BUMHS",
+    "status": "available",
+    "admissionUrl": "https://www.bumhs.edu.pk/admissions"
+  },
+  "cecos": {
+    "universityId": "cecos",
+    "shortName": "CECOS",
+    "status": "available",
+    "admissionUrl": "https://www.cecos.edu.pk/admissions"
+  },
+  "cibes": {
+    "universityId": "cibes",
+    "shortName": "CIBES",
+    "status": "available",
+    "admissionUrl": "https://cibes.edu.pk/admissions"
+  },
+  "cityuniversity": {
+    "universityId": "cityuniversity",
+    "shortName": "CITYUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://cityuniversity.edu.pk/admissions"
+  },
+  "cust": {
+    "universityId": "cust",
+    "shortName": "CUST",
+    "status": "available",
+    "admissionUrl": "https://cust.edu.pk/admissions"
+  },
+  "cuvas": {
+    "universityId": "cuvas",
+    "shortName": "CUVAS",
+    "status": "available",
+    "admissionUrl": "https://cuvas.edu.pk/admissions"
+  },
+  "dadabhoy": {
+    "universityId": "dadabhoy",
+    "shortName": "DADABHOY",
+    "status": "available",
+    "admissionUrl": "https://www.dadabhoy.edu.pk/admissions"
+  },
+  "dmiu": {
+    "universityId": "dmiu",
+    "shortName": "DMIU",
+    "status": "available",
+    "admissionUrl": "https://dmiu.edu.pk/admissions"
+  },
+  "dsu": {
+    "universityId": "dsu",
+    "shortName": "DSU",
+    "status": "available",
+    "admissionUrl": "https://www.dsu.edu.pk/admissions"
+  },
+  "duet": {
+    "universityId": "duet",
+    "shortName": "DUET",
+    "status": "available",
+    "admissionUrl": "https://duet.edu.pk/admissions"
+  },
+  "duhs": {
+    "universityId": "duhs",
+    "shortName": "DUHS",
+    "status": "available",
+    "admissionUrl": "https://www.duhs.edu.pk/admissions"
+  },
+  "emaan": {
+    "universityId": "emaan",
+    "shortName": "EMAAN",
+    "status": "available",
+    "admissionUrl": "https://www.emaan.edu.pk/admissions"
+  },
+  "eum": {
+    "universityId": "eum",
+    "shortName": "EUM",
+    "status": "available",
+    "admissionUrl": "https://eum.edu.pk/admissions"
+  },
+  "fccollege": {
+    "universityId": "fccollege",
+    "shortName": "FCCOLLEGE",
+    "status": "available",
+    "admissionUrl": "https://www.fccollege.edu.pk/admissions"
+  },
+  "fjmu": {
+    "universityId": "fjmu",
+    "shortName": "FJMU",
+    "status": "available",
+    "admissionUrl": "https://fjmu.edu.pk/admissions"
+  },
+  "fjwu": {
+    "universityId": "fjwu",
+    "shortName": "FJWU",
+    "status": "available",
+    "admissionUrl": "https://fjwu.edu.pk/admissions"
+  },
+  "fu": {
+    "universityId": "fu",
+    "shortName": "FU",
+    "status": "available",
+    "admissionUrl": "https://www.fu.edu.pk/admissions"
+  },
+  "fui": {
+    "universityId": "fui",
+    "shortName": "FUI",
+    "status": "available",
+    "admissionUrl": "https://www.fui.edu.pk/admissions"
+  },
+  "fuuast": {
+    "universityId": "fuuast",
+    "shortName": "FUUAST",
+    "status": "available",
+    "admissionUrl": "https://www.fuuast.edu.pk/admissions"
+  },
+  "gandhara": {
+    "universityId": "gandhara",
+    "shortName": "GANDHARA",
+    "status": "available",
+    "admissionUrl": "https://gandhara.edu.pk/admissions"
+  },
+  "gcuf": {
+    "universityId": "gcuf",
+    "shortName": "GCUF",
+    "status": "available",
+    "admissionUrl": "https://gcuf.edu.pk/admissions"
+  },
+  "gcuh": {
+    "universityId": "gcuh",
+    "shortName": "GCUH",
+    "status": "available",
+    "admissionUrl": "https://gcuh.edu.pk/admissions"
+  },
+  "gcwuf": {
+    "universityId": "gcwuf",
+    "shortName": "GCWUF",
+    "status": "available",
+    "admissionUrl": "https://gcwuf.edu.pk/admissions"
+  },
+  "gcwus": {
+    "universityId": "gcwus",
+    "shortName": "GCWUS",
+    "status": "available",
+    "admissionUrl": "http://www.gcwus.edu.pk/admissions"
+  },
+  "gift": {
+    "universityId": "gift",
+    "shortName": "GIFT",
+    "status": "available",
+    "admissionUrl": "https://www.gift.edu.pk/admissions"
+  },
+  "gims": {
+    "universityId": "gims",
+    "shortName": "GIMS",
+    "status": "available",
+    "admissionUrl": "https://gims.edu.pk/admissions"
+  },
+  "giu": {
+    "universityId": "giu",
+    "shortName": "GIU",
+    "status": "available",
+    "admissionUrl": "https://giu.edu.pk/admissions"
+  },
+  "gnies": {
+    "universityId": "gnies",
+    "shortName": "GNIES",
+    "status": "available",
+    "admissionUrl": "https://gnies.edu.pk/admissions"
+  },
+  "gomal": {
+    "universityId": "gomal",
+    "shortName": "GOMAL",
+    "status": "available",
+    "admissionUrl": "https://gomal.edu.pk/admissions"
+  },
+  "gscwu": {
+    "universityId": "gscwu",
+    "shortName": "GSCWU",
+    "status": "available",
+    "admissionUrl": "https://www.gscwu.edu.pk/admissions"
+  },
+  "gu": {
+    "universityId": "gu",
+    "shortName": "GU",
+    "status": "available",
+    "admissionUrl": "https://gudgk.edu.pk/admissions"
+  },
+  "habib": {
+    "universityId": "habib",
+    "shortName": "HABIB",
+    "status": "available",
+    "admissionUrl": "https://habib.edu.pk/admissions"
+  },
+  "hajvery": {
+    "universityId": "hajvery",
+    "shortName": "HAJVERY",
+    "status": "available",
+    "admissionUrl": "https://hajvery.edu.pk/admissions"
+  },
+  "hamdard": {
+    "universityId": "hamdard",
+    "shortName": "HAMDARD",
+    "status": "available",
+    "admissionUrl": "https://hamdard.edu.pk/admissions"
+  },
+  "hands-ids": {
+    "universityId": "hands-ids",
+    "shortName": "HANDS-IDS",
+    "status": "available",
+    "admissionUrl": "https://hands-ids.edu.pk/admissions"
+  },
+  "hitecuni": {
+    "universityId": "hitecuni",
+    "shortName": "HITECUNI",
+    "status": "available",
+    "admissionUrl": "https://hitecuni.edu.pk/admissions"
+  },
+  "hu": {
+    "universityId": "hu",
+    "shortName": "HU",
+    "status": "available",
+    "admissionUrl": "https://hu.edu.pk/admissions"
+  },
+  "iac": {
+    "universityId": "iac",
+    "shortName": "IAC",
+    "status": "available",
+    "admissionUrl": "https://iac.edu.pk/admissions"
+  },
+  "iba-suk": {
+    "universityId": "iba-suk",
+    "shortName": "IBA-SUK",
+    "status": "available",
+    "admissionUrl": "https://www.iba-suk.edu.pk/admissions"
+  },
+  "ibitpu": {
+    "universityId": "ibitpu",
+    "shortName": "IBITPU",
+    "status": "available",
+    "admissionUrl": "https://www.ibitpu.edu.pk/admissions"
+  },
+  "ibiu": {
+    "universityId": "ibiu",
+    "shortName": "IBIU",
+    "status": "available",
+    "admissionUrl": "https://iiu.edu.pk/admissions"
+  },
+  "icp": {
+    "universityId": "icp",
+    "shortName": "ICP",
+    "status": "available",
+    "admissionUrl": "https://www.icp.edu.pk/admissions"
+  },
+  "iisat": {
+    "universityId": "iisat",
+    "shortName": "IISAT",
+    "status": "available",
+    "admissionUrl": "https://iisat.edu.pk/admissions"
+  },
+  "iiu": {
+    "universityId": "iiu",
+    "shortName": "IIU",
+    "status": "available",
+    "admissionUrl": "https://iiu.edu.pk/admissions"
+  },
+  "ilma": {
+    "universityId": "ilma",
+    "shortName": "ILMA",
+    "status": "available",
+    "admissionUrl": "https://ilma.edu.pk/admissions"
+  },
+  "imperial": {
+    "universityId": "imperial",
+    "shortName": "IMPERIAL",
+    "status": "available",
+    "admissionUrl": "https://www.imperial.edu.pk/admissions"
+  },
+  "imsciences": {
+    "universityId": "imsciences",
+    "shortName": "IMSCIENCES",
+    "status": "available",
+    "admissionUrl": "https://imsciences.edu.pk/admissions"
+  },
+  "indus": {
+    "universityId": "indus",
+    "shortName": "INDUS",
+    "status": "available",
+    "admissionUrl": "http://www.indus.edu.pk/admissions"
+  },
+  "inu": {
+    "universityId": "inu",
+    "shortName": "INU",
+    "status": "available",
+    "admissionUrl": "https://inu.edu.pk/admissions"
+  },
+  "iobm": {
+    "universityId": "iobm",
+    "shortName": "IOBM",
+    "status": "available",
+    "admissionUrl": "https://iobm.edu.pk/admissions"
+  },
+  "iqra": {
+    "universityId": "iqra",
+    "shortName": "IQRA",
+    "status": "available",
+    "admissionUrl": "https://iqra.edu.pk/admissions"
+  },
+  "isp": {
+    "universityId": "isp",
+    "shortName": "ISP",
+    "status": "available",
+    "admissionUrl": "http://isp.edu.pk/admissions"
+  },
+  "isra": {
+    "universityId": "isra",
+    "shortName": "ISRA",
+    "status": "available",
+    "admissionUrl": "https://www.isra.edu.pk/admissions"
+  },
+  "ist": {
+    "universityId": "ist",
+    "shortName": "IST",
+    "status": "available",
+    "admissionUrl": "https://ist.edu.pk/admissions"
+  },
+  "isu": {
+    "universityId": "isu",
+    "shortName": "ISU",
+    "status": "available",
+    "admissionUrl": "https://isu.edu.pk/admissions"
+  },
+  "iub": {
+    "universityId": "iub",
+    "shortName": "IUB",
+    "status": "available",
+    "admissionUrl": "https://www.iub.edu.pk/admissions"
+  },
+  "jinnah": {
+    "universityId": "jinnah",
+    "shortName": "JINNAH",
+    "status": "available",
+    "admissionUrl": "https://jinnah.edu/admissions"
+  },
+  "jsmu": {
+    "universityId": "jsmu",
+    "shortName": "JSMU",
+    "status": "available",
+    "admissionUrl": "https://www.jsmu.edu.pk/admissions"
+  },
+  "juw": {
+    "universityId": "juw",
+    "shortName": "JUW",
+    "status": "available",
+    "admissionUrl": "https://juw.edu.pk/admissions"
+  },
+  "kasbit": {
+    "universityId": "kasbit",
+    "shortName": "KASBIT",
+    "status": "available",
+    "admissionUrl": "https://kasbit.edu.pk/admissions"
+  },
+  "kfueit": {
+    "universityId": "kfueit",
+    "shortName": "KFUEIT",
+    "status": "available",
+    "admissionUrl": "https://www.kfueit.edu.pk/admissions"
+  },
+  "kiet": {
+    "universityId": "kiet",
+    "shortName": "KIET",
+    "status": "available",
+    "admissionUrl": "https://kiet.edu.pk/admissions"
+  },
+  "kinnaird": {
+    "universityId": "kinnaird",
+    "shortName": "KINNAIRD",
+    "status": "available",
+    "admissionUrl": "https://www.kinnaird.edu.pk/admissions"
+  },
+  "kite": {
+    "universityId": "kite",
+    "shortName": "KITE",
+    "status": "available",
+    "admissionUrl": "https://kiet.edu.pk/admissions"
+  },
+  "kiu": {
+    "universityId": "kiu",
+    "shortName": "KIU",
+    "status": "available",
+    "admissionUrl": "https://www.kiu.edu.pk/admissions"
+  },
+  "kkkuk": {
+    "universityId": "kkkuk",
+    "shortName": "KKKUK",
+    "status": "available",
+    "admissionUrl": "https://kkkuk.edu.pk/admissions"
+  },
+  "ksbl": {
+    "universityId": "ksbl",
+    "shortName": "KSBL",
+    "status": "available",
+    "admissionUrl": "https://ksbl.edu.pk/admissions"
+  },
+  "kum": {
+    "universityId": "kum",
+    "shortName": "KUM",
+    "status": "available",
+    "admissionUrl": "https://kum.edu.pk/admissions"
+  },
+  "kust": {
+    "universityId": "kust",
+    "shortName": "KUST",
+    "status": "available",
+    "admissionUrl": "https://www.kust.edu.pk/admissions"
+  },
+  "lahoreschool": {
+    "universityId": "lahoreschool",
+    "shortName": "LAHORESCHOOL",
+    "status": "available",
+    "admissionUrl": "https://lahoreschool.edu.pk/admissions"
+  },
+  "lcwu": {
+    "universityId": "lcwu",
+    "shortName": "LCWU",
+    "status": "available",
+    "admissionUrl": "https://lcwu.edu.pk/admissions"
+  },
+  "leads": {
+    "universityId": "leads",
+    "shortName": "LEADS",
+    "status": "available",
+    "admissionUrl": "https://leads.edu.pk/admissions"
+  },
+  "lgu": {
+    "universityId": "lgu",
+    "shortName": "LGU",
+    "status": "available",
+    "admissionUrl": "https://lgu.edu.pk/admissions"
+  },
+  "list": {
+    "universityId": "list",
+    "shortName": "LIST",
+    "status": "available",
+    "admissionUrl": "https://list.edu.pk/admissions"
+  },
+  "luawms": {
+    "universityId": "luawms",
+    "shortName": "LUAWMS",
+    "status": "available",
+    "admissionUrl": "https://www.luawms.edu.pk/admissions"
+  },
+  "lumhs": {
+    "universityId": "lumhs",
+    "shortName": "LUMHS",
+    "status": "available",
+    "admissionUrl": "https://www.lumhs.edu.pk/admissions"
+  },
+  "maliruniversity": {
+    "universityId": "maliruniversity",
+    "shortName": "MALIRUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://maliruniversity.edu.pk/admissions"
+  },
+  "mite": {
+    "universityId": "mite",
+    "shortName": "MITE",
+    "status": "available",
+    "admissionUrl": "https://mite.edu.pk/admissions"
+  },
+  "miu": {
+    "universityId": "miu",
+    "shortName": "MIU",
+    "status": "available",
+    "admissionUrl": "https://miu.edu.pk/admissions"
+  },
+  "mnsuam": {
+    "universityId": "mnsuam",
+    "shortName": "MNSUAM",
+    "status": "available",
+    "admissionUrl": "https://mnsuam.edu.pk/admissions"
+  },
+  "mnsuet": {
+    "universityId": "mnsuet",
+    "shortName": "MNSUET",
+    "status": "available",
+    "admissionUrl": "https://mnsuet.edu.pk/admissions"
+  },
+  "muk": {
+    "universityId": "muk",
+    "shortName": "MUK",
+    "status": "available",
+    "admissionUrl": "https://muk.edu.pk/admissions"
+  },
+  "mul": {
+    "universityId": "mul",
+    "shortName": "MUL",
+    "status": "available",
+    "admissionUrl": "https://mul.edu.pk/admissions"
+  },
+  "must": {
+    "universityId": "must",
+    "shortName": "MUST",
+    "status": "available",
+    "admissionUrl": "https://must.edu.pk/admissions"
+  },
+  "mustm": {
+    "universityId": "mustm",
+    "shortName": "MUSTM",
+    "status": "available",
+    "admissionUrl": "https://must.edu.pk/admissions"
+  },
+  "mypgi": {
+    "universityId": "mypgi",
+    "shortName": "MYPGI",
+    "status": "available",
+    "admissionUrl": "https://mypgi.edu.pk/admissions"
+  },
+  "myuniversity": {
+    "universityId": "myuniversity",
+    "shortName": "MYUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://myuniversity.edu.pk/admissions"
+  },
+  "namal": {
+    "universityId": "namal",
+    "shortName": "NAMAL",
+    "status": "available",
+    "admissionUrl": "https://namal.edu.pk/admissions"
+  },
+  "nca": {
+    "universityId": "nca",
+    "shortName": "NCA",
+    "status": "available",
+    "admissionUrl": "https://nca.edu.pk/admissions"
+  },
+  "ncbae": {
+    "universityId": "ncbae",
+    "shortName": "NCBAE",
+    "status": "available",
+    "admissionUrl": "https://www.ncbae.edu.pk/admissions"
+  },
+  "ndu": {
+    "universityId": "ndu",
+    "shortName": "NDU",
+    "status": "available",
+    "admissionUrl": "https://ndu.edu.pk/admissions"
+  },
+  "neduet": {
+    "universityId": "neduet",
+    "shortName": "NEDUET",
+    "status": "available",
+    "admissionUrl": "https://www.neduet.edu.pk/admissions"
+  },
+  "newports": {
+    "universityId": "newports",
+    "shortName": "NEWPORTS",
+    "status": "available",
+    "admissionUrl": "https://www.newports.edu.pk/admissions"
+  },
+  "nfciet": {
+    "universityId": "nfciet",
+    "shortName": "NFCIET",
+    "status": "available",
+    "admissionUrl": "https://www.nfciet.edu.pk/admissions"
+  },
+  "nhu": {
+    "universityId": "nhu",
+    "shortName": "NHU",
+    "status": "available",
+    "admissionUrl": "https://nhu.edu.pk/admissions"
+  },
+  "niu": {
+    "universityId": "niu",
+    "shortName": "NIU",
+    "status": "available",
+    "admissionUrl": "https://niu.edu.pk/admissions"
+  },
+  "nmu": {
+    "universityId": "nmu",
+    "shortName": "NMU",
+    "status": "available",
+    "admissionUrl": "https://nmu.edu.pk/admissions"
+  },
+  "northern": {
+    "universityId": "northern",
+    "shortName": "NORTHERN",
+    "status": "available",
+    "admissionUrl": "https://northern.edu.pk/admissions"
+  },
+  "nsu": {
+    "universityId": "nsu",
+    "shortName": "NSU",
+    "status": "available",
+    "admissionUrl": "https://nsu.edu.pk/admissions"
+  },
+  "ntu": {
+    "universityId": "ntu",
+    "shortName": "NTU",
+    "status": "available",
+    "admissionUrl": "https://ntu.edu.pk/admissions"
+  },
+  "nu": {
+    "universityId": "nu",
+    "shortName": "NU",
+    "status": "available",
+    "admissionUrl": "https://nu.edu.pk/admissions"
+  },
+  "numl": {
+    "universityId": "numl",
+    "shortName": "NUML",
+    "status": "available",
+    "admissionUrl": "https://numl.edu.pk/admissions"
+  },
+  "nums": {
+    "universityId": "nums",
+    "shortName": "NUMS",
+    "status": "available",
+    "admissionUrl": "https://www.nums.edu.pk/admissions"
+  },
+  "nup": {
+    "universityId": "nup",
+    "shortName": "NUP",
+    "status": "available",
+    "admissionUrl": "https://nup.edu.pk/admissions"
+  },
+  "nutec": {
+    "universityId": "nutec",
+    "shortName": "NUTEC",
+    "status": "available",
+    "admissionUrl": "https://nutec.edu.pk/admissions"
+  },
+  "paf-iast": {
+    "universityId": "paf-iast",
+    "shortName": "PAF-IAST",
+    "status": "available",
+    "admissionUrl": "https://www.paf-iast.edu.pk/admissions"
+  },
+  "pide": {
+    "universityId": "pide",
+    "shortName": "PIDE",
+    "status": "available",
+    "admissionUrl": "https://pide.org.pk/admissions"
+  },
+  "pifd": {
+    "universityId": "pifd",
+    "shortName": "PIFD",
+    "status": "available",
+    "admissionUrl": "https://pifd.edu.pk/admissions"
+  },
+  "pmc": {
+    "universityId": "pmc",
+    "shortName": "PMC",
+    "status": "available",
+    "admissionUrl": "https://pmc.edu.pk/admissions"
+  },
+  "preston": {
+    "universityId": "preston",
+    "shortName": "PRESTON",
+    "status": "available",
+    "admissionUrl": "https://preston.edu.pk/admissions"
+  },
+  "ptut": {
+    "universityId": "ptut",
+    "shortName": "PTUT",
+    "status": "available",
+    "admissionUrl": "https://ptut.edu.pk/admissions"
+  },
+  "pu": {
+    "universityId": "pu",
+    "shortName": "PU",
+    "status": "available",
+    "admissionUrl": "https://pu.edu.pk/admissions"
+  },
+  "pumhs": {
+    "universityId": "pumhs",
+    "shortName": "PUMHS",
+    "status": "available",
+    "admissionUrl": "https://www.pumhs.edu.pk/admissions"
+  },
+  "putrasul": {
+    "universityId": "putrasul",
+    "shortName": "PUTRASUL",
+    "status": "available",
+    "admissionUrl": "https://putrasul.edu.pk/admissions"
+  },
+  "qarshi": {
+    "universityId": "qarshi",
+    "shortName": "QARSHI",
+    "status": "available",
+    "admissionUrl": "https://www.qarshi.edu.pk/admissions"
+  },
+  "quest": {
+    "universityId": "quest",
+    "shortName": "QUEST",
+    "status": "available",
+    "admissionUrl": "https://quest.edu.pk/admissions"
+  },
+  "qurtuba": {
+    "universityId": "qurtuba",
+    "shortName": "QURTUBA",
+    "status": "available",
+    "admissionUrl": "https://qurtuba.edu.pk/admissions"
+  },
+  "riphah": {
+    "universityId": "riphah",
+    "shortName": "RIPHAH",
+    "status": "available",
+    "admissionUrl": "https://www.riphah.edu.pk/admissions"
+  },
+  "rlku": {
+    "universityId": "rlku",
+    "shortName": "RLKU",
+    "status": "available",
+    "admissionUrl": "https://rlku.edu.pk/admissions"
+  },
+  "rmur": {
+    "universityId": "rmur",
+    "shortName": "RMUR",
+    "status": "available",
+    "admissionUrl": "https://rmur.edu.pk/admissions"
+  },
+  "rwu": {
+    "universityId": "rwu",
+    "shortName": "RWU",
+    "status": "available",
+    "admissionUrl": "https://rwu.edu.pk/admissions"
+  },
+  "sabsu": {
+    "universityId": "sabsu",
+    "shortName": "SABSU",
+    "status": "available",
+    "admissionUrl": "https://sabsu.edu.pk/admissions"
+  },
+  "salu": {
+    "universityId": "salu",
+    "shortName": "SALU",
+    "status": "available",
+    "admissionUrl": "https://www.salu.edu.pk/admissions"
+  },
+  "sau": {
+    "universityId": "sau",
+    "shortName": "SAU",
+    "status": "available",
+    "admissionUrl": "https://www.sau.edu.pk/admissions"
+  },
+  "sbbcu": {
+    "universityId": "sbbcu",
+    "shortName": "SBBCU",
+    "status": "available",
+    "admissionUrl": "https://sbbcu.edu.pk/admissions"
+  },
+  "sbbdewanuniversity": {
+    "universityId": "sbbdewanuniversity",
+    "shortName": "SBBDEWANUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://sbbdewanuniversity.edu.pk/admissions"
+  },
+  "sbbu": {
+    "universityId": "sbbu",
+    "shortName": "SBBU",
+    "status": "available",
+    "admissionUrl": "https://sbbu.edu.pk/admissions"
+  },
+  "sbbusba": {
+    "universityId": "sbbusba",
+    "shortName": "SBBUSBA",
+    "status": "available",
+    "admissionUrl": "https://www.sbbu.edu.pk/admissions"
+  },
+  "sbbuvas": {
+    "universityId": "sbbuvas",
+    "shortName": "SBBUVAS",
+    "status": "available",
+    "admissionUrl": "https://www.sbbuvas.edu.pk/index.php/admissions"
+  },
+  "sbbwu": {
+    "universityId": "sbbwu",
+    "shortName": "SBBWU",
+    "status": "available",
+    "admissionUrl": "https://sbbwu.edu.pk/sbbwu/admissions"
+  },
+  "sbkwu": {
+    "universityId": "sbkwu",
+    "shortName": "SBKWU",
+    "status": "available",
+    "admissionUrl": "https://sbkwu.edu.pk/admissions"
+  },
+  "sbu": {
+    "universityId": "sbu",
+    "shortName": "SBU",
+    "status": "available",
+    "admissionUrl": "https://sbu.edu.pk/admissions"
+  },
+  "shu": {
+    "universityId": "shu",
+    "shortName": "SHU",
+    "status": "available",
+    "admissionUrl": "https://shu.edu.pk/admissions"
+  },
+  "simat": {
+    "universityId": "simat",
+    "shortName": "SIMAT",
+    "status": "available",
+    "admissionUrl": "https://simat.edu.pk/admissions"
+  },
+  "sims": {
+    "universityId": "sims",
+    "shortName": "SIMS",
+    "status": "available",
+    "admissionUrl": "https://sims.siut.edu.pk/admissions"
+  },
+  "smbbmu": {
+    "universityId": "smbbmu",
+    "shortName": "SMBBMU",
+    "status": "available",
+    "admissionUrl": "https://smbbmu.edu.pk/admissions"
+  },
+  "smiu": {
+    "universityId": "smiu",
+    "shortName": "SMIU",
+    "status": "available",
+    "admissionUrl": "https://www.smiu.edu.pk/admissions"
+  },
+  "sohail": {
+    "universityId": "sohail",
+    "shortName": "SOHAIL",
+    "status": "available",
+    "admissionUrl": "https://sohail.edu.pk/admissions"
+  },
+  "sscase": {
+    "universityId": "sscase",
+    "shortName": "SSCASE",
+    "status": "available",
+    "admissionUrl": "https://sscase.edu.pk/admissions"
+  },
+  "ssuet": {
+    "universityId": "ssuet",
+    "shortName": "SSUET",
+    "status": "available",
+    "admissionUrl": "https://www.ssuet.edu.pk/admissions"
+  },
+  "stmu": {
+    "universityId": "stmu",
+    "shortName": "STMU",
+    "status": "available",
+    "admissionUrl": "https://stmu.edu.pk/admissions"
+  },
+  "suit": {
+    "universityId": "suit",
+    "shortName": "SUIT",
+    "status": "available",
+    "admissionUrl": "https://www.suit.edu.pk/admissions"
+  },
+  "superior": {
+    "universityId": "superior",
+    "shortName": "SUPERIOR",
+    "status": "available",
+    "admissionUrl": "https://www.superior.edu.pk/admissions"
+  },
+  "szabmu": {
+    "universityId": "szabmu",
+    "shortName": "SZABMU",
+    "status": "available",
+    "admissionUrl": "https://szabmu.edu.pk/admissions"
+  },
+  "szabul": {
+    "universityId": "szabul",
+    "shortName": "SZABUL",
+    "status": "available",
+    "admissionUrl": "https://szabul.edu.pk/admissions"
+  },
+  "tag-gu": {
+    "universityId": "tag-gu",
+    "shortName": "TAG-GU",
+    "status": "available",
+    "admissionUrl": "https://www.tag-gu.global/admissions"
+  },
+  "thaluniversity": {
+    "universityId": "thaluniversity",
+    "shortName": "THALUNIVERSITY",
+    "status": "available",
+    "admissionUrl": "https://thaluniversity.edu.pk/admissions"
+  },
+  "tip": {
+    "universityId": "tip",
+    "shortName": "TIP",
+    "status": "available",
+    "admissionUrl": "https://www.tip.edu.pk/admissions"
+  },
+  "tuf": {
+    "universityId": "tuf",
+    "shortName": "TUF",
+    "status": "available",
+    "admissionUrl": "https://tuf.edu.pk/admissions"
+  },
+  "uaar": {
+    "universityId": "uaar",
+    "shortName": "UAAR",
+    "status": "available",
+    "admissionUrl": "https://www.uaar.edu.pk/admissions"
+  },
+  "uac": {
+    "universityId": "uac",
+    "shortName": "UAC",
+    "status": "available",
+    "admissionUrl": "https://uac.edu.pk/admissions"
+  },
+  "uad": {
+    "universityId": "uad",
+    "shortName": "UAD",
+    "status": "available",
+    "admissionUrl": "https://www.uad.edu.pk/admissions"
+  },
+  "uaf": {
+    "universityId": "uaf",
+    "shortName": "UAF",
+    "status": "available",
+    "admissionUrl": "https://www.uaf.edu.pk/admissions"
+  },
+  "uajk": {
+    "universityId": "uajk",
+    "shortName": "UAJK",
+    "status": "available",
+    "admissionUrl": "https://www.uajk.edu.pk/admissions"
+  },
+  "ubas": {
+    "universityId": "ubas",
+    "shortName": "UBAS",
+    "status": "available",
+    "admissionUrl": "https://ubas.edu.pk/admissions"
+  },
+  "uchs": {
+    "universityId": "uchs",
+    "shortName": "UCHS",
+    "status": "available",
+    "admissionUrl": "https://uchs.edu.pk/admissions"
+  },
+  "ue": {
+    "universityId": "ue",
+    "shortName": "UE",
+    "status": "available",
+    "admissionUrl": "https://ue.edu.pk/admissions"
+  },
+  "ueas": {
+    "universityId": "ueas",
+    "shortName": "UEAS",
+    "status": "available",
+    "admissionUrl": "https://www.ueas.edu.pk/admissions"
+  },
+  "uetmardan": {
+    "universityId": "uetmardan",
+    "shortName": "UETMARDAN",
+    "status": "available",
+    "admissionUrl": "https://uetmardan.edu.pk/admissions"
+  },
+  "uetpeshawar": {
+    "universityId": "uetpeshawar",
+    "shortName": "UETPESHAWAR",
+    "status": "available",
+    "admissionUrl": "https://www.uetpeshawar.edu.pk/admissions"
+  },
+  "uettaxila": {
+    "universityId": "uettaxila",
+    "shortName": "UETTAXILA",
+    "status": "available",
+    "admissionUrl": "https://www.uettaxila.edu.pk/admissions"
+  },
+  "uhe": {
+    "universityId": "uhe",
+    "shortName": "UHE",
+    "status": "available",
+    "admissionUrl": "https://www.uhe.edu.pk/admissions"
+  },
+  "uhs": {
+    "universityId": "uhs",
+    "shortName": "UHS",
+    "status": "available",
+    "admissionUrl": "https://www.uhs.edu.pk/admissions"
+  },
+  "uit": {
+    "universityId": "uit",
+    "shortName": "UIT",
+    "status": "available",
+    "admissionUrl": "https://uit.edu.pk/admissions"
+  },
+  "ul": {
+    "universityId": "ul",
+    "shortName": "UL",
+    "status": "available",
+    "admissionUrl": "https://ul.edu.pk/admissions"
+  },
+  "ulm": {
+    "universityId": "ulm",
+    "shortName": "ULM",
+    "status": "available",
+    "admissionUrl": "https://ulm.edu.pk/admissions"
+  },
+  "ums": {
+    "universityId": "ums",
+    "shortName": "UMS",
+    "status": "available",
+    "admissionUrl": "https://ums.edu.pk/admissions"
+  },
+  "umw": {
+    "universityId": "umw",
+    "shortName": "UMW",
+    "status": "available",
+    "admissionUrl": "https://www.umw.edu.pk/admissions"
+  },
+  "uo": {
+    "universityId": "uo",
+    "shortName": "UO",
+    "status": "available",
+    "admissionUrl": "https://uo.edu.pk/admissions"
+  },
+  "uo-buner": {
+    "universityId": "uo-buner",
+    "shortName": "UO-BUNER",
+    "status": "available",
+    "admissionUrl": "https://www.uo-buner.edu.pk/admissions"
+  },
+  "uoas": {
+    "universityId": "uoas",
+    "shortName": "UOAS",
+    "status": "available",
+    "admissionUrl": "https://uoas.edu.pk/admissions"
+  },
+  "uob": {
+    "universityId": "uob",
+    "shortName": "UOB",
+    "status": "available",
+    "admissionUrl": "https://www.uob.edu.pk/admissions"
+  },
+  "uobs": {
+    "universityId": "uobs",
+    "shortName": "UOBS",
+    "status": "available",
+    "admissionUrl": "https://uobs.edu.pk/admissions"
+  },
+  "uoc": {
+    "universityId": "uoc",
+    "shortName": "UOC",
+    "status": "available",
+    "admissionUrl": "https://www.uoc.edu.pk/admissions"
+  },
+  "uoch": {
+    "universityId": "uoch",
+    "shortName": "UOCH",
+    "status": "available",
+    "admissionUrl": "https://uoch.edu.pk/admissions"
+  },
+  "uochenab": {
+    "universityId": "uochenab",
+    "shortName": "UOCHENAB",
+    "status": "available",
+    "admissionUrl": "https://uoc.edu.pk/admissions"
+  },
+  "uog": {
+    "universityId": "uog",
+    "shortName": "UOG",
+    "status": "available",
+    "admissionUrl": "https://uog.edu.pk/admissions"
+  },
+  "uogwadar": {
+    "universityId": "uogwadar",
+    "shortName": "UOGWADAR",
+    "status": "available",
+    "admissionUrl": "https://uog.edu.pk/admissions"
+  },
+  "uoh": {
+    "universityId": "uoh",
+    "shortName": "UOH",
+    "status": "available",
+    "admissionUrl": "https://uoh.edu.pk/admissions"
+  },
+  "uoj": {
+    "universityId": "uoj",
+    "shortName": "UOJ",
+    "status": "available",
+    "admissionUrl": "https://uoj.edu.pk/admissions"
+  },
+  "uokajk": {
+    "universityId": "uokajk",
+    "shortName": "UOKAJK",
+    "status": "available",
+    "admissionUrl": "https://uokajk.edu.pk/admissions"
+  },
+  "uol": {
+    "universityId": "uol",
+    "shortName": "UOL",
+    "status": "available",
+    "admissionUrl": "https://www.uol.edu.pk/admissions"
+  },
+  "uolr": {
+    "universityId": "uolr",
+    "shortName": "UOLR",
+    "status": "available",
+    "admissionUrl": "https://uol.edu.pk/admissions"
+  },
+  "uom": {
+    "universityId": "uom",
+    "shortName": "UOM",
+    "status": "available",
+    "admissionUrl": "https://www.uom.edu.pk/admissions"
+  },
+  "uomakran": {
+    "universityId": "uomakran",
+    "shortName": "UOMAKRAN",
+    "status": "available",
+    "admissionUrl": "https://uomakran.edu.pk/admissions"
+  },
+  "uon": {
+    "universityId": "uon",
+    "shortName": "UON",
+    "status": "available",
+    "admissionUrl": "https://uon.edu.pk/admissions"
+  },
+  "uos": {
+    "universityId": "uos",
+    "shortName": "UOS",
+    "status": "available",
+    "admissionUrl": "https://uos.edu.pk/admissions"
+  },
+  "uosahiwal": {
+    "universityId": "uosahiwal",
+    "shortName": "UOSAHIWAL",
+    "status": "available",
+    "admissionUrl": "https://www.uosahiwal.edu.pk/admissions"
+  },
+  "uoswabi": {
+    "universityId": "uoswabi",
+    "shortName": "UOSWABI",
+    "status": "available",
+    "admissionUrl": "https://uoswabi.edu.pk/admissions"
+  },
+  "uoturbat": {
+    "universityId": "uoturbat",
+    "shortName": "UOTURBAT",
+    "status": "available",
+    "admissionUrl": "https://uoturbat.edu.pk/admissions"
+  },
+  "uow": {
+    "universityId": "uow",
+    "shortName": "UOW",
+    "status": "available",
+    "admissionUrl": "https://www.uow.edu.pk/admissions"
+  },
+  "upr": {
+    "universityId": "upr",
+    "shortName": "UPR",
+    "status": "available",
+    "admissionUrl": "https://www.upr.edu.pk/admissions"
+  },
+  "usa": {
+    "universityId": "usa",
+    "shortName": "USA",
+    "status": "available",
+    "admissionUrl": "https://www.usa.edu.pk/admissions"
+  },
+  "usindh": {
+    "universityId": "usindh",
+    "shortName": "USINDH",
+    "status": "available",
+    "admissionUrl": "https://usindh.edu.pk/admissions"
+  },
+  "uskt": {
+    "universityId": "uskt",
+    "shortName": "USKT",
+    "status": "available",
+    "admissionUrl": "https://uskt.edu.pk/admissions"
+  },
+  "usms": {
+    "universityId": "usms",
+    "shortName": "USMS",
+    "status": "available",
+    "admissionUrl": "https://www.usms.edu.pk/admissions"
+  },
+  "usp": {
+    "universityId": "usp",
+    "shortName": "USP",
+    "status": "available",
+    "admissionUrl": "https://usp.edu.pk/admissions"
+  },
+  "ustb": {
+    "universityId": "ustb",
+    "shortName": "USTB",
+    "status": "available",
+    "admissionUrl": "https://www.ustb.edu.pk/admissions"
+  },
+  "uswat": {
+    "universityId": "uswat",
+    "shortName": "USWAT",
+    "status": "available",
+    "admissionUrl": "https://uswat.edu.pk/admissions"
+  },
+  "uvas": {
+    "universityId": "uvas",
+    "shortName": "UVAS",
+    "status": "available",
+    "admissionUrl": "https://www.uvas.edu.pk/admissions"
+  },
+  "wuajk": {
+    "universityId": "wuajk",
+    "shortName": "WUAJK",
+    "status": "available",
+    "admissionUrl": "https://wuajk.edu.pk/admissions"
+  },
+  "wum": {
+    "universityId": "wum",
+    "shortName": "WUM",
+    "status": "available",
+    "admissionUrl": "https://wum.edu.pk/admissions"
+  },
+  "wumardan": {
+    "universityId": "wumardan",
+    "shortName": "WUMARDAN",
+    "status": "available",
+    "admissionUrl": "https://wumardan.edu.pk/admissions"
+  },
+  "wus": {
+    "universityId": "wus",
+    "shortName": "WUS",
+    "status": "available",
+    "admissionUrl": "https://wus.edu.pk/admissions"
+  },
+  "zu": {
+    "universityId": "zu",
+    "shortName": "ZU",
+    "status": "available",
+    "admissionUrl": "https://zu.edu.pk/admissions"
+  }
+}

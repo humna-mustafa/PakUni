@@ -4,7 +4,7 @@
  */
 
 import {supabase} from './supabase';
-import {MERIT_RECORDS, AVAILABLE_YEARS, MERIT_CATEGORIES, MeritRecord} from '../data/meritArchive';
+import {MERIT_RECORDS, AVAILABLE_YEARS, MERIT_CATEGORIES, MeritRecord, UNIVERSITY_MERIT_INFO, UniversityMeritInfo, MeritDataStatus} from '../data/meritArchive';
 import {logger} from '../utils/logger';
 
 export interface MeritListRecord {
@@ -99,6 +99,7 @@ export async function fetchMeritLists(
       universityShortName: item.university?.short_name || '',
       programName: item.program_name,
       programCode: item.program_code || undefined,
+      campus: item.campus || item.city || 'Main Campus',
       year: item.year,
       session: item.session as 'Fall' | 'Spring',
       meritType: item.merit_type as 'open' | 'self-finance' | 'reserved',
@@ -329,6 +330,7 @@ export function getMeritInsights(records: MeritRecord[], year: number) {
 /**
  * Get university merit summary by short name (synchronous, local data only)
  * Used for displaying merit history in university detail screen
+ * Now groups by campus → program → years (tree structure)
  */
 export function getUniversityMeritSummaryByShortName(
   records: MeritRecord[],
@@ -339,6 +341,14 @@ export function getUniversityMeritSummaryByShortName(
     category: string;
     years: {year: number; closingMerit: number; list2Merit?: number; list3Merit?: number}[];
   }[];
+  campuses: {
+    campus: string;
+    programs: {
+      programName: string;
+      category: string;
+      years: {year: number; closingMerit: number; list2Merit?: number; list3Merit?: number}[];
+    }[];
+  }[];
   years: number[];
   totalRecords: number;
   trend: 'increasing' | 'decreasing' | 'stable' | null;
@@ -346,41 +356,58 @@ export function getUniversityMeritSummaryByShortName(
   const uniRecords = records.filter(r => r.universityShortName === universityShortName);
 
   if (uniRecords.length === 0) {
-    return {programs: [], years: [], totalRecords: 0, trend: null};
+    return {programs: [], campuses: [], years: [], totalRecords: 0, trend: null};
   }
 
   // Get all unique years
   const years = [...new Set(uniRecords.map(r => r.year))].sort((a, b) => b - a);
 
-  // Group by program
-  const programsMap = new Map<string, MeritRecord[]>();
-  uniRecords.forEach(record => {
-    const existing = programsMap.get(record.programName) || [];
-    existing.push(record);
-    programsMap.set(record.programName, existing);
-  });
-
-  const programs = Array.from(programsMap.entries()).map(([programName, programRecords]) => {
-    const sortedRecords = programRecords.sort((a, b) => b.year - a.year);
-
-    // Group by year to collect list merits
-    const yearsMap = new Map<number, {closingMerit: number; list2Merit?: number; list3Merit?: number}>();
-    sortedRecords.forEach(r => {
-      const existing = yearsMap.get(r.year);
-      if (!existing) {
-        yearsMap.set(r.year, {closingMerit: r.closingMerit});
-      }
-      // If we have listNumber in data, use it for list2/list3
+  // Helper: build program data from records
+  const buildProgramData = (recs: MeritRecord[]) => {
+    const programsMap = new Map<string, MeritRecord[]>();
+    recs.forEach(record => {
+      const existing = programsMap.get(record.programName) || [];
+      existing.push(record);
+      programsMap.set(record.programName, existing);
     });
 
-    return {
-      programName,
-      category: sortedRecords[0].category,
-      years: Array.from(yearsMap.entries())
-        .map(([year, data]) => ({year, ...data}))
-        .sort((a, b) => b.year - a.year),
-    };
+    return Array.from(programsMap.entries()).map(([programName, programRecords]) => {
+      const sortedRecords = programRecords.sort((a, b) => b.year - a.year);
+      const yearsMap = new Map<number, {closingMerit: number; list2Merit?: number; list3Merit?: number}>();
+      sortedRecords.forEach(r => {
+        if (!yearsMap.has(r.year)) {
+          yearsMap.set(r.year, {closingMerit: r.closingMerit});
+        }
+      });
+
+      return {
+        programName,
+        category: sortedRecords[0].category,
+        years: Array.from(yearsMap.entries())
+          .map(([year, data]) => ({year, ...data}))
+          .sort((a, b) => b.year - a.year),
+      };
+    }).sort((a, b) => a.programName.localeCompare(b.programName));
+  };
+
+  // Build flat programs list (for backwards compatibility)
+  const programs = buildProgramData(uniRecords);
+
+  // Build campus-based tree grouping
+  const campusMap = new Map<string, MeritRecord[]>();
+  uniRecords.forEach(record => {
+    const campus = record.campus || record.city || 'Main Campus';
+    const existing = campusMap.get(campus) || [];
+    existing.push(record);
+    campusMap.set(campus, existing);
   });
+
+  const campuses = Array.from(campusMap.entries())
+    .map(([campus, campusRecords]) => ({
+      campus,
+      programs: buildProgramData(campusRecords),
+    }))
+    .sort((a, b) => a.campus.localeCompare(b.campus));
 
   // Calculate overall trend
   let trend: 'increasing' | 'decreasing' | 'stable' | null = null;
@@ -400,11 +427,127 @@ export function getUniversityMeritSummaryByShortName(
   }
 
   return {
-    programs: programs.sort((a, b) => a.programName.localeCompare(b.programName)),
+    programs,
+    campuses,
     years,
     totalRecords: uniRecords.length,
     trend,
   };
+}
+
+/**
+ * Build a complete merit tree: University → Campus → Programs → Year merit data
+ * Used for the main Merit Archive screen
+ */
+export interface MeritTreeUniversity {
+  universityId: string;
+  universityName: string;
+  shortName: string;
+  meritInfo: UniversityMeritInfo | null;
+  campuses: {
+    campus: string;
+    programs: {
+      programName: string;
+      category: string;
+      years: {year: number; closingMerit: number; session: string; meritType: string; totalSeats: number}[];
+    }[];
+  }[];
+  latestMerit: number | null;
+  programCount: number;
+  campusCount: number;
+}
+
+export function buildMeritTree(
+  records: MeritRecord[],
+  filterYear?: number,
+  filterCategory?: string,
+): MeritTreeUniversity[] {
+  let filteredRecords = [...records];
+  if (filterYear) {
+    filteredRecords = filteredRecords.filter(r => r.year === filterYear);
+  }
+  if (filterCategory && filterCategory !== 'all') {
+    // Map category filter to actual categories in data
+    const categoryMap: Record<string, string[]> = {
+      'medical': ['medical'],
+      'engineering': ['electrical-engineering', 'mechanical-engineering', 'civil-engineering'],
+      'computer-science': ['computer-science'],
+      'business': ['business'],
+      'general': ['general'],
+    };
+    const validCats = categoryMap[filterCategory] || [filterCategory];
+    filteredRecords = filteredRecords.filter(r => validCats.includes(r.category));
+  }
+
+  // Group by university
+  const uniMap = new Map<string, MeritRecord[]>();
+  filteredRecords.forEach(r => {
+    const existing = uniMap.get(r.universityId) || [];
+    existing.push(r);
+    uniMap.set(r.universityId, existing);
+  });
+
+  return Array.from(uniMap.entries()).map(([universityId, uniRecords]) => {
+    // Group by campus
+    const campusMap = new Map<string, MeritRecord[]>();
+    uniRecords.forEach(r => {
+      const campus = r.campus || r.city || 'Main Campus';
+      const existing = campusMap.get(campus) || [];
+      existing.push(r);
+      campusMap.set(campus, existing);
+    });
+
+    const campuses = Array.from(campusMap.entries()).map(([campus, campusRecords]) => {
+      // Group by program within campus
+      const progMap = new Map<string, MeritRecord[]>();
+      campusRecords.forEach(r => {
+        const existing = progMap.get(r.programName) || [];
+        existing.push(r);
+        progMap.set(r.programName, existing);
+      });
+
+      const programs = Array.from(progMap.entries()).map(([programName, progRecords]) => ({
+        programName,
+        category: progRecords[0].category,
+        years: progRecords
+          .sort((a, b) => b.year - a.year)
+          .map(r => ({
+            year: r.year,
+            closingMerit: r.closingMerit,
+            session: r.session,
+            meritType: r.meritType,
+            totalSeats: r.totalSeats,
+          })),
+      })).sort((a, b) => a.programName.localeCompare(b.programName));
+
+      return {campus, programs};
+    }).sort((a, b) => a.campus.localeCompare(b.campus));
+
+    // Get highest merit
+    const allMerits = uniRecords.map(r => r.closingMerit);
+    const latestMerit = allMerits.length > 0 ? Math.max(...allMerits) : null;
+
+    // Count unique programs across all campuses
+    const uniquePrograms = new Set(uniRecords.map(r => r.programName));
+
+    return {
+      universityId,
+      universityName: uniRecords[0].universityName,
+      shortName: uniRecords[0].universityShortName,
+      meritInfo: UNIVERSITY_MERIT_INFO[universityId] || null,
+      campuses,
+      latestMerit,
+      programCount: uniquePrograms.size,
+      campusCount: campuses.length,
+    };
+  }).sort((a, b) => (b.latestMerit || 0) - (a.latestMerit || 0));
+}
+
+/**
+ * Get merit info for a university (portal links, social links, etc.)
+ */
+export function getUniversityMeritInfo(universityId: string): UniversityMeritInfo | null {
+  return UNIVERSITY_MERIT_INFO[universityId] || null;
 }
 
 /**
@@ -426,5 +569,6 @@ export function getYearlyTrendData(records: MeritRecord[]) {
   }).filter(d => d.count > 0);
 }
 
-// Re-export constants
-export {AVAILABLE_YEARS, MERIT_CATEGORIES};
+// Re-export constants and types
+export {AVAILABLE_YEARS, MERIT_CATEGORIES, UNIVERSITY_MERIT_INFO};
+export type {UniversityMeritInfo, MeritDataStatus};

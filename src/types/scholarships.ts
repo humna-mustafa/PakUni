@@ -4,7 +4,7 @@
 
 import type {ScholarshipData} from '../data/scholarships';
 
-export type FilterType = 'all' | 'need_based' | 'merit_based' | 'hafiz_e_quran' | 'government' | 'private';
+export type FilterType = 'all' | 'need_based' | 'merit_based' | 'hafiz_e_quran' | 'government' | 'private' | 'international' | 'institutional' | 'sports' | 'disabled' | 'special';
 
 export interface FilterConfig {
   value: FilterType;

@@ -1,6 +1,15 @@
-/**
- * PremiumMeritArchiveScreen - Past Merit Lists Archive
- * Features: Searchable table, trend analysis, year-by-year comparison
+﻿/**
+ * PremiumMeritArchiveScreen - Merit Lists Archive (Tree View)
+ *
+ * Tree structure: University -> Campus -> Program -> Year/Cycle Merit Lists
+ * Features:
+ * - Expandable university cards showing campuses and programs
+ * - Year and category filters
+ * - Search across universities, programs, cities
+ * - Data accuracy disclaimers
+ * - Portal links for universities with internal merit systems (FAST, LUMS)
+ * - Social media & official website links
+ * - Graceful handling of missing data
  */
 
 import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
@@ -15,6 +24,9 @@ import {
   StatusBar,
   Platform,
   RefreshControl,
+  Linking,
+  LayoutAnimation,
+  UIManager,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -29,123 +41,668 @@ import {
   fetchMeritLists,
   getMeritInsights,
   getYearlyTrendData,
+  buildMeritTree,
   AVAILABLE_YEARS,
   MERIT_CATEGORIES,
+  UNIVERSITY_MERIT_INFO,
 } from '../services/meritLists';
-import {
-  MERIT_RECORDS,
-  MeritRecord,
-  getYearlyChange,
-} from '../data/meritArchive';
+import type {MeritTreeUniversity} from '../services/meritLists';
+import {MERIT_RECORDS, MeritRecord} from '../data/meritArchive';
+import type {UniversityMeritInfo} from '../data/meritArchive';
 
-const {width} = Dimensions.get('window');
+// Enable LayoutAnimation on Android
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 // ============================================================================
-// MERIT ROW COMPONENT
+// DATA DISCLAIMER BANNER
 // ============================================================================
 
-interface MeritRowProps {
-  record: MeritRecord;
-  yearlyChange: number | null;
+const DisclaimerBanner: React.FC<{colors: any; isDark: boolean}> = ({
+  colors,
+  isDark,
+}) => (
+  <View
+    style={[
+      styles.disclaimerBanner,
+      {
+        backgroundColor: isDark
+          ? 'rgba(251, 191, 36, 0.1)'
+          : 'rgba(251, 191, 36, 0.08)',
+      },
+    ]}>
+    <Icon
+      name="information-circle"
+      family="Ionicons"
+      size={18}
+      color="#F59E0B"
+    />
+    <View style={styles.disclaimerBannerText}>
+      <Text style={[styles.disclaimerTitle, {color: colors.text}]}>
+        Data Accuracy Notice
+      </Text>
+      <Text style={[styles.disclaimerBody, {color: colors.textSecondary}]}>
+        Merit data is collected from public sources and may not be 100%
+        accurate. Always verify with the university's official website or
+        admission office. Visit university social media pages for the latest
+        updates.
+      </Text>
+    </View>
+  </View>
+);
+
+// ============================================================================
+// PORTAL INFO CARD - For universities with internal merit portals
+// ============================================================================
+
+const PortalInfoCard: React.FC<{
+  meritInfo: UniversityMeritInfo;
+  colors: any;
+  isDark: boolean;
+}> = ({meritInfo, colors, isDark}) => {
+  if (meritInfo.status !== 'portal_only' && !meritInfo.note) {
+    return null;
+  }
+
+  return (
+    <View
+      style={[
+        styles.portalCard,
+        {
+          backgroundColor: isDark
+            ? 'rgba(59, 130, 246, 0.08)'
+            : 'rgba(59, 130, 246, 0.06)',
+        },
+      ]}>
+      <View style={styles.portalHeader}>
+        <Icon
+          name="globe-outline"
+          family="Ionicons"
+          size={16}
+          color="#3B82F6"
+        />
+        <Text style={[styles.portalTitle, {color: '#3B82F6'}]}>
+          {meritInfo.status === 'portal_only'
+            ? 'Internal Merit Portal'
+            : 'Note'}
+        </Text>
+      </View>
+      {meritInfo.note && (
+        <Text style={[styles.portalNote, {color: colors.textSecondary}]}>
+          {meritInfo.note}
+        </Text>
+      )}
+      <View style={styles.portalLinks}>
+        {meritInfo.portalUrl && (
+          <TouchableOpacity
+            style={[styles.portalLinkBtn, {backgroundColor: '#3B82F6'}]}
+            onPress={() => Linking.openURL(meritInfo.portalUrl!)}
+            activeOpacity={0.7}>
+            <Icon
+              name="open-outline"
+              family="Ionicons"
+              size={14}
+              color="#FFFFFF"
+            />
+            <Text style={styles.portalLinkText}>Visit Merit Portal</Text>
+          </TouchableOpacity>
+        )}
+        {meritInfo.admissionUrl && (
+          <TouchableOpacity
+            style={[
+              styles.portalLinkBtn,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255,255,255,0.1)'
+                  : 'rgba(0,0,0,0.06)',
+              },
+            ]}
+            onPress={() => Linking.openURL(meritInfo.admissionUrl!)}
+            activeOpacity={0.7}>
+            <Icon
+              name="school-outline"
+              family="Ionicons"
+              size={14}
+              color={colors.primary}
+            />
+            <Text style={[styles.portalLinkTextAlt, {color: colors.primary}]}>
+              Admissions Page
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+};
+
+// ============================================================================
+// SOCIAL LINKS ROW
+// ============================================================================
+
+const SocialLinksRow: React.FC<{
+  meritInfo: UniversityMeritInfo;
+  colors: any;
+}> = ({meritInfo, colors}) => {
+  const socialLinks = meritInfo.socialLinks;
+  if (!socialLinks) {
+    return null;
+  }
+
+  const links: {icon: string; url: string; color: string}[] = [];
+  if (socialLinks.facebook) {
+    links.push({
+      icon: 'logo-facebook',
+      url: socialLinks.facebook,
+      color: '#1877F2',
+    });
+  }
+  if (socialLinks.youtube) {
+    links.push({
+      icon: 'logo-youtube',
+      url: socialLinks.youtube,
+      color: '#FF0000',
+    });
+  }
+  if (socialLinks.instagram) {
+    links.push({
+      icon: 'logo-instagram',
+      url: socialLinks.instagram,
+      color: '#E4405F',
+    });
+  }
+  if (socialLinks.linkedin) {
+    links.push({
+      icon: 'logo-linkedin',
+      url: socialLinks.linkedin,
+      color: '#0A66C2',
+    });
+  }
+  if (socialLinks.twitter) {
+    links.push({
+      icon: 'logo-twitter',
+      url: socialLinks.twitter,
+      color: '#1DA1F2',
+    });
+  }
+
+  if (links.length === 0) {
+    return null;
+  }
+
+  return (
+    <View style={styles.socialRow}>
+      <Text style={[styles.socialLabel, {color: colors.textSecondary}]}>
+        Follow for updates:
+      </Text>
+      <View style={styles.socialIcons}>
+        {links.map((link, i) => (
+          <TouchableOpacity
+            key={i}
+            onPress={() => Linking.openURL(link.url)}
+            style={[styles.socialBtn, {backgroundColor: `${link.color}15`}]}
+            activeOpacity={0.7}>
+            <Icon
+              name={link.icon}
+              family="Ionicons"
+              size={16}
+              color={link.color}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+// ============================================================================
+// PROGRAM MERIT ROW - Shows year-by-year merit for a program
+// ============================================================================
+
+type ProgramData =
+  MeritTreeUniversity['campuses'][0]['programs'][0];
+
+const ProgramMeritRow: React.FC<{
+  program: ProgramData;
+  colors: any;
+  isDark: boolean;
+}> = ({program, colors, isDark}) => {
+  const [expanded, setExpanded] = useState(false);
+  const latestYear = program.years[0]; // years sorted desc
+
+  const getMeritColor = (merit: number) => {
+    if (merit >= 95) return '#EF4444';
+    if (merit >= 90) return '#F59E0B';
+    if (merit >= 85) return colors.primary;
+    if (merit >= 75) return '#10B981';
+    return '#6B7280';
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'medical':
+        return 'medkit-outline';
+      case 'computer-science':
+        return 'code-slash-outline';
+      case 'electrical-engineering':
+      case 'mechanical-engineering':
+      case 'civil-engineering':
+        return 'construct-outline';
+      case 'business':
+        return 'briefcase-outline';
+      default:
+        return 'school-outline';
+    }
+  };
+
+  return (
+    <View
+      style={[
+        styles.programRow,
+        {borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'},
+      ]}>
+      <TouchableOpacity
+        style={styles.programHeader}
+        onPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          setExpanded(!expanded);
+          Haptics.light();
+        }}
+        activeOpacity={0.7}>
+        <View style={styles.programInfo}>
+          <Icon
+            name={getCategoryIcon(program.category)}
+            family="Ionicons"
+            size={14}
+            color={colors.textSecondary}
+          />
+          <Text
+            style={[styles.programName, {color: colors.text}]}
+            numberOfLines={1}>
+            {program.programName}
+          </Text>
+        </View>
+        <View style={styles.programMeritBadge}>
+          {latestYear && (
+            <Text
+              style={[
+                styles.programMeritValue,
+                {color: getMeritColor(latestYear.closingMerit)},
+              ]}>
+              {latestYear.closingMerit.toFixed(1)}%
+            </Text>
+          )}
+          <Icon
+            name={expanded ? 'chevron-up' : 'chevron-down'}
+            family="Ionicons"
+            size={16}
+            color={colors.textSecondary}
+          />
+        </View>
+      </TouchableOpacity>
+
+      {expanded && (
+        <View style={styles.programYears}>
+          {/* Year header */}
+          <View style={styles.yearTableHeader}>
+            <Text
+              style={[styles.yearTableHeaderText, {color: colors.textSecondary}]}>
+              Year
+            </Text>
+            <Text
+              style={[styles.yearTableHeaderText, {color: colors.textSecondary}]}>
+              Session
+            </Text>
+            <Text
+              style={[
+                styles.yearTableHeaderText,
+                {color: colors.textSecondary, textAlign: 'right'},
+              ]}>
+              Merit
+            </Text>
+            <Text
+              style={[
+                styles.yearTableHeaderText,
+                {color: colors.textSecondary, textAlign: 'right'},
+              ]}>
+              Seats
+            </Text>
+            <Text
+              style={[
+                styles.yearTableHeaderText,
+                {color: colors.textSecondary, textAlign: 'right'},
+              ]}>
+              Change
+            </Text>
+          </View>
+          {program.years.map((yearData, idx) => {
+            const prevYear = program.years[idx + 1];
+            const change = prevYear
+              ? yearData.closingMerit - prevYear.closingMerit
+              : null;
+            return (
+              <View
+                key={yearData.year}
+                style={[
+                  styles.yearRow,
+                  {
+                    backgroundColor:
+                      idx % 2 === 0
+                        ? isDark
+                          ? 'rgba(255,255,255,0.02)'
+                          : 'rgba(0,0,0,0.02)'
+                        : 'transparent',
+                  },
+                ]}>
+                <Text style={[styles.yearValue, {color: colors.text}]}>
+                  {yearData.year}
+                </Text>
+                <Text
+                  style={[styles.yearSession, {color: colors.textSecondary}]}>
+                  {yearData.session}
+                </Text>
+                <Text
+                  style={[
+                    styles.yearMerit,
+                    {color: getMeritColor(yearData.closingMerit)},
+                  ]}>
+                  {yearData.closingMerit.toFixed(1)}%
+                </Text>
+                <Text
+                  style={[styles.yearSeats, {color: colors.textSecondary}]}>
+                  {yearData.totalSeats}
+                </Text>
+                <View style={styles.yearChange}>
+                  {change !== null ? (
+                    <View style={styles.changeRow}>
+                      <Icon
+                        name={change >= 0 ? 'caret-up' : 'caret-down'}
+                        family="Ionicons"
+                        size={10}
+                        color={change >= 0 ? '#10B981' : '#EF4444'}
+                      />
+                      <Text
+                        style={[
+                          styles.changeValue,
+                          {color: change >= 0 ? '#10B981' : '#EF4444'},
+                        ]}>
+                        {change >= 0 ? '+' : ''}
+                        {change.toFixed(1)}
+                      </Text>
+                    </View>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.changeValue,
+                        {color: colors.textSecondary},
+                      ]}>
+                      {'\u2014'}
+                    </Text>
+                  )}
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      )}
+    </View>
+  );
+};
+
+// ============================================================================
+// CAMPUS SECTION - Shows programs under a campus
+// ============================================================================
+
+const CampusSection: React.FC<{
+  campus: MeritTreeUniversity['campuses'][0];
+  showCampusHeader: boolean;
+  colors: any;
+  isDark: boolean;
+}> = ({campus, showCampusHeader, colors, isDark}) => {
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    <View style={styles.campusSection}>
+      {showCampusHeader && (
+        <TouchableOpacity
+          style={[
+            styles.campusHeader,
+            {
+              backgroundColor: isDark
+                ? 'rgba(255,255,255,0.04)'
+                : 'rgba(0,0,0,0.03)',
+            },
+          ]}
+          onPress={() => {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut,
+            );
+            setExpanded(!expanded);
+            Haptics.light();
+          }}
+          activeOpacity={0.7}>
+          <View style={styles.campusInfo}>
+            <Icon
+              name="location-outline"
+              family="Ionicons"
+              size={14}
+              color={colors.primary}
+            />
+            <Text style={[styles.campusName, {color: colors.text}]}>
+              {campus.campus} Campus
+            </Text>
+            <View
+              style={[
+                styles.campusBadge,
+                {backgroundColor: `${colors.primary}15`},
+              ]}>
+              <Text
+                style={[styles.campusBadgeText, {color: colors.primary}]}>
+                {campus.programs.length}{' '}
+                {campus.programs.length === 1 ? 'program' : 'programs'}
+              </Text>
+            </View>
+          </View>
+          <Icon
+            name={expanded ? 'chevron-up' : 'chevron-down'}
+            family="Ionicons"
+            size={16}
+            color={colors.textSecondary}
+          />
+        </TouchableOpacity>
+      )}
+
+      {expanded &&
+        campus.programs.map((program, idx) => (
+          <ProgramMeritRow
+            key={`${program.programName}-${idx}`}
+            program={program}
+            colors={colors}
+            isDark={isDark}
+          />
+        ))}
+    </View>
+  );
+};
+
+// ============================================================================
+// UNIVERSITY CARD - Expandable with campuses and programs
+// ============================================================================
+
+const UniversityCard: React.FC<{
+  university: MeritTreeUniversity;
   colors: any;
   isDark: boolean;
   index: number;
-  onPress: () => void;
-}
-
-const MeritRow: React.FC<MeritRowProps> = ({
-  record,
-  yearlyChange,
-  colors,
-  isDark,
-  index,
-  onPress,
-}) => {
+}> = ({university, colors, isDark, index}) => {
+  const [expanded, setExpanded] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const meritInfo = university.meritInfo;
+  const isPortalOnly = meritInfo?.status === 'portal_only';
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
-      delay: index * 30,
+      delay: Math.min(index * 50, 500),
       useNativeDriver: true,
     }).start();
   }, [index]);
 
   const getMeritColor = (merit: number) => {
-    if (merit >= 90) return colors.error;
-    if (merit >= 85) return colors.warning;
-    if (merit >= 80) return colors.primary;
-    return colors.success;
+    if (merit >= 95) return '#EF4444';
+    if (merit >= 90) return '#F59E0B';
+    if (merit >= 85) return colors.primary;
+    if (merit >= 75) return '#10B981';
+    return '#6B7280';
   };
 
   return (
-    <Animated.View style={{opacity: fadeAnim}}>
+    <Animated.View
+      style={[
+        styles.universityCard,
+        {backgroundColor: colors.card, opacity: fadeAnim},
+      ]}>
+      {/* University header - always visible */}
       <TouchableOpacity
-        style={[
-          styles.meritRow,
-          {
-            backgroundColor: index % 2 === 0 
-              ? (isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)')
-              : 'transparent',
-          },
-        ]}
-        onPress={onPress}
+        style={styles.uniHeader}
+        onPress={() => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          setExpanded(!expanded);
+          Haptics.light();
+        }}
         activeOpacity={0.7}>
-        {/* University Info */}
-        <View style={styles.rowUniversity}>
-          <Text style={[styles.universityShort, {color: colors.primary}]} numberOfLines={1}>
-            {record.universityShortName}
-          </Text>
-          <Text style={[styles.programName, {color: colors.text}]} numberOfLines={1}>
-            {record.programName.replace(/\([^)]*\)/g, '').trim()}
-          </Text>
-        </View>
-
-        {/* City */}
-        <View style={styles.rowCity}>
-          <Text style={[styles.cityText, {color: colors.textSecondary}]} numberOfLines={1}>
-            {record.city}
-          </Text>
-        </View>
-
-        {/* Closing Merit */}
-        <View style={styles.rowMerit}>
-          <Text style={[styles.meritValue, {color: getMeritColor(record.closingMerit)}]}>
-            {record.closingMerit.toFixed(1)}%
-          </Text>
-        </View>
-
-        {/* Trend - green for increase (good), red for decrease */}
-        <View style={styles.rowTrend}>
-          {yearlyChange !== null ? (
-            <View style={styles.trendContainer}>
-              <Icon
-                name={yearlyChange >= 0 ? 'trending-up' : 'trending-down'}
-                family="Ionicons"
-                size={14}
-                color={yearlyChange >= 0 ? colors.success : colors.error}
-              />
+        <View style={styles.uniHeaderLeft}>
+          <View
+            style={[
+              styles.uniInitial,
+              {backgroundColor: `${colors.primary}15`},
+            ]}>
+            <Text style={[styles.uniInitialText, {color: colors.primary}]}>
+              {university.shortName.substring(0, 3)}
+            </Text>
+          </View>
+          <View style={styles.uniHeaderInfo}>
+            <View style={styles.uniNameRow}>
               <Text
-                style={[
-                  styles.trendText,
-                  {color: yearlyChange >= 0 ? colors.success : colors.error},
-                ]}>
-                {yearlyChange >= 0 ? '+' : ''}{yearlyChange.toFixed(1)}
+                style={[styles.uniName, {color: colors.text}]}
+                numberOfLines={1}>
+                {university.universityName}
+              </Text>
+              {isPortalOnly && (
+                <View
+                  style={[
+                    styles.portalBadge,
+                    {backgroundColor: 'rgba(59, 130, 246, 0.1)'},
+                  ]}>
+                  <Icon
+                    name="globe-outline"
+                    family="Ionicons"
+                    size={10}
+                    color="#3B82F6"
+                  />
+                  <Text style={styles.portalBadgeText}>Portal</Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.uniMeta}>
+              <Text
+                style={[styles.uniMetaText, {color: colors.textSecondary}]}>
+                {university.campusCount}{' '}
+                {university.campusCount === 1 ? 'campus' : 'campuses'}{' '}
+                {'\u00B7'} {university.programCount}{' '}
+                {university.programCount === 1 ? 'program' : 'programs'}
               </Text>
             </View>
-          ) : (
-            <Text style={[styles.trendText, {color: colors.textSecondary}]}>-</Text>
-          )}
+          </View>
         </View>
-
-        {/* Seats */}
-        <View style={styles.rowSeats}>
-          <Text style={[styles.seatsText, {color: colors.textSecondary}]}>
-            {record.totalSeats}
-          </Text>
+        <View style={styles.uniHeaderRight}>
+          {university.latestMerit && (
+            <Text
+              style={[
+                styles.uniMeritBadge,
+                {color: getMeritColor(university.latestMerit)},
+              ]}>
+              {university.latestMerit.toFixed(1)}%
+            </Text>
+          )}
+          <Icon
+            name={expanded ? 'chevron-up-outline' : 'chevron-down-outline'}
+            family="Ionicons"
+            size={20}
+            color={colors.textSecondary}
+          />
         </View>
       </TouchableOpacity>
+
+      {/* Expanded content */}
+      {expanded && (
+        <View
+          style={[
+            styles.uniBody,
+            {
+              borderTopColor: isDark
+                ? 'rgba(255,255,255,0.06)'
+                : 'rgba(0,0,0,0.06)',
+            },
+          ]}>
+          {/* Portal info card for portal_only universities */}
+          {meritInfo && (
+            <PortalInfoCard
+              meritInfo={meritInfo}
+              colors={colors}
+              isDark={isDark}
+            />
+          )}
+
+          {/* Social links */}
+          {meritInfo && (
+            <SocialLinksRow meritInfo={meritInfo} colors={colors} />
+          )}
+
+          {/* Campus -> Program tree */}
+          {university.campuses.map((campus, idx) => (
+            <CampusSection
+              key={`${campus.campus}-${idx}`}
+              campus={campus}
+              showCampusHeader={university.campusCount > 1}
+              colors={colors}
+              isDark={isDark}
+            />
+          ))}
+
+          {/* Visit official website suggestion */}
+          {meritInfo?.admissionUrl && (
+            <TouchableOpacity
+              style={[
+                styles.visitWebsite,
+                {
+                  backgroundColor: isDark
+                    ? 'rgba(255,255,255,0.04)'
+                    : 'rgba(0,0,0,0.03)',
+                },
+              ]}
+              onPress={() => Linking.openURL(meritInfo.admissionUrl!)}
+              activeOpacity={0.7}>
+              <Icon
+                name="open-outline"
+                family="Ionicons"
+                size={14}
+                color={colors.primary}
+              />
+              <Text
+                style={[styles.visitWebsiteText, {color: colors.primary}]}>
+                Visit official admissions website for latest merit lists
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </Animated.View>
   );
 };
@@ -154,194 +711,27 @@ const MeritRow: React.FC<MeritRowProps> = ({
 // INSIGHT CARD COMPONENT
 // ============================================================================
 
-interface InsightCardProps {
+const InsightCard: React.FC<{
   title: string;
   value: string;
   subtitle: string;
   iconName: string;
   color: string;
   colors: any;
-}
-
-const InsightCard: React.FC<InsightCardProps> = ({
-  title,
-  value,
-  subtitle,
-  iconName,
-  color,
-  colors,
-}) => {
-  return (
-    <View style={[styles.insightCard, {backgroundColor: colors.card}]}>
-      <View style={[styles.insightIcon, {backgroundColor: `${color}15`}]}>
-        <Icon name={iconName} family="Ionicons" size={20} color={color} />
-      </View>
-      <Text style={[styles.insightTitle, {color: colors.textSecondary}]}>{title}</Text>
-      <Text style={[styles.insightValue, {color: colors.text}]}>{value}</Text>
-      <Text style={[styles.insightSubtitle, {color: colors.textSecondary}]}>{subtitle}</Text>
+}> = ({title, value, subtitle, iconName, color, colors}) => (
+  <View style={[styles.insightCard, {backgroundColor: colors.card}]}>
+    <View style={[styles.insightIcon, {backgroundColor: `${color}15`}]}>
+      <Icon name={iconName} family="Ionicons" size={20} color={color} />
     </View>
-  );
-};
-
-// ============================================================================
-// MERIT TREND CHART COMPONENT (Simple Bar Chart)
-// ============================================================================
-
-interface TrendChartProps {
-  data: {year: number; merit: number}[];
-  colors: any;
-  isDark: boolean;
-}
-
-const TrendChart: React.FC<TrendChartProps> = ({data, colors, isDark}) => {
-  if (data.length === 0) return null;
-
-  // Ensure data is sorted by year ascending (oldest to newest, left to right)
-  const sortedData = [...data].sort((a, b) => a.year - b.year);
-  
-  // Normalize to range for better visualization
-  const normalizedMin = Math.floor(Math.min(...sortedData.map(d => d.merit)) - 5);
-  const normalizedMax = Math.ceil(Math.max(...sortedData.map(d => d.merit)) + 5);
-  const chartRange = normalizedMax - normalizedMin || 1;
-  
-  // Calculate overall trend for the header indicator
-  const latestMerit = sortedData[sortedData.length - 1]?.merit || 0;
-  const previousMerit = sortedData.length >= 2 ? sortedData[sortedData.length - 2]?.merit : null;
-  const yearOverYearChange = previousMerit !== null ? latestMerit - previousMerit : null;
-  
-  return (
-    <View style={[styles.trendChartContainer, {backgroundColor: colors.card}]}>
-      <View style={styles.trendChartHeader}>
-        <Icon name="trending-up" family="Ionicons" size={18} color={colors.primary} />
-        <Text style={[styles.trendChartTitle, {color: colors.text}]}>Merit Trend</Text>
-        {/* Year-over-year trend indicator */}
-        {yearOverYearChange !== null && (
-          <View style={styles.trendIndicatorBadge}>
-            <Icon
-              name={yearOverYearChange >= 0 ? 'arrow-up' : 'arrow-down'}
-              family="Ionicons"
-              size={12}
-              color={yearOverYearChange >= 0 ? colors.success : colors.error}
-            />
-            <Text
-              style={[
-                styles.trendIndicatorText,
-                {color: yearOverYearChange >= 0 ? colors.success : colors.error},
-              ]}>
-              {yearOverYearChange >= 0 ? '+' : ''}{yearOverYearChange.toFixed(1)}% vs last year
-            </Text>
-          </View>
-        )}
-      </View>
-      <Text style={[styles.trendChartSubtitle, {color: colors.textSecondary, marginBottom: SPACING.sm}]}>
-        Average closing merit by year (oldest → newest)
-      </Text>
-      
-      <View style={styles.chartArea}>
-        {/* Y-axis labels */}
-        <View style={styles.yAxisLabels}>
-          <Text style={[styles.axisLabel, {color: colors.textSecondary}]}>{normalizedMax}%</Text>
-          <Text style={[styles.axisLabel, {color: colors.textSecondary}]}>{Math.round((normalizedMax + normalizedMin) / 2)}%</Text>
-          <Text style={[styles.axisLabel, {color: colors.textSecondary}]}>{normalizedMin}%</Text>
-        </View>
-        
-        {/* Bars - sorted oldest to newest (left to right) */}
-        <View style={styles.barsContainer}>
-          {sortedData.map((item, index) => {
-            // Higher merit = taller bar
-            const height = ((item.merit - normalizedMin) / chartRange) * 120;
-            const isLatest = index === sortedData.length - 1;
-            const prevItem = index > 0 ? sortedData[index - 1] : null;
-            const change = prevItem ? item.merit - prevItem.merit : null;
-            
-            return (
-              <View key={item.year} style={styles.barColumn}>
-                <View style={styles.barWrapper}>
-                  <Text style={[styles.barValue, {color: colors.text}]}>
-                    {item.merit.toFixed(1)}%
-                  </Text>
-                  <Animated.View
-                    style={[
-                      styles.bar,
-                      {
-                        height: Math.max(height, 20),
-                        backgroundColor: isLatest
-                          ? colors.primary
-                          : isDark
-                          ? 'rgba(69, 115, 223, 0.5)'
-                          : 'rgba(69, 115, 223, 0.3)',
-                      },
-                    ]}>
-                    {isLatest && (
-                      <View style={[styles.barGlow, {backgroundColor: colors.primary}]} />
-                    )}
-                  </Animated.View>
-                  {/* Change indicator: green for increase (good), red for decrease */}
-                  {change !== null && (
-                    <View style={styles.changeIndicator}>
-                      <Icon
-                        name={change >= 0 ? 'caret-up' : 'caret-down'}
-                        family="Ionicons"
-                        size={10}
-                        color={change >= 0 ? colors.success : colors.error}
-                      />
-                      <Text
-                        style={[
-                          styles.changeText,
-                          {color: change >= 0 ? colors.success : colors.error},
-                        ]}>
-                        {change >= 0 ? '+' : ''}{change.toFixed(1)}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-                <Text style={[styles.barLabel, {color: colors.textSecondary}]}>
-                  {item.year}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      </View>
-      
-      {/* Trend summary */}
-      {sortedData.length >= 2 && (
-        <View style={[styles.trendSummary, {backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'}]}>
-          {(() => {
-            // Compare newest vs oldest (sortedData is ascending)
-            const totalChange = sortedData[sortedData.length - 1].merit - sortedData[0].merit;
-            const isIncreasing = totalChange > 0;
-            return (
-              <>
-                <Icon
-                  name={isIncreasing ? 'trending-up' : 'trending-down'}
-                  family="Ionicons"
-                  size={16}
-                  color={isIncreasing ? colors.success : colors.error}
-                />
-                <Text style={[styles.trendSummaryText, {color: colors.textSecondary}]}>
-                  Merit has {isIncreasing ? 'increased' : 'decreased'} by{' '}
-                  <Text style={{color: isIncreasing ? colors.success : colors.error, fontWeight: TYPOGRAPHY.weight.bold}}>
-                    {Math.abs(totalChange).toFixed(1)}%
-                  </Text>{' '}
-                  over {sortedData.length} years
-                </Text>
-              </>
-            );
-          })()}
-        </View>
-      )}
-      
-      {/* Data disclaimer */}
-      <View style={styles.disclaimerContainer}>
-        <Icon name="information-circle-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-        <Text style={[styles.disclaimerText, {color: colors.textSecondary}]}>
-          Last updated: Feb 2026. Merit data is approximate and may vary by seat category. Please verify with official university sources.
-        </Text>
-      </View>
-    </View>
-  );
-};
+    <Text style={[styles.insightTitle, {color: colors.textSecondary}]}>
+      {title}
+    </Text>
+    <Text style={[styles.insightValue, {color: colors.text}]}>{value}</Text>
+    <Text style={[styles.insightSubtitle, {color: colors.textSecondary}]}>
+      {subtitle}
+    </Text>
+  </View>
+);
 
 // ============================================================================
 // MAIN SCREEN COMPONENT
@@ -351,40 +741,33 @@ const PremiumMeritArchiveScreen = () => {
   const navigation = useNavigation();
   const {colors, isDark} = useTheme();
 
-  const [selectedYear, setSelectedYear] = useState(2024);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'merit' | 'name' | 'city'>('merit');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [meritRecords, setMeritRecords] = useState<MeritRecord[]>(MERIT_RECORDS);
+  const [meritRecords, setMeritRecords] =
+    useState<MeritRecord[]>(MERIT_RECORDS);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [dataSource, setDataSource] = useState<'supabase' | 'local'>('local');
-
   const headerAnim = useRef(new Animated.Value(0)).current;
 
   // Load merit data
   const loadMeritData = useCallback(async () => {
     try {
-      const {data, error, source} = await fetchMeritLists();
+      const {data} = await fetchMeritLists();
       if (data && data.length > 0) {
         setMeritRecords(data);
-        setDataSource(source);
       }
-      // If no data from Supabase, use local MERIT_RECORDS (already set as default)
     } catch (err) {
-      logger.debug('Error loading merit data, using local data', err, 'MeritArchive');
+      logger.debug('Using local merit data', err, 'MeritArchive');
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Initial load
   useEffect(() => {
     loadMeritData();
   }, [loadMeritData]);
 
-  // Animate header
   useEffect(() => {
     Animated.timing(headerAnim, {
       toValue: 1,
@@ -393,7 +776,6 @@ const PremiumMeritArchiveScreen = () => {
     }).start();
   }, []);
 
-  // Pull to refresh
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     Haptics.refreshThreshold();
@@ -402,66 +784,46 @@ const PremiumMeritArchiveScreen = () => {
     Haptics.success();
   }, [loadMeritData]);
 
-  // Filter and sort records
-  const filteredRecords = useMemo(() => {
-    let records = meritRecords.filter(r => r.year === selectedYear);
+  // Build the merit tree with filters
+  const meritTree = useMemo(() => {
+    let tree = buildMeritTree(
+      meritRecords,
+      selectedYear || undefined,
+      selectedCategory !== 'all' ? selectedCategory : undefined,
+    );
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      records = records.filter(r => r.category === selectedCategory);
-    }
-
-    // Search filter
+    // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      records = records.filter(r =>
-        r.universityName.toLowerCase().includes(query) ||
-        r.universityShortName.toLowerCase().includes(query) ||
-        r.programName.toLowerCase().includes(query) ||
-        r.city.toLowerCase().includes(query)
+      tree = tree.filter(
+        uni =>
+          uni.universityName.toLowerCase().includes(query) ||
+          uni.shortName.toLowerCase().includes(query) ||
+          uni.campuses.some(
+            c =>
+              c.campus.toLowerCase().includes(query) ||
+              c.programs.some(p =>
+                p.programName.toLowerCase().includes(query),
+              ),
+          ),
       );
     }
 
-    // Sort
-    records.sort((a, b) => {
-      let comparison = 0;
-      switch (sortBy) {
-        case 'merit':
-          comparison = a.closingMerit - b.closingMerit;
-          break;
-        case 'name':
-          comparison = a.universityShortName.localeCompare(b.universityShortName);
-          break;
-        case 'city':
-          comparison = a.city.localeCompare(b.city);
-          break;
-      }
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
+    return tree;
+  }, [meritRecords, selectedYear, selectedCategory, searchQuery]);
 
-    return records;
-  }, [meritRecords, selectedYear, selectedCategory, searchQuery, sortBy, sortOrder]);
-
-  // Insights
+  // Insights for selected year
   const insights = useMemo(() => {
-    return getMeritInsights(meritRecords, selectedYear);
+    return getMeritInsights(
+      meritRecords,
+      selectedYear || AVAILABLE_YEARS[0],
+    );
   }, [meritRecords, selectedYear]);
 
-  // Historical Trend Data (all years average)
-  const trendData = useMemo(() => {
-    return getYearlyTrendData(meritRecords);
+  // Stats
+  const uniqueUniversities = useMemo(() => {
+    return new Set(meritRecords.map(r => r.universityId)).size;
   }, [meritRecords]);
-
-  // Handle sort toggle
-  const handleSort = useCallback((column: 'merit' | 'name' | 'city') => {
-    Haptics.light();
-    if (sortBy === column) {
-      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortBy(column);
-      setSortOrder(column === 'merit' ? 'desc' : 'asc');
-    }
-  }, [sortBy]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -489,33 +851,47 @@ const PremiumMeritArchiveScreen = () => {
             },
           ]}>
           <LinearGradient
-            colors={isDark ? ['#059669', '#047857', '#065F46'] : ['#10B981', '#059669', '#047857']}
+            colors={
+              isDark
+                ? ['#059669', '#047857', '#065F46']
+                : ['#10B981', '#059669', '#047857']
+            }
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.header}>
             <View style={styles.headerDecoCircle1} />
             <View style={styles.headerDecoCircle2} />
 
-            {/* Back Button */}
             <TouchableOpacity
               style={styles.backBtn}
               onPress={() => navigation.goBack()}>
-              <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+              <Icon
+                name="arrow-back"
+                family="Ionicons"
+                size={24}
+                color="#FFFFFF"
+              />
             </TouchableOpacity>
 
             <View style={styles.headerContent}>
               <View style={styles.headerIconCircle}>
-                <Icon name="archive-outline" family="Ionicons" size={32} color="#FFFFFF" />
+                <Icon
+                  name="archive-outline"
+                  family="Ionicons"
+                  size={32}
+                  color="#FFFFFF"
+                />
               </View>
               <Text style={styles.headerTitle}>Merit Archive</Text>
               <Text style={styles.headerSubtitle}>
-                Historical closing merits (2020-2024)
+                {uniqueUniversities} universities {'\u00B7'}{' '}
+                {meritRecords.length} records
               </Text>
             </View>
           </LinearGradient>
         </Animated.View>
 
-        {/* Search Bar - Consistent Design */}
+        {/* Search */}
         <View style={styles.searchWrapper}>
           <PremiumSearchBar
             value={searchQuery}
@@ -530,7 +906,6 @@ const PremiumMeritArchiveScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
-          stickyHeaderIndices={[1]}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -539,13 +914,31 @@ const PremiumMeritArchiveScreen = () => {
               tintColor="#059669"
             />
           }>
-
-          <View>
-            {/* Year Selector */}
-            <ScrollView
+          {/* Year Selector - All Years option + individual years */}
+          <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.yearContainer}>
+            <TouchableOpacity
+              style={[
+                styles.yearChip,
+                {
+                  backgroundColor:
+                    selectedYear === null ? colors.primary : colors.card,
+                  borderColor:
+                    selectedYear === null ? colors.primary : colors.border,
+                },
+              ]}
+              onPress={() => setSelectedYear(null)}
+              activeOpacity={0.8}>
+              <Text
+                style={[
+                  styles.yearText,
+                  {color: selectedYear === null ? '#FFFFFF' : colors.text},
+                ]}>
+                All Years
+              </Text>
+            </TouchableOpacity>
             {AVAILABLE_YEARS.map(year => (
               <TouchableOpacity
                 key={year}
@@ -627,7 +1020,9 @@ const PremiumMeritArchiveScreen = () => {
                 <InsightCard
                   title="Average Merit"
                   value={`${insights.avgMerit.toFixed(1)}%`}
-                  subtitle={`${selectedYear} session`}
+                  subtitle={
+                    selectedYear ? `${selectedYear} session` : 'All years'
+                  }
                   iconName="analytics-outline"
                   color={colors.primary}
                   colors={colors}
@@ -635,17 +1030,21 @@ const PremiumMeritArchiveScreen = () => {
                 <InsightCard
                   title="Highest Merit"
                   value={`${insights.highestMerit.toFixed(1)}%`}
-                  subtitle={insights.highestProgram?.universityShortName || ''}
+                  subtitle={
+                    insights.highestProgram?.universityShortName || ''
+                  }
                   iconName="arrow-up-circle-outline"
-                  color={colors.error}
+                  color="#EF4444"
                   colors={colors}
                 />
                 <InsightCard
                   title="Lowest Merit"
                   value={`${insights.lowestMerit.toFixed(1)}%`}
-                  subtitle={insights.lowestProgram?.universityShortName || ''}
+                  subtitle={
+                    insights.lowestProgram?.universityShortName || ''
+                  }
                   iconName="arrow-down-circle-outline"
-                  color={colors.success}
+                  color="#10B981"
                   colors={colors}
                 />
                 <InsightCard
@@ -653,108 +1052,59 @@ const PremiumMeritArchiveScreen = () => {
                   value={`${insights.totalPrograms}`}
                   subtitle="in database"
                   iconName="school-outline"
-                  color={colors.warning}
+                  color="#F59E0B"
                   colors={colors}
                 />
               </ScrollView>
             </View>
           )}
 
-          {/* Historical Merit Trend Chart */}
-          {trendData.length > 1 && (
-            <TrendChart data={trendData} colors={colors} isDark={isDark} />
-          )}
-          </View>
+          {/* Data Disclaimer */}
+          <DisclaimerBanner colors={colors} isDark={isDark} />
 
-          {/* Table Header - Sticky */}
-          <View style={[styles.tableHeader, {backgroundColor: colors.background}]}>
-            <TouchableOpacity
-              style={styles.headerUniversity}
-              onPress={() => handleSort('name')}>
-              <Text style={[styles.headerText, {color: colors.textSecondary}]}>University</Text>
-              {sortBy === 'name' && (
-                <Icon
-                  name={sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'}
-                  family="Ionicons"
-                  size={12}
-                  color={colors.primary}
-                />
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.headerCity}
-              onPress={() => handleSort('city')}>
-              <Text style={[styles.headerText, {color: colors.textSecondary}]}>City</Text>
-              {sortBy === 'city' && (
-                <Icon
-                  name={sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'}
-                  family="Ionicons"
-                  size={12}
-                  color={colors.primary}
-                />
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.headerMerit}
-              onPress={() => handleSort('merit')}>
-              <Text style={[styles.headerText, {color: colors.textSecondary}]}>Merit</Text>
-              {sortBy === 'merit' && (
-                <Icon
-                  name={sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'}
-                  family="Ionicons"
-                  size={12}
-                  color={colors.primary}
-                />
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.headerTrend}>
-              <Text style={[styles.headerText, {color: colors.textSecondary}]}>Trend</Text>
-            </View>
-
-            <View style={styles.headerSeats}>
-              <Text style={[styles.headerText, {color: colors.textSecondary}]}>Seats</Text>
-            </View>
-          </View>
-
-          {/* Table Body */}
-          <View style={[styles.tableBody, {backgroundColor: colors.card}]}>
-            {filteredRecords.length > 0 ? (
-              filteredRecords.map((record, index) => (
-                <MeritRow
-                  key={record.id}
-                  record={record}
-                  yearlyChange={getYearlyChange(record.universityId, record.programName)}
-                  colors={colors}
-                  isDark={isDark}
-                  index={index}
-                  onPress={() => {
-                    Haptics.light();
-                    // Could navigate to detailed view
-                  }}
-                />
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Icon name="search-outline" family="Ionicons" size={48} color={colors.textSecondary} />
-                <Text style={[styles.emptyTitle, {color: colors.text}]}>
-                  No Records Found
-                </Text>
-                <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
-                  Try adjusting your search or filters
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {/* Results Count */}
+          {/* Results count */}
           <View style={styles.resultsCount}>
-            <Text style={[styles.resultsText, {color: colors.textSecondary}]}>
-              Showing {filteredRecords.length} of {MERIT_RECORDS.filter(r => r.year === selectedYear).length} programs
+            <Text
+              style={[styles.resultsText, {color: colors.textSecondary}]}>
+              {meritTree.length}{' '}
+              {meritTree.length === 1 ? 'university' : 'universities'}
+              {searchQuery ? ` matching "${searchQuery}"` : ''}
+              {selectedYear
+                ? ` ${'\u00B7'} ${selectedYear}`
+                : ` ${'\u00B7'} All years`}
             </Text>
           </View>
+
+          {/* University Tree */}
+          {meritTree.length > 0 ? (
+            meritTree.map((university, index) => (
+              <UniversityCard
+                key={university.universityId}
+                university={university}
+                colors={colors}
+                isDark={isDark}
+                index={index}
+              />
+            ))
+          ) : (
+            <View style={[styles.emptyState, {backgroundColor: colors.card}]}>
+              <Icon
+                name="search-outline"
+                family="Ionicons"
+                size={48}
+                color={colors.textSecondary}
+              />
+              <Text style={[styles.emptyTitle, {color: colors.text}]}>
+                No Records Found
+              </Text>
+              <Text
+                style={[styles.emptyText, {color: colors.textSecondary}]}>
+                {searchQuery
+                  ? 'Try a different search term or adjust filters'
+                  : 'No merit data available for the selected filters'}
+              </Text>
+            </View>
+          )}
 
           <View style={{height: 100}} />
         </ScrollView>
@@ -768,15 +1118,10 @@ const PremiumMeritArchiveScreen = () => {
 // ============================================================================
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: SPACING.xl,
-  },
+  container: {flex: 1},
+  safeArea: {flex: 1},
+  scrollContent: {paddingBottom: SPACING.xl},
+
   // Header
   headerContainer: {},
   header: {
@@ -817,10 +1162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
   },
-  headerContent: {
-    alignItems: 'center',
-    paddingTop: SPACING.xl,
-  },
+  headerContent: {alignItems: 'center', paddingTop: SPACING.xl},
   headerIconCircle: {
     width: 64,
     height: 64,
@@ -832,7 +1174,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: TYPOGRAPHY.weight.bold,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
     color: '#FFFFFF',
     marginBottom: 4,
   },
@@ -840,12 +1182,14 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     color: 'rgba(255,255,255,0.9)',
   },
-  // Unified search wrapper
+
+  // Search
   searchWrapper: {
     paddingHorizontal: SPACING.lg,
     marginTop: -20,
     marginBottom: SPACING.md,
   },
+
   // Year Selector
   yearContainer: {
     paddingHorizontal: SPACING.lg,
@@ -861,8 +1205,9 @@ const styles = StyleSheet.create({
   },
   yearText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
   },
+
   // Category Filter
   categoryContainer: {
     paddingHorizontal: SPACING.lg,
@@ -881,13 +1226,11 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
   },
+
   // Insights
-  insightsContainer: {
-    paddingLeft: SPACING.lg,
-    marginBottom: SPACING.md,
-  },
+  insightsContainer: {paddingLeft: SPACING.lg, marginBottom: SPACING.md},
   insightCard: {
     width: 130,
     padding: SPACING.md,
@@ -900,9 +1243,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 4,
       },
-      android: {
-        elevation: 2,
-      },
+      android: {elevation: 2},
     }),
   },
   insightIcon: {
@@ -915,62 +1256,41 @@ const styles = StyleSheet.create({
   },
   insightTitle: {
     fontSize: 10,
-    fontWeight: TYPOGRAPHY.weight.medium,
+    fontWeight: TYPOGRAPHY.weight.medium as any,
     marginBottom: 2,
   },
   insightValue: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weight.bold,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
   },
-  insightSubtitle: {
-    fontSize: 10,
-    marginTop: 2,
-  },
-  // Table Header
-  tableHeader: {
+  insightSubtitle: {fontSize: 10, marginTop: 2},
+
+  // Disclaimer Banner
+  disclaimerBanner: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-  },
-  headerUniversity: {
-    flex: 2.5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  headerCity: {
-    flex: 1.2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  headerMerit: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 4,
-  },
-  headerTrend: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  headerSeats: {
-    flex: 0.7,
-    alignItems: 'flex-end',
-  },
-  headerText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  // Table Body
-  tableBody: {
+    alignItems: 'flex-start',
     marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    gap: SPACING.sm,
+  },
+  disclaimerBannerText: {flex: 1},
+  disclaimerTitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    marginBottom: 2,
+  },
+  disclaimerBody: {fontSize: 11, lineHeight: 16},
+
+  // Results Count
+  resultsCount: {paddingHorizontal: SPACING.lg, paddingBottom: SPACING.sm},
+  resultsText: {fontSize: TYPOGRAPHY.sizes.xs},
+
+  // University Card
+  universityCard: {
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.sm,
     borderRadius: RADIUS.lg,
     overflow: 'hidden',
     ...Platform.select({
@@ -980,82 +1300,252 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.06,
         shadowRadius: 8,
       },
-      android: {
-        elevation: 2,
-      },
+      android: {elevation: 2},
     }),
   },
-  meritRow: {
+  uniHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: SPACING.md,
+  },
+  uniHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: SPACING.sm,
+  },
+  uniInitial: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  uniInitialText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+  },
+  uniHeaderInfo: {flex: 1},
+  uniNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    flexWrap: 'wrap',
+  },
+  uniName: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    flexShrink: 1,
+  },
+  portalBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    gap: 3,
+  },
+  portalBadgeText: {
+    fontSize: 9,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    color: '#3B82F6',
+  },
+  uniMeta: {marginTop: 2},
+  uniMetaText: {fontSize: 11},
+  uniHeaderRight: {alignItems: 'flex-end', gap: 4},
+  uniMeritBadge: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+  },
+
+  // University Body (expanded)
+  uniBody: {borderTopWidth: StyleSheet.hairlineWidth, paddingBottom: SPACING.sm},
+
+  // Portal Info Card
+  portalCard: {
+    margin: SPACING.sm,
+    marginBottom: 0,
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+  },
+  portalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    marginBottom: SPACING.xs,
+  },
+  portalTitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+  },
+  portalNote: {fontSize: 11, lineHeight: 16, marginBottom: SPACING.sm},
+  portalLinks: {flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm},
+  portalLinkBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm + 2,
+    paddingVertical: SPACING.xs + 2,
+    borderRadius: RADIUS.md,
+    gap: SPACING.xs,
   },
-  rowUniversity: {
-    flex: 2.5,
-  },
-  universityShort: {
+  portalLinkText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.bold,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    color: '#FFFFFF',
   },
-  programName: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.medium,
-    marginTop: 1,
-  },
-  rowCity: {
-    flex: 1.2,
-  },
-  cityText: {
+  portalLinkTextAlt: {
     fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
   },
-  rowMerit: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  meritValue: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  rowTrend: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  trendContainer: {
+
+  // Social Links
+  socialRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    gap: SPACING.sm,
   },
-  trendText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
+  socialLabel: {fontSize: 11},
+  socialIcons: {flexDirection: 'row', gap: SPACING.xs},
+  socialBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  rowSeats: {
-    flex: 0.7,
-    alignItems: 'flex-end',
+
+  // Campus Section
+  campusSection: {marginTop: 2},
+  campusHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    marginHorizontal: SPACING.sm,
+    marginTop: SPACING.xs,
+    borderRadius: RADIUS.sm,
   },
-  seatsText: {
+  campusInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    flex: 1,
+  },
+  campusName: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.medium,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
   },
-  // Results Count
-  resultsCount: {
-    paddingHorizontal: SPACING.lg,
+  campusBadge: {paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4},
+  campusBadgeText: {
+    fontSize: 9,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
+  },
+
+  // Program Row
+  programRow: {
+    marginHorizontal: SPACING.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  programHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: SPACING.sm,
     paddingVertical: SPACING.sm,
   },
-  resultsText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    textAlign: 'center',
+  programInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    flex: 1,
   },
+  programName: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
+    flex: 1,
+  },
+  programMeritBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+  },
+  programMeritValue: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+  },
+
+  // Year table within program
+  programYears: {paddingHorizontal: SPACING.sm, paddingBottom: SPACING.sm},
+  yearTableHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: SPACING.xs,
+    marginBottom: 2,
+  },
+  yearTableHeaderText: {
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
+    flex: 1,
+    textTransform: 'uppercase',
+  },
+  yearRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: SPACING.xs,
+    borderRadius: 4,
+  },
+  yearValue: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    flex: 1,
+  },
+  yearSession: {fontSize: 11, flex: 1},
+  yearMerit: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
+    flex: 1,
+    textAlign: 'right',
+  },
+  yearSeats: {fontSize: 11, flex: 1, textAlign: 'right'},
+  yearChange: {flex: 1, alignItems: 'flex-end'},
+  changeRow: {flexDirection: 'row', alignItems: 'center', gap: 1},
+  changeValue: {
+    fontSize: 10,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
+  },
+
+  // Visit Website
+  visitWebsite: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: SPACING.sm,
+    margin: SPACING.sm,
+    padding: SPACING.sm,
+    borderRadius: RADIUS.sm,
+    gap: SPACING.xs,
+  },
+  visitWebsiteText: {
+    fontSize: 11,
+    fontWeight: TYPOGRAPHY.weight.semibold as any,
+  },
+
   // Empty State
   emptyState: {
     alignItems: 'center',
-    paddingVertical: SPACING.xxl * 2,
+    marginHorizontal: SPACING.lg,
+    paddingVertical: SPACING.xl * 2,
     paddingHorizontal: SPACING.xl,
+    borderRadius: RADIUS.lg,
   },
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weight.bold,
+    fontWeight: TYPOGRAPHY.weight.bold as any,
     marginTop: SPACING.md,
     marginBottom: SPACING.xs,
   },
@@ -1063,157 +1553,6 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     textAlign: 'center',
   },
-  // Trend Chart Styles
-  trendChartContainer: {
-    marginHorizontal: SPACING.lg,
-    marginVertical: SPACING.md,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  trendChartHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.md,
-    gap: SPACING.sm,
-  },
-  trendChartTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  trendChartSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  chartArea: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    height: 150,
-    paddingLeft: 35,
-  },
-  yAxisLabels: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 20,
-    width: 32,
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingRight: 4,
-  },
-  axisLabel: {
-    fontSize: 9,
-    fontWeight: TYPOGRAPHY.weight.medium,
-  },
-  barsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
-    height: 130,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
-    paddingBottom: 2,
-    paddingLeft: 4,
-  },
-  barColumn: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    flex: 1,
-    maxWidth: 60,
-  },
-  barWrapper: {
-    width: 28,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    position: 'relative',
-  },
-  bar: {
-    width: 22,
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    minHeight: 8,
-  },
-  barGlow: {
-    position: 'absolute',
-    left: 2,
-    right: 2,
-    top: 0,
-    height: 8,
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-  },
-  barValue: {
-    fontSize: 9,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 3,
-  },
-  barLabel: {
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginTop: 6,
-  },
-  changeIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 2,
-    gap: 1,
-  },
-  changeText: {
-    fontSize: 8,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  trendSummary: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: SPACING.md,
-    paddingTop: SPACING.sm,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    gap: 6,
-  },
-  trendSummaryText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  trendIndicatorBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 'auto',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
-    borderRadius: RADIUS.sm,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    gap: 2,
-  },
-  trendIndicatorText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  disclaimerContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: SPACING.md,
-    paddingTop: SPACING.sm,
-    gap: SPACING.xs,
-  },
-  disclaimerText: {
-    fontSize: 10,
-    fontStyle: 'italic',
-    flex: 1,
-    lineHeight: 14,
-  },
 });
 
 export default PremiumMeritArchiveScreen;
-

@@ -125,7 +125,7 @@ const PremiumUniversityDetailScreen = () => {
             <ProgramsTab university={university} programs={universityPrograms} colors={colors} isDark={isDark} />
           )}
           {activeTab === 'merits' && (
-            <MeritsTab meritSummary={meritSummary} colors={colors} isDark={isDark} />
+            <MeritsTab meritSummary={meritSummary} universityId={university?.id} colors={colors} isDark={isDark} />
           )}
           {activeTab === 'admission' && (
             <AdmissionTab

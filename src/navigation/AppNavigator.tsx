@@ -94,7 +94,7 @@ import {
 
 // User Feature Screens - Data Submission
 import UserDataSubmissionScreen from '../screens/UserDataSubmissionScreen';
-import UltraContributeScreen from '../screens/UltraContributeScreen';
+import { UltraContributeScreen } from '../screens/UltraContributeScreen';
 
 // Components
 import {ErrorBoundary, PremiumTabBar} from '../components';
