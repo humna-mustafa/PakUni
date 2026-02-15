@@ -1,0 +1,406 @@
+NOTIFICATION BELL – UI ISSUE (HOME PAGE)
+On the Home page, clicking the notification bell (top right corner) does not open a notification screen or popup. Instead, it shows a small thin bar.
+Expected behavior: Clicking the notification bell should open a proper notification screen or popup displaying user notifications clearly.
+ 
+
+also on boarding pages are misisng which intercative pages  appears implemnt onboarding screens o that it only appaers once when user first app launch when user tap "Get started 
+ or "Skip"   then according it but onboarding screen must professional goos like top compnaise professional .
+ADMISSION FEATURES – SPRING/FALL MERIT & PROGRAM SESSION HANDLING
+The app currently ignores differences between spring and fall admissions across all features:
+* Some universities offer only fall, some offer both; each session has different merit requirements.
+* Programs may be offered in fall, spring, or both, with different merit cutoffs.
+* Features like Admission Chance Calculator, Score Game, and University Details do not account for these differences.
+Fix Required:
+* Apply correct spring/fall merit rules and program availability across all relevant features in app.
+* Ensure calculations, results, and displayed data reflect the correct session-specific merit for each university and program.
+* Shared results and all app features must respect these session-based differences.
+
+
+In whole app this feature “AI Match”  for getting recommendation is not correctly working 0% correctly working.
+? Current Problem 
+The AI Match feature is not generating correct university recommendations.
+Recommendations do not change logically with marks, ignore recent all universities recent merit history, spring and fall both for universities who offer program s in bothsessions and either one based on if it offer one ., and do not validate eligibility based on the user’s input.
+As a result, the AI Match output is unreliable and misleading.
+
+? Detailed Issues Identified
+1?? Marks-Based Recommendation Logic Is Broken
+Observed Behavior:
+* Increasing or decreasing marks (even by 1 mark) produces incorrect or random recommendations
+* High marks do not consistently return high-merit universities
+* Low or average marks sometimes return top-tier universities
+* There is no visible threshold logic
+Expected Behavior:
+* Recommendations must be tiered by marks:
+o High marks ? Top-tier universities
+o Average marks ? Mid-tier universities
+o Low marks ? Low-tier / fallback universities
+* Small changes in marks should not drastically reshuffle results
+* AI should use ranges, not exact marks only
+
+2?? No Use of Previous Merit History (Critical Issue)
+Observed Behavior:
+* AI Match does not check last year or previous years’ merit lists
+* Universities are recommended even if:
+o The user’s marks are below historical closing merit
+o The program was never offered at that merit
+Expected Behavior:
+* For each university + program:
+o Check last 1–3 years’ recnt merit history
+o Compare user marks vs closing merit
+o Only recommend if user marks fall within a realistic merit range
+* Merit history must be a core data source, not optional
+
+3?? Eligibility Is Not Validated
+Observed Behavior:
+* AI does not correctly verify:
+o If the program exists in the selected university
+o If the user’s marks are eligible for that program
+o If entry test is required and user selected it
+* Universities are shown even when the user is clearly ineligible
+Expected Behavior:
+AI must validate before recommending:
+* Program availability
+* Minimum eligibility criteria
+* Entry test requirement (if applicable)
+* Marks vs merit threshold
+If any condition fails, the university should not appear in recommendations.
+
+4?? City, University Type & Program Filters Are Weak
+Observed Behavior:
+* Selected filters (city, public/private, program) are not strictly enforced
+* AI sometimes recommends universities:
+o Outside selected city
+o Outside selected university type
+o With mismatched programs
+Expected Behavior:
+* Filters must act as hard constraints, not suggestions
+* AI should only consider universities that:
+o Match selected city (or explicitly marked “other cities”)
+o Match university type (public / private / both)
+o Offer the selected program
+
+5?? Recommendation Ranking Is Incorrect
+Observed Behavior:
+* No clear ordering of universities
+* Top universities appear mixed with low-tier ones
+* Ranking does not reflect merit strength or competitiveness
+Expected Behavior:
+Recommendations must be ranked logically:
+1. Best-fit universities (highest chance of admission)
+2. Medium-fit universities
+3. Safe / low-tier universities
+Ranking factors should include:
+* Merit history match
+* User marks strength
+* University reputation (optional weight)
+* Admission probability score
+
+6?? No Stability in Recommendations
+Observed Behavior:
+* Every small change in marks reshuffles the entire list
+* No buffering or tolerance logic
+Expected Behavior:
+* AI should use:
+o Merit ranges
+o Probability bands
+o Confidence scores
+* Minor mark changes should only cause minor ranking shifts, not full changes
+
+? What Needs to Be Done (Solution Direction)
+?? Required AI Logic Improvements
+1. Introduce Merit-Based Ranges
+o High / Medium / Low probability buckets
+2. Integrate Historical Merit Data
+o At least last 2–3 years
+3. Strict Eligibility Validation
+o Before recommendation, not after
+4. Hard Enforcement of Filters
+o City, program, university type
+5. Scoring & Ranking System
+o Admission probability score per university
+6. Stability Logic
+o Prevent extreme changes for small mark variations
+
+?? Conclusion
+Currently, AI Match behaves like a random suggestion engine, not an admission-matching system.
+To be fully functional:
+* It must reason over data
+* Validate eligibility
+* Use historical merit trends
+* Rank results logically
+* Maintain stability across small input changes
+Until these issues are fixed, AI Match recommendations cannot be trusted by students.
+
+
+
+
+ 
+APP-WIDE ISSUES
+1. In whole app in this feature “Merit Calculator” – Hafiz-e-Quran Marks
+* The app inconsistently applies Hafiz-e-Quran marks across universities:
+o Sometimes adds marks where the university does not award them
+o Sometimes fails to add marks where the university does award them
+o Currently uses a fixed 20 marks universally, ignoring university rules
+* Expected: Apply Hafiz-e-Quran marks dynamically based on each university’s official policy throughout the app.
+2. In whole app in “Entry Test” feature – Duplicate & Incorrect Test Listings
+* In the Entry Test feature, NAT test details show wrong NAT variants.
+* Other tests also show incorrect or incomplete test-type information.
+* Expected: Either remove incorrect variants or update all test types with correct information for all tests across the app.
+Conclusion: Both features need a system-wide fix to ensure accurate, reliable, and consistent information.
+
+
+ENTRY TEST FEATURE – DUPLICATE & INCORRECT TEST LISTING
+In the Entry Test feature, the "NAT" test details show wrong NAT variants. Either remove the incorrect NAT variants or update with correct NAT type information. Other tests also have incorrect  and incomplete test-type information.
+
+In whole app in “Deadlines” feature 
+Issue 3: “Apply Now” Button Redirection
+The “Apply Now” button works for some universities, but for many it redirects to a 404 error page. Every “Apply Now” button must redirect to the correct and official admission page. Broken or incorrect links should be fixed to avoid user confusion.
+
+
+
+ENTRY TEST FEATURE – DATA ACCURACY & NAVIGATION ISSUES
+Additionally, the “Register Now” button for majority tests redirects to a 404 error page or  an incorrect page instead of the official registration page. All registration buttons must link to valid, official, and verified sources.
+ In “Entry Test” feature  the duration of each test written in in each test deails page in test format section differs from written in “Duration box”after “On Track ” box in details pagaes  write accurte details of test , accurate , verified , official “Durations” of all entry test.
+  
+
+ENTRY TEST FEATURE – SEARCH BAR NOT WORKING
+In the Entry Test feature, the search bar is not working properly for all listed tests especiallay for “NAT test” an dits keywords. Searching by test name does not return correct or complete results, and some tests do not appear even when the correct keyword is entered.
+The search functionality must work reliably in all cases and provide accurate results, similar to a top-quality search experience used by major platforms.
+
+
+CAREER GUIDANCE FEATURE – DATA ACCURACY & NAVIGATION ISSUE
+In the “Career Guidance” feature accros the app, the “Avg S
+alary”shown for all careers must be accurate and verified. Currently, salary information needs to be reviewed to ensure it reflects correct and up-to-date data.
+
+
+In whole app in “STUDY GUIDES” FEATURE – SEARCH DISPLAY ISSUE
+In the Study Guides feature, performing a search shows all categories above the search results instead of displaying results correctly below the search bar. Ensure:
+* Search results appear directly below the search bar.
+* Categories only appear where intended, not mixed with search results.
+* This applies to all study guides across the app.
+
+
+SCORE GAME / ADMISSION CHANCE CALCULATOR – RESULT SHARING & ACCURACY
+The feature currently has two issues across the app:
+Accuracy: Admission chances are calculated incorrectly; they do not consider student marks, selected program/university, historical merit lists, or whether the student applies for spring or fall.
+Fix Required:
+* Update calculations using 2025–2026 merit data for all programs and universities.
+* Ensure results differ correctly for spring and fall admissions.
+* Ensure all selections (specific or “All Universities/Programs”) return complete, accurate chances.
+
+In UNIVERSITIES PAGE – DATA ACCURACY & UI ISSUES
+Current Issues:
+2. University Logos
+* Many university logos are missing or incorrectly displayed.
+* An Excel file with logos  misinsg now has been provided  to you both excel file onemaster an done with currently misinsg logos link also if somemisinsg find logos from master excel file, but the app is not applying them correctly even same logos was present in previous excel universities data sheet but you miss them and dodnot paply accutaely also all logos .
+
+
+UNIVERSITY LOGO CONSISTENCY – APP-WIDE
+Display official university logos alongside the university name where relevant and appropriate, such as in University Details, Merit Lists, Calculators, Entry Tests, and other key sections.
+Ensure logos are used only where they improve clarity and professionalism, maintaining accurate logo mapping and brand consistency across the app.
+
+3. Filters
+* Duplicate/redundant filters for provinces exist. Only one dropdown or bubble filter should be used. Also by deault make sure that filter button is off user can itself just on it because by it ux an dscreen look messy too much filter think aboutif my this opinion good then  implenet finot then left.  
+* Sorting filters ( “Ranking”,)is is  not working.
+4. University Details
+* Subpages for universities show incomplete or incorrect data:
+o  approx. many pages show “Information coming soon” or “No data available” incorrectly.
+o Programs subpages show incorrect programs offered it must show all, exact same programs offred by that university also each university offred different programs also missing fees correct information for all prograsm.
+o Merit subpages have no accurste data recent data, no spring fall implentatiaon if applaicable for that uni .o “Admission” subpages and “Aid” and “Merit” subpages are empty .
+
+
+
+
+
+
+In TOOLS FEATURE Across the app– MERIT CALCULATOR, GRADE CONVERTER, TARGET CALCULATOR, AND WHAT-IF SIMULATOR ISSUES in tools
+2. Grade Converter Tool
+* The Grade Converter calculates incorrect grades to marks for all subjectsnow its marking percentage formula is wrong not accordindg actual percentage formula used in olevel and  A levels in Pakistan
+.
+* The tool must follow Pakistan grade and marks  conversion criteria accurately for alevel snad olevels inter and matric.
+* Results must be 100% correct for all subjects grades,output marks must be 100% authentic correct and input combinations.
+3. Target Calculator Tool
+Not based on actual recent merit data of univeristies
+* The calculation must be consistent and reliable across all scenarios.
+4. What-If Simulator Tool
+* The simulator calculates admission chances based on past merit, but the results are too low and inaccurate.
+No merit info it has recent official, accurste merit.
+* the merit estimation logic is wrong:
+o It does not use recent average historical merit cutoffs accurately.
+o Admission chances are underestimated or incorrect for programs and universities.
+* The simulator must use last year’s average merit cutoffs and proper calculation logic to display accurate chances.
+
+
+
+
+
+
+In app in “Scholarship” page first this page was working  but have someissues which I list in previous testing but last time in correctig issues you make “Scholarship” page completely infunctional now nothing in this page is working . also I idnot know hthat either previous issues are resolved or not whicgh was theaeae below. Make full page fully functional ,accurate .
+
+SCHOLARSHIPS PAGE – DATA ACCURACY & UI/UX ISSUES
+Current Issues:
+1. Selected Universities Dropdown
+* The dropdown filter does not list the university name should appear in the dropdown; abbreviations should not be shown in this filter.
+* Selecting a university from the dropdown does not display it in the filter bar.
+* Currently, after selection, the university does not appear properly in that bar it name, and no redundant buttons or bubbles should be created for that uni name ,seleces name  must be shown as written in that dropdown bar as text.
+2. UI/UX Problems
+* The “Note” box is covering half the screen and overlapping filters, resulting in poor UI/UX.
+* Scholarship boxes contain too much information initially, making the page cluttered and confusing first filter then note then scholarships which is bad such complexity.
+* Scholarship coverage percentages are incorrect for all scholashisps. After full researcha, from credible , official or google ai mode info or reliable credible information is mwriitten.
+* Monthly stipend, income limit, and application deadlines are missing or either wrong for allscholarships.
+3. University Logos and “Apply Now” Buttons
+* Logos for universities offering the scholarship are missing or incorrect in “Where Available” box in each scholarship box.
+* “Apply Now” buttons redirect to wrong pages, 404 pages, or misdirected links.
+* Universities offering the scholarship are not listed correctly in the box.
+4. Scholarship Coverage & Details
+* Scholarship coverage percentages are completely wrong.
+* Information about stipend, income limits, and other benefits is inaccurate.
+* Even well-known scholarships like PEEF have wrong details.
+
+Expected Behavior / Corrections Needed:
+1. Selected Universities Dropdown
+* Populate the dropdown with correct university names  without redundancyecat same name which you list in universities page list.
+* When a university is selected, it must appear in the filter bar without creating extra buttons or bubbles.
+* Ensure smooth selection and removal functionality.
+2. UI/UX Improvements
+* Either remove the notes/notification box or place it in a suitable position, e.g., at the end of each scholarship detail.
+* Simplify scholarship boxes with clean UI and good UX, showing only essential info initially.
+* Ensure proper spacing and readability for all elements.
+3. Scholarship Coverage & Details
+* Perform a full credible search and update all scholarship coverage percentages correctly.
+* Provide correct monthly stipend, income limit, and application deadlines for all scholarships.
+* Include a clear list of universities offering each scholarship with correct logos and names.
+4. Apply Now Buttons
+* Fix all “Apply Now” buttons to redirect to the correct official scholarship web page.
+5. General Data Accuracy
+* All data (coverage, stipend, deadlines, universities) must be 100% accurate and verified.
+* Ensure no redundancy, no misrepresentation, and correct formatting.
+* Follow best practices for naming (full name or abbreviation as appropriate) across the page.
+
+Conclusion:
+The Scholarships page currently has 0% accuracy and multiple UI/UX issues. All dropdowns, university listings, scholarship boxes, coverage percentages, stipend, deadlines, and Apply Now links must be corrected to 100% accuracy. The page must also have clean, simple, and user-friendly UI/UX.
+
+
+
+
+
+
+In whole app the CAREER ROADMAPS FEATURE – DURATION, SALARY, AND NAVIGATION ISSUES
+In careers roadmap feature in “MDCAT” career the box win which its duration, demand, difficulty is written  is exceeding screen , cutting screen , make “MDCAT page that little whitis h box below the line “Save lives, be a hero” below this line the box which is below it is issue it eceedidng screen make it like lal other career this page. Make itcorrect ui an dux
+3. Salary Range
+* Salary ranges in Career Roadmaps are inconsistent with Career Guidance feature.
+* Incorrect or conflicting salary information reduces credibility.write correct in both average in careers guidance feature and salary range in career rodmap feature.
+4. Navigation & UI/UX
+* Navigation between careers and roadmaps is unclear or inconsistent.
+* The interface is not clean; confusing layout and poor UX reduce usability.
+
+
+In whole REPORT WRONG DATA FEATURE all its subfaetures – UNIVERSITY SELECTION CHANGE ISSUE
+Current Issue:
+Selecting university from searach bar and then after going forward an dthen coming back to change the ui of search bar deop down universities name list and cross button for removing last univeritsy and pen button for editing or addaing replacing new uni ui and ux issue make it smooth correct, ux and ui.
+
+In whole appa in this feature  MERIT / MERIT ARCHIVE FEATURE – DATA ACCURACY & UPDATING
+In the Merit / Merit Archive feature, ensure:
+* Display correct and reliable merit data for 2025 and 2026.
+* Include both spring and fall sessions where applicable.
+* Verify which universities offer both sessions and which offer only one.
+
+
+
+
+In MYGOAL FEATURE why “Quick Templates” boxes are removed from main page of “My goals ” also in add they just shown as lin why I want templtes ui an dux exct aor similar like the templatse in “Badges” feature of app where in main page first quick templatses an dlast one templet box for custom one . also the quick template template laredauy premade templtes I tink did not require edit feature just for custom ones full edition is ok also the ui of all created goal when clicked has now bwcome comcplex, messy, confusinsg ui an dux wise make this feature usable, enjoybale, also good good user experience also in custom templtes allow edition in such a way that when user seescehck points it didnnto see croos symbols in front of each goal its conflictifg for students just when editbutton clicked just then become fully editble an dby saving it saved and ready of markiang like this I want best feature.aslo for delete button just dustbin icon  or like deltedbutton in my achievement feature aloang with eidt button is enough not need for somuch big button in goal do thinking logicallay ui and ux  for good app.
+
+
+In “Badges” / “MYACHIEVEMENTS” FEATURE – UI, DATA, AND IMAGE HANDLING ISSUES
+Current Issues:
+3. Image Handling Problems
+* When adding pictures from mobile to celebration cards:
+o The storage location and position of images are unclear.
+o After adding an image, returning to view the achievement not display the images.
+o If the image is deleted from the mobile device, it must not  disappears from the card it must still seeable exact same from certain placein celebration crads, now after adding images when user returnsclciing on them dodnot open that addaed pictures that are not agiang seebale..
+* Celebration cards should store images independently so they remain visible even if deleted from the device.
+4. Editability Issues
+* After creating an achievement or celebration card:
+o Cards are not editable, including text, date, and images.
+o Users cannot update or modify achievements after creation.
+ Also in all templtes ensure that the date which user enter in form also show on card.
+
+COMPARE UNIVERSITIES FEATURE – LOGOS, DATA ACCURACY, AND SHARING ISSUES
+Current Issues:
+.
+2. Incorrect Comparison Data
+* All comparison details for universities are incorrect, including:
+o Programs offered
+o Campuses (number and location)
+o Fee ranges
+* Some campuses and program data in the Universities page are also wrong or missing, which affects comparison accuracy.
+* The comparison must only include reliable and verified data. If some data cannot be fixed, it should be skipped rather than showing wrong information.
+
+
+In whole app THE MERIT / MERIT ARCHIVE FEATURE – DATA ACCURACY & UPDATING ISSUE
+Current IssueCampuses and programs deauils are wrong in merit archive s boxes in boxes of each university names laso all falla written where merit of spring for univeristoies which offer also spering first see which uni offer which either psring or fall or both or then which programs in which and then how many camuuses for whole app an dlaos for this merit arachives this dta ais required .
+
+The Merit Archive / The Merit feature must provide 100% accurate, verified, and up-to-date merit data, including correct trends, historical cutoffs, and rankings. Current data is completely unreliable and outdated and must be fully corrected and maintained for proper functionality and student trust.
+
+
+
+KIDZONE – SUBJECT GUIDES PAGE & FEATURE CONSISTENCY
+Current Issues:
+1. UI/UX Problems
+* The Subjects Guides page in KidZone has poor UI/UX:
+o Complex and confusing layout
+o Not child-friendly
+o Buttons, boxes, and text are inconsistent and cluttered
+2. Feature Consistency with Main App
+* Features present in the main app (such as search functionality, filters, and content updates) are not implemented in KidZone.
+* KidZone currently lags behind the main app in functionality and user experience.
+
+
+
+
+
+Fix all these problms in App : make 100%correction also again verify either correction you made is correct or not is authentic or not just make changes when you have authentic credible official source.
+Data Requirements Document
+1. Merit Calculator – Hafiz-e-Quran Marks
+* Correct Hafiz-e-Quran marks required as per each university. 
+* Need confirmation whether each university adds Hafiz-e-Quran marks or not. 
+2. Merit Calculator – Merit Formulas
+* Correct merit formulas required for ALL universities. 
+3. Homepage ? Quick Actions ? Entry Tests
+* Correct Registration Last Date for all entry tests. 
+* Correct Test Date for all entry tests. 
+* Correct Test Duration required. 
+* Correct Test Fee required. 
+4. Entry Tests Data Requirements
+* Correct registration website links required for ALL entry tests. 
+* Fix “Register Now” buttons – currently redirect to wrong/unofficial pages. 
+* Complete entry tests list required – currently incomplete. 
+5. Careers Section
+* All careers list required with correct duration. 
+6. Universities Page
+* Correct Campuses data required. 
+* Programs list required for each university. 
+* Last year Merit Lists required. 
+* Missing university logos need to be added. 
+7. Scholarships Section
+* Complete Scholarships list for all universities. 
+* Correct Campus availability for each scholarship. 
+* Scholarship Coverage Percent required. 
+* Correct Monthly Stipend required. 
+* Correct Income Limit required. 
+* Correct Application Deadline required. 
+* “Apply Now” buttons directing to wrong pages – fix required with correct official links. 
+8. More ? Dates Section
+* Correct Application Open dates required. 
+* Correct Deadline dates required. 
+* Correct Entry Test dates required. 
+* Fix Apply Now button redirects with correct website links. 
+9. Compare Universities Section
+* Correct Ranking data required. 
+correct hec ranking of alla univeristies
+* Correct Programs list required.  
+* Correct Fee Range required. 
+* Hostel availability (Yes/No) required. 
+* Scholarship availability data required. 
+10. Merit Data
+Accurate Last recent Years University Merit

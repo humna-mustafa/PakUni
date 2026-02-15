@@ -20,6 +20,9 @@ import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
 import {getUniversityBrandColor, getLogo} from '../utils/universityLogos';
 import UniversityLogo from './UniversityLogo';
 
+// SVG file import — the logo artwork is in a standalone .svg file
+import PakUniIconWhite from '../assets/svg/pakuni-icon-white.svg';
+
 // ============================================================================
 // BRAND CONSTANTS - PakUni Identity
 // ============================================================================
@@ -28,8 +31,9 @@ const PAKUNI_BRAND = {
   colors: {
     primary: '#4573DF',       // Brand Blue
     primaryDark: '#3660C9',
+    primaryLight: '#6B93F0',  // Lighter brand blue
     secondary: '#10B981',     // Emerald
-    accent: '#4573DF',        // Violet
+    accent: '#3660C9',        // Darker blue for contrast
     gold: '#F59E0B',          // Amber
     goldLight: '#FBBF24',
     success: '#10B981',
@@ -37,9 +41,9 @@ const PAKUNI_BRAND = {
     error: '#EF4444',
   },
   gradients: {
-    primary: ['#4573DF', '#4573DF'],
+    primary: ['#6B93F0', '#4573DF', '#3660C9'],
     success: ['#10B981', '#059669'],
-    premium: ['#4573DF', '#4573DF', '#3660C9'],
+    premium: ['#6B93F0', '#4573DF', '#3660C9'],
     dark: ['#0B1118', '#010203'],
   },
 };
@@ -61,61 +65,16 @@ const PakUniLogoBadge: React.FC<PakUniLogoBadgeProps> = ({
     ? 'rgba(255,255,255,0.2)' 
     : 'rgba(69, 115, 223,0.15)';
   
-  const capSize = size * 0.6;
-  const bookSize = size * 0.35;
-  
+  const iconSize = Math.round(size * 0.75);
+
   return (
-    <View style={[logoStyles.container, {width: size, height: size, backgroundColor: bgColor, borderRadius: size / 2}]}>
-      {/* Graduation Cap */}
-      <View style={logoStyles.capWrapper}>
-        {/* Cap Top (Mortarboard) */}
-        <LinearGradient
-          colors={['#4573DF', '#4573DF']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[logoStyles.capTop, {
-            width: capSize,
-            height: capSize * 0.35,
-            borderRadius: 2,
-          }]}
-        />
-        {/* Cap Base */}
-        <LinearGradient
-          colors={['#3660C9', '#4573DF']}
-          style={[logoStyles.capBase, {
-            width: capSize * 0.5,
-            height: capSize * 0.3,
-            borderRadius: 2,
-            marginTop: -2,
-          }]}
-        />
-        {/* Tassel */}
-        <View style={[logoStyles.tassel, {
-          width: 2,
-          height: capSize * 0.35,
-          backgroundColor: PAKUNI_BRAND.colors.gold,
-          right: size * 0.12,
-          top: capSize * 0.2,
-        }]}>
-          <View style={[logoStyles.tasselKnot, {
-            width: 5,
-            height: 5,
-            borderRadius: 2.5,
-            backgroundColor: PAKUNI_BRAND.colors.goldLight,
-          }]} />
-        </View>
-      </View>
-      {/* Book at bottom */}
-      <View style={[logoStyles.book, {marginTop: -2}]}>
-        <LinearGradient
-          colors={['#10B981', '#059669']}
-          style={[logoStyles.bookPage, {
-            width: bookSize,
-            height: bookSize * 0.5,
-            borderRadius: 2,
-          }]}
-        />
-      </View>
+    <View
+      accessible
+      accessibilityRole="image"
+      accessibilityLabel="PakUni logo"
+      style={[logoStyles.container, {width: size, height: size, backgroundColor: bgColor, borderRadius: size / 2}]}
+    >
+      <PakUniIconWhite width={iconSize} height={iconSize} />
     </View>
   );
 };
@@ -126,26 +85,6 @@ const logoStyles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
-  capWrapper: {
-    alignItems: 'center',
-    position: 'relative',
-  },
-  capTop: {
-    transform: [{perspective: 100}, {rotateX: '15deg'}],
-  },
-  capBase: {},
-  tassel: {
-    position: 'absolute',
-  },
-  tasselKnot: {
-    position: 'absolute',
-    bottom: -3,
-    left: -1.5,
-  },
-  book: {
-    alignItems: 'center',
-  },
-  bookPage: {},
 });
 
 // ============================================================================

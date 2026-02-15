@@ -97,7 +97,33 @@ import UserDataSubmissionScreen from '../screens/UserDataSubmissionScreen';
 import { UltraContributeScreen } from '../screens/UltraContributeScreen';
 
 // Components
-import {ErrorBoundary, PremiumTabBar} from '../components';
+import {ErrorBoundary, PremiumTabBar, withAdminGuard} from '../components';
+
+// Wrap admin screens with role guards
+const GuardedAdminDashboardScreen = withAdminGuard(AdminDashboardScreen);
+const GuardedAdminUsersScreen = withAdminGuard(AdminUsersScreen, ['admin', 'super_admin']);
+const GuardedAdminContentScreen = withAdminGuard(AdminContentScreen);
+const GuardedAdminReportsScreen = withAdminGuard(AdminReportsScreen);
+const GuardedAdminAnnouncementsScreen = withAdminGuard(AdminAnnouncementsScreen);
+const GuardedAdminFeedbackScreen = withAdminGuard(AdminFeedbackScreen);
+const GuardedAdminAnalyticsScreen = withAdminGuard(AdminAnalyticsScreen);
+const GuardedAdminSettingsScreen = withAdminGuard(AdminSettingsScreen, ['admin', 'super_admin']);
+const GuardedAdminAuditLogsScreen = withAdminGuard(AdminAuditLogsScreen, ['admin', 'super_admin']);
+const GuardedAdminNotificationsScreen = withAdminGuard(AdminNotificationsScreen);
+const GuardedAdminErrorReportsScreen = withAdminGuard(AdminErrorReportsScreen);
+const GuardedAdminDataManagementScreen = withAdminGuard(AdminDataManagementScreen);
+const GuardedAdminTursoDataManagementScreen = withAdminGuard(AdminTursoDataManagementScreen);
+const GuardedAdminTursoNotificationsScreen = withAdminGuard(AdminTursoNotificationsScreen);
+const GuardedAdminSystemHealthScreen = withAdminGuard(AdminSystemHealthScreen);
+const GuardedAdminBulkOperationsScreen = withAdminGuard(AdminBulkOperationsScreen, ['admin', 'super_admin']);
+const GuardedAdminAppConfigScreen = withAdminGuard(AdminAppConfigScreen, ['super_admin']);
+const GuardedAdminActivityDashboardScreen = withAdminGuard(AdminActivityDashboardScreen);
+const GuardedAdminContentModerationScreen = withAdminGuard(AdminContentModerationScreen);
+const GuardedAdminDataSubmissionsScreen = withAdminGuard(AdminDataSubmissionsScreen);
+const GuardedAdminAutoApprovalRulesScreen = withAdminGuard(AdminAutoApprovalRulesScreen, ['admin', 'super_admin']);
+const GuardedAdminMeritDeadlinesScreen = withAdminGuard(AdminMeritDeadlinesScreen);
+const GuardedAdminNotificationTriggersScreen = withAdminGuard(AdminNotificationTriggersScreen, ['admin', 'super_admin']);
+const GuardedAdminApprovalAnalyticsScreen = withAdminGuard(AdminApprovalAnalyticsScreen);
 
 // Contexts
 import {useTheme} from '../contexts/ThemeContext';
@@ -511,128 +537,128 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={ContactSupportScreen}
             options={{headerShown: false}}
           />
-          {/* Admin Screens */}
+          {/* Admin Screens - Protected with role guards */}
           <Stack.Screen
             name="AdminDashboard"
-            component={AdminDashboardScreen}
+            component={GuardedAdminDashboardScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminUsers"
-            component={AdminUsersScreen}
+            component={GuardedAdminUsersScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminContent"
-            component={AdminContentScreen}
+            component={GuardedAdminContentScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminReports"
-            component={AdminReportsScreen}
+            component={GuardedAdminReportsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminAnnouncements"
-            component={AdminAnnouncementsScreen}
+            component={GuardedAdminAnnouncementsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminFeedback"
-            component={AdminFeedbackScreen}
+            component={GuardedAdminFeedbackScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminAnalytics"
-            component={AdminAnalyticsScreen}
+            component={GuardedAdminAnalyticsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminSettings"
-            component={AdminSettingsScreen}
+            component={GuardedAdminSettingsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminAuditLogs"
-            component={AdminAuditLogsScreen}
+            component={GuardedAdminAuditLogsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminNotifications"
-            component={AdminNotificationsScreen}
+            component={GuardedAdminNotificationsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminErrorReports"
-            component={AdminErrorReportsScreen}
+            component={GuardedAdminErrorReportsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminDataManagement"
-            component={AdminDataManagementScreen}
+            component={GuardedAdminDataManagementScreen}
             options={{headerShown: false}}
           />
-          {/* Turso Admin Screens */}
+          {/* Turso Admin Screens - Protected */}
           <Stack.Screen
             name="AdminTursoDataManagement"
-            component={AdminTursoDataManagementScreen}
+            component={GuardedAdminTursoDataManagementScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminTursoNotifications"
-            component={AdminTursoNotificationsScreen}
+            component={GuardedAdminTursoNotificationsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminSystemHealth"
-            component={AdminSystemHealthScreen}
+            component={GuardedAdminSystemHealthScreen}
             options={{headerShown: false}}
           />
-          {/* Advanced Admin Screens */}
+          {/* Advanced Admin Screens - Protected */}
           <Stack.Screen
             name="AdminBulkOperations"
-            component={AdminBulkOperationsScreen}
+            component={GuardedAdminBulkOperationsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminAppConfig"
-            component={AdminAppConfigScreen}
+            component={GuardedAdminAppConfigScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminActivityDashboard"
-            component={AdminActivityDashboardScreen}
+            component={GuardedAdminActivityDashboardScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminContentModeration"
-            component={AdminContentModerationScreen}
+            component={GuardedAdminContentModerationScreen}
             options={{headerShown: false}}
           />
-          {/* Data Management & Approval Workflow */}
+          {/* Data Management & Approval Workflow - Protected */}
           <Stack.Screen
             name="AdminDataSubmissions"
-            component={AdminDataSubmissionsScreen}
+            component={GuardedAdminDataSubmissionsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminAutoApprovalRules"
-            component={AdminAutoApprovalRulesScreen}
+            component={GuardedAdminAutoApprovalRulesScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminMeritDeadlines"
-            component={AdminMeritDeadlinesScreen}
+            component={GuardedAdminMeritDeadlinesScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminNotificationTriggers"
-            component={AdminNotificationTriggersScreen}
+            component={GuardedAdminNotificationTriggersScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="AdminApprovalAnalytics"
-            component={AdminApprovalAnalyticsScreen}
+            component={GuardedAdminApprovalAnalyticsScreen}
             options={{headerShown: false}}
           />
           {/* User Data Submission - Ultra Contribute Screen */}

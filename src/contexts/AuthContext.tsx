@@ -201,6 +201,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   // Track last profile fetch to avoid redundant API calls
   const lastProfileFetchRef = useRef<number>(0);
 
+  // =========================================================================
+  // AUTH RATE LIMITING: Prevent rapid auth attempts (M-12)
+  // =========================================================================
+  const authAttemptsRef = useRef<{count: number; lastAttempt: number}>({count: 0, lastAttempt: 0});
+  const AUTH_RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
+  const AUTH_MAX_ATTEMPTS = 5; // Max 5 attempts per minute
+  const AUTH_COOLDOWN_MS = 3000; // 3 second cooldown after failed attempt
+
+  const checkAuthRateLimit = useCallback((): {allowed: boolean; waitTime?: number} => {
+    const now = Date.now();
+    const {count, lastAttempt} = authAttemptsRef.current;
+    
+    // Reset count if outside the rate limit window
+    if (now - lastAttempt > AUTH_RATE_LIMIT_WINDOW_MS) {
+      authAttemptsRef.current = {count: 0, lastAttempt: now};
+      return {allowed: true};
+    }
+    
+    // Check cooldown after last attempt
+    if (now - lastAttempt < AUTH_COOLDOWN_MS) {
+      return {allowed: false, waitTime: AUTH_COOLDOWN_MS - (now - lastAttempt)};
+    }
+    
+    // Check if max attempts exceeded
+    if (count >= AUTH_MAX_ATTEMPTS) {
+      const waitTime = AUTH_RATE_LIMIT_WINDOW_MS - (now - lastAttempt);
+      return {allowed: false, waitTime};
+    }
+    
+    return {allowed: true};
+  }, []);
+
+  const incrementAuthAttempt = useCallback(() => {
+    authAttemptsRef.current = {
+      count: authAttemptsRef.current.count + 1,
+      lastAttempt: Date.now(),
+    };
+  }, []);
+
   // Check if we should fetch profile (throttled)
   const shouldFetchProfile = useCallback(async (): Promise<boolean> => {
     const now = Date.now();
@@ -577,8 +616,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   }, []);
 
   const signInWithEmail = useCallback(async (email: string, password: string): Promise<boolean> => {
+    // Check rate limit before attempting sign in
+    const rateCheck = checkAuthRateLimit();
+    if (!rateCheck.allowed) {
+      const waitSeconds = Math.ceil((rateCheck.waitTime || 3000) / 1000);
+      throw new Error(`Too many login attempts. Please wait ${waitSeconds} seconds before trying again.`);
+    }
+
     try {
       setState(prev => ({...prev, isLoading: true, authError: null}));
+      incrementAuthAttempt();
 
       const {data, error} = await supabase.auth.signInWithPassword({
         email,
@@ -620,8 +667,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     password: string,
     name: string
   ): Promise<boolean> => {
+    // Check rate limit before attempting sign up
+    const rateCheck = checkAuthRateLimit();
+    if (!rateCheck.allowed) {
+      const waitSeconds = Math.ceil((rateCheck.waitTime || 3000) / 1000);
+      throw new Error(`Too many sign-up attempts. Please wait ${waitSeconds} seconds before trying again.`);
+    }
+
     try {
       setState(prev => ({...prev, isLoading: true, authError: null}));
+      incrementAuthAttempt();
 
       const {data, error} = await supabase.auth.signUp({
         email,

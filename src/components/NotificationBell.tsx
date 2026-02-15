@@ -570,6 +570,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: SCREEN_WIDTH - MODERN_SPACING.lg * 2,
     maxWidth: 360,
+    minHeight: 250,
     maxHeight: SCREEN_HEIGHT * 0.55,
     borderRadius: 14,
     overflow: 'hidden',
@@ -607,6 +608,7 @@ const styles = StyleSheet.create({
   },
   notificationList: {
     maxHeight: SCREEN_HEIGHT * 0.38,
+    minHeight: 180,
   },
   panelFooter: {
     flexDirection: 'row',
@@ -667,10 +669,12 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
+    minHeight: 180,
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: MODERN_SPACING.xl * 1.5,
+    paddingVertical: MODERN_SPACING.xl * 2,
+    paddingHorizontal: MODERN_SPACING.lg,
   },
   emptyTitle: {
     fontSize: 15,

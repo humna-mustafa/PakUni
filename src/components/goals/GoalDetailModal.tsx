@@ -109,68 +109,53 @@ const GoalDetailModal = React.memo(
                     </Text>
                   </View>
                   {goal.milestones.map((milestone: any, index: number) => (
-                    <View
+                    <TouchableOpacity
                       key={index}
-                      style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <TouchableOpacity
+                      style={[
+                        styles.milestoneCard,
+                        {
+                          backgroundColor: milestone.completed
+                            ? goal.color + '15'
+                            : colors.background,
+                          borderColor: milestone.completed
+                            ? goal.color
+                            : colors.border,
+                        },
+                      ]}
+                      onPress={() => onToggleMilestone(goal.id, index)}>
+                      <View
                         style={[
-                          styles.milestoneCard,
+                          styles.milestoneCheckbox,
                           {
                             backgroundColor: milestone.completed
-                              ? goal.color + '15'
-                              : colors.background,
-                            borderColor: milestone.completed
                               ? goal.color
-                              : colors.border,
+                              : 'transparent',
+                            borderColor: goal.color,
+                          },
+                        ]}>
+                        {milestone.completed && (
+                          <Icon
+                            name="checkmark"
+                            family="Ionicons"
+                            size={14}
+                            color="#FFFFFF"
+                          />
+                        )}
+                      </View>
+                      <Text
+                        style={[
+                          styles.milestoneCardText,
+                          {
+                            color: colors.text,
+                            textDecorationLine: milestone.completed
+                              ? 'line-through'
+                              : 'none',
                             flex: 1,
                           },
-                        ]}
-                        onPress={() => onToggleMilestone(goal.id, index)}>
-                        <View
-                          style={[
-                            styles.milestoneCheckbox,
-                            {
-                              backgroundColor: milestone.completed
-                                ? goal.color
-                                : 'transparent',
-                              borderColor: goal.color,
-                            },
-                          ]}>
-                          {milestone.completed && (
-                            <Icon
-                              name="checkmark"
-                              family="Ionicons"
-                              size={14}
-                              color="#FFFFFF"
-                            />
-                          )}
-                        </View>
-                        <Text
-                          style={[
-                            styles.milestoneCardText,
-                            {
-                              color: colors.text,
-                              textDecorationLine: milestone.completed
-                                ? 'line-through'
-                                : 'none',
-                              flex: 1,
-                            },
-                          ]}>
-                          {milestone.text}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{padding: 6, marginLeft: 2}}
-                        onPress={() => onRemoveMilestone(goal.id, index)}
-                        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
-                        <Icon
-                          name="close-circle-outline"
-                          family="Ionicons"
-                          size={20}
-                          color={colors.error + '80'}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                        ]}>
+                        {milestone.text}
+                      </Text>
+                    </TouchableOpacity>
                   ))}
 
                   {/* Add new milestone inline */}
@@ -268,91 +253,59 @@ const GoalDetailModal = React.memo(
                   </View>
                 </View>
 
-                {/* Edit Goal Button */}
-                <TouchableOpacity
-                  style={[
-                    styles.editGoalBtn,
-                    {
-                      backgroundColor: colors.primary + '15',
-                      borderColor: colors.primary,
-                    },
-                  ]}
-                  onPress={() => {
-                    onClose();
-                    setTimeout(() => onEdit(goal), 200);
-                  }}>
-                  <Icon
-                    name="pencil-outline"
-                    family="Ionicons"
-                    size={20}
-                    color={colors.primary}
-                  />
-                  <Text
+                {/* Action Buttons - Compact Row */}
+                <View style={styles.actionButtonsRow}>
+                  {/* Edit Button */}
+                  <TouchableOpacity
                     style={[
-                      styles.editGoalText,
-                      {color: colors.primary},
-                    ]}>
-                    Edit Goal
-                  </Text>
-                </TouchableOpacity>
+                      styles.actionBtn,
+                      {backgroundColor: colors.primary + '15'},
+                    ]}
+                    onPress={() => {
+                      onClose();
+                      setTimeout(() => onEdit(goal), 200);
+                    }}>
+                    <Icon
+                      name="pencil-outline"
+                      family="Ionicons"
+                      size={18}
+                      color={colors.primary}
+                    />
+                    <Text style={[styles.actionBtnText, {color: colors.primary}]}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
 
-                {/* Mark Complete Button */}
-                <TouchableOpacity
-                  style={[
-                    styles.completeGoalBtn,
-                    {
-                      backgroundColor: goal.completed
-                        ? colors.success + '15'
-                        : colors.background,
-                      borderColor: colors.success,
-                    },
-                  ]}
-                  onPress={() => onToggleCompleted(goal.id)}>
-                  <Icon
-                    name={
-                      goal.completed
-                        ? 'checkmark-circle'
-                        : 'checkmark-circle-outline'
-                    }
-                    family="Ionicons"
-                    size={20}
-                    color={colors.success}
-                  />
-                  <Text
+                  {/* Complete Button */}
+                  <TouchableOpacity
                     style={[
-                      styles.completeGoalText,
-                      {color: colors.success},
-                    ]}>
-                    {goal.completed
-                      ? 'Mark Incomplete'
-                      : 'Mark as Complete'}
-                  </Text>
-                </TouchableOpacity>
+                      styles.actionBtn,
+                      {backgroundColor: goal.completed ? colors.success + '15' : colors.background},
+                    ]}
+                    onPress={() => onToggleCompleted(goal.id)}>
+                    <Icon
+                      name={goal.completed ? 'checkmark-circle' : 'checkmark-circle-outline'}
+                      family="Ionicons"
+                      size={18}
+                      color={colors.success}
+                    />
+                    <Text style={[styles.actionBtnText, {color: colors.success}]}>
+                      {goal.completed ? 'Undo' : 'Done'}
+                    </Text>
+                  </TouchableOpacity>
 
-                {/* Delete Goal Button */}
-                <TouchableOpacity
-                  style={[
-                    styles.deleteGoalBtn,
-                    {
-                      backgroundColor: colors.error + '15',
-                      borderColor: colors.error,
-                    },
-                  ]}
-                  onPress={() => onDelete(goal.id)}>
-                  <Icon
-                    name="trash-outline"
-                    family="Ionicons"
-                    size={20}
-                    color={colors.error}
-                  />
-                  <Text
-                    style={[
-                      styles.deleteGoalText,
-                      {color: colors.error},
-                    ]}>
-                    Delete Goal
-                  </Text>
-                </TouchableOpacity>
+                  {/* Delete Button */}
+                  <TouchableOpacity
+                    style={[styles.actionBtn, {backgroundColor: colors.error + '10'}]}
+                    onPress={() => onDelete(goal.id)}>
+                    <Icon
+                      name="trash-outline"
+                      family="Ionicons"
+                      size={18}
+                      color={colors.error}
+                    />
+                  </TouchableOpacity>
+                </View>
 
                 <View style={{height: SPACING.xxl}} />
               </ScrollView>
@@ -464,49 +417,25 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: TYPOGRAPHY.weight.semibold,
   },
-  editGoalBtn: {
+  actionButtonsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: SPACING.md,
     marginTop: SPACING.md,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
     gap: SPACING.sm,
   },
-  editGoalText: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  completeGoalBtn: {
+  actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: SPACING.md,
-    marginTop: SPACING.sm,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    gap: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.full,
+    gap: 6,
   },
-  completeGoalText: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  deleteGoalBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: SPACING.md,
-    marginTop: SPACING.lg,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    gap: SPACING.sm,
-  },
-  deleteGoalText: {
-    fontSize: TYPOGRAPHY.sizes.md,
+  actionBtnText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });

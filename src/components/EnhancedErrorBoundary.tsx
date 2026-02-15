@@ -19,6 +19,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from './icons';
 import {PREMIUM_DESIGN, TYPOGRAPHY} from '../constants/design';
+import {errorReportingService} from '../services/errorReporting';
 
 // ============================================================================
 // TYPES
@@ -292,22 +293,22 @@ export class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
 
   private reportCrash = async (error: Error, errorInfo: ErrorInfo): Promise<void> => {
     try {
-      // In production, send to crash reporting service
-      // Example: Sentry.captureException(error, {extra: {componentStack: errorInfo.componentStack}});
-      
-      // For now, just log
-      const crashReport = {
-        error: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        timestamp: new Date().toISOString(),
-        platform: Platform.OS,
-        version: Platform.Version,
-      };
-      
-      console.log('Crash Report:', crashReport);
+      // Report to Supabase error_reports table via errorReportingService
+      await errorReportingService.reportError(error, {
+        category: 'ui_crash',
+        severity: 'high',
+        context: 'ErrorBoundary',
+        additionalData: {
+          componentStack: errorInfo.componentStack,
+          platform: Platform.OS,
+          platformVersion: Platform.Version,
+        },
+      });
     } catch (reportError) {
-      console.error('Failed to report crash:', reportError);
+      // Silently fail - don't crash the error boundary itself
+      if (__DEV__) {
+        console.error('Failed to report crash:', reportError);
+      }
     }
   };
 

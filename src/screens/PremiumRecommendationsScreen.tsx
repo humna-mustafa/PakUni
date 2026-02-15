@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
+import {useAuth} from '../contexts/AuthContext';
 import {UNIVERSITIES} from '../data';
 import {getRecommendations, UniversityRecommendation} from '../utils/recommendationEngine';
 import {Icon} from '../components/icons';
@@ -418,9 +419,11 @@ const ResultCard = ({
 
 const PremiumRecommendationsScreen = () => {
   const {colors, isDark} = useTheme();
+  const {user} = useAuth();
   const navigation = useNavigation<any>();
   const [currentStep, setCurrentStep] = useState(1);
   const [showResults, setShowResults] = useState(false);
+  const [profileDataLoaded, setProfileDataLoaded] = useState(false);
   
   // Form state - now with customizable total marks (default 1200 as per 2024+ Pakistan)
   const [matricMarks, setMatricMarks] = useState('');
@@ -432,10 +435,78 @@ const PremiumRecommendationsScreen = () => {
   const [preferredPrograms, setPreferredPrograms] = useState<string[]>([]);
   const [preferredCities, setPreferredCities] = useState<string[]>([]);
   const [preferredType, setPreferredType] = useState('');
+  const [preferredSession, setPreferredSession] = useState<'Fall' | 'Spring' | 'Both'>('Both');
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const headerAnim = useRef(new Animated.Value(0)).current;
   const contentAnim = useRef(new Animated.Value(0)).current;
+
+  // Map user's targetField to program categories
+  const mapTargetFieldToPrograms = (targetField: string | null): string[] => {
+    if (!targetField) return [];
+    const fieldLower = targetField.toLowerCase();
+    const mappings: Record<string, string[]> = {
+      'engineering': ['Engineering'],
+      'software': ['Computer Science', 'Engineering'],
+      'computer': ['Computer Science'],
+      'it': ['Computer Science'],
+      'medicine': ['Medical'],
+      'medical': ['Medical'],
+      'doctor': ['Medical'],
+      'mbbs': ['Medical'],
+      'business': ['Business'],
+      'commerce': ['Business'],
+      'mba': ['Business'],
+      'law': ['Law'],
+      'legal': ['Law'],
+      'arts': ['Arts'],
+      'design': ['Arts'],
+      'humanities': ['Arts'],
+    };
+    
+    for (const [key, programs] of Object.entries(mappings)) {
+      if (fieldLower.includes(key)) {
+        return programs;
+      }
+    }
+    return [];
+  };
+
+  // Pre-fill form with user's profile data (merit history & preferences)
+  useEffect(() => {
+    if (user && !profileDataLoaded) {
+      // Load saved academic marks from profile
+      if (user.matricMarks) {
+        setMatricMarks(user.matricMarks.toString());
+      }
+      if (user.interMarks) {
+        setFscMarks(user.interMarks.toString());
+      }
+      if (user.entryTestScore) {
+        setEntryTestScore(user.entryTestScore.toString());
+      }
+      
+      // Pre-select programs based on user's target field/career
+      const matchedPrograms = mapTargetFieldToPrograms(user.targetField);
+      if (matchedPrograms.length > 0) {
+        setPreferredPrograms(matchedPrograms);
+      }
+      
+      // Pre-select user's city if it matches available options
+      if (user.city) {
+        const cities = ['Lahore', 'Karachi', 'Islamabad', 'Peshawar', 'Multan', 'Faisalabad'];
+        const matchedCity = cities.find(c => 
+          c.toLowerCase() === user.city?.toLowerCase() ||
+          user.city?.toLowerCase().includes(c.toLowerCase())
+        );
+        if (matchedCity) {
+          setPreferredCities([matchedCity]);
+        }
+      }
+      
+      setProfileDataLoaded(true);
+    }
+  }, [user, profileDataLoaded]);
 
   // Validation helpers
   const validateNumericInput = (value: string) => {
@@ -547,6 +618,7 @@ const PremiumRecommendationsScreen = () => {
       preferredPrograms,
       preferredCities,
       universityType: preferredType === 'Public' ? 'Public' : preferredType === 'Private' ? 'Private' : 'Both',
+      preferredSession,
     });
     
     // City filtering: Prioritize preferred cities but include all
@@ -571,7 +643,7 @@ const PremiumRecommendationsScreen = () => {
     }
     
     return allRecommendations;
-  }, [showResults, matricMarks, matricTotal, fscMarks, fscTotal, entryTestScore, entryTestTotal, preferredPrograms, preferredCities, preferredType]);
+  }, [showResults, matricMarks, matricTotal, fscMarks, fscTotal, entryTestScore, entryTestTotal, preferredPrograms, preferredCities, preferredType, preferredSession]);
 
   // Calculate recommendation stats
   const recommendationStats = React.useMemo(() => {
@@ -800,6 +872,16 @@ const PremiumRecommendationsScreen = () => {
               <Text style={[styles.stepDescription, {color: colors.textSecondary}]}>
                 Enter your marks to calculate merit (new total marks: 1200 for 2024+)
               </Text>
+              
+              {/* Profile data indicator */}
+              {profileDataLoaded && (matricMarks || fscMarks) && (
+                <View style={[styles.profileDataBanner, {backgroundColor: colors.primary + '15'}]}>
+                  <Icon name="person-circle-outline" family="Ionicons" size={16} color={colors.primary} />
+                  <Text style={[styles.profileDataText, {color: colors.primary}]}>
+                    Pre-filled from your profile. Edit if needed.
+                  </Text>
+                </View>
+              )}
 
               {/* Matric Marks Row */}
               <View style={styles.marksRow}>
@@ -891,6 +973,16 @@ const PremiumRecommendationsScreen = () => {
               <Text style={[styles.stepDescription, {color: colors.textSecondary}]}>
                 What are you looking for?
               </Text>
+              
+              {/* Profile preferences indicator */}
+              {profileDataLoaded && (preferredPrograms.length > 0 || preferredCities.length > 0) && (
+                <View style={[styles.profileDataBanner, {backgroundColor: colors.primary + '15'}]}>
+                  <Icon name="sparkles-outline" family="Ionicons" size={16} color={colors.primary} />
+                  <Text style={[styles.profileDataText, {color: colors.primary}]}>
+                    Matched with your career choice & city from profile
+                  </Text>
+                </View>
+              )}
 
               <View style={styles.preferenceSection}>
                 <Text style={[styles.preferenceLabel, {color: colors.text}]}>
@@ -926,6 +1018,18 @@ const PremiumRecommendationsScreen = () => {
                   options={types}
                   selected={preferredType}
                   onSelect={setPreferredType}
+                  colors={colors}
+                />
+              </View>
+
+              <View style={styles.preferenceSection}>
+                <Text style={[styles.preferenceLabel, {color: colors.text}]}>
+                  Preferred Session
+                </Text>
+                <ChipSelector
+                  options={['Fall', 'Spring', 'Both']}
+                  selected={preferredSession}
+                  onSelect={(val) => setPreferredSession(val as 'Fall' | 'Spring' | 'Both')}
                   colors={colors}
                 />
               </View>
@@ -1168,6 +1272,20 @@ const styles = StyleSheet.create({
   stepDescription: {
     fontSize: TYPOGRAPHY.sizes.sm,
     marginBottom: SPACING.lg,
+  },
+  profileDataBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: RADIUS.sm,
+    marginBottom: SPACING.md,
+  },
+  profileDataText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.medium,
+    flex: 1,
   },
   inputContainer: {
     marginBottom: SPACING.md,

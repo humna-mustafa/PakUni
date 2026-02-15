@@ -7,52 +7,77 @@
     
     <!-- 
         PakUni Premium App Icon - Graduation Cap Design
-        Centered in safe zone (centered in 66dp area within 108dp canvas)
+        Centered in safe zone (66dp area within 108dp canvas)
         Safe zone offset: 21dp on each side
+        Brand colors: Blue #4573DF, Green #10B981, Gold #F59E0B
     -->
     
     <!-- Decorative glow circle behind cap -->
     <path
-        android:pathData="M54,54m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+        android:pathData="M54,54m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0"
         android:fillColor="#FFFFFF"
-        android:fillAlpha="0.15"/>
+        android:fillAlpha="0.12"/>
     
     <!-- Open Book Base - Left Page -->
     <path
-        android:pathData="M36,62 L50,62 L50,70 Q50,72 48,72 L36,72 Q34,72 34,70 L34,62 Z"
+        android:pathData="M37,63 L50,63 L50,71 Q50,73 48,73 L37,73 Q35,73 35,71 L35,63 Z"
         android:fillColor="#10B981"/>
+    
+    <!-- Book page lines - Left -->
+    <path
+        android:pathData="M39,66 L47,66"
+        android:strokeWidth="0.8"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"/>
+    <path
+        android:pathData="M39,68.5 L45,68.5"
+        android:strokeWidth="0.8"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"/>
+    
+    <!-- Book spine -->
+    <path
+        android:pathData="M51,63 L57,63 L57,73 L51,73 Z"
+        android:fillColor="#0D9488"/>
     
     <!-- Open Book Base - Right Page -->
     <path
-        android:pathData="M58,62 L72,62 L72,70 Q72,72 70,72 L60,72 Q58,72 58,70 L58,62 Z"
+        android:pathData="M58,63 L71,63 L71,71 Q71,73 69,73 L60,73 Q58,73 58,71 L58,63 Z"
         android:fillColor="#059669"/>
     
-    <!-- Book spine highlight -->
+    <!-- Book page lines - Right -->
     <path
-        android:pathData="M52,62 L56,62 L56,72 L52,72 Z"
-        android:fillColor="#0D9488"/>
+        android:pathData="M61,66 L69,66"
+        android:strokeWidth="0.8"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"/>
+    <path
+        android:pathData="M63,68.5 L69,68.5"
+        android:strokeWidth="0.8"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.3"/>
     
     <!-- Cap Base (Crown) -->
     <path
-        android:pathData="M44,52 L64,52 L66,60 Q66,62 64,62 L44,62 Q42,62 42,60 L44,52 Z"
+        android:pathData="M44,52 L64,52 L66,61 Q66,63 64,63 L44,63 Q42,63 42,61 L44,52 Z"
         android:fillColor="#FFFFFF"/>
     
-    <!-- Cap Band -->
+    <!-- Cap Band - Brand Blue -->
     <path
-        android:pathData="M43,58 L65,58 L65,60 L43,60 Z"
-        android:fillColor="#8B5CF6"
-        android:fillAlpha="0.7"/>
+        android:pathData="M43,58 L65,58 L65,60.5 L43,60.5 Z"
+        android:fillColor="#4573DF"
+        android:fillAlpha="0.5"/>
     
     <!-- Mortarboard Top (Diamond shape - rotated square) -->
     <path
-        android:pathData="M54,38 L74,48 L54,58 L34,48 Z"
+        android:pathData="M54,37 L75,48 L54,59 L33,48 Z"
         android:fillColor="#FFFFFF"/>
     
-    <!-- Mortarboard shine effect -->
+    <!-- Mortarboard shine effect - Brand Blue -->
     <path
-        android:pathData="M54,38 L64,43 L54,48 L44,43 Z"
-        android:fillColor="#8B5CF6"
-        android:fillAlpha="0.4"/>
+        android:pathData="M54,37 L64.5,42.5 L54,48 L43.5,42.5 Z"
+        android:fillColor="#4573DF"
+        android:fillAlpha="0.25"/>
     
     <!-- Button on top - Gold -->
     <path
@@ -67,37 +92,39 @@
     
     <!-- Tassel string (horizontal) -->
     <path
-        android:pathData="M54,46 L68,46 L68,48 L54,48 Z"
-        android:fillColor="#F59E0B"/>
+        android:pathData="M54,46 Q61,46 68,47"
+        android:strokeWidth="2"
+        android:strokeColor="#F59E0B"
+        android:fillColor="#00000000"/>
     
     <!-- Tassel knot -->
     <path
-        android:pathData="M68,45m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+        android:pathData="M68,45.5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
         android:fillColor="#FBBF24"/>
     
     <!-- Tassel fringe strands -->
     <path
-        android:pathData="M66,48 L66,60"
+        android:pathData="M66,48 L66,58"
         android:strokeWidth="1.5"
         android:strokeColor="#F59E0B"/>
     <path
-        android:pathData="M68,48 L68,62"
+        android:pathData="M68,48 L68,60"
         android:strokeWidth="1.5"
         android:strokeColor="#FBBF24"/>
     <path
-        android:pathData="M70,48 L70,58"
+        android:pathData="M70,48 L70,56"
         android:strokeWidth="1.5"
         android:strokeColor="#F59E0B"/>
     
-    <!-- Decorative stars -->
+    <!-- Decorative dots (instead of stars - cleaner at small sizes) -->
     <path
-        android:pathData="M38,40 L39,42 L41,42 L39.5,43.5 L40,46 L38,44.5 L36,46 L36.5,43.5 L35,42 L37,42 Z"
+        android:pathData="M38,42m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
         android:fillColor="#FBBF24"
-        android:fillAlpha="0.9"/>
+        android:fillAlpha="0.8"/>
     
     <path
-        android:pathData="M72,52 L72.5,53 L74,53 L73,54 L73.5,55.5 L72,54.5 L70.5,55.5 L71,54 L70,53 L71.5,53 Z"
+        android:pathData="M73,53m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0"
         android:fillColor="#FBBF24"
-        android:fillAlpha="0.7"/>
+        android:fillAlpha="0.6"/>
 
 </vector>

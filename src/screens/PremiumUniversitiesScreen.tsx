@@ -25,7 +25,6 @@ import {LIST_ITEM_HEIGHTS, ANIMATION_SCALES} from '../constants/ui';
 import {useTheme} from '../contexts/ThemeContext';
 import {useAuth} from '../contexts/AuthContext';
 import {RootStackParamList, TabParamList} from '../navigation/AppNavigator';
-import {PROVINCES} from '../data';
 import {hybridDataService} from '../services/hybridData';
 import type {TursoUniversity} from '../services/turso';
 import type {UniversityData} from '../data';
@@ -379,7 +378,7 @@ const PremiumUniversitiesScreen = () => {
   const [selectedType, setSelectedType] = useState<'all' | 'public' | 'private'>('all');
   const [sortBy, setSortBy] = useState('ranking');
   const [refreshing, setRefreshing] = useState(false);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [universities, setUniversities] = useState<UniversityItem[]>([]);
   const [loading, setLoading] = useState(true);
   const headerAnim = useRef(new Animated.Value(0)).current;
@@ -553,8 +552,17 @@ const PremiumUniversitiesScreen = () => {
     // Sorting
     result.sort((a, b) => {
       switch (sortBy) {
-        case 'ranking':
-          return (a.ranking_national || 999) - (b.ranking_national || 999);
+        case 'ranking': {
+          // Sort by national ranking first, then HEC ranking, then alphabetically
+          const rankA = a.ranking_national ?? 999;
+          const rankB = b.ranking_national ?? 999;
+          if (rankA !== rankB) return rankA - rankB;
+          // HEC ranking as tiebreaker (W1 > W2 > W3 > W4)
+          const hecA = a.ranking_hec ? parseInt(a.ranking_hec.replace(/\D/g, '')) || 99 : 99;
+          const hecB = b.ranking_hec ? parseInt(b.ranking_hec.replace(/\D/g, '')) || 99 : 99;
+          if (hecA !== hecB) return hecA - hecB;
+          return a.name.localeCompare(b.name);
+        }
         case 'established':
           return (a.established_year || 0) - (b.established_year || 0);
         case 'name':
@@ -623,7 +631,7 @@ const PremiumUniversitiesScreen = () => {
             </View>
           </View>
 
-          {/* Enhanced Province Filter with SearchableDropdown */}
+          {/* Province Filter - Single Dropdown (no redundant pills) */}
           <View style={styles.filterRow}>
             <View style={styles.filterDropdownContainer}>
               <SearchableDropdown
@@ -634,36 +642,6 @@ const PremiumUniversitiesScreen = () => {
                 searchPlaceholder="Search provinces..."
                 emptyMessage="No provinces found"
               />
-            </View>
-            
-            {/* Quick Filter Pills */}
-            <View style={styles.quickFiltersRow}>
-              {PROVINCES.slice(0, 4).map(prov => (
-                <TouchableOpacity
-                  key={prov.value}
-                  onPress={() => setSelectedProvince(prov.value)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Filter by ${prov.label}${selectedProvince === prov.value ? ', currently selected' : ''}`}
-                  style={[
-                    styles.quickFilterPill,
-                    {
-                      backgroundColor: selectedProvince === prov.value 
-                        ? colors.primary 
-                        : `${colors.primary}10`,
-                      borderColor: selectedProvince === prov.value 
-                        ? colors.primary 
-                        : colors.border,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      styles.quickFilterText,
-                      {color: selectedProvince === prov.value ? '#FFFFFF' : colors.text},
-                    ]}>
-                    {prov.label.length > 6 ? prov.label.slice(0, 6) + '.' : prov.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
             </View>
           </View>
 
@@ -810,6 +788,7 @@ const PremiumUniversitiesScreen = () => {
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
           removeClippedSubviews={false}
+          estimatedItemSize={120}
           onViewableItemsChanged={onViewableItemsChanged.current}
           viewabilityConfig={viewabilityConfig.current}
           refreshControl={
@@ -1212,21 +1191,6 @@ const styles = StyleSheet.create({
   },
   filterDropdownContainer: {
     marginBottom: SPACING.sm,
-  },
-  quickFiltersRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.xs,
-  },
-  quickFilterPill: {
-    paddingHorizontal: SPACING.sm + 2,
-    paddingVertical: SPACING.xs,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-  },
-  quickFilterText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   // University card logo styles
   logoContainer: {

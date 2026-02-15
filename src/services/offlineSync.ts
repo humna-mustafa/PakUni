@@ -15,6 +15,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { logger } from '../utils/logger';
+import { hybridDataService } from './hybridData';
 
 // ============================================================================
 // TYPES
@@ -308,12 +309,41 @@ class OfflineSyncService {
   }
 
   /**
-   * Execute operation against backend (must be implemented by subclass)
+   * Execute operation against backend via hybridDataService
    */
   private async executeOperation(operation: QueuedOperation): Promise<void> {
-    // This is a placeholder - actual implementation would call real APIs
-    // For now, just simulate success after a short delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    const { action, payload, resourceId } = operation;
+
+    switch (action) {
+      case 'addFavorite': {
+        const success = await hybridDataService.addFavorite(payload.type, payload.itemId);
+        if (!success) throw new Error('addFavorite failed');
+        break;
+      }
+      case 'removeFavorite': {
+        const success = await hybridDataService.removeFavorite(resourceId || payload.favoriteId);
+        if (!success) throw new Error('removeFavorite failed');
+        break;
+      }
+      case 'saveCalculation': {
+        const success = await hybridDataService.saveCalculation(payload);
+        if (!success) throw new Error('saveCalculation failed');
+        break;
+      }
+      case 'updateGoal': {
+        const success = await hybridDataService.updateGoal(resourceId || payload.goalId, payload.updates);
+        if (!success) throw new Error('updateGoal failed');
+        break;
+      }
+      case 'deleteGoal': {
+        const success = await hybridDataService.deleteGoal(resourceId || payload.goalId);
+        if (!success) throw new Error('deleteGoal failed');
+        break;
+      }
+      default:
+        logger.warn(`Unknown sync action: ${action}`, { operation }, 'OfflineSync');
+        throw new Error(`Unknown sync action: ${action}`);
+    }
   }
 
   /**

@@ -66,7 +66,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'MDCAT/University Test',
     career_prospects: ['Pharmacist', 'Clinical Pharmacist', 'Drug Inspector', 'Pharmaceutical Industry'],
     avg_fee_per_semester: 60000,
-    universities: ['PU', 'UoK', 'RIU', 'UoL', 'UVAS'],
+    universities: ['PU', 'UOK', 'RIU', 'UOL', 'UVAS'],
   },
   {
     id: 'bsn',
@@ -98,7 +98,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'University Test',
     career_prospects: ['Physical Therapist', 'Rehabilitation Specialist', 'Sports Therapist'],
     avg_fee_per_semester: 55000,
-    universities: ['RIU', 'ISRA', 'UoL', 'UHS'],
+    universities: ['RIU', 'ISRA', 'UOL', 'UHS'],
   },
   // ========== ENGINEERING ==========
   {
@@ -115,7 +115,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'ECAT/ETEA/NET',
     career_prospects: ['Civil Engineer', 'Structural Engineer', 'Project Manager', 'Construction Manager'],
     avg_fee_per_semester: 85000,
-    universities: ['UET', 'NUST', 'NED', 'GIKI', 'MUET', 'UET Peshawar', 'COMSATS'],
+    universities: ['UET', 'NUST', 'NED', 'GIKI', 'MUET', 'UETPESHAWAR', 'COMSATS'],
   },
   {
     id: 'bsc-electrical',
@@ -147,7 +147,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'ECAT/ETEA/NET',
     career_prospects: ['Mechanical Engineer', 'Design Engineer', 'Manufacturing Engineer', 'HVAC Engineer'],
     avg_fee_per_semester: 85000,
-    universities: ['UET', 'NUST', 'GIKI', 'NED', 'PIEAS', 'UET Taxila'],
+    universities: ['UET', 'NUST', 'GIKI', 'NED', 'PIEAS', 'UETTAXILA'],
   },
   {
     id: 'bsc-computer-engineering',
@@ -195,7 +195,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'ECAT/NET',
     career_prospects: ['Process Engineer', 'Chemical Engineer', 'Petroleum Engineer', 'Environmental Engineer'],
     avg_fee_per_semester: 85000,
-    universities: ['UET', 'NUST', 'NED', 'MUET', 'UET Peshawar'],
+    universities: ['UET', 'NUST', 'NED', 'MUET', 'UETPESHAWAR'],
   },
   // ========== COMPUTER SCIENCE & IT ==========
   {
@@ -212,7 +212,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Software Developer', 'Data Scientist', 'AI Engineer', 'Cybersecurity Analyst', 'Cloud Architect'],
     avg_fee_per_semester: 80000,
-    universities: ['FAST', 'LUMS', 'NUST', 'COMSATS', 'ITU', 'GIKI', 'PU', 'UoK', 'QAU'],
+    universities: ['FAST', 'LUMS', 'NUST', 'COMSATS', 'ITU', 'GIKI', 'PU', 'UOK', 'QAU'],
   },
   {
     id: 'bsit',
@@ -228,7 +228,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['IT Manager', 'Network Administrator', 'System Analyst', 'Web Developer'],
     avg_fee_per_semester: 70000,
-    universities: ['COMSATS', 'VU', 'PU', 'UoK', 'GCUF', 'BZU'],
+    universities: ['COMSATS', 'VU', 'PU', 'UOK', 'GCUF', 'BZU'],
   },
   {
     id: 'bsds',
@@ -276,7 +276,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Security Analyst', 'Penetration Tester', 'Security Engineer', 'SOC Analyst'],
     avg_fee_per_semester: 85000,
-    universities: ['NUST', 'AU', 'COMSATS', 'FAST', 'Bahria', 'GIKI', 'PIEAS'],
+    universities: ['NUST', 'AU', 'COMSATS', 'FAST', 'BAHRIA', 'GIKI', 'PIEAS'],
   },
   // ========== BUSINESS ==========
   {
@@ -293,7 +293,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Business Manager', 'Marketing Manager', 'HR Manager', 'Entrepreneur', 'Consultant'],
     avg_fee_per_semester: 100000,
-    universities: ['LUMS', 'IBA', 'NUST', 'FAST', 'Bahria', 'UCP', 'UMT', 'SZABIST'],
+    universities: ['LUMS', 'IBA', 'NUST', 'FAST', 'BAHRIA', 'UCP', 'UMT', 'SZABIST'],
   },
   {
     id: 'bs-accounting-finance',
@@ -309,7 +309,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Chartered Accountant', 'Financial Analyst', 'Auditor', 'Investment Banker'],
     avg_fee_per_semester: 90000,
-    universities: ['IBA', 'LUMS', 'NUST', 'FAST', 'Bahria', 'UCP', 'UMT'],
+    universities: ['IBA', 'LUMS', 'NUST', 'FAST', 'BAHRIA', 'UCP', 'UMT'],
   },
   {
     id: 'bs-economics',
@@ -325,7 +325,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Economist', 'Policy Analyst', 'Research Analyst', 'Financial Consultant'],
     avg_fee_per_semester: 85000,
-    universities: ['LUMS', 'QAU', 'IBA', 'NUST', 'PU', 'UoK'],
+    universities: ['LUMS', 'QAU', 'IBA', 'NUST', 'PU', 'UOK'],
   },
   {
     id: 'bs-fintech',
@@ -341,7 +341,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'University Test',
     career_prospects: ['Fintech Analyst', 'Digital Banking Specialist', 'Blockchain Developer', 'Financial Consultant'],
     avg_fee_per_semester: 95000,
-    universities: ['FAST', 'NUST', 'Bahria', 'UMT', 'UCP'],
+    universities: ['FAST', 'NUST', 'BAHRIA', 'UMT', 'UCP'],
   },
   {
     id: 'mba',
@@ -357,7 +357,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'GMAT/GAT/University Test',
     career_prospects: ['CEO', 'CFO', 'Business Consultant', 'Entrepreneur', 'Director'],
     avg_fee_per_semester: 200000,
-    universities: ['LUMS', 'IBA', 'NUST', 'FAST', 'LSE', 'Bahria', 'UCP'],
+    universities: ['LUMS', 'IBA', 'NUST', 'FAST', 'LSE', 'BAHRIA', 'UCP'],
   },
   // ========== LAW ==========
   {
@@ -374,7 +374,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'HEC LAT',
     career_prospects: ['Advocate', 'Corporate Lawyer', 'Judge', 'Legal Advisor', 'Legal Consultant'],
     avg_fee_per_semester: 70000,
-    universities: ['PU Law', 'UoK Law', 'BZU', 'Islamia University', 'UMT'],
+    universities: ['PU Law', 'UOK Law', 'BZU', 'Islamia University', 'UMT'],
   },
   {
     id: 'llb-3year',
@@ -390,7 +390,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'HEC LAT',
     career_prospects: ['Advocate', 'Corporate Lawyer', 'Judge', 'Legal Advisor'],
     avg_fee_per_semester: 60000,
-    universities: ['PU Law', 'UoK', 'Bahria', 'UCP', 'UoL'],
+    universities: ['PU Law', 'UOK', 'BAHRIA', 'UCP', 'UOL'],
   },
   // ========== ARTS & SOCIAL SCIENCES ==========
   {
@@ -407,7 +407,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Clinical Psychologist', 'Counselor', 'HR Specialist', 'Researcher'],
     avg_fee_per_semester: 55000,
-    universities: ['PU', 'QAU', 'GCU', 'NUST', 'UoK', 'UoP', 'FJWU'],
+    universities: ['PU', 'QAU', 'GCU', 'NUST', 'UOK', 'UOP', 'FJWU'],
   },
   {
     id: 'bs-english',
@@ -423,7 +423,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Teacher', 'Writer', 'Journalist', 'Content Creator', 'Translator'],
     avg_fee_per_semester: 40000,
-    universities: ['GCU', 'PU', 'QAU', 'NUML', 'UoK', 'BZU'],
+    universities: ['GCU', 'PU', 'QAU', 'NUML', 'UOK', 'BZU'],
   },
   {
     id: 'bs-mass-comm',
@@ -439,7 +439,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Journalist', 'TV Producer', 'PR Specialist', 'Digital Media Manager'],
     avg_fee_per_semester: 60000,
-    universities: ['PU', 'UoK', 'BNU', 'FC College', 'UCP', 'Beacon House'],
+    universities: ['PU', 'UOK', 'BNU', 'FC College', 'UCP', 'Beacon House'],
   },
   {
     id: 'bs-ir',
@@ -455,7 +455,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Diplomat', 'Policy Analyst', 'Research Analyst', 'NGO Worker', 'Civil Servant'],
     avg_fee_per_semester: 55000,
-    universities: ['QAU', 'PU', 'NDU', 'Bahria', 'NUST'],
+    universities: ['QAU', 'PU', 'NDU', 'BAHRIA', 'NUST'],
   },
   // ========== AGRICULTURE ==========
   {
@@ -537,7 +537,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'University Test',
     career_prospects: ['Optometrist', 'Vision Therapist', 'Clinical Researcher'],
     avg_fee_per_semester: 55000,
-    universities: ['ISRA', 'UoL', 'RIU', 'Shifa'],
+    universities: ['ISRA', 'UOL', 'RIU', 'Shifa'],
   },
   {
     id: 'bs-nutrition',
@@ -553,7 +553,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'University Test',
     career_prospects: ['Nutritionist', 'Dietitian', 'Clinical Nutritionist', 'Food Scientist'],
     avg_fee_per_semester: 45000,
-    universities: ['UAF', 'UoK', 'GCUF', 'UoL', 'Kinnaird', 'LCWU'],
+    universities: ['UAF', 'UOK', 'GCUF', 'UOL', 'Kinnaird', 'LCWU'],
   },
   {
     id: 'bs-public-health',
@@ -796,7 +796,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['HR Manager', 'Recruitment Specialist', 'Training Manager', 'HR Consultant'],
     avg_fee_per_semester: 75000,
-    universities: ['NUST', 'Bahria', 'UCP', 'UMT', 'SZABIST'],
+    universities: ['NUST', 'BAHRIA', 'UCP', 'UMT', 'SZABIST'],
   },
   {
     id: 'bs-supply-chain',
@@ -812,7 +812,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Supply Chain Manager', 'Logistics Manager', 'Procurement Specialist', 'Operations Manager'],
     avg_fee_per_semester: 80000,
-    universities: ['IBA', 'LUMS', 'NUST', 'UMT', 'Bahria'],
+    universities: ['IBA', 'LUMS', 'NUST', 'UMT', 'BAHRIA'],
   },
   {
     id: 'bcom',
@@ -828,7 +828,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: null,
     career_prospects: ['Accountant', 'Bookkeeper', 'Tax Consultant', 'Banking Officer'],
     avg_fee_per_semester: 25000,
-    universities: ['PU', 'UoK', 'BZU', 'GCUF', 'UoS'],
+    universities: ['PU', 'UOK', 'BZU', 'GCUF', 'UOS'],
   },
   {
     id: 'acca',
@@ -861,7 +861,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Social Worker', 'NGO Manager', 'Research Analyst', 'Policy Advisor'],
     avg_fee_per_semester: 40000,
-    universities: ['QAU', 'PU', 'UoK', 'BZU', 'UoP'],
+    universities: ['QAU', 'PU', 'UOK', 'BZU', 'UOP'],
   },
   {
     id: 'bs-political-science',
@@ -877,7 +877,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Political Analyst', 'Civil Servant', 'Diplomat', 'Researcher'],
     avg_fee_per_semester: 40000,
-    universities: ['QAU', 'PU', 'UoK', 'GCU', 'FC College'],
+    universities: ['QAU', 'PU', 'UOK', 'GCU', 'FC College'],
   },
   {
     id: 'bs-history',
@@ -893,7 +893,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Historian', 'Teacher', 'Museum Curator', 'Researcher'],
     avg_fee_per_semester: 35000,
-    universities: ['QAU', 'PU', 'GCU', 'UoK', 'FC College'],
+    universities: ['QAU', 'PU', 'GCU', 'UOK', 'FC College'],
   },
   {
     id: 'bs-islamic-studies',
@@ -909,7 +909,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Islamic Scholar', 'Teacher', 'Mufti', 'Islamic Banking Officer'],
     avg_fee_per_semester: 25000,
-    universities: ['IIU', 'PU', 'UoK', 'BZU', 'UoP'],
+    universities: ['IIU', 'PU', 'UOK', 'BZU', 'UOP'],
   },
   {
     id: 'bs-urdu',
@@ -925,7 +925,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: null,
     career_prospects: ['Writer', 'Teacher', 'Translator', 'Editor', 'Content Creator'],
     avg_fee_per_semester: 25000,
-    universities: ['PU', 'UoK', 'GCU', 'BZU', 'NUML'],
+    universities: ['PU', 'UOK', 'GCU', 'BZU', 'NUML'],
   },
   // ========== EDUCATION ==========
   {
@@ -942,7 +942,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['School Teacher', 'Education Administrator', 'Curriculum Developer'],
     avg_fee_per_semester: 30000,
-    universities: ['AIOU', 'IER PU', 'UoK', 'BZU', 'UoP', 'VU'],
+    universities: ['AIOU', 'IER PU', 'UOK', 'BZU', 'UOP', 'VU'],
   },
   {
     id: 'bs-education',
@@ -975,7 +975,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'Portfolio + Aptitude Test',
     career_prospects: ['Artist', 'Illustrator', 'Art Director', 'Gallery Curator'],
     avg_fee_per_semester: 80000,
-    universities: ['NCA', 'BNU', 'PU', 'UoK'],
+    universities: ['NCA', 'BNU', 'PU', 'UOK'],
   },
   {
     id: 'bs-graphic-design',
@@ -1024,7 +1024,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Physicist', 'Research Scientist', 'Teacher', 'Data Analyst'],
     avg_fee_per_semester: 40000,
-    universities: ['QAU', 'PU', 'UoK', 'GCU', 'NUST', 'PIEAS'],
+    universities: ['QAU', 'PU', 'UOK', 'GCU', 'NUST', 'PIEAS'],
   },
   {
     id: 'bs-chemistry',
@@ -1040,7 +1040,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Chemist', 'Lab Scientist', 'Quality Control', 'Pharmaceutical Industry'],
     avg_fee_per_semester: 40000,
-    universities: ['QAU', 'PU', 'UoK', 'GCU', 'NUST'],
+    universities: ['QAU', 'PU', 'UOK', 'GCU', 'NUST'],
   },
   {
     id: 'bs-mathematics',
@@ -1056,7 +1056,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Mathematician', 'Data Scientist', 'Actuary', 'Research Analyst'],
     avg_fee_per_semester: 35000,
-    universities: ['QAU', 'PU', 'LUMS', 'GCU', 'UoK', 'NUST'],
+    universities: ['QAU', 'PU', 'LUMS', 'GCU', 'UOK', 'NUST'],
   },
   {
     id: 'bs-statistics',
@@ -1072,7 +1072,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Statistician', 'Data Analyst', 'Actuary', 'Research Analyst'],
     avg_fee_per_semester: 35000,
-    universities: ['QAU', 'PU', 'UoK', 'COMSATS', 'GCU'],
+    universities: ['QAU', 'PU', 'UOK', 'COMSATS', 'GCU'],
   },
   {
     id: 'bs-biotechnology',
@@ -1088,7 +1088,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Biotechnologist', 'Research Scientist', 'Pharmaceutical Industry', 'Genetic Engineer'],
     avg_fee_per_semester: 50000,
-    universities: ['QAU', 'COMSATS', 'NUST', 'VU', 'UoK'],
+    universities: ['QAU', 'COMSATS', 'NUST', 'VU', 'UOK'],
   },
   {
     id: 'bs-microbiology',
@@ -1104,7 +1104,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Microbiologist', 'Lab Scientist', 'Quality Assurance', 'Research Scientist'],
     avg_fee_per_semester: 45000,
-    universities: ['QAU', 'PU', 'UoK', 'UAF', 'GCUF'],
+    universities: ['QAU', 'PU', 'UOK', 'UAF', 'GCUF'],
   },
   {
     id: 'bs-environmental-science',
@@ -1120,7 +1120,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'NAT/University Test',
     career_prospects: ['Environmental Scientist', 'EPA Officer', 'Sustainability Consultant'],
     avg_fee_per_semester: 40000,
-    universities: ['QAU', 'PU', 'UoK', 'COMSATS', 'NUST'],
+    universities: ['QAU', 'PU', 'UOK', 'COMSATS', 'NUST'],
   },
   // ========== GRADUATE PROGRAMS ==========
   {
@@ -1169,7 +1169,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'GAT/University Test',
     career_prospects: ['Lecturer', 'Researcher', 'Writer', 'Editor'],
     avg_fee_per_semester: 50000,
-    universities: ['PU', 'GCU', 'QAU', 'BZU', 'UoK'],
+    universities: ['PU', 'GCU', 'QAU', 'BZU', 'UOK'],
   },
   {
     id: 'phd-computer-science',
@@ -1426,7 +1426,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'GAT/University Test',
     career_prospects: ['Senior Advocate', 'Legal Consultant', 'Judge', 'Corporate Counsel', 'Lecturer'],
     avg_fee_per_semester: 80000,
-    universities: ['PU', 'IIUI', 'BZU', 'KU', 'UoP'],
+    universities: ['PU', 'IIUI', 'BZU', 'KU', 'UOP'],
   },
   {
     id: 'mphil-education',
@@ -1458,7 +1458,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'GAT/University Test',
     career_prospects: ['Biotech Researcher', 'Lab Director', 'Pharmaceutical Scientist', 'Lecturer'],
     avg_fee_per_semester: 80000,
-    universities: ['QAU', 'NUST', 'COMSATS', 'PU', 'UoK'],
+    universities: ['QAU', 'NUST', 'COMSATS', 'PU', 'UOK'],
   },
   {
     id: 'ms-mathematics',
@@ -1522,7 +1522,7 @@ export const PROGRAMS: ProgramData[] = [
     entry_test: 'HAT/University Test',
     career_prospects: ['Professor', 'Education Policy Maker', 'Research Director', 'Vice Chancellor'],
     avg_fee_per_semester: 50000,
-    universities: ['AIOU', 'PU', 'QAU', 'IIUI', 'UoP'],
+    universities: ['AIOU', 'PU', 'QAU', 'IIUI', 'UOP'],
   },
 ];
 

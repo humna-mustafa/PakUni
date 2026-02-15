@@ -45,10 +45,83 @@ import {
   captureAndSaveCard,
 } from '../services/cardCapture';
 import {launchImageLibrary} from 'react-native-image-picker';
+import RNFS from 'react-native-fs';
 
 // ============================================================================
 // IMAGE PERSISTENCE - Save and load card images by achievement ID
 // ============================================================================
+
+// Directory for persisted achievement images
+const ACHIEVEMENT_IMAGES_DIR = `${RNFS.DocumentDirectoryPath}/achievement_images`;
+
+/**
+ * Ensure the achievement images directory exists
+ */
+const ensureImagesDirExists = async (): Promise<void> => {
+  try {
+    const exists = await RNFS.exists(ACHIEVEMENT_IMAGES_DIR);
+    if (!exists) {
+      await RNFS.mkdir(ACHIEVEMENT_IMAGES_DIR);
+    }
+  } catch (error) {
+    console.error('Failed to create images directory:', error);
+  }
+};
+
+/**
+ * Copy a temporary image to persistent storage
+ * Returns the persistent URI or null if failed
+ */
+const persistImage = async (tempUri: string, achievementId: string, imageType: string): Promise<string | null> => {
+  try {
+    await ensureImagesDirExists();
+    
+    // Generate unique filename
+    const timestamp = Date.now();
+    const extension = tempUri.includes('.png') ? 'png' : 'jpg';
+    const filename = `${achievementId}_${imageType}_${timestamp}.${extension}`;
+    const destPath = `${ACHIEVEMENT_IMAGES_DIR}/${filename}`;
+    
+    // Copy the image file
+    await RNFS.copyFile(tempUri, destPath);
+    
+    // Return the file URI
+    return `file://${destPath}`;
+  } catch (error) {
+    console.error('Failed to persist image:', error);
+    return null;
+  }
+};
+
+/**
+ * Delete a persisted image file
+ */
+const deletePersistedImage = async (uri: string): Promise<void> => {
+  try {
+    if (uri && uri.startsWith('file://')) {
+      const path = uri.replace('file://', '');
+      const exists = await RNFS.exists(path);
+      if (exists) {
+        await RNFS.unlink(path);
+      }
+    }
+  } catch (error) {
+    console.error('Failed to delete persisted image:', error);
+  }
+};
+
+/**
+ * Validate that an image URI still exists
+ */
+const validateImageUri = async (uri: string): Promise<boolean> => {
+  if (!uri) return false;
+  try {
+    const path = uri.startsWith('file://') ? uri.replace('file://', '') : uri;
+    return await RNFS.exists(path);
+  } catch {
+    return false;
+  }
+};
 const CARD_IMAGES_KEY_PREFIX = '@pakuni_card_images_';
 
 const getCardImagesKey = (achievementId: string) => 
@@ -56,10 +129,17 @@ const getCardImagesKey = (achievementId: string) =>
 
 const saveCardImages = async (achievementId: string, images: CardCustomImages): Promise<void> => {
   try {
-    // Only save if there are actual images
-    const hasImages = Object.values(images).some(val => val && val.trim && val.trim() !== '');
+    // Check if there are any actual images (non-empty string values)
+    const hasImages = Object.values(images).some(val => 
+      typeof val === 'string' && val.trim() !== ''
+    );
+    
     if (hasImages) {
+      // Save images when there are some
       await AsyncStorage.setItem(getCardImagesKey(achievementId), JSON.stringify(images));
+    } else {
+      // Remove saved images when all are cleared
+      await AsyncStorage.removeItem(getCardImagesKey(achievementId));
     }
   } catch (error) {
     console.error('Failed to save card images:', error);
@@ -70,7 +150,28 @@ const loadCardImages = async (achievementId: string): Promise<CardCustomImages |
   try {
     const saved = await AsyncStorage.getItem(getCardImagesKey(achievementId));
     if (saved) {
-      return JSON.parse(saved);
+      const images: CardCustomImages = JSON.parse(saved);
+      
+      // Validate that image files still exist
+      const validatedImages: CardCustomImages = {};
+      const imageKeys: (keyof CardCustomImages)[] = [
+        'backgroundImage', 'logoImage', 'userPhoto', 
+        'campusImage', 'personalPhoto', 'campusLogo'
+      ];
+      
+      for (const key of imageKeys) {
+        const uri = images[key];
+        if (uri && await validateImageUri(uri)) {
+          validatedImages[key] = uri;
+        }
+      }
+      
+      // Preserve non-image fields like studentName
+      if (images.studentName) {
+        validatedImages.studentName = images.studentName;
+      }
+      
+      return validatedImages;
     }
   } catch (error) {
     console.error('Failed to load card images:', error);
@@ -104,6 +205,7 @@ interface ImagePickerModalProps {
   images: CardCustomImages;
   onImagesChange: (images: CardCustomImages) => void;
   cardType: 'merit' | 'admission' | 'test' | 'scholarship' | 'custom';
+  achievementId?: string;
 }
 
 const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
@@ -112,6 +214,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
   images,
   onImagesChange,
   cardType,
+  achievementId,
 }) => {
   const pickImage = async (imageType: keyof CardCustomImages) => {
     try {
@@ -123,9 +226,30 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
       });
 
       if (result.assets && result.assets[0]?.uri) {
+        const tempUri = result.assets[0].uri;
+        
+        // Persist the image to permanent storage
+        if (achievementId) {
+          const persistedUri = await persistImage(tempUri, achievementId, imageType);
+          if (persistedUri) {
+            // Delete old image if exists
+            const oldUri = images[imageType];
+            if (oldUri && oldUri !== persistedUri) {
+              await deletePersistedImage(oldUri);
+            }
+            
+            onImagesChange({
+              ...images,
+              [imageType]: persistedUri,
+            });
+            return;
+          }
+        }
+        
+        // Fallback to temp URI if persistence fails
         onImagesChange({
           ...images,
-          [imageType]: result.assets[0].uri,
+          [imageType]: tempUri,
         });
       }
     } catch (error) {
@@ -133,7 +257,13 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({
     }
   };
 
-  const removeImage = (imageType: keyof CardCustomImages) => {
+  const removeImage = async (imageType: keyof CardCustomImages) => {
+    // Delete persisted image file
+    const uri = images[imageType];
+    if (uri) {
+      await deletePersistedImage(uri);
+    }
+    
     const newImages = {...images};
     delete newImages[imageType];
     onImagesChange(newImages);
@@ -603,6 +733,7 @@ export const MeritSuccessCard: React.FC<MeritCardProps> = ({
         images={images}
         onImagesChange={handleImagesChange}
         cardType="merit"
+        achievementId={achievement?.id}
       />
     </View>
   );
@@ -866,6 +997,7 @@ export const AdmissionCelebrationCard: React.FC<MeritCardProps> = ({
         images={images}
         onImagesChange={handleImagesChange}
         cardType="admission"
+        achievementId={achievement?.id}
       />
     </View>
   );
@@ -1130,6 +1262,7 @@ export const TestCompletionCard: React.FC<MeritCardProps> = ({
         images={images}
         onImagesChange={handleImagesChange}
         cardType="test"
+        achievementId={achievement?.id}
       />
     </View>
   );
@@ -1399,6 +1532,7 @@ export const ScholarshipWinCard: React.FC<MeritCardProps> = ({
         images={images}
         onImagesChange={handleImagesChange}
         cardType="scholarship"
+        achievementId={achievement?.id}
       />
     </View>
   );

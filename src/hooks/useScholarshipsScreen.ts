@@ -252,7 +252,9 @@ export const useScholarshipsScreen = () => {
     selectedUniversity,
     setSelectedUniversity,
     selectedScholarship,
+    setSelectedScholarship,
     showDetail,
+    setShowDetail,
     refreshing,
     isFav,
     showFilters,
@@ -269,5 +271,6 @@ export const useScholarshipsScreen = () => {
     getUserInitials,
     navigateToProfile,
     isFavorite,
+    analytics,
   };
 };

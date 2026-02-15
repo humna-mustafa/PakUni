@@ -69,18 +69,12 @@ function AppContent(): React.JSX.Element {
   const [showNav, setShowNav] = React.useState(false);
 
   React.useEffect(() => {
-    console.log('[App] AppContent mounted, waiting 500ms for nav...');
     // Delay navigation rendering - gives React time to stabilize
     const delay = setTimeout(() => {
-      console.log('[App] Setting showNav = true');
       setShowNav(true);
     }, 500);
     return () => clearTimeout(delay);
   }, []);
-
-  React.useEffect(() => {
-    console.log('[App] showNav changed to:', showNav);
-  }, [showNav]);
 
   React.useEffect(() => {
     // Fire and forget  initialization - don't block UI

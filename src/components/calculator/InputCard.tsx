@@ -1,7 +1,8 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useMemo} from 'react';
 import {View, Text, TextInput, Animated, StyleSheet} from 'react-native';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, SPACING, RADIUS, ANIMATION} from '../../constants/design';
+import {createNumericInputHandler} from '../../utils/validation';
 
 interface InputCardProps {
   iconName: string;
@@ -28,6 +29,11 @@ const InputCard = React.memo(({
 }: InputCardProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const focusAnim = useRef(new Animated.Value(0)).current;
+
+  const sanitize = useMemo(() => createNumericInputHandler({allowDecimals: true, max: 9999}), []);
+
+  const handleObtainedChange = (text: string) => onObtainedChange(sanitize(text));
+  const handleTotalChange = (text: string) => onTotalChange(sanitize(text));
 
   useEffect(() => {
     Animated.spring(focusAnim, {
@@ -81,8 +87,9 @@ const InputCard = React.memo(({
               },
             ]}
             value={obtainedValue}
-            onChangeText={onObtainedChange}
+            onChangeText={handleObtainedChange}
             keyboardType="numeric"
+            maxLength={7}
             placeholder={placeholder}
             placeholderTextColor={colors.textSecondary}
             onFocus={() => setIsFocused(true)}
@@ -105,8 +112,9 @@ const InputCard = React.memo(({
               },
             ]}
             value={totalValue}
-            onChangeText={onTotalChange}
+            onChangeText={handleTotalChange}
             keyboardType="numeric"
+            maxLength={7}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />

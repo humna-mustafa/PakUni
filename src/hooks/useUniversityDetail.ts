@@ -107,7 +107,14 @@ export const useUniversityDetail = () => {
     return found;
   }, [universityId]);
 
-  const universityPrograms = useMemo(() => PROGRAMS.slice(0, 10), []);
+  const universityPrograms = useMemo(() => {
+    if (!university) return [];
+    return PROGRAMS.filter(p => 
+      p.universities?.some(u => 
+        u.toLowerCase() === university.short_name.toLowerCase()
+      )
+    ).slice(0, 20);
+  }, [university]);
 
   const universityScholarships = useMemo(() => {
     if (!university) return [];

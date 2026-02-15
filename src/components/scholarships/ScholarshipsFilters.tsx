@@ -16,9 +16,9 @@ interface ScholarshipsFiltersProps {
   searchQuery: string;
   onSearchChange: (text: string) => void;
   selectedType: FilterType;
-  onTypeChange: (type: FilterType) => void;
+  onTypeSelect: (type: FilterType) => void;
   selectedUniversity: string | null;
-  onUniversityChange: (value: string | null) => void;
+  onUniversitySelect: (value: string | null) => void;
   universityOptions: Array<{label: string; value: string}>;
   showFilters: boolean;
   colors: any;
@@ -28,9 +28,9 @@ const ScholarshipsFilters = ({
   searchQuery,
   onSearchChange,
   selectedType,
-  onTypeChange,
+  onTypeSelect,
   selectedUniversity,
-  onUniversityChange,
+  onUniversitySelect,
   universityOptions,
   showFilters,
   colors,
@@ -55,7 +55,7 @@ const ScholarshipsFilters = ({
           <View style={styles.universityDropdownWrapper}>
             <SearchableDropdown
               options={universityOptions}
-              onSelect={(_option, value) => onUniversityChange(value)}
+              onSelect={(_option, value) => onUniversitySelect(value)}
               placeholder="Filter by University"
               label="Selected University"
               emptyMessage="All Universities"
@@ -71,7 +71,7 @@ const ScholarshipsFilters = ({
                   {selectedUniversity}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => onUniversityChange(null)}
+                  onPress={() => onUniversitySelect(null)}
                   hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
                   <Icon name="close-circle" family="Ionicons" size={16} color={colors.primary} />
                 </TouchableOpacity>
@@ -88,7 +88,7 @@ const ScholarshipsFilters = ({
                 key={filter.value}
                 filter={filter}
                 isSelected={selectedType === filter.value}
-                onPress={() => onTypeChange(filter.value)}
+                onPress={() => onTypeSelect(filter.value)}
                 colors={colors}
               />
             ))}

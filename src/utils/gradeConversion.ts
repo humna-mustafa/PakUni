@@ -161,24 +161,25 @@ export const percentageToCGPA = (
 // ============================================================================
 
 // Cambridge O-Level Grade Points and Equivalence
+// Updated per IBCC 2024 Official Guidelines
 const O_LEVEL_GRADES: OLevelGrade[] = [
   {grade: 'A*', points: 8, percentage: 90},
   {grade: 'A', points: 7, percentage: 85},
-  {grade: 'B', points: 6, percentage: 75},
-  {grade: 'C', points: 5, percentage: 65},
-  {grade: 'D', points: 4, percentage: 55},
-  {grade: 'E', points: 3, percentage: 45},
-  {grade: 'F', points: 2, percentage: 35},
-  {grade: 'G', points: 1, percentage: 25},
+  {grade: 'B', points: 6, percentage: 80},
+  {grade: 'C', points: 5, percentage: 70},
+  {grade: 'D', points: 4, percentage: 60},
+  {grade: 'E', points: 3, percentage: 50},
+  {grade: 'F', points: 2, percentage: 40},
+  {grade: 'G', points: 1, percentage: 33},
   {grade: 'U', points: 0, percentage: 0},
 ];
 
 /**
  * Convert O-Level grades to Pakistani Matric (SSC) equivalent
- * Using official IBCC (Inter Board Committee of Chairmen) formula
+ * Using official IBCC (Inter Board Committee of Chairmen) 2024 formula
  * 
  * IBCC Grade → Marks mapping (per subject out of 100):
- *   A* = 90, A = 85, B = 75, C = 65, D = 55, E = 45, F/G/U = Fail
+ *   A* = 90, A = 85, B = 80, C = 70, D = 60, E = 50, F = 40, G = 33, U = Fail
  * 
  * Best 8 subjects are considered
  * Matric (SSC) total = 1100 marks
@@ -247,22 +248,23 @@ export const convertOLevelToMatric = (
 // ============================================================================
 
 // Cambridge A-Level Grade Points and Equivalence
+// Updated per IBCC 2024 Official Guidelines
 const A_LEVEL_GRADES: ALevelGrade[] = [
   {grade: 'A*', points: 8, percentage: 90},
   {grade: 'A', points: 7, percentage: 85},
-  {grade: 'B', points: 6, percentage: 75},
-  {grade: 'C', points: 5, percentage: 65},
-  {grade: 'D', points: 4, percentage: 55},
-  {grade: 'E', points: 3, percentage: 45},
+  {grade: 'B', points: 6, percentage: 80},
+  {grade: 'C', points: 5, percentage: 70},
+  {grade: 'D', points: 4, percentage: 60},
+  {grade: 'E', points: 3, percentage: 50},
   {grade: 'U', points: 0, percentage: 0},
 ];
 
 /**
  * Convert A-Level grades to Pakistani Intermediate (HSSC) equivalent
- * Using official IBCC formula
+ * Using official IBCC 2024 formula
  * 
  * IBCC Grade → Marks mapping (per subject out of 100):
- *   A* = 90, A = 85, B = 75, C = 65, D = 55, E = 45, U = Fail
+ *   A* = 90, A = 85, B = 80, C = 70, D = 60, E = 50, U = Fail
  * 
  * Best 3 principal subjects are considered
  * Inter (HSSC) total = 1100 marks

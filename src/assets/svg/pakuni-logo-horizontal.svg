@@ -1,0 +1,78 @@
+<svg width="300" height="80" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 
+    === PAKUNI LOGO - HORIZONTAL ===
+    Icon Left, Text Right.
+    Consistent geometry with icon.svg
+  -->
+  <defs>
+    <!-- Use same gradients as vertical logo for consistency -->
+    <linearGradient id="capTopH" x1="50" y1="20" x2="50" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B86E5" />
+      <stop offset="1" stop-color="#3A63C5" />
+    </linearGradient>
+
+    <linearGradient id="capBaseH" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2D4F9E" />
+      <stop offset="1" stop-color="#1E3A7A" />
+    </linearGradient>
+
+    <linearGradient id="bookLeftH" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#34D399" />
+      <stop offset="1" stop-color="#059669" />
+    </linearGradient>
+
+    <linearGradient id="bookRightH" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#059669" />
+      <stop offset="1" stop-color="#34D399" />
+    </linearGradient>
+
+    <linearGradient id="goldH" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FCD34D" />
+      <stop offset="0.5" stop-color="#F59E0B" />
+      <stop offset="1" stop-color="#B45309" />
+    </linearGradient>
+  </defs>
+
+  <!-- === ICON GROUP (Scaled down slightly to fit height) === 
+       Original icon fits inside 100x100 box. here we scale it to fit height 80.
+       Scale 0.75 results in 75px height. Translate to keep margin.
+  -->
+  <g transform="translate(10, 5) scale(0.7)">
+      <!-- === BOOK BASE === -->
+      <g transform="translate(0, 10)">
+        <path d="M22 68 L78 68 C80 68 82 66 82 64 L18 64 C18 66 20 68 22 68 Z" fill="#064E3B" />
+        <path d="M50 50 L20 54 L20 64 L50 62 Z" fill="url(#bookLeftH)" />
+        <path d="M20 64 L50 62 L50 64 L22 66 Z" fill="#065F46" />
+        <path d="M50 50 L80 54 L80 64 L50 62 Z" fill="url(#bookRightH)" />
+        <path d="M80 64 L50 62 L50 64 L78 66 Z" fill="#065F46" />
+        <rect x="49" y="50" width="2" height="14" fill="#047857" opacity="0.4" />
+      </g>
+
+      <!-- === GRADUATION CAP === -->
+      <g>
+        <path d="M30 42 L70 42 L72 52 C72 56 64 58 50 58 C36 58 28 56 28 52 Z" fill="url(#capBaseH)" />
+        <path d="M50 15 L88 34 L50 53 L12 34 Z" fill="url(#capTopH)" />
+        <path d="M50 53 L88 34 L88 36 L50 55 L12 36 L12 34 Z" fill="#1E3A7A" opacity="0.3" />
+        <path d="M50 15 L88 34 L50 40 L12 34 Z" fill="#FFFFFF" opacity="0.1" />
+      </g>
+
+      <!-- === TASSEL & BUTTON === -->
+      <g>
+        <circle cx="50" cy="34" r="3.5" fill="url(#goldH)" stroke="#B45309" stroke-width="0.5" />
+        <path d="M50 34 Q65 34 76 42" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" fill="none" />
+        <circle cx="76" cy="42" r="2" fill="#B45309" />
+        <path d="M74 44 L74 62" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" />
+        <path d="M78 44 L78 58" stroke="#FCD34D" stroke-width="2" stroke-linecap="round" />
+      </g>
+  </g>
+
+  <!-- === TEXT === -->
+  <!-- Adjusted position for horizontal layout -->
+  <text x="90" y="52" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="900" letter-spacing="-1.2">
+    <tspan fill="#1F2937">Pak</tspan><tspan fill="#4573DF">Uni</tspan>
+  </text>
+  
+  <text x="92" y="70" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#6B7280" font-weight="500" letter-spacing="0.8" opacity="0.9">
+    YOUR GATEWAY TO UNIVERSITIES
+  </text>
+</svg>

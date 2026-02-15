@@ -121,18 +121,69 @@ const PremiumGoalSettingScreen = () => {
       <GoalStatsCard goals={goals} totalProgress={totalProgress} colors={colors} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Quick Start Templates Section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+              <Icon name="flash-outline" family="Ionicons" size={20} color="#f39c12" />
+              <Text style={[styles.sectionTitle, {color: colors.text}]}>Quick Start</Text>
+            </View>
+          </View>
+          <Text style={[styles.quickStartSubtitle, {color: colors.textSecondary}]}>
+            Tap a template to create a goal instantly
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.templatesContainer}>
+            {GOAL_TEMPLATES.slice(0, 5).map((template, index) => (
+              <TouchableOpacity
+                key={template.id}
+                style={[styles.templateCard, {backgroundColor: template.color + '15', borderColor: template.color + '40'}]}
+                onPress={() => handleSelectTemplate(template)}
+                activeOpacity={0.7}>
+                <View style={[styles.templateIconBg, {backgroundColor: template.color}]}>
+                  <Icon name={template.iconName} family="Ionicons" size={24} color="#FFFFFF" />
+                </View>
+                <Text style={[styles.templateTitle, {color: colors.text}]} numberOfLines={2}>
+                  {template.title}
+                </Text>
+                <View style={styles.templateMeta}>
+                  <Icon name="flag-outline" family="Ionicons" size={12} color={colors.textSecondary} />
+                  <Text style={[styles.templateMetaText, {color: colors.textSecondary}]}>
+                    {template.milestones.length} steps
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+            {/* Custom Goal Card */}
+            <TouchableOpacity
+              style={[styles.templateCard, styles.customTemplateCard, {backgroundColor: colors.card, borderColor: colors.border}]}
+              onPress={openAddModal}
+              activeOpacity={0.7}>
+              <View style={[styles.templateIconBg, {backgroundColor: colors.primary}]}>
+                <Icon name="add" family="Ionicons" size={24} color="#FFFFFF" />
+              </View>
+              <Text style={[styles.templateTitle, {color: colors.text}]} numberOfLines={2}>
+                Custom Goal
+              </Text>
+              <View style={styles.templateMeta}>
+                <Icon name="create-outline" family="Ionicons" size={12} color={colors.textSecondary} />
+                <Text style={[styles.templateMetaText, {color: colors.textSecondary}]}>
+                  Create your own
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+
         {/* My Goals Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
               <Icon name="clipboard-outline" family="Ionicons" size={20} color={colors.text} />
-              <Text style={[styles.sectionTitle, {color: colors.text}]}>My Goals</Text>
+              <Text style={[styles.sectionTitle, {color: colors.text}]}>My Goals ({goals.length})</Text>
             </View>
-            <TouchableOpacity
-              style={[styles.addBtn, {backgroundColor: colors.primary}]}
-              onPress={openAddModal}>
-              <Text style={styles.addBtnText}>+ Add</Text>
-            </TouchableOpacity>
           </View>
 
           {goals.map((goal, index) => (
@@ -316,6 +367,47 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: TYPOGRAPHY.weight.medium,
     fontStyle: 'italic',
+  },
+  quickStartSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    marginBottom: SPACING.sm,
+  },
+  templatesContainer: {
+    paddingRight: SPACING.md,
+    gap: SPACING.sm,
+  },
+  templateCard: {
+    width: 120,
+    padding: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  customTemplateCard: {
+    borderStyle: 'dashed',
+  },
+  templateIconBg: {
+    width: 48,
+    height: 48,
+    borderRadius: RADIUS.lg,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.xs,
+  },
+  templateTitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.semibold,
+    textAlign: 'center',
+    marginBottom: SPACING.xs,
+    height: 36,
+  },
+  templateMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  templateMetaText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
   },
 });
 

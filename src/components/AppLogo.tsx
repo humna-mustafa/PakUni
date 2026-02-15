@@ -1,15 +1,17 @@
 /**
- * AppLogo Component - Premium PakUni Branding
- * 
- * A beautiful, pixel-perfect logo featuring:
- * - Graduation cap (mortarboard) as the main symbol
- * - Modern gradient effects
- * - Multiple size variants
- * - Animated and static versions
- * - Dark/light mode support
- * 
+ * AppLogo Component — PakUni Branding
+ *
+ * Proper SVG-file-based logo system.
+ * Artwork lives in `src/assets/svg/*.svg` as standalone files.
+ * react-native-svg-transformer converts them to React components at
+ * build time so they render as crisp vectors at every DPI.
+ *
+ * Exports the same public API consumed by the rest of the app:
+ *   AppLogo, GraduationCapIcon, LogoBadge, SplashLogo,
+ *   LogoText, Tagline, BRAND_COLORS, GRADIENT_PRESETS, LOGO_SIZES
+ *
  * @author PakUni Team
- * @version 2.0.0
+ * @version 4.0.0 — SVG-file edition
  */
 
 import React, {useRef, useEffect, memo} from 'react';
@@ -27,8 +29,17 @@ import {TYPOGRAPHY} from '../constants/design';
 import {useTheme} from '../contexts/ThemeContext';
 import {roundToPixel, PP_SHADOWS} from '../constants/pixel-perfect';
 
+// ---------------------------------------------------------------------------
+// SVG file imports — each .svg is compiled to a React component by
+// react-native-svg-transformer (configured in metro.config.js)
+// ---------------------------------------------------------------------------
+import PakUniIcon from '../assets/svg/pakuni-icon.svg';
+import PakUniIconWhite from '../assets/svg/pakuni-icon-white.svg';
+import PakUniLogoVertical from '../assets/svg/pakuni-logo.svg';
+import PakUniLogoHorizontal from '../assets/svg/pakuni-logo-horizontal.svg';
+
 // ============================================================================
-// TYPES & INTERFACES
+// TYPES
 // ============================================================================
 
 export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'hero';
@@ -48,13 +59,16 @@ interface AppLogoProps {
 // SIZE CONFIGURATIONS
 // ============================================================================
 
-const LOGO_SIZES: Record<LogoSize, {
-  icon: number;
-  text: number;
-  tagline: number;
-  gap: number;
-  containerPadding: number;
-}> = {
+const LOGO_SIZES: Record<
+  LogoSize,
+  {
+    icon: number;
+    text: number;
+    tagline: number;
+    gap: number;
+    containerPadding: number;
+  }
+> = {
   xs: {icon: 24, text: 14, tagline: 8, gap: 4, containerPadding: 2},
   sm: {icon: 32, text: 18, tagline: 10, gap: 6, containerPadding: 4},
   md: {icon: 48, text: 24, tagline: 12, gap: 8, containerPadding: 6},
@@ -64,33 +78,34 @@ const LOGO_SIZES: Record<LogoSize, {
   hero: {icon: 140, text: 56, tagline: 20, gap: 16, containerPadding: 16},
 };
 
-// Brand Colors - Matching App Theme
+// ============================================================================
+// BRAND COLORS — Single source of truth
+// ============================================================================
+
 const BRAND_COLORS = {
-  primary: '#4573DF',       // PakUni Brand Blue
-  primaryDark: '#3660C9',   // Darker brand blue
-  primaryLight: '#4573DF',  // Lighter brand blue
-  secondary: '#10B981',     // Emerald Green (app secondary)
-  accent: '#4573DF',        // Brand accent
-  gold: '#F59E0B',          // Warm academic gold
-  goldLight: '#FBBF24',     // Light gold
-  goldDark: '#B45309',      // Dark gold
-  pakistanGreen: '#059669', // Professional Pakistan Green
+  primary: '#4573DF',
+  primaryDark: '#3660C9',
+  primaryLight: '#6B93F0',
+  secondary: '#10B981',
+  accent: '#3660C9',
+  gold: '#F59E0B',
+  goldLight: '#FBBF24',
+  goldDark: '#B45309',
+  pakistanGreen: '#059669',
   white: '#FFFFFF',
 };
 
-// Premium gradients - Matching App Theme
 const GRADIENT_PRESETS = {
-  primary: ['#4573DF', '#4573DF'],
+  primary: ['#6B93F0', '#4573DF', '#3660C9'],
   emerald: ['#10B981', '#059669'],
   golden: ['#FBBF24', '#F59E0B'],
   royal: ['#4573DF', '#3660C9', '#2A4FA8'],
   pakistan: ['#10B981', '#059669'],
-  premium: ['#4573DF', '#4573DF', '#3660C9'],
+  premium: ['#6B93F0', '#4573DF', '#3660C9'],
 };
 
 // ============================================================================
-// PREMIUM GRADUATION CAP ICON - Pure React Native (No SVG dependency)
-// Beautiful icon built with View components and gradients
+// GRADUATION CAP ICON — Wrapper around imported SVG file
 // ============================================================================
 
 interface GraduationCapIconProps {
@@ -100,20 +115,33 @@ interface GraduationCapIconProps {
   animated?: boolean;
 }
 
-const GraduationCapIcon = memo<GraduationCapIconProps>(({
-  size,
-  primaryColor = BRAND_COLORS.primary,
-  secondaryColor = BRAND_COLORS.accent,
-  animated = false,
-}) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+/**
+ * Renders the PakUni graduation-cap SVG at the requested pixel size.
+ *
+ * Two colour variants ship as separate `.svg` files:
+ *   • Brand-colored (default) — pakuni-icon.svg
+ *   • White — pakuni-icon-white.svg
+ *
+ * When `primaryColor` is white-ish the white variant is selected
+ * automatically so callers don't need to change anything.
+ */
+const GraduationCapIcon = memo<GraduationCapIconProps>(
+  ({
+    size,
+    primaryColor = BRAND_COLORS.primary,
+    // secondaryColor kept for backward-compat with existing callers
+    secondaryColor: _secondaryColor,
+    animated = false,
+  }) => {
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+    const bounceAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (animated) {
-      // Subtle breathing animation
-      Animated.loop(
+    useEffect(() => {
+      if (!animated) {
+        return;
+      }
+
+      const breathe = Animated.loop(
         Animated.sequence([
           Animated.timing(scaleAnim, {
             toValue: 1.03,
@@ -125,11 +153,11 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
             duration: 1500,
             useNativeDriver: true,
           }),
-        ])
-      ).start();
+        ]),
+      );
+      breathe.start();
 
-      // Tassel swing animation
-      Animated.loop(
+      const swing = Animated.loop(
         Animated.sequence([
           Animated.timing(bounceAnim, {
             toValue: 1,
@@ -141,387 +169,60 @@ const GraduationCapIcon = memo<GraduationCapIconProps>(({
             duration: 2000,
             useNativeDriver: true,
           }),
-        ])
-      ).start();
+        ]),
+      );
+      swing.start();
+
+      return () => {
+        breathe.stop();
+        swing.stop();
+      };
+    }, [animated, scaleAnim, bounceAnim]);
+
+    // Pick the correct SVG colour variant
+    const isWhite =
+      primaryColor === '#FFFFFF' ||
+      primaryColor === '#FFF' ||
+      primaryColor === '#fff' ||
+      primaryColor === 'white' ||
+      primaryColor?.toLowerCase() === '#ffffff';
+
+    const SvgIcon = isWhite ? PakUniIconWhite : PakUniIcon;
+    const svgElement = <SvgIcon width={size} height={size} />;
+
+    if (!animated) {
+      return (
+        <View
+          style={{
+            width: size,
+            height: size,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {svgElement}
+        </View>
+      );
     }
-  }, [animated, scaleAnim, bounceAnim]);
 
-  const tasselSwing = bounceAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['-5deg', '5deg'],
-  });
-
-  // Calculate proportions based on size
-  const capTopWidth = size * 0.9;
-  const capTopHeight = size * 0.35;
-  const capBaseWidth = size * 0.5;
-  const capBaseHeight = size * 0.25;
-  const buttonSize = size * 0.12;
-  const tasselWidth = size * 0.08;
-  const tasselLength = size * 0.35;
-  const bookWidth = size * 0.7;
-  const bookHeight = size * 0.18;
-
-  return (
-    <Animated.View
-      style={[
-        iconStyles.container,
-        {
+    return (
+      <Animated.View
+        style={{
           width: size,
           height: size,
+          alignItems: 'center',
+          justifyContent: 'center',
           transform: [{scale: scaleAnim}],
-        },
-      ]}
-    >
-      {/* Glow Effect Behind */}
-      <View
-        style={[
-          iconStyles.glowOuter,
-          {
-            width: size * 0.8,
-            height: size * 0.8,
-            borderRadius: size * 0.4,
-            backgroundColor: primaryColor,
-            opacity: 0.1,
-          },
-        ]}
-      />
-
-      {/* Open Book Base */}
-      <View style={[iconStyles.bookContainer, {bottom: size * 0.05}]}>
-        {/* Left Book Page */}
-        <LinearGradient
-          colors={['#00897B', '#00695C']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[
-            iconStyles.bookPage,
-            {
-              width: bookWidth * 0.5,
-              height: bookHeight,
-              borderTopLeftRadius: size * 0.02,
-              borderBottomLeftRadius: size * 0.06,
-              transform: [{rotateY: '-15deg'}, {skewY: '-3deg'}],
-            },
-          ]}
-        >
-          {/* Page Lines */}
-          <View style={[iconStyles.pageLine, {width: '70%', top: '30%'}]} />
-          <View style={[iconStyles.pageLine, {width: '50%', top: '55%'}]} />
-        </LinearGradient>
-        
-        {/* Right Book Page */}
-        <LinearGradient
-          colors={['#00695C', '#00897B']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[
-            iconStyles.bookPage,
-            {
-              width: bookWidth * 0.5,
-              height: bookHeight,
-              borderTopRightRadius: size * 0.02,
-              borderBottomRightRadius: size * 0.06,
-              transform: [{rotateY: '15deg'}, {skewY: '3deg'}],
-            },
-          ]}
-        >
-          {/* Page Lines */}
-          <View style={[iconStyles.pageLine, {width: '70%', top: '30%', alignSelf: 'flex-end'}]} />
-          <View style={[iconStyles.pageLine, {width: '50%', top: '55%', alignSelf: 'flex-end'}]} />
-        </LinearGradient>
-      </View>
-
-      {/* Cap Shadow */}
-      <View
-        style={[
-          iconStyles.capShadow,
-          {
-            width: capTopWidth * 0.85,
-            height: capTopHeight * 0.4,
-            borderRadius: capTopHeight * 0.2,
-            backgroundColor: primaryColor,
-            bottom: size * 0.22,
-          },
-        ]}
-      />
-
-      {/* Cap Base (Crown) */}
-      <LinearGradient
-        colors={[primaryColor, secondaryColor]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[
-          iconStyles.capBase,
-          {
-            width: capBaseWidth,
-            height: capBaseHeight,
-            borderRadius: size * 0.04,
-            borderBottomLeftRadius: size * 0.08,
-            borderBottomRightRadius: size * 0.08,
-            bottom: size * 0.25,
-          },
-        ]}
+        }}
       >
-        {/* Cap Band */}
-        <View
-          style={[
-            iconStyles.capBand,
-            {
-              height: size * 0.03,
-              backgroundColor: secondaryColor,
-              bottom: size * 0.02,
-            },
-          ]}
-        />
-      </LinearGradient>
-
-      {/* Cap Top (Mortarboard) */}
-      <LinearGradient
-        colors={[primaryColor, secondaryColor, primaryColor]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[
-          iconStyles.capTop,
-          {
-            width: capTopWidth,
-            height: capTopHeight,
-            top: size * 0.15,
-            transform: [{rotateX: '60deg'}],
-          },
-        ]}
-      >
-        {/* Shine Effect */}
-        <LinearGradient
-          colors={['rgba(255,255,255,0.4)', 'rgba(255,255,255,0.1)', 'transparent']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[iconStyles.shine, {borderRadius: size * 0.02}]}
-        />
-      </LinearGradient>
-
-      {/* Button on Top */}
-      <LinearGradient
-        colors={[BRAND_COLORS.goldLight, BRAND_COLORS.gold]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[
-          iconStyles.button,
-          {
-            width: buttonSize,
-            height: buttonSize,
-            borderRadius: buttonSize / 2,
-            top: size * 0.12,
-          },
-        ]}
-      >
-        {/* Button Highlight */}
-        <View
-          style={[
-            iconStyles.buttonHighlight,
-            {
-              width: buttonSize * 0.4,
-              height: buttonSize * 0.4,
-              borderRadius: buttonSize * 0.2,
-              top: buttonSize * 0.15,
-              left: buttonSize * 0.15,
-            },
-          ]}
-        />
-      </LinearGradient>
-
-      {/* Tassel */}
-      <Animated.View
-        style={[
-          iconStyles.tasselContainer,
-          {
-            right: size * 0.08,
-            top: size * 0.18,
-            transform: [{rotate: tasselSwing}],
-          },
-        ]}
-      >
-        {/* Tassel String */}
-        <View
-          style={[
-            iconStyles.tasselString,
-            {
-              width: size * 0.25,
-              height: tasselWidth * 0.6,
-              backgroundColor: BRAND_COLORS.gold,
-              borderRadius: tasselWidth * 0.3,
-            },
-          ]}
-        />
-        
-        {/* Tassel Knot */}
-        <LinearGradient
-          colors={[BRAND_COLORS.goldLight, BRAND_COLORS.gold]}
-          style={[
-            iconStyles.tasselKnot,
-            {
-              width: tasselWidth * 1.5,
-              height: tasselWidth * 1.5,
-              borderRadius: tasselWidth * 0.75,
-              right: 0,
-              top: tasselWidth * 0.2,
-            },
-          ]}
-        />
-
-        {/* Tassel Fringe - Fixed heights for consistent rendering */}
-        <View
-          style={[
-            iconStyles.tasselFringe,
-            {
-              right: tasselWidth * 0.25,
-              top: tasselWidth * 1.5,
-            },
-          ]}
-        >
-          {[0.9, 1.1, 1.0, 1.15, 0.85].map((heightMultiplier, i) => (
-            <View
-              key={i}
-              style={[
-                iconStyles.fringeStrand,
-                {
-                  width: tasselWidth * 0.3,
-                  height: tasselLength * heightMultiplier,
-                  backgroundColor: i % 2 === 0 ? BRAND_COLORS.gold : BRAND_COLORS.goldLight,
-                  borderRadius: tasselWidth * 0.15,
-                  marginHorizontal: tasselWidth * 0.05,
-                },
-              ]}
-            />
-          ))}
-        </View>
+        {svgElement}
       </Animated.View>
-
-      {/* Decorative Stars */}
-      <View style={[iconStyles.star, {left: size * 0.08, top: size * 0.12}]}>
-        <Text style={[iconStyles.starText, {fontSize: size * 0.08, color: BRAND_COLORS.gold}]}>✦</Text>
-      </View>
-      <View style={[iconStyles.star, {right: size * 0.35, top: size * 0.08}]}>
-        <Text style={[iconStyles.starText, {fontSize: size * 0.06, color: BRAND_COLORS.gold}]}>✦</Text>
-      </View>
-      <View style={[iconStyles.star, {left: size * 0.15, bottom: size * 0.08}]}>
-        <Text style={[iconStyles.starText, {fontSize: size * 0.05, color: secondaryColor, opacity: 0.6}]}>•</Text>
-      </View>
-      <View style={[iconStyles.star, {right: size * 0.1, bottom: size * 0.12}]}>
-        <Text style={[iconStyles.starText, {fontSize: size * 0.04, color: secondaryColor, opacity: 0.5}]}>•</Text>
-      </View>
-    </Animated.View>
-  );
-});
-
-const iconStyles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    );
   },
-  glowOuter: {
-    position: 'absolute',
-  },
-  bookContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-  bookPage: {
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  pageLine: {
-    position: 'absolute',
-    height: 1.5,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    borderRadius: 1,
-    left: 4,
-  },
-  capShadow: {
-    position: 'absolute',
-    opacity: 0.15,
-  },
-  capBase: {
-    position: 'absolute',
-    overflow: 'hidden',
-  },
-  capBand: {
-    position: 'absolute',
-    width: '100%',
-    opacity: 0.7,
-  },
-  capTop: {
-    position: 'absolute',
-    borderRadius: 4,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  shine: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  button: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#FFC107',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.5,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  buttonHighlight: {
-    position: 'absolute',
-    backgroundColor: 'rgba(255,255,255,0.6)',
-  },
-  tasselContainer: {
-    position: 'absolute',
-  },
-  tasselString: {
-    position: 'absolute',
-    left: 0,
-  },
-  tasselKnot: {
-    position: 'absolute',
-  },
-  tasselFringe: {
-    position: 'absolute',
-    flexDirection: 'row',
-  },
-  fringeStrand: {
-    // Style applied inline
-  },
-  star: {
-    position: 'absolute',
-  },
-  starText: {
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-});
+);
 
 // ============================================================================
-// LOGO TEXT COMPONENT
+// LOGO TEXT
 // ============================================================================
 
 interface LogoTextProps {
@@ -531,23 +232,17 @@ interface LogoTextProps {
 }
 
 const LogoText = memo<LogoTextProps>(({size, color, weight = 'bold'}) => {
-  const {colors, isDark} = useTheme();
+  const {colors} = useTheme();
   const textColor = color || colors.text;
-
-  const fontWeight: TextStyle['fontWeight'] = 
-    weight === 'heavy' ? '900' : 
-    weight === 'bold' ? '700' : '500';
+  const fontWeight: TextStyle['fontWeight'] =
+    weight === 'heavy' ? '900' : weight === 'bold' ? '700' : '500';
 
   return (
     <View style={styles.textContainer}>
       <Text
         style={[
           styles.logoText,
-          {
-            fontSize: roundToPixel(size),
-            color: textColor,
-            fontWeight,
-          },
+          {fontSize: roundToPixel(size), color: textColor, fontWeight},
         ]}
         accessibilityRole="header"
       >
@@ -559,7 +254,7 @@ const LogoText = memo<LogoTextProps>(({size, color, weight = 'bold'}) => {
 });
 
 // ============================================================================
-// TAGLINE COMPONENT
+// TAGLINE
 // ============================================================================
 
 interface TaglineProps {
@@ -573,13 +268,7 @@ const Tagline = memo<TaglineProps>(({size, color}) => {
 
   return (
     <Text
-      style={[
-        styles.tagline,
-        {
-          fontSize: roundToPixel(size),
-          color: textColor,
-        },
-      ]}
+      style={[styles.tagline, {fontSize: roundToPixel(size), color: textColor}]}
     >
       Your Gateway to Pakistani Universities
     </Text>
@@ -587,177 +276,176 @@ const Tagline = memo<TaglineProps>(({size, color}) => {
 });
 
 // ============================================================================
-// MAIN APP LOGO COMPONENT
+// MAIN APP LOGO
 // ============================================================================
 
-export const AppLogo: React.FC<AppLogoProps> = memo(({
-  size = 'md',
-  variant = 'full',
-  animated = false,
-  showTagline = false,
-  color,
-  style,
-  onLayout,
-}) => {
-  const {colors, isDark} = useTheme();
-  const config = LOGO_SIZES[size];
+export const AppLogo: React.FC<AppLogoProps> = memo(
+  ({
+    size = 'md',
+    variant = 'full',
+    animated = false,
+    showTagline = false,
+    color,
+    style,
+    onLayout,
+  }) => {
+    const {colors} = useTheme();
+    const config = LOGO_SIZES[size];
 
-  // Render based on variant
-  const renderLogo = () => {
-    switch (variant) {
-      case 'icon':
-        return (
-          <GraduationCapIcon
-            size={config.icon}
-            primaryColor={color || BRAND_COLORS.primary}
-            animated={animated}
-          />
-        );
-
-      case 'text':
-        return (
-          <LogoText
-            size={config.text}
-            color={color}
-            weight="bold"
-          />
-        );
-
-      case 'compact':
-        return (
-          <View style={styles.compactContainer}>
-            <GraduationCapIcon
-              size={config.icon * 0.6}
-              primaryColor={color || BRAND_COLORS.primary}
-              animated={animated}
-            />
-            <LogoText
-              size={config.text * 0.8}
-              color={color}
-              weight="bold"
-            />
-          </View>
-        );
-
-      case 'horizontal':
-        return (
-          <View style={styles.horizontalContainer}>
+    const renderLogo = () => {
+      switch (variant) {
+        case 'icon':
+          return (
             <GraduationCapIcon
               size={config.icon}
               primaryColor={color || BRAND_COLORS.primary}
               animated={animated}
             />
-            <View style={{width: config.gap}} />
-            <View>
-              <LogoText
-                size={config.text}
-                color={color}
-                weight="bold"
+          );
+
+        case 'text':
+          return <LogoText size={config.text} color={color} weight="bold" />;
+
+        case 'compact':
+          return (
+            <View style={styles.compactContainer}>
+              <GraduationCapIcon
+                size={config.icon * 0.6}
+                primaryColor={color || BRAND_COLORS.primary}
+                animated={animated}
               />
+              <LogoText size={config.text * 0.8} color={color} weight="bold" />
+            </View>
+          );
+
+        case 'horizontal':
+          // Use the perfect SVG file if default branding (no overrides)
+          if (!color && !animated && showTagline) {
+            return (
+              <PakUniLogoHorizontal
+                width={config.icon * 3.5} // Estimate width based on icon size
+                height={config.icon}
+              />
+            );
+          }
+          return (
+            <View style={styles.horizontalContainer}>
+              <GraduationCapIcon
+                size={config.icon}
+                primaryColor={color || BRAND_COLORS.primary}
+                animated={animated}
+              />
+              <View style={{width: config.gap}} />
+              <View>
+                <LogoText size={config.text} color={color} weight="bold" />
+                {showTagline && (
+                  <Tagline
+                    size={config.tagline}
+                    color={colors.textSecondary}
+                  />
+                )}
+              </View>
+            </View>
+          );
+
+        case 'full':
+        default:
+          // Use the perfect SVG file if default branding (no overrides)
+          if (!color && !animated && showTagline) {
+             return (
+              <PakUniLogoVertical
+                width={config.icon * 2.5} // Estimate width based on icon size
+                height={config.icon * 3}
+              />
+            );
+          }
+          return (
+            <View style={styles.fullContainer}>
+              <GraduationCapIcon
+                size={config.icon}
+                primaryColor={color || BRAND_COLORS.primary}
+                animated={animated}
+              />
+              <View style={{height: config.gap}} />
+              <LogoText size={config.text} color={color} weight="bold" />
               {showTagline && (
-                <Tagline
-                  size={config.tagline}
-                  color={colors.textSecondary}
-                />
+                <>
+                  <View style={{height: config.gap / 2}} />
+                  <Tagline
+                    size={config.tagline}
+                    color={colors.textSecondary}
+                  />
+                </>
               )}
             </View>
-          </View>
-        );
+          );
+      }
+    };
 
-      case 'full':
-      default:
-        return (
-          <View style={styles.fullContainer}>
-            <GraduationCapIcon
-              size={config.icon}
-              primaryColor={color || BRAND_COLORS.primary}
-              animated={animated}
-            />
-            <View style={{height: config.gap}} />
-            <LogoText
-              size={config.text}
-              color={color}
-              weight="bold"
-            />
-            {showTagline && (
-              <>
-                <View style={{height: config.gap / 2}} />
-                <Tagline
-                  size={config.tagline}
-                  color={colors.textSecondary}
-                />
-              </>
-            )}
-          </View>
-        );
-    }
-  };
-
-  return (
-    <View style={[styles.container, style]} onLayout={onLayout}>
-      {renderLogo()}
-    </View>
-  );
-});
+    return (
+      <View style={[styles.container, style]} onLayout={onLayout}>
+        {renderLogo()}
+      </View>
+    );
+  },
+);
 
 // ============================================================================
-// ANIMATED SPLASH LOGO - For Splash Screens
+// ANIMATED SPLASH LOGO
 // ============================================================================
 
 interface SplashLogoProps {
   onAnimationComplete?: () => void;
 }
 
-export const SplashLogo: React.FC<SplashLogoProps> = memo(({onAnimationComplete}) => {
-  const {colors, isDark} = useTheme();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
+export const SplashLogo: React.FC<SplashLogoProps> = memo(
+  ({onAnimationComplete}) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(0.8)).current;
+    const slideAnim = useRef(new Animated.Value(30)).current;
 
-  useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 800,
+    useEffect(() => {
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 500,
           useNativeDriver: true,
         }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          tension: 50,
-          friction: 7,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      onAnimationComplete?.();
-    });
-  }, [fadeAnim, scaleAnim, slideAnim, onAnimationComplete]);
+      ]).start(() => {
+        onAnimationComplete?.();
+      });
+    }, [fadeAnim, scaleAnim, slideAnim, onAnimationComplete]);
 
-  return (
-    <View style={styles.splashContainer}>
-      <Animated.View
-        style={[
-          styles.splashLogoWrapper,
-          {
-            opacity: fadeAnim,
-            transform: [{scale: scaleAnim}],
-          },
-        ]}
-      >
-        <AppLogo size="hero" variant="full" showTagline animated />
-      </Animated.View>
-    </View>
-  );
-});
+    return (
+      <View style={styles.splashContainer}>
+        <Animated.View
+          style={[
+            styles.splashLogoWrapper,
+            {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
+          ]}
+        >
+          <AppLogo size="hero" variant="full" showTagline animated />
+        </Animated.View>
+      </View>
+    );
+  },
+);
 
 // ============================================================================
-// LOGO BADGE - For Headers/Nav
+// LOGO BADGE — For Headers/Nav
 // ============================================================================
 
 interface LogoBadgeProps {
@@ -765,56 +453,54 @@ interface LogoBadgeProps {
   showGlow?: boolean;
 }
 
-export const LogoBadge: React.FC<LogoBadgeProps> = memo(({size = 'md', showGlow = false}) => {
-  const {colors, isDark} = useTheme();
-  
-  const badgeSizes = {
-    sm: 36,
-    md: 44,
-    lg: 56,
-  };
+export const LogoBadge: React.FC<LogoBadgeProps> = memo(
+  ({size = 'md', showGlow = false}) => {
+    const {isDark} = useTheme();
 
-  const badgeSize = badgeSizes[size];
+    const badgeSizes = {sm: 36, md: 44, lg: 56};
+    const badgeSize = badgeSizes[size];
 
-  return (
-    <View style={[styles.badgeContainer, {width: badgeSize, height: badgeSize}]}>
-      {showGlow && (
-        <View
+    return (
+      <View
+        style={[styles.badgeContainer, {width: badgeSize, height: badgeSize}]}
+      >
+        {showGlow && (
+          <View
+            style={[
+              styles.badgeGlow,
+              {
+                width: badgeSize + 16,
+                height: badgeSize + 16,
+                borderRadius: (badgeSize + 16) / 2,
+                backgroundColor: isDark
+                  ? 'rgba(69, 115, 223, 0.2)'
+                  : 'rgba(69, 115, 223, 0.15)',
+              },
+            ]}
+          />
+        )}
+        <LinearGradient
+          colors={GRADIENT_PRESETS.primary}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
           style={[
-            styles.badgeGlow,
+            styles.badgeGradient,
             {
-              width: badgeSize + 16,
-              height: badgeSize + 16,
-              borderRadius: (badgeSize + 16) / 2,
-              backgroundColor: isDark 
-                ? 'rgba(69, 115, 223, 0.2)' 
-                : 'rgba(69, 115, 223, 0.15)',
+              width: badgeSize,
+              height: badgeSize,
+              borderRadius: badgeSize / 2,
             },
           ]}
-        />
-      )}
-      <LinearGradient
-        colors={GRADIENT_PRESETS.primary}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[
-          styles.badgeGradient,
-          {
-            width: badgeSize,
-            height: badgeSize,
-            borderRadius: badgeSize / 2,
-          },
-        ]}
-      >
-        <GraduationCapIcon
-          size={badgeSize * 0.65}
-          primaryColor="#FFFFFF"
-          secondaryColor="rgba(255,255,255,0.8)"
-        />
-      </LinearGradient>
-    </View>
-  );
-});
+        >
+          <GraduationCapIcon
+            size={badgeSize * 0.65}
+            primaryColor="#FFFFFF"
+          />
+        </LinearGradient>
+      </View>
+    );
+  },
+);
 
 // ============================================================================
 // STYLES

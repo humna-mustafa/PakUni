@@ -2,6 +2,7 @@
  * Target Calculator
  * "To get into NUST, you need 87% in entry test"
  * Calculates required scores to achieve target aggregate
+ * Enhanced with actual merit data from meritArchive
  */
 
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
@@ -18,6 +19,40 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
 import {useTheme} from '../../contexts';
+import {MERIT_RECORDS} from '../../data/meritArchive';
+
+// ============================================================================
+// MERIT DATA HELPERS
+// ============================================================================
+
+// Get recent merit data for a university
+const getUniversityMeritData = (universityShortName: string) => {
+  const uniRecords = MERIT_RECORDS.filter(
+    r => r.universityShortName.toUpperCase() === universityShortName.toUpperCase()
+  );
+  if (uniRecords.length === 0) return null;
+
+  // Get most recent year's records
+  const years = [...new Set(uniRecords.map(r => r.year))].sort((a, b) => b - a);
+  const latestYear = years[0];
+  const latestRecords = uniRecords.filter(r => r.year === latestYear);
+
+  // Calculate average closing merit
+  const avgMerit = latestRecords.reduce((sum, r) => sum + r.closingMerit, 0) / latestRecords.length;
+
+  // Get range
+  const minMerit = Math.min(...latestRecords.map(r => r.closingMerit));
+  const maxMerit = Math.max(...latestRecords.map(r => r.closingMerit));
+
+  return {
+    year: latestYear,
+    avgMerit: Math.round(avgMerit * 10) / 10,
+    minMerit: Math.round(minMerit * 10) / 10,
+    maxMerit: Math.round(maxMerit * 10) / 10,
+    totalPrograms: latestRecords.length,
+    session: latestRecords[0]?.session || 'Fall',
+  };
+};
 
 // ============================================================================
 // TYPES
@@ -474,6 +509,35 @@ export const TargetCalculator: React.FC<TargetCalculatorProps> = ({onCalculate})
             Min. for {selectedUniversity.shortName}: {selectedUniversity.minAggregate}%
           </Text>
         )}
+        {/* Merit-based target suggestions */}
+        {selectedUniversity && (() => {
+          const meritData = getUniversityMeritData(selectedUniversity.shortName);
+          if (!meritData) return null;
+          return (
+            <View style={styles.meritSuggestionsContainer}>
+              <Text style={[styles.meritSuggestionLabel, {color: colors.textSecondary}]}>
+                Based on {meritData.year} {meritData.session} merit data:
+              </Text>
+              <View style={styles.meritChipsRow}>
+                <TouchableOpacity 
+                  style={[styles.meritChip, {backgroundColor: colors.success + '15', borderColor: colors.success}]}
+                  onPress={() => setTargetAggregate(meritData.minMerit.toString())}>
+                  <Text style={[styles.meritChipText, {color: colors.success}]}>Safe: {meritData.minMerit}%</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.meritChip, {backgroundColor: colors.warning + '15', borderColor: colors.warning}]}
+                  onPress={() => setTargetAggregate(meritData.avgMerit.toString())}>
+                  <Text style={[styles.meritChipText, {color: colors.warning}]}>Avg: {meritData.avgMerit}%</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.meritChip, {backgroundColor: colors.error + '15', borderColor: colors.error}]}
+                  onPress={() => setTargetAggregate(meritData.maxMerit.toString())}>
+                  <Text style={[styles.meritChipText, {color: colors.error}]}>Top: {meritData.maxMerit}%</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })()}
       </View>
 
       {/* Calculate Button */}
@@ -814,6 +878,27 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.xs,
     color: '#10B981',
     marginTop: 4,
+  },
+  meritSuggestionsContainer: {
+    marginTop: SPACING.sm,
+  },
+  meritSuggestionLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    marginBottom: 6,
+  },
+  meritChipsRow: {
+    flexDirection: 'row',
+    gap: SPACING.xs,
+  },
+  meritChip: {
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    borderWidth: 1,
+  },
+  meritChipText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   calculateButton: {
     marginTop: SPACING.lg,

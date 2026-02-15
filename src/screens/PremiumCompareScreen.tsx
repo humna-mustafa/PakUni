@@ -538,6 +538,14 @@ const PremiumCompareScreen = () => {
           </LinearGradient>
         </View>
 
+        {/* Data Disclaimer */}
+        <View style={[styles.disclaimerCard, {backgroundColor: colors.card, borderColor: colors.warning || '#F59E0B'}]}>
+          <Icon name="information-circle" family="Ionicons" size={20} color={colors.warning || '#F59E0B'} />
+          <Text style={[styles.disclaimerText, {color: colors.textSecondary}]}>
+            Data shown is for reference only. Please verify with official university websites for the most accurate and up-to-date information.
+          </Text>
+        </View>
+
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
@@ -806,6 +814,21 @@ const styles = StyleSheet.create({
   tipText: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.sm,
+  },
+  disclaimerCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: SPACING.md,
+    marginTop: SPACING.md,
+    padding: SPACING.sm,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    gap: SPACING.sm,
+  },
+  disclaimerText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.xs,
+    lineHeight: 16,
   },
   // Modal styles
   modalOverlay: {

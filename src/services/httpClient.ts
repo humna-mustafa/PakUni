@@ -153,7 +153,7 @@ class HttpClient {
   }
 
   /**
-   * Perform actual fetch with timeout
+   * Perform actual fetch with timeout and abort support
    */
   private performFetch<T = any>(
     url: string,
@@ -168,11 +168,17 @@ class HttpClient {
       let timedOut = false;
       let completed = false;
 
+      // Create AbortController for this request
+      const controller = new AbortController();
+      this.activeRequests.set(url, controller);
+
       // Setup timeout
       const timeoutId = setTimeout(() => {
         timedOut = true;
+        controller.abort();
         if (!completed) {
           completed = true;
+          this.activeRequests.delete(url);
           resolve({
             ok: false,
             status: 408,
@@ -184,14 +190,16 @@ class HttpClient {
         }
       }, config.timeout);
 
-      // Perform fetch
+      // Perform fetch with abort signal
       fetch(url, {
         method: config.method || 'GET',
         headers: config.headers,
         body: config.body,
+        signal: controller.signal,
       })
         .then(async (response) => {
           clearTimeout(timeoutId);
+          this.activeRequests.delete(url);
 
           if (timedOut || completed) return;
           completed = true;
@@ -226,6 +234,7 @@ class HttpClient {
         })
         .catch((error) => {
           clearTimeout(timeoutId);
+          this.activeRequests.delete(url);
 
           if (timedOut || completed) return;
           completed = true;

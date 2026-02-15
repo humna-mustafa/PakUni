@@ -55,7 +55,11 @@ export { default as NotificationBell, type Notification, type NotificationType }
 // Error Handling
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as EnhancedErrorBoundary, GlobalErrorProvider } from './EnhancedErrorBoundary';
+export { default as AdminRouteGuard } from './AdminRouteGuard';
 export { default as EnhancedErrorToast } from './EnhancedErrorToast';
+
+// Access Control
+export { AdminGuard, withAdminGuard } from './AdminGuard';
 
 // =============================================================================
 // SWIPEABLE CARDS (Modern Gesture-Enabled)

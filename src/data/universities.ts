@@ -56,7 +56,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://crystalpng.com/wp-content/uploads/2023/09/Abasyn-University-Logo.png",
     description: "Founded in 2007, Abasyn University is a private HEC-recognized institution in Peshawar known for its programs in business administration, computer science, engineering, and health sciences. The university also has campuses in Islamabad and operates with a focus on providing quality education with modern teaching methodologies. Abasyn is particularly recognized for its MBA and BBA programs in the KPK region.",
     admission_url: "https://www.abasyn.edu.pk",
-    campuses: ["Peshawar"],
+    campuses: ["Peshawar", "Islamabad"],
   },
   {
     id: 2,
@@ -116,7 +116,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Founded in 1983 by His Highness the Aga Khan, AKU is an international research university with campuses in Pakistan, East Africa, and the UK. Its medical college and teaching hospital in Karachi are considered among the best in Pakistan, operating without provincial or regional quotas. AKU is known for its rigorous academic standards, clinical training, and nursing programs that meet international benchmarks.",
     admission_url: "https://www.aku.edu",
-    campuses: ["Karachi"],
+    campuses: ["Karachi", "Nairobi (Kenya)", "Kampala (Uganda)", "Dar es Salaam (Tanzania)", "London (UK)"],
   },
   {
     id: 7,
@@ -136,7 +136,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxpoT2MLyu14PovsouBxQzhN96Xpj8Cho5Hg&s",
     description: "Established in 2002 under the Pakistan Air Force, Air University in Islamabad specializes in aerospace engineering, avionics, electrical engineering, computer science, and management sciences. It is the only university in Pakistan offering dedicated aerospace and aviation programs. Air University combines military discipline with academic excellence and has quickly risen in national university rankings.",
     admission_url: "https://www.au.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad", "Multan", "Kamra"],
   },
   {
     id: 8,
@@ -376,7 +376,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://crystalpng.com/wp-content/uploads/2022/06/bahria-university-logo.png",
     description: "Founded in 2000 under the Pakistan Navy, Bahria University has campuses in Islamabad, Lahore, Karachi, and other cities. It is known for its strong programs in computer science, engineering, management sciences, and maritime studies. As a military-affiliated institution, Bahria combines disciplined campus culture with quality education and is one of the most popular multi-campus universities in Pakistan.",
     admission_url: "https://www.bahria.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad (E-8)", "Lahore", "Karachi"],
   },
   {
     id: 20,
@@ -656,7 +656,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/commons/c/c0/COMSATS_new_logo.jpg",
     description: "Established in 1998, COMSATS University Islamabad (CUI) is one of Pakistan's leading public universities with seven campuses across the country including Islamabad, Lahore, Abbottabad, and Wah. It is particularly renowned for its computer science, information technology, electrical engineering, and biosciences programs. CUI consistently ranks among the top 5 Pakistani universities and is known for accessible quality education.",
     admission_url: "https://www.comsats.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad", "Lahore", "Abbottabad", "Wah", "Vehari", "Sahiwal", "Attock"],
   },
   {
     id: 35,
@@ -756,7 +756,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/b/bf/Logo_of_Dow_University_of_Health_Sciences.gif",
     description: "Founded in 1945 as Dow Medical College, DOW University of Health Sciences is one of the most prestigious medical universities in Pakistan and the premier health sciences institution in Sindh. It offers highly competitive programs in medicine (MBBS), dentistry, physical therapy, and nursing across multiple campuses. DUHS is renowned for producing top medical professionals and maintains affiliations with several major hospitals in Karachi.",
     admission_url: "https://www.duhs.edu.pk",
-    campuses: ["Karachi"],
+    campuses: ["Karachi (DUHS Main)", "Karachi (Ojha Campus)", "Karachi (DIMC)"],
   },
   {
     id: 40,
@@ -896,7 +896,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvAIO9tyaNPL_kZ3bO_pPVGSfOK7OC5nEhtQ&s",
     description: "Federal Urdu University of Arts, Sciences and Technology (FUUAST) was established in 2002 as Pakistan's first Urdu-medium university, with dual campuses in Karachi and Islamabad. It offers programs in sciences, humanities, engineering, pharmacy, and management with instruction in both Urdu and English. FUUAST is a unique federal institution promoting Urdu as a medium of higher education while maintaining international academic standards.",
     admission_url: "https://www.fuuast.edu.pk",
-    campuses: ["Karachi"],
+    campuses: ["Karachi", "Islamabad"],
   },
   {
     id: 47,
@@ -936,7 +936,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/5/5d/Logo_Foundation_University.png",
     description: "Foundation University Islamabad was established in 2002 under the auspices of Fauji Foundation, Pakistan's largest military welfare organization. It offers programs in engineering, computer science, medical and health sciences, liberal arts, and management across campuses in Islamabad and Rawalpindi. FUI is known for its disciplined academic environment and strong alumni network in defense and corporate sectors.",
     admission_url: "https://www.fui.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad", "Rawalpindi (FUMC)"],
   },
   {
     id: 49,
@@ -1216,7 +1216,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/e/e9/Hajvery_University_Logo.png",
     description: "Hajvery University (HU) is a private HEC-recognized university in Lahore, established in 2002 and named after the Sufi saint Hazrat Ali Hajveri (Data Ganj Bakhsh). It offers programs in business, engineering, computer science, pharmacy, and media studies across multiple campuses in Lahore. HU focuses on providing affordable quality education and has a growing student body in Punjab.",
     admission_url: "https://hajvery.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore (Main Campus)", "Lahore (City Campus)"],
   },
   {
     id: 65,
@@ -1636,7 +1636,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://crystalpng.com/wp-content/uploads/2025/07/Iqra-University-Logo.png",
     description: "Founded in 2000, Iqra University is one of Pakistan's largest private universities with campuses in Karachi, Islamabad, and other cities. It offers a wide range of programs in business, engineering, media sciences, computer science, education, and health sciences. Iqra University is known for its diverse student body, entrepreneurial focus, and strong emphasis on research and community service.",
     admission_url: "https://iqra.edu.pk",
-    campuses: ["Karachi"],
+    campuses: ["Karachi (Main Campus)", "Karachi (Defence)", "Karachi (North Campus)", "Islamabad"],
   },
   {
     id: 88,
@@ -1676,7 +1676,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/a/a5/Isra_University_logo.png",
     description: "Isra University is a private HEC-recognized institution in Hyderabad, Sindh, with a strong focus on medical and health sciences education. Established in 1997, it operates one of the few private medical colleges in Sindh and offers programs in MBBS, dentistry, nursing, pharmacy, and allied health sciences. The university also has campuses in Karachi and Islamabad and is known for its clinical training facilities and teaching hospital.",
     admission_url: "https://www.isra.edu.pk",
-    campuses: ["Hyderabad"],
+    campuses: ["Hyderabad", "Karachi", "Islamabad"],
   },
   {
     id: 90,
@@ -2276,7 +2276,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Founded in 1998, Mohammad Ali Jinnah University (MAJU) is a private HEC-recognized university in Karachi with a strong focus on engineering, IT, and business education. Named after the founder of Pakistan, MAJU offers programs in computer science, software engineering, electronics, business administration, and humanities across its campuses in Karachi and Islamabad. The university is known for producing skilled IT professionals and engineers for Pakistan's growing technology sector.",
     admission_url: "https://jinnah.edu/",
-    campuses: ["Karachi"],
+    campuses: ["Karachi", "Islamabad"],
   },
   {
     id: 120,
@@ -2436,7 +2436,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://crystalpng.com/wp-content/uploads/2024/09/ncbae-university-logo.png",
     description: "National College of Business Administration and Economics (NCBAE) is a private HEC-recognized degree-awarding institution in Lahore specializing in business, economics, and commerce education. It offers undergraduate and graduate programs in business administration, accounting, finance, economics, and IT with a focus on practical industry skills. NCBAE serves students across Punjab with additional campuses in Multan and other cities.",
     admission_url: "https://www.ncbae.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore", "Multan"],
   },
   {
     id: 128,
@@ -2501,7 +2501,7 @@ export const UNIVERSITIES: UniversityData[] = [
   {
     id: 131,
     name: "National University of Computer and Emerging Sciences",
-    short_name: "NU",
+    short_name: "FAST",
     type: "private",
     province: "islamabad",
     city: "Islamabad",
@@ -2516,7 +2516,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/e/e4/National_University_of_Computer_and_Emerging_Sciences_logo.png",
     description: "Founded in 2000 by the FAST (Foundation for Advancement of Science and Technology) established in 1980, FAST-NUCES is Pakistan's premier computer science university. With campuses in Islamabad, Lahore, Karachi, Peshawar, Faisalabad, and Chiniot-Faisalabad, it is widely regarded as the gold standard for CS/IT education in Pakistan. FAST graduates are highly sought after by top tech companies globally and locally.",
     admission_url: "https://nu.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad", "Lahore", "Karachi", "Peshawar", "Faisalabad", "Chiniot-Faisalabad"],
   },
   {
     id: 132,
@@ -2556,7 +2556,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Established in 1970 under the Pakistan Army, the National University of Modern Languages (NUML) is Pakistan's premier institution for language education, offering instruction in over 25 languages including Chinese, Japanese, Korean, Arabic, Turkish, and European languages. Beyond languages, NUML offers programs in management sciences, IT, engineering, and social sciences through campuses in Islamabad, Lahore, Karachi, Peshawar, and other cities. NUML plays a unique role in Pakistani higher education by combining multilingual competency with general academic programs.",
     admission_url: "https://numl.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad", "Lahore", "Karachi", "Peshawar", "Quetta", "Multan", "Faisalabad", "Hyderabad"],
   },
   {
     id: 134,
@@ -2596,7 +2596,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/thumb/2/22/NUST_Vector.svg/330px-NUST_Vector.svg.png",
     description: "Established in 1991 under the Pakistan Army, NUST is consistently ranked Pakistan's #1 university and among the top 400 globally (QS). Its sprawling H-12 campus in Islamabad houses top-tier schools of engineering, IT, business, and medicine. Known for producing industry-ready graduates, NUST is a leader in research, innovation, and technology commercialization in Pakistan.",
     admission_url: "https://nust.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad (H-12)", "Rawalpindi", "Karachi", "Risalpur", "Quetta"],
   },
   {
     id: 136,
@@ -2641,7 +2641,7 @@ export const UNIVERSITIES: UniversityData[] = [
   {
     id: 138,
     name: "NED University of Engineering and Technology",
-    short_name: "NEDUET",
+    short_name: "NED",
     type: "public",
     province: "sindh",
     city: "Karachi",
@@ -2916,7 +2916,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdLfAUUfyILUqXP1DrCIjXiLu1tFhvvRqEcQ&s",
     description: "Preston University is a private multi-campus university headquartered in Kohat, KPK, with additional campuses in Islamabad, Karachi, and Lahore. It offers undergraduate and graduate programs in management sciences, computer science, engineering, and social sciences. The university focuses on providing accessible higher education across multiple cities in Pakistan.",
     admission_url: "https://preston.edu.pk",
-    campuses: ["Kohat"],
+    campuses: ["Kohat", "Islamabad", "Karachi", "Lahore"],
   },
   {
     id: 152,
@@ -3036,7 +3036,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://media.licdn.com/dms/image/v2/D4D0BAQGinBkRz46BDA/company-logo_200_200/company-logo_200_200/0/1690885526197/qurtuba_schools_colleges_peshawar_d_i_khan_islamabad_logo?e=2147483647&v=beta&t=8woJw-SNMywVAt_byOIaKXSBg20p9oL0xnzjk8esGf8",
     description: "Qurtuba University of Science and Information Technology is a private HEC-recognized university with campuses in D.I. Khan and Peshawar, KPK. It is part of the Qurtuba Schools and Colleges educational network and offers programs in computer science, management, education, and Islamic studies. The university serves as a key higher education provider in the southern Khyber Pakhtunkhwa region.",
     admission_url: "https://qurtuba.edu.pk",
-    campuses: ["Dera Ismail Khan"],
+    campuses: ["Dera Ismail Khan", "Peshawar"],
   },
   {
     id: 158,
@@ -3116,7 +3116,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Founded in 2002, Riphah International University is a private university in Islamabad with a strong focus on Islamic values, healthcare education, and ethical leadership. It operates campuses in Islamabad, Lahore, and Faisalabad, offering programs in medicine, dentistry, pharmacy, engineering, computing, and management. Riphah's medical and dental colleges are among the most reputed private medical institutions in Pakistan.",
     admission_url: "https://www.riphah.edu.pk",
-    campuses: ["Islamabad"],
+    campuses: ["Islamabad (Main)", "Islamabad (I-14)", "Lahore", "Faisalabad", "Rawalpindi"],
   },
   {
     id: 162,
@@ -3196,7 +3196,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4C472Exo0DXxatWtb8ukPvx6YvvoYt5VqkQ&s",
     description: "Founded in 2001, Sarhad University of Science and Information Technology (SUIT) is one of the leading private universities in KPK, headquartered in Peshawar. It offers programs in engineering, computing, management, pharmacy, and social sciences across multiple campuses. SUIT is known for its strong IT and engineering faculties and serves a large student body from across Khyber Pakhtunkhwa.",
     admission_url: "https://www.suit.edu.pk",
-    campuses: ["Peshawar"],
+    campuses: ["Peshawar (Main)", "Peshawar (City Campus)", "Mardan"],
   },
   {
     id: 166,
@@ -3396,7 +3396,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://www.hec.gov.pk/english/universities/PublishingImages/SZABIST%20University%20karachi.png",
     description: "Founded in 1995 and named after Pakistan's former Prime Minister, SZABIST is a leading private institute with its main campus in Karachi and additional campuses in Islamabad, Larkana, Hyderabad, and Dubai. It is known for strong programs in computer science, media sciences, business administration, and social sciences. SZABIST is recognized for its industry-oriented curriculum and consistently ranks among the top private institutions in Pakistan.",
     admission_url: "https://szabist.edu.pk",
-    campuses: ["Karachi"],
+    campuses: ["Karachi", "Islamabad", "Larkana", "Hyderabad", "Dubai"],
   },
   {
     id: 176,
@@ -3856,7 +3856,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Founded in 1999, The University of Lahore is one of Pakistan's largest private universities with campuses in Lahore, Islamabad, and other cities. It offers over 100 programs in medicine, engineering, business, arts, and social sciences, serving tens of thousands of students. UOL is known for its state-of-the-art teaching hospital and strong healthcare education programs.",
     admission_url: "https://www.uol.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore (Main)", "Lahore (Raiwind)", "Islamabad", "Sargodha", "Gujrat"],
   },
   {
     id: 201,
@@ -3976,7 +3976,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/4/49/University_Of_Azad_Jammu_And_Kashmir_Logo.png",
     description: "Established in 1980, the University of Azad Jammu and Kashmir is the largest and oldest university in AJK, headquartered in Muzaffarabad. It offers programs across multiple faculties including sciences, arts, law, and education with sub-campuses across the region. UAJK plays a central role in higher education development in Azad Kashmir and has educated thousands of professionals.",
     admission_url: "https://www.uajk.edu.pk",
-    campuses: ["Muzaffarabad"],
+    campuses: ["Muzaffarabad", "Mirpur", "Kotli", "Rawalakot", "Bhimber"],
   },
   {
     id: 207,
@@ -4056,7 +4056,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/e/eb/University_of_Central_Punjab_%28logo%29.jpg",
     description: "Established in 1998, the University of Central Punjab is one of Lahore's prominent private universities offering programs in law, engineering, business, pharmacy, and media sciences. UCP is known for its strong law school and IT programs, with a modern campus featuring well-equipped laboratories and research centers. The university has grown rapidly and maintains strong industry connections.",
     admission_url: "https://www.ucp.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore", "Faisalabad"],
   },
   {
     id: 211,
@@ -4156,7 +4156,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/2/26/University_of_Education_Lahore_Logo.png",
     description: "Established in 2002, the University of Education is Pakistan's first dedicated public university for teacher training and education research, headquartered in Lahore with campuses across Punjab. It offers programs in education, sciences, and arts with a focus on producing qualified teachers. UE plays a critical role in improving the quality of education across Punjab province.",
     admission_url: "https://ue.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore (Township)", "Lahore (Bank Road)", "Faisalabad", "Multan", "Vehari", "Attock", "D.G. Khan", "Jauharabad"],
   },
   {
     id: 216,
@@ -4196,7 +4196,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Established in 1921 as Mughalpura Technical College, UET Lahore is Pakistan's oldest and most prestigious engineering university. It conducts the ECAT (Engineering College Admission Test) used by engineering institutions across Punjab. With over 40 undergraduate and postgraduate programs in engineering and technology, UET Lahore has produced some of Pakistan's most prominent engineers, architects, and technologists.",
     admission_url: "https://uet.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore", "KSK (Kala Shah Kaku)", "Faisalabad", "Narowal", "RCET (Rachna)"],
   },
   {
     id: 218,
@@ -4276,7 +4276,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/c/c4/University_of_Gujrat_Logo.png",
     description: "Established in 2004, the University of Gujrat is a rapidly growing public university in Punjab serving the Gujrat division. It offers over 60 programs in sciences, arts, engineering, and business with sub-campuses in multiple cities. UoG has become one of Punjab's well-regarded public universities known for quality education and strong research output.",
     admission_url: "https://uog.edu.pk",
-    campuses: ["Gujrat"],
+    campuses: ["Gujrat (Main)", "Gujrat (Hafiz Hayat)", "Sialkot", "Mandi Bahauddin"],
   },
   {
     id: 222,
@@ -4536,7 +4536,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "",
     description: "Established in 1990, the University of Management and Technology (UMT) is one of Lahore's leading private universities. It offers a wide range of programs in business, engineering, computer science, social sciences, and textiles. UMT is known for its strong industry linkages, modern campus facilities, and focus on entrepreneurship and innovation, making it a popular choice among students in Punjab.",
     admission_url: "https://www.umt.edu.pk",
-    campuses: ["Lahore"],
+    campuses: ["Lahore", "Sialkot"],
   },
   {
     id: 235,
@@ -4676,7 +4676,7 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://upload.wikimedia.org/wikipedia/en/c/c3/University_of_Sargodha.png",
     description: "Established in 2002, the University of Sargodha is a major public university serving the Sargodha division of Punjab with sub-campuses in multiple cities. It offers over 80 programs across faculties of sciences, arts, pharmacy, engineering, and medicine. UoS has rapidly become one of Punjab's prominent universities with strong research output and a growing international reputation.",
     admission_url: "https://uos.edu.pk",
-    campuses: ["Sargodha"],
+    campuses: ["Sargodha", "Bhakkar", "Mianwali", "Lyallpur Town"],
   },
   {
     id: 242,
@@ -4996,7 +4996,27 @@ export const UNIVERSITIES: UniversityData[] = [
     logo_url: "https://media.licdn.com/dms/image/v2/C510BAQEmDXwWSacWxg/company-logo_400_400/company-logo_400_400/0/1630575383072/ziauddin_university_logo?e=2147483647&v=beta&t=FFpl6AXSQRTdSHeahqwBtkiIzrgFEo7YNxcC8ceZGk0",
     description: "Founded in 1995, Ziauddin University is a leading private health sciences university in Karachi with multiple campuses. It offers programs in medicine, dentistry, nursing, pharmacy, and engineering, and operates the Ziauddin Hospital network. ZU is known for its quality medical education, research output, and modern clinical training facilities across its teaching hospitals.",
     admission_url: "https://zu.edu.pk",
-    campuses: ["Karachi"],
+    campuses: ["Karachi (Clifton)", "Karachi (North Nazimabad)", "Karachi (Kemari)"],
+  },
+  {
+    id: 258,
+    name: "Virtual University of Pakistan",
+    short_name: "VU",
+    type: "public",
+    province: "punjab",
+    city: "Lahore",
+    address: "M.A. Jinnah Campus, Defence Road, Off Raiwind Road, Lahore",
+    website: "https://www.vu.edu.pk",
+    email: "info@vu.edu.pk",
+    phone: "+92-42-111-880-880",
+    established_year: 2002,
+    ranking_hec: "W3",
+    ranking_national: null,
+    is_hec_recognized: true,
+    logo_url: "https://upload.wikimedia.org/wikipedia/en/3/36/Virtual_University_of_Pakistan_logo.png",
+    description: "Established in 2002 as Pakistan's first university based entirely on modern ICT, the Virtual University offers distance learning programs across the country through over 200 virtual campuses. It provides affordable, accessible higher education in computer science, business, management, and social sciences. VU pioneered online education in Pakistan and has the largest student enrollment of any Pakistani university.",
+    admission_url: "https://www.vu.edu.pk",
+    campuses: ["Lahore (Main)", "200+ Virtual Campuses Nationwide"],
   },
 ];
 

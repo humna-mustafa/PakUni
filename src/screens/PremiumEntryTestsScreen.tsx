@@ -460,6 +460,23 @@ const PremiumEntryTestsScreen = () => {
       const abbr = fullNameWords.map(w => w[0]).join('');
       if (abbr.startsWith(query)) return true;
 
+      // Search through variants (e.g., NAT-IE, NAT-IM)
+      if (test.variants && test.variants.length > 0) {
+        const variantMatch = test.variants.some((variant: EntryTestVariant) => {
+          const variantNameLower = variant.name.toLowerCase();
+          const variantFullNameLower = (variant.full_name || '').toLowerCase();
+          const variantApplicableLower = (variant.applicable_for || []).join(' ').toLowerCase();
+          
+          return (
+            variantNameLower.includes(query) ||
+            variantFullNameLower.includes(query) ||
+            variantApplicableLower.includes(query) ||
+            variantNameLower.split(/[\s,\-()]+/).some(w => w.startsWith(query))
+          );
+        });
+        if (variantMatch) return true;
+      }
+
       return false;
     });
   }, [activeFilter, debouncedSearchQuery]);
@@ -658,7 +675,9 @@ const PremiumEntryTestsScreen = () => {
                     <Icon name="time-outline" family="Ionicons" size={24} color={colors.primary} />
                     <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Duration</Text>
                     <Text style={[styles.infoValue, {color: colors.text}]}>
-                      {selectedTest.duration || '3 hours'}
+                      {selectedTest.test_format?.duration_minutes 
+                        ? `${Math.floor(selectedTest.test_format.duration_minutes / 60)}h ${selectedTest.test_format.duration_minutes % 60 > 0 ? `${selectedTest.test_format.duration_minutes % 60}m` : ''}`
+                        : 'Varies'}
                     </Text>
                   </View>
                 </View>

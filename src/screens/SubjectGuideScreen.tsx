@@ -573,8 +573,8 @@ const SubjectGuideScreen = () => {
                       setShowSubjectModal(true);
                     }}>
                     <View style={[styles.subjectCard, {backgroundColor: colors.card, borderColor: colors.border}]}>
-                      <Icon name={subject.iconName} family="Ionicons" size={28} color={colors.primary} />
-                      <Text style={[styles.subjectName, {color: colors.text}]}>{subject.name}</Text>
+                      <Icon name={subject.iconName} family="Ionicons" size={36} color={colors.primary} />
+                      <Text style={[styles.subjectName, {color: colors.text}]} numberOfLines={1}>{subject.name}</Text>
                       <View style={[
                         styles.difficultyBadge,
                         {backgroundColor: getDifficultyColor(subject.difficulty) + '20'},
@@ -1036,29 +1036,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: SPACING.sm,
+    gap: SPACING.md,
+    paddingHorizontal: SPACING.xs,
   },
   subjectCardWrapper: {
-    width: '31%',
+    width: '47%',
     marginBottom: SPACING.xs,
   },
   subjectCard: {
     width: '100%',
-    minHeight: 100,
-    borderRadius: BORDER_RADIUS.lg,
+    minHeight: 130,
+    borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.md,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   subjectEmoji: {
     fontSize: 36,
     marginBottom: SPACING.sm,
   },
   subjectName: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
+    fontSize: FONTS.sizes.lg,
+    fontWeight: TYPOGRAPHY.weight.bold,
     marginBottom: SPACING.xs,
+    textAlign: 'center',
   },
   difficultyBadge: {
     paddingHorizontal: SPACING.sm,

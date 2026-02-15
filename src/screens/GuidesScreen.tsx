@@ -121,8 +121,8 @@ const GuidesScreen: React.FC = () => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Categories Section */}
-          {!selectedCategory && (
+          {/* Categories Section - Hidden when searching or category is selected */}
+          {!selectedCategory && !searchQuery && (
             <View style={styles.section}>
               <View
                 style={{

@@ -145,3 +145,8 @@ FINAL_SYSTEM_STATUS.txt
 
 # Kaggle datasets (downloaded separately)
 kaggle-data/
+
+# Firebase/Google Services config files (security - add locally)
+google-services.json
+src/google-services.json
+ios/*/GoogleService-Info.plist

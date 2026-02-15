@@ -2,6 +2,7 @@
  * What-If Simulator
  * "If I score 80 in NET, my aggregate becomes..."
  * Real-time aggregate simulation with slider
+ * Enhanced with actual merit data from meritArchive
  */
 
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
@@ -19,8 +20,49 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Icon} from '../icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../../constants/design';
 import {useTheme} from '../../contexts';
+import {MERIT_RECORDS} from '../../data/meritArchive';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
+
+// ============================================================================
+// MERIT DATA HELPERS
+// ============================================================================
+
+// Get program-wise merit data for a university from actual records
+const getProgramMeritFromArchive = (universityShortName: string): {name: string; lastMerit: number}[] => {
+  const uniRecords = MERIT_RECORDS.filter(
+    r => r.universityShortName.toUpperCase() === universityShortName.toUpperCase()
+  );
+  if (uniRecords.length === 0) return [];
+
+  // Get most recent year's records
+  const years = [...new Set(uniRecords.map(r => r.year))].sort((a, b) => b - a);
+  const latestYear = years[0];
+  const latestRecords = uniRecords.filter(r => r.year === latestYear);
+
+  // Group by program and get average merit
+  const programMap = new Map<string, number[]>();
+  latestRecords.forEach(record => {
+    const programName = record.programName.length > 20 
+      ? record.programName.substring(0, 17) + '...'
+      : record.programName;
+    if (!programMap.has(programName)) {
+      programMap.set(programName, []);
+    }
+    programMap.get(programName)!.push(record.closingMerit);
+  });
+
+  // Convert to array with average merit, sorted by merit (highest first)
+  const programs = Array.from(programMap.entries())
+    .map(([name, merits]) => ({
+      name,
+      lastMerit: Math.round(merits.reduce((a, b) => a + b, 0) / merits.length * 10) / 10,
+    }))
+    .sort((a, b) => b.lastMerit - a.lastMerit)
+    .slice(0, 6); // Show top 6 programs
+
+  return programs;
+};
 
 // ============================================================================
 // TYPES
@@ -54,7 +96,7 @@ interface WhatIfSimulatorProps {
 }
 
 // ============================================================================
-// PRESET UNIVERSITIES
+// PRESET UNIVERSITIES (programs loaded dynamically from merit archive)
 // ============================================================================
 
 const PRESET_UNIVERSITIES: UniversityConfig[] = [
@@ -68,13 +110,10 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     testName: 'NET',
     minAggregate: 60,
     color: '#4573DF',
-    programs: [
-      {name: 'CS', lastMerit: 90},
-      {name: 'EE', lastMerit: 85},
-      {name: 'ME', lastMerit: 80},
-      {name: 'Civil', lastMerit: 75},
-      {name: 'BBA', lastMerit: 72},
-    ],
+    // Programs loaded from merit archive
+    programs: getProgramMeritFromArchive('NUST').length > 0 
+      ? getProgramMeritFromArchive('NUST')
+      : [{name: 'CS', lastMerit: 87}, {name: 'EE', lastMerit: 82}, {name: 'ME', lastMerit: 78}],
   },
   {
     id: 'fast',
@@ -86,13 +125,9 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     testName: 'FAST Test',
     minAggregate: 50,
     color: '#DC2626',
-    programs: [
-      {name: 'CS', lastMerit: 82},
-      {name: 'SE', lastMerit: 78},
-      {name: 'DS', lastMerit: 75},
-      {name: 'AI', lastMerit: 80},
-      {name: 'Cyber', lastMerit: 73},
-    ],
+    programs: getProgramMeritFromArchive('FAST').length > 0
+      ? getProgramMeritFromArchive('FAST')
+      : [{name: 'CS', lastMerit: 80}, {name: 'SE', lastMerit: 76}, {name: 'AI', lastMerit: 78}],
   },
   {
     id: 'giki',
@@ -104,12 +139,9 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     testName: 'GIKI Test',
     minAggregate: 65,
     color: '#059669',
-    programs: [
-      {name: 'CS', lastMerit: 85},
-      {name: 'EE', lastMerit: 80},
-      {name: 'ME', lastMerit: 77},
-      {name: 'Materials', lastMerit: 70},
-    ],
+    programs: getProgramMeritFromArchive('GIKI').length > 0
+      ? getProgramMeritFromArchive('GIKI')
+      : [{name: 'CS', lastMerit: 83}, {name: 'EE', lastMerit: 78}, {name: 'ME', lastMerit: 75}],
   },
   {
     id: 'comsats',
@@ -121,12 +153,9 @@ const PRESET_UNIVERSITIES: UniversityConfig[] = [
     testName: 'NTS',
     minAggregate: 45,
     color: '#0891B2',
-    programs: [
-      {name: 'CS', lastMerit: 75},
-      {name: 'SE', lastMerit: 72},
-      {name: 'EE', lastMerit: 68},
-      {name: 'BBA', lastMerit: 63},
-    ],
+    programs: getProgramMeritFromArchive('COMSATS').length > 0
+      ? getProgramMeritFromArchive('COMSATS')
+      : [{name: 'CS', lastMerit: 73}, {name: 'SE', lastMerit: 70}, {name: 'EE', lastMerit: 66}],
   },
 ];
 
