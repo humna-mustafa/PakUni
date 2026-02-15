@@ -35,8 +35,6 @@ import {roundToPixel, PP_SHADOWS} from '../constants/pixel-perfect';
 // ---------------------------------------------------------------------------
 import PakUniIcon from '../assets/svg/pakuni-icon.svg';
 import PakUniIconWhite from '../assets/svg/pakuni-icon-white.svg';
-import PakUniLogoVertical from '../assets/svg/pakuni-logo.svg';
-import PakUniLogoHorizontal from '../assets/svg/pakuni-logo-horizontal.svg';
 
 // ============================================================================
 // TYPES
@@ -319,15 +317,6 @@ export const AppLogo: React.FC<AppLogoProps> = memo(
           );
 
         case 'horizontal':
-          // Use the perfect SVG file if default branding (no overrides)
-          if (!color && !animated && showTagline) {
-            return (
-              <PakUniLogoHorizontal
-                width={config.icon * 3.5} // Estimate width based on icon size
-                height={config.icon}
-              />
-            );
-          }
           return (
             <View style={styles.horizontalContainer}>
               <GraduationCapIcon
@@ -350,15 +339,6 @@ export const AppLogo: React.FC<AppLogoProps> = memo(
 
         case 'full':
         default:
-          // Use the perfect SVG file if default branding (no overrides)
-          if (!color && !animated && showTagline) {
-             return (
-              <PakUniLogoVertical
-                width={config.icon * 2.5} // Estimate width based on icon size
-                height={config.icon * 3}
-              />
-            );
-          }
           return (
             <View style={styles.fullContainer}>
               <GraduationCapIcon
