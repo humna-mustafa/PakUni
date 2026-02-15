@@ -19,32 +19,26 @@ import {Icon} from './icons';
 import {TYPOGRAPHY, RADIUS, SPACING} from '../constants/design';
 import {getUniversityBrandColor, getLogo} from '../utils/universityLogos';
 import UniversityLogo from './UniversityLogo';
+import {BRAND_COLORS, GRADIENT_PRESETS} from './AppLogo';
 
 // SVG file import — the logo artwork is in a standalone .svg file
 import PakUniIconWhite from '../assets/svg/pakuni-icon-white.svg';
 
 // ============================================================================
-// BRAND CONSTANTS - PakUni Identity
+// BRAND CONSTANTS - Extends AppLogo.BRAND_COLORS (single source of truth)
 // ============================================================================
 
 const PAKUNI_BRAND = {
   colors: {
-    primary: '#4573DF',       // Brand Blue
-    primaryDark: '#3660C9',
-    primaryLight: '#6B93F0',  // Lighter brand blue
-    secondary: '#10B981',     // Emerald
-    accent: '#3660C9',        // Darker blue for contrast
-    gold: '#F59E0B',          // Amber
-    goldLight: '#FBBF24',
-    success: '#10B981',
-    warning: '#F59E0B',
+    ...BRAND_COLORS,
+    success: BRAND_COLORS.secondary,
+    warning: BRAND_COLORS.gold,
     error: '#EF4444',
   },
   gradients: {
-    primary: ['#6B93F0', '#4573DF', '#3660C9'],
-    success: ['#10B981', '#059669'],
-    premium: ['#6B93F0', '#4573DF', '#3660C9'],
-    dark: ['#0B1118', '#010203'],
+    ...GRADIENT_PRESETS,
+    success: ['#10B981', '#059669'] as string[],
+    dark: ['#0B1118', '#010203'] as string[],
   },
 };
 

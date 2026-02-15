@@ -1,21 +1,21 @@
 <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- Book -->
-  <rect x="29" y="65" width="20" height="12" rx="2" fill="#FFF" opacity="0.45"/>
-  <rect x="49" y="64" width="2" height="14" rx="0.5" fill="#FFF" opacity="0.3"/>
-  <rect x="51" y="65" width="20" height="12" rx="2" fill="#FFF" opacity="0.45"/>
+  <!-- Open book -->
+  <path d="M50,63 C44,63.5 32,64 27,66 L27,78 C32,76 44,75.5 50,76 Z" fill="#FFF" opacity="0.45"/>
+  <path d="M50,63 C56,63.5 68,64 73,66 L73,78 C68,76 56,75.5 50,76 Z" fill="#FFF" opacity="0.45"/>
+  <path d="M50,63 L50,76" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.3"/>
 
   <!-- Cap band -->
-  <path d="M38,50 L62,50 L63,57 Q63,62 60,62 L40,62 Q37,62 37,57 Z" fill="#FFF" opacity="0.35"/>
+  <path d="M36,49 L64,49 L65.5,56 Q65.5,61 62,61 L38,61 Q34.5,61 34.5,56 Z" fill="#FFF" opacity="0.35"/>
 
   <!-- Mortarboard -->
-  <path d="M50,20 L87,37 L50,54 L13,37 Z" fill="#FFFFFF"/>
+  <path d="M50,18 L88,36 L50,54 L12,36 Z" fill="#FFFFFF"/>
 
   <!-- Button -->
-  <circle cx="50" cy="37" r="3.5" fill="#FFF" opacity="0.8"/>
+  <circle cx="50" cy="36" r="3.2" fill="#FFF" opacity="0.8"/>
 
   <!-- Tassel -->
-  <path d="M53.5,39 C62,38.5 70,42 73,47" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-opacity="0.85"/>
-  <circle cx="73" cy="47" r="2.5" fill="#FFF" opacity="0.75"/>
-  <path d="M71.5,49.5 Q70.5,57 70.5,66" fill="none" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.65"/>
-  <path d="M74,49.5 Q74.5,57 74,69" fill="none" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.65"/>
+  <path d="M53,38.5 C60,38 68,41 72,46" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-opacity="0.85"/>
+  <circle cx="72" cy="46" r="2.3" fill="#FFF" opacity="0.75"/>
+  <path d="M70.5,48.5 C70,54 69.5,58 70,64" fill="none" stroke="#FFF" stroke-width="1.4" stroke-linecap="round" stroke-opacity="0.65"/>
+  <path d="M73.5,48.5 C74,55 74.5,60 73.8,67" fill="none" stroke="#FFF" stroke-width="1.4" stroke-linecap="round" stroke-opacity="0.65"/>
 </svg>

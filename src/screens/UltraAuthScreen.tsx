@@ -793,8 +793,7 @@ export class UltraAuthScreen extends React.Component<UltraAuthScreenProps, Ultra
                 </View>
 
                 <Text style={[styles.logoText, {color: colors.text}]}>
-                  <Text style={{color: BRAND_COLORS.primary}}>Pak</Text>
-                  <Text style={{color: BRAND_COLORS.secondary}}>Uni</Text>
+                  Pak<Text style={{color: BRAND_COLORS.primary}}>Uni</Text>
                 </Text>
                 <Text style={[styles.logoSubtext, {color: colors.textSecondary}]}>
                   Your Education Partner

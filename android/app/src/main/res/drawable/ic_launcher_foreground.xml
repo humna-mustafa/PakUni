@@ -5,52 +5,54 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Book -->
+    <!-- Open book: left page curves outward -->
     <path
-        android:pathData="M37,65 L52,65 L52,75 L37,75 Z"
+        android:pathData="M54,63 C49,63.5 39,64 33,66 L33,77 C39,75.5 49,75 54,75.5 Z"
         android:fillColor="#10B981"/>
+    <!-- Right page -->
     <path
-        android:pathData="M52.5,64 L54.5,64 L54.5,76 L52.5,76 Z"
-        android:fillColor="#047857"/>
-    <path
-        android:pathData="M55,65 L70,65 L70,75 L55,75 Z"
+        android:pathData="M54,63 C59,63.5 69,64 75,66 L75,77 C69,75.5 59,75 54,75.5 Z"
         android:fillColor="#059669"/>
+    <!-- Spine -->
+    <path
+        android:pathData="M54,63 L54,75.5"
+        android:strokeWidth="1.5"
+        android:strokeColor="#047857"
+        android:fillColor="#00000000"/>
 
     <!-- Cap band -->
     <path
-        android:pathData="M43,51 L65,51 L66,57 Q66,61 63,61 L45,61 Q42,61 42,57 Z"
+        android:pathData="M41,50 L67,50 L68.5,56 Q68.5,61 65,61 L43,61 Q39.5,61 39.5,56 Z"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.35"/>
 
     <!-- Mortarboard -->
     <path
-        android:pathData="M54,26 L82,42 L54,58 L26,42 Z"
+        android:pathData="M54,24 L88,39 L54,54 L20,39 Z"
         android:fillColor="#FFFFFF"/>
 
     <!-- Button -->
     <path
-        android:pathData="M54,42m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+        android:pathData="M54,39m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
         android:fillColor="#F59E0B"/>
 
-    <!-- Tassel cord -->
+    <!-- Tassel -->
     <path
-        android:pathData="M57,44 C63,43.5 69,46.5 72,50"
+        android:pathData="M57,41 C62,40.5 70,43 74,47"
         android:strokeWidth="1.8"
         android:strokeColor="#F59E0B"
         android:fillColor="#00000000"/>
-    <!-- Knot -->
     <path
-        android:pathData="M72,50m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0"
+        android:pathData="M74,47m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0"
         android:fillColor="#FBBF24"/>
-    <!-- Strands -->
     <path
-        android:pathData="M70.5,52 Q70,58 70,64"
-        android:strokeWidth="1.5"
+        android:pathData="M72.5,49 C72,54 71.5,58 72,63"
+        android:strokeWidth="1.4"
         android:strokeColor="#F59E0B"
         android:fillColor="#00000000"/>
     <path
-        android:pathData="M73,52 Q73.5,59 73,67"
-        android:strokeWidth="1.5"
+        android:pathData="M75.5,49 C76,55 76.5,59 75.8,66"
+        android:strokeWidth="1.4"
         android:strokeColor="#FBBF24"
         android:fillColor="#00000000"/>
 
