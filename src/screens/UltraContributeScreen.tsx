@@ -42,7 +42,7 @@ export const UltraContributeScreen: React.FC<{ navigation: any; route?: any }> =
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <UniversalHeader
         title="Data Correction"

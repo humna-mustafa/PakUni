@@ -36,6 +36,7 @@ interface ScholarshipDetailModalProps {
   onToggleFavorite: () => void;
   openLink: (url?: string) => void;
   colors: any;
+  onFixData?: (scholarshipId: string, scholarshipName: string) => void;
 }
 
 const getModalTypeIconName = (type: string) => {
@@ -58,6 +59,7 @@ const ScholarshipDetailModal = ({
   onToggleFavorite,
   openLink,
   colors,
+  onFixData,
 }: ScholarshipDetailModalProps) => {
   if (!scholarship) return null;
 
@@ -337,6 +339,19 @@ const ScholarshipDetailModal = ({
                   <Text style={styles.applyBtnText}>Apply Now</Text>
                   <Icon name="arrow-forward" family="Ionicons" size={18} color="#FFFFFF" />
                 </LinearGradient>
+              </TouchableOpacity>
+            )}
+
+            {/* Fix Data button */}
+            {onFixData && (
+              <TouchableOpacity
+                onPress={() => onFixData((scholarship as any).id || scholarship.name, scholarship.name)}
+                style={[styles.fixDataBtn, {borderColor: colors.border || '#E5E7EB'}]}>
+                <Icon name="create-outline" family="Ionicons" size={15} color={colors.textSecondary} />
+                <Text style={{fontSize: 13, color: colors.textSecondary, fontWeight: '500' as any, flex: 1}}>
+                  Found incorrect data? Fix it
+                </Text>
+                <Icon name="arrow-forward" family="Ionicons" size={13} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
 
@@ -662,6 +677,17 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weight.bold,
+  },
+  fixDataBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: SPACING.sm,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    borderStyle: 'dashed',
   },
 });
 

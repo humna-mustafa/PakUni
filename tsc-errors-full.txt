@@ -1,0 +1,132 @@
+src/components/calculators/CustomFormulaBuilder.tsx(125,16): error TS2345: Argument of type '(prev: number) => number' is not assignable to parameter of type 'number'.
+src/components/contribute/CategorySelectionStep.tsx(13,10): error TS2614: Module '"../gestures/AnimatedPressable"' has no exported member 'AnimatedPressable'. Did you mean to use 'import AnimatedPressable from "../gestures/AnimatedPressable"' instead?
+src/components/contribute/EntitySelectionStep.tsx(22,10): error TS2614: Module '"../gestures/AnimatedPressable"' has no exported member 'AnimatedPressable'. Did you mean to use 'import AnimatedPressable from "../gestures/AnimatedPressable"' instead?
+src/components/contribute/index.ts(5,10): error TS2614: Module '"../gestures/AnimatedPressable"' has no exported member 'AnimatedPressable'. Did you mean to use 'import AnimatedPressable from "../gestures/AnimatedPressable"' instead?
+src/components/EnhancedErrorBoundary.tsx(298,9): error TS2353: Object literal may only specify known properties, and 'category' does not exist in type '{ userAction?: string | undefined; additionalContext?: Record<string, any> | undefined; userFeedback?: string | undefined; componentStack?: string | undefined; }'.
+src/components/index.ts(378,3): error TS2305: Module '"./scholarships"' has no exported member 'EmptyState'.
+src/components/index.ts(390,3): error TS2305: Module '"./guides"' has no exported member 'EmptyState'.
+src/constants/index.ts(6,1): error TS2308: Module './brand' has already exported a member named 'GRADIENTS'. Consider explicitly re-exporting to resolve the ambiguity.
+src/constants/index.ts(6,1): error TS2308: Module './theme' has already exported a member named 'SPACING'. Consider explicitly re-exporting to resolve the ambiguity.
+src/constants/index.ts(7,1): error TS2308: Module './design' has already exported a member named 'OPACITY'. Consider explicitly re-exporting to resolve the ambiguity.
+src/contexts/AuthContext.tsx(535,85): error TS2339: Property 'type' does not exist on type 'never'.
+src/contexts/AuthContext.tsx(536,70): error TS2339: Property 'type' does not exist on type 'never'.
+src/hooks/useContactSupportScreen.ts(279,74): error TS2345: Argument of type '[never, { screen: string; }]' is not assignable to parameter of type 'never'.
+src/navigation/AppNavigator.tsx(267,56): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminBulkOperations"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminBulkOperations"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(268,51): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminAppConfig"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminAppConfig"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(269,59): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminActivityDashboard"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminActivityDashboard"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(270,59): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminContentModeration"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminContentModeration"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(271,57): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminDataSubmissions"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminDataSubmissions"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(272,59): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminAutoApprovalRules"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminAutoApprovalRules"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(273,56): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminMeritDeadlines"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminMeritDeadlines"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(274,62): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminNotificationTriggers"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminNotificationTriggers"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/navigation/AppNavigator.tsx(275,59): error TS2322: Type 'ComponentType<{ navigation: any; }>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminApprovalAnalytics"> | undefined'.
+  Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ScreenComponentType<AdminStackParamList, "AdminApprovalAnalytics"> | undefined'.
+    Type 'ComponentClass<{ navigation: any; }, any>' is not assignable to type 'ComponentClass<{}, any>'.
+      Types of property 'getDerivedStateFromProps' are incompatible.
+        Type 'GetDerivedStateFromProps<{ navigation: any; }, any> | undefined' is not assignable to type 'GetDerivedStateFromProps<{}, any> | undefined'.
+          Type 'GetDerivedStateFromProps<{ navigation: any; }, any>' is not assignable to type 'GetDerivedStateFromProps<{}, any>'.
+            Types of parameters 'nextProps' and 'nextProps' are incompatible.
+              Property 'navigation' is missing in type 'Readonly<{}>' but required in type 'Readonly<{ navigation: any; }>'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(236,7): error TS2322: Type '"AdminTursoDataManagement"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(245,7): error TS2322: Type '"AdminDataManagement"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(255,7): error TS2322: Type '"AdminUsers"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(266,7): error TS2322: Type '"AdminTursoNotifications"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(275,7): error TS2322: Type '"AdminNotifications"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(285,7): error TS2322: Type '"AdminContent"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(294,7): error TS2322: Type '"AdminReports"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(304,7): error TS2322: Type '"AdminErrorReports"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(314,7): error TS2322: Type '"AdminSystemHealth"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(323,7): error TS2322: Type '"AdminAnalytics"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(333,7): error TS2322: Type '"AdminFeedback"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(342,7): error TS2322: Type '"AdminAnnouncements"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(352,7): error TS2322: Type '"AdminSettings"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(361,7): error TS2322: Type '"AdminAuditLogs"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(371,7): error TS2322: Type '"AdminBulkOperations"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(380,7): error TS2322: Type '"AdminAppConfig"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(389,7): error TS2322: Type '"AdminActivityDashboard"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(398,7): error TS2322: Type '"AdminContentModeration"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(408,7): error TS2322: Type '"AdminDataSubmissions"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(417,7): error TS2322: Type '"AdminMeritDeadlines"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(426,7): error TS2322: Type '"AdminNotificationTriggers"' is not assignable to type '"Admin"'.
+src/screens/admin/EnterpriseAdminDashboardScreen.tsx(711,48): error TS2769: No overload matches this call.
+  Argument of type '["AdminSettings"]' is not assignable to parameter of type '[screen: "Achievements", params?: undefined, options?: { merge?: boolean | undefined; pop?: boolean | undefined; } | undefined] | [screen: "Profile", params?: undefined, options?: { merge?: boolean | undefined; pop?: boolean | undefined; } | undefined] | ... 34 more ... | [screen: ...]'.
+    Type '["AdminSettings"]' is not assignable to type '[screen: "Achievements", params?: undefined, options?: { merge?: boolean | undefined; pop?: boolean | undefined; } | undefined] | [screen: "Profile", params?: undefined, options?: { merge?: boolean | undefined; pop?: boolean | undefined; } | undefined] | ... 30 more ... | [screen: ...]'.
+      Type '["AdminSettings"]' is not assignable to type '[screen: "Admin", params?: NavigatorScreenParams<AdminStackParamList> | undefined, options?: { merge?: boolean | undefined; pop?: boolean | undefined; } | undefined]'.
+        Type at position 0 in source is not compatible with type at position 0 in target.
+          Type '"AdminSettings"' is not assignable to type '"Admin"'.
+  Overload 2 of 2, '(options: { name: "Achievements"; params: undefined; path?: string | undefined; merge?: boolean | undefined; pop?: boolean | undefined; } | { name: "Profile"; params: undefined; path?: string | undefined; merge?: boolean | undefined; pop?: boolean | undefined; } | ... 34 more ... | { ...; }): void', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type '{ name: "Achievements"; params: undefined; path?: string | undefined; merge?: boolean | undefined; pop?: boolean | undefined; } | { name: "Profile"; params: undefined; path?: string | undefined; merge?: boolean | undefined; pop?: boolean | undefined; } | ... 34 more ... | { ...; }'.
+src/screens/index.ts(70,9): error TS2305: Module '"./UltraContributeScreen"' has no exported member 'default'.
+src/screens/PremiumCareerGuidanceScreen.tsx(160,141): error TS2339: Property 'maxSalary' does not exist on type 'CareerField'.
+src/screens/PremiumScholarshipsScreen.tsx(65,11): error TS2322: Type '{ colors: ThemeColors; filteredCount: number; showFilters: boolean; onToggleFilters: () => void; user: UserProfile | null; getUserInitials: () => string; onProfilePress: () => void; }' is not assignable to type 'IntrinsicAttributes & ScholarshipsHeaderProps'.
+  Property 'user' does not exist on type 'IntrinsicAttributes & ScholarshipsHeaderProps'.
+src/screens/PremiumScholarshipsScreen.tsx(134,11): error TS2322: Type '{ visible: boolean; scholarship: ScholarshipData | null; colors: ThemeColors; isFav: boolean; onClose: () => void; onToggleFavorite: () => Promise<void>; onOpenLink: (url?: string | undefined) => void; }' is not assignable to type 'IntrinsicAttributes & ScholarshipDetailModalProps'.
+  Property 'onOpenLink' does not exist on type 'IntrinsicAttributes & ScholarshipDetailModalProps'. Did you mean 'openLink'?
+src/screens/PremiumUniversitiesScreen.tsx(76,11): error TS2322: Type 'Dispatch<SetStateAction<"public" | "private" | "all">>' is not assignable to type '(v: string) => void'.
+  Types of parameters 'value' and 'v' are incompatible.
+    Type 'string' is not assignable to type 'SetStateAction<"public" | "private" | "all">'.
+src/screens/PremiumUniversitiesScreen.tsx(125,13): error TS2322: Type '{ data: UniversityItem[]; keyExtractor: (item: UniversityItem) => string; renderItem: ({ item, index }: { item: UniversityItem; index: number; }) => Element; ... 10 more ...; ListEmptyComponent: Element; }' is not assignable to type 'IntrinsicAttributes & FlashListProps<UniversityItem> & { ref?: Ref<FlashListRef<UniversityItem>> | undefined; }'.
+  Property 'estimatedItemSize' does not exist on type 'IntrinsicAttributes & FlashListProps<UniversityItem> & { ref?: Ref<FlashListRef<UniversityItem>> | undefined; }'.
+src/screens/PremiumUniversityDetailScreen.tsx(128,52): error TS2322: Type 'number' is not assignable to type 'string'.
+src/services/offlineSync.ts(329,65): error TS2345: Argument of type 'Record<string, any>' is not assignable to parameter of type 'Omit<UserCalculation, "id" | "user_id" | "created_at">'.
+  Type 'Record<string, any>' is missing the following properties from type 'Omit<UserCalculation, "id" | "user_id" | "created_at">': matric_marks, inter_marks, education_system, calculated_merit
+src/utils/universityAliases.ts(188,3): error TS1117: An object literal cannot have multiple properties with the same name.
+src/utils/universityAliases.ts(191,3): error TS1117: An object literal cannot have multiple properties with the same name.
+src/utils/universityAliases.ts(206,3): error TS1117: An object literal cannot have multiple properties with the same name.
+src/utils/universityAliases.ts(209,3): error TS1117: An object literal cannot have multiple properties with the same name.

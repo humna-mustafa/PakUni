@@ -21,15 +21,30 @@ export type { AdmissionDeadline, FollowedUniversity } from './deadlines';
 
 export {
   MERIT_RECORDS,
+  OPEN_MERIT_RECORDS,
+  QUOTA_MERIT_RECORDS,
   MERIT_CATEGORIES,
   AVAILABLE_YEARS,
+  QUOTA_TYPE_LABELS,
   getMeritTrend,
   getYearlyChange,
   searchMeritRecords,
   getHighestMeritPrograms,
   getLowestMeritPrograms,
+  getQuotaRecords,
+  getBestQuotaRecord,
+  getSelfFinanceRecord,
 } from './meritArchive';
 export type { MeritRecord, YearlyTrend } from './meritArchive';
+
+export {
+  UNIVERSITY_FEES,
+  getUniversityFees,
+  getProgramFee,
+  formatFeeShort,
+  estimateTotalCost,
+} from './feesData';
+export type { UniversityFeeData, ProgramFee, ScholarshipSummary } from './feesData';
 
 export { SCHOLARSHIPS, getScholarshipsForUniversity, isScholarshipAvailableAt } from './scholarships';
 export type { ScholarshipData } from './scholarships';

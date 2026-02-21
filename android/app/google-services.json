@@ -14,19 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "69201457652-android.apps.googleusercontent.com",
+          "client_id": "69201457652-km6n3soj0dr4aq3m8845vboth14sm61j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.pakuni",
-            "certificate_hash": "2d63fee0e1e825d33b4bfe8a4899c37ac6d5d166"
-          }
-        },
-        {
-          "client_id": "69201457652-debug.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.pakuni",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "ab5ca75089ca51e7b4e571f8caf0991d449ac4c1"
           }
         },
         {

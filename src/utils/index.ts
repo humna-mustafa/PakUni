@@ -14,57 +14,17 @@ export type {HapticType} from './haptics';
 // ANIMATIONS
 // ============================================================================
 
-export {
-  Springs,
-  Timings,
-  Easings,
-  createPressAnimation,
-  fadeIn,
-  fadeOut,
-  slideUp,
-  slideInRight,
-  scaleIn,
-  staggeredList,
-  pulse,
-  shake,
-  shimmer,
-  rotate,
-  bounce,
-  rotateInterpolation,
-  scrollFadeInterpolation,
-  parallaxInterpolation,
-  entryAnimation,
-  exitAnimation,
-} from './animations';
-
-export {default as Animations} from './animations';
+// ============================================================================
+// ANIMATIONS (moved to component-level - see gestures/ and hooks/useAnimationCleanup)
+// ============================================================================
 
 // ============================================================================
 // DESIGN POLISH
 // ============================================================================
 
-export {
-  createOrganicWobble,
-  createBreathingAnimation,
-  getNaturalStaggerDelay,
-  getCascadeDelay,
-  getNoisePattern,
-  getOrganicBorderRadius,
-  getSubtleRotation,
-  getLayeredShadow,
-  getGlowShadow,
-  scaleSize,
-  moderateScale,
-  lightenColor,
-  darkenColor,
-  withOpacity,
-  celebrationAnimation,
-  errorShake,
-  rubberbandValue,
-  getVelocityDuration,
-} from './designPolish';
-
-export {default as DesignPolish} from './designPolish';
+// ============================================================================
+// DESIGN POLISH (consolidated into constants/design.ts)
+// ============================================================================
 
 // ============================================================================
 // ACCESSIBILITY
@@ -122,23 +82,9 @@ export type {ValidationResult} from './security';
 // FORM VALIDATION
 // ============================================================================
 
-export {
-  rules,
-  validateField,
-  validateForm,
-  useForm,
-  schemas,
-  formatters,
-  parsers,
-} from './formValidation';
-export type {
-  FieldConfig,
-  ValidationRule,
-  FieldState,
-  FormState,
-  UseFormOptions,
-  ValidationSchema,
-} from './formValidation';
+// ============================================================================
+// FORM VALIDATION (removed - unused)
+// ============================================================================
 
 // ============================================================================
 // LOADING STATES

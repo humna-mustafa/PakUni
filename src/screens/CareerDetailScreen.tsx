@@ -211,6 +211,21 @@ const CareerDetailScreen = () => {
           <Text style={[styles.outlookText, {color: colors.textSecondary}]}>{career.future_outlook}</Text>
         </View>
 
+        {/* Fix Data */}
+        <TouchableOpacity
+          onPress={() =>
+            (navigation as any).navigate('DataCorrection', {
+              entityType: 'career',
+              entityId: career.id,
+              entityName: career.name,
+            })
+          }
+          style={[styles.fixDataRow, {borderColor: colors.border || '#E5E7EB', backgroundColor: colors.card}]}>
+          <Icon name="create-outline" family="Ionicons" size={16} color={colors.textSecondary} />
+          <Text style={[styles.fixDataText, {color: colors.textSecondary}]}>Found incorrect or outdated career data? Fix it</Text>
+          <Icon name="chevron-forward" family="Ionicons" size={14} color={colors.textSecondary} />
+        </TouchableOpacity>
+
         <View style={{height: 32}} />
       </ScrollView>
     </SafeAreaView>
@@ -438,6 +453,22 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.semibold,
     color: '#333',
     textAlign: 'right',
+  },
+  fixDataRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    padding: SPACING.md,
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+  },
+  fixDataText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

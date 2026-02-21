@@ -1,433 +1,32 @@
 /**
  * FavoritesScreen - Display and manage user's favorite items
- * ENHANCED: Premium animations, floating effects, polished UI
+ * Thin composition using FavoriteItemCard, TabButton + useFavoritesScreen
  */
 
-import React, {useState, useCallback, memo, useRef, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Pressable,
-  StatusBar,
-  Platform,
-  Animated,
-  Modal,
-  TouchableOpacity,
-  Easing,
-} from 'react-native';
-import {ANIMATION_SCALES, SPRING_CONFIGS, ACCESSIBILITY} from '../constants/ui';
-import {TYPOGRAPHY} from '../constants/design';
+import React, {useCallback} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, Animated, Modal, StatusBar, Platform} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
+import {TYPOGRAPHY} from '../constants/design';
 import {Icon} from '../components/icons';
-import {useTheme} from '../contexts/ThemeContext';
-import {useAuth} from '../contexts/AuthContext';
-import {UNIVERSITIES, SCHOLARSHIPS, PROGRAMS} from '../data';
-import type {RootStackParamList} from '../navigation/AppNavigator';
-import {Haptics} from '../utils/haptics';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-// ============================================================================
-// TYPES
-// ============================================================================
-
-type TabType = 'universities' | 'scholarships' | 'programs';
-
-interface FavoriteItem {
-  id: string;
-  name: string;
-  subtitle: string;
-  type: TabType;
-  icon: string;
-  color: string;
-}
-
-// ============================================================================
-// TAB BUTTON COMPONENT
-// ============================================================================
-
-interface TabButtonProps {
-  label: string;
-  count: number;
-  isActive: boolean;
-  onPress: () => void;
-  colors: any;
-}
-
-const TabButton = memo<TabButtonProps>(({label, count, isActive, onPress, colors}) => (
-  <Pressable
-    style={({pressed}) => [
-      styles.tabButton,
-      {
-        backgroundColor: isActive ? colors.primaryLight : 'transparent',
-        opacity: pressed ? 0.8 : 1,
-      },
-    ]}
-    onPress={onPress}
-    accessibilityRole="tab"
-    accessibilityState={{selected: isActive}}
-    accessibilityLabel={`${label} tab, ${count} items`}>
-    <Text
-      style={[
-        styles.tabLabel,
-        {color: isActive ? colors.primary : colors.textSecondary},
-        isActive && styles.tabLabelActive,
-      ]}>
-      {label}
-    </Text>
-    <View
-      style={[
-        styles.tabCount,
-        {backgroundColor: isActive ? colors.primary : colors.border},
-      ]}>
-      <Text
-        style={[
-          styles.tabCountText,
-          {color: isActive ? '#FFFFFF' : colors.textSecondary},
-        ]}>
-        {count}
-      </Text>
-    </View>
-  </Pressable>
-));
-
-// ============================================================================
-// FAVORITE ITEM COMPONENT (ENHANCED)
-// ============================================================================
-
-interface FavoriteItemProps {
-  item: FavoriteItem;
-  onPress: (item: FavoriteItem) => void;
-  onRemove: (id: string, type: TabType) => void;
-  colors: any;
-  index?: number;
-}
-
-const FavoriteItemCard = memo<FavoriteItemProps>(({item, onPress, onRemove, colors, index = 0}) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
-  const heartBeatAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    // Staggered entrance animation
-    const delay = index * 70;
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 350,
-        delay,
-        useNativeDriver: true,
-      }),
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        tension: 50,
-        friction: 8,
-        delay,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [index]);
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.PRESS,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
-    }).start();
-  };
-
-  const handleRemovePress = () => {
-    // Heart beat animation on remove
-    Animated.sequence([
-      Animated.timing(heartBeatAnim, {
-        toValue: 1.3,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(heartBeatAnim, {
-        toValue: 0.8,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.spring(heartBeatAnim, {
-        toValue: 1,
-        friction: 3,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    onRemove(item.id, item.type);
-  };
-
-  return (
-    <Animated.View 
-      style={{
-        transform: [{scale: scaleAnim}, {translateX: slideAnim}],
-        opacity: fadeAnim,
-      }}>
-      <Pressable
-        style={[styles.itemCard, {backgroundColor: colors.card}]}
-        onPress={() => onPress(item)}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        accessibilityRole="button"
-        accessibilityLabel={`${item.name}, ${item.subtitle}`}>
-        {/* Gradient accent strip */}
-        <LinearGradient
-          colors={[item.color, item.color + 'CC']}
-          style={styles.itemAccentStrip}
-        />
-        
-        {/* Icon */}
-        <View style={[styles.itemIcon, {backgroundColor: `${item.color}15`}]}>
-          <Icon name={item.icon} family="Ionicons" size={24} color={item.color} />
-        </View>
-
-        {/* Content */}
-        <View style={styles.itemContent}>
-          <Text style={[styles.itemName, {color: colors.text}]} numberOfLines={1}>
-            {item.name}
-          </Text>
-          <Text style={[styles.itemSubtitle, {color: colors.textSecondary}]} numberOfLines={1}>
-            {item.subtitle}
-          </Text>
-        </View>
-
-        {/* Remove Button */}
-        <Animated.View style={{transform: [{scale: heartBeatAnim}]}}>
-          <Pressable
-            style={({pressed}) => [
-              styles.removeButton,
-              {
-                backgroundColor: `${colors.error}15`,
-                opacity: pressed ? 0.7 : 1,
-              },
-            ]}
-            onPress={handleRemovePress}
-            hitSlop={ACCESSIBILITY.HIT_SLOP.medium}
-            accessibilityRole="button"
-            accessibilityLabel={`Remove ${item.name} from favorites`}>
-            <Icon name="heart-dislike-outline" family="Ionicons" size={20} color={colors.error} />
-          </Pressable>
-        </Animated.View>
-      </Pressable>
-    </Animated.View>
-  );
-});
-
-// ============================================================================
-// MAIN COMPONENT (ENHANCED)
-// ============================================================================
+import {FavoriteItemCard, TabButton} from '../components/favorites';
+import type {FavoriteItem} from '../components/favorites';
+import {useFavoritesScreen} from '../hooks/useFavoritesScreen';
 
 const FavoritesScreen: React.FC = () => {
-  const navigation = useNavigation<NavigationProp>();
-  const {colors, isDark} = useTheme();
-  const {user, removeFavorite} = useAuth();
-  const [activeTab, setActiveTab] = useState<TabType>('universities');
-  
-  // Remove confirmation modal state
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
-  const [itemToRemove, setItemToRemove] = useState<{id: string; type: TabType; name: string} | null>(null);
-  const modalScaleAnim = useRef(new Animated.Value(0.8)).current;
-  const modalOpacityAnim = useRef(new Animated.Value(0)).current;
-
-  // Header animations
-  const headerFadeAnim = useRef(new Animated.Value(0)).current;
-  const headerSlideAnim = useRef(new Animated.Value(-20)).current;
-  const floatAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // Header entrance animation
-    Animated.parallel([
-      Animated.timing(headerFadeAnim, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-      Animated.spring(headerSlideAnim, {
-        toValue: 0,
-        tension: 50,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    // Floating animation
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(floatAnim, {
-          toValue: 1,
-          duration: 2500,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(floatAnim, {
-          toValue: 0,
-          duration: 2500,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, []);
-
-  const floatTranslateY = floatAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -6],
-  });
-
-  // Get favorite items
-  const getFavoriteItems = useCallback((): FavoriteItem[] => {
-    if (!user) return [];
-
-    switch (activeTab) {
-      case 'universities':
-        return (user.favoriteUniversities || []).map(id => {
-          const uni = UNIVERSITIES.find(u => u.short_name === id);
-          return {
-            id,
-            name: uni?.name || id,
-            subtitle: uni ? `${uni.city} • ${uni.type}` : '',
-            type: 'universities' as TabType,
-            icon: 'school-outline',
-            color: '#4573DF',
-          };
-        });
-      case 'scholarships':
-        return (user.favoriteScholarships || []).map(id => {
-          const sch = SCHOLARSHIPS.find((s: any) => s.id === id);
-          return {
-            id,
-            name: sch?.name || id,
-            subtitle: sch ? `${sch.provider} • ${sch.tuitionCoverage || 0}%` : '',
-            type: 'scholarships' as TabType,
-            icon: 'ribbon-outline',
-            color: '#F59E0B',
-          };
-        });
-      case 'programs':
-        return (user.favoritePrograms || []).map(id => {
-          const prog = PROGRAMS.find((p: any) => p.id === id);
-          return {
-            id,
-            name: prog?.name || id,
-            subtitle: prog ? `${prog.level} • ${prog.duration_years} years` : '',
-            type: 'programs' as TabType,
-            icon: 'library-outline',
-            color: '#10B981',
-          };
-        });
-      default:
-        return [];
-    }
-  }, [user, activeTab]);
-
-  const items = getFavoriteItems();
-
-  // Counts
-  const universitiesCount = user?.favoriteUniversities?.length || 0;
-  const scholarshipsCount = user?.favoriteScholarships?.length || 0;
-  const programsCount = user?.favoritePrograms?.length || 0;
-
-  const handleItemPress = useCallback((item: FavoriteItem) => {
-    if (item.type === 'universities') {
-      navigation.navigate('UniversityDetail', {universityId: item.id});
-    }
-    // Add navigation for other types as needed
-  }, [navigation]);
-
-  // Show confirmation modal before removing
-  const showRemoveConfirmation = useCallback((id: string, type: TabType, name: string) => {
-    Haptics.light();
-    setItemToRemove({id, type, name});
-    setShowRemoveModal(true);
-    
-    // Animate modal in
-    Animated.parallel([
-      Animated.spring(modalScaleAnim, {
-        toValue: 1,
-        tension: 65,
-        friction: 10,
-        useNativeDriver: true,
-      }),
-      Animated.timing(modalOpacityAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [modalScaleAnim, modalOpacityAnim]);
-
-  // Close modal with animation
-  const closeRemoveModal = useCallback(() => {
-    Animated.parallel([
-      Animated.timing(modalScaleAnim, {
-        toValue: 0.8,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(modalOpacityAnim, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setShowRemoveModal(false);
-      setItemToRemove(null);
-    });
-  }, [modalScaleAnim, modalOpacityAnim]);
-
-  // Confirm removal
-  const confirmRemove = useCallback(() => {
-    if (!itemToRemove) return;
-    
-    Haptics.success();
-    const favoriteType = itemToRemove.type === 'universities' 
-      ? 'university' 
-      : itemToRemove.type === 'scholarships' 
-        ? 'scholarship' 
-        : 'program';
-    removeFavorite(itemToRemove.id, favoriteType);
-    closeRemoveModal();
-  }, [itemToRemove, removeFavorite, closeRemoveModal]);
-
-  const handleRemove = useCallback((id: string, type: TabType) => {
-    // Find the item name for display in modal
-    let name = '';
-    if (type === 'universities') {
-      const uni = UNIVERSITIES.find(u => u.short_name === id);
-      name = uni?.name || id;
-    } else if (type === 'scholarships') {
-      const sch = SCHOLARSHIPS.find((s: any) => s.id === id);
-      name = sch?.name || id;
-    } else {
-      const prog = PROGRAMS.find((p: any) => p.id === id);
-      name = prog?.name || id;
-    }
-    showRemoveConfirmation(id, type, name);
-  }, [showRemoveConfirmation]);
+  const {
+    colors, isDark, navigation,
+    activeTab, setActiveTab, items,
+    universitiesCount, scholarshipsCount, programsCount,
+    handleItemPress, handleRemove,
+    showRemoveModal, itemToRemove,
+    modalScaleAnim, modalOpacityAnim,
+    closeRemoveModal, confirmRemove,
+    headerFadeAnim, headerSlideAnim, floatTranslateY, floatAnim,
+  } = useFavoritesScreen();
 
   const renderItem = useCallback(({item, index}: {item: FavoriteItem; index: number}) => (
-    <FavoriteItemCard
-      item={item}
-      onPress={handleItemPress}
-      onRemove={handleRemove}
-      colors={colors}
-      index={index}
-    />
+    <FavoriteItemCard item={item} onPress={handleItemPress} onRemove={handleRemove} colors={colors} index={index} />
   ), [colors, handleItemPress, handleRemove]);
 
   const keyExtractor = useCallback((item: FavoriteItem) => `${item.type}-${item.id}`, []);
@@ -443,63 +42,28 @@ const FavoritesScreen: React.FC = () => {
       <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
         Tap the heart icon on any {activeTab.slice(0, -1)} to save it here for quick access.
       </Text>
-      <TouchableOpacity
-        style={[styles.exploreButton, {backgroundColor: colors.primary}]}
+      <TouchableOpacity style={[styles.exploreButton, {backgroundColor: colors.primary}]}
         onPress={() => {
-          if (activeTab === 'universities') {
-            navigation.navigate('MainTabs', {screen: 'Universities'});
-          } else if (activeTab === 'scholarships') {
-            navigation.navigate('MainTabs', {screen: 'Scholarships'});
-          }
+          if (activeTab === 'universities') navigation.navigate('MainTabs', {screen: 'Universities'});
+          else if (activeTab === 'scholarships') navigation.navigate('MainTabs', {screen: 'Scholarships'});
         }}>
-        <Text style={styles.exploreButtonText}>
-          Explore {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-        </Text>
+        <Text style={styles.exploreButtonText}>Explore {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</Text>
       </TouchableOpacity>
     </View>
   );
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       {/* Decorative floating hearts */}
-      <Animated.View 
-        style={[
-          styles.floatingHeart1, 
-          {
-            backgroundColor: '#F43F5E10',
-            transform: [{translateY: floatTranslateY}]
-          }
-        ]} 
-      />
-      <Animated.View 
-        style={[
-          styles.floatingHeart2, 
-          {
-            backgroundColor: colors.primary + '08',
-            transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]
-          }
-        ]} 
-      />
+      <Animated.View style={[styles.floatingHeart1, {backgroundColor: '#F43F5E10', transform: [{translateY: floatTranslateY}]}]} />
+      <Animated.View style={[styles.floatingHeart2, {backgroundColor: colors.primary + '08', transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]}]} />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        {/* Animated Header */}
-        <Animated.View 
-          style={[
-            styles.header,
-            {
-              opacity: headerFadeAnim,
-              transform: [{translateY: headerSlideAnim}]
-            }
-          ]}>
-          <TouchableOpacity
-            style={[styles.backButton, {backgroundColor: colors.card}]}
-            onPress={() => navigation.goBack()}>
+        {/* Header */}
+        <Animated.View style={[styles.header, {opacity: headerFadeAnim, transform: [{translateY: headerSlideAnim}]}]}>
+          <TouchableOpacity style={[styles.backButton, {backgroundColor: colors.card}]} onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" family="Ionicons" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, {color: colors.text}]}>Favorites</Text>
@@ -512,100 +76,37 @@ const FavoritesScreen: React.FC = () => {
 
         {/* Tab Bar */}
         <View style={[styles.tabBar, {backgroundColor: colors.card}]}>
-          <TabButton
-            label="Universities"
-            count={universitiesCount}
-            isActive={activeTab === 'universities'}
-            onPress={() => setActiveTab('universities')}
-            colors={colors}
-          />
-          <TabButton
-            label="Scholarships"
-            count={scholarshipsCount}
-            isActive={activeTab === 'scholarships'}
-            onPress={() => setActiveTab('scholarships')}
-            colors={colors}
-          />
-          <TabButton
-            label="Programs"
-            count={programsCount}
-            isActive={activeTab === 'programs'}
-            onPress={() => setActiveTab('programs')}
-            colors={colors}
-          />
+          <TabButton label="Universities" count={universitiesCount} isActive={activeTab === 'universities'} onPress={() => setActiveTab('universities')} colors={colors} />
+          <TabButton label="Scholarships" count={scholarshipsCount} isActive={activeTab === 'scholarships'} onPress={() => setActiveTab('scholarships')} colors={colors} />
+          <TabButton label="Programs" count={programsCount} isActive={activeTab === 'programs'} onPress={() => setActiveTab('programs')} colors={colors} />
         </View>
 
         {/* List */}
-        <FlatList
-          data={items}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          contentContainerStyle={[
-            styles.listContent,
-            items.length === 0 && styles.emptyList,
-          ]}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={renderEmpty}
-        />
+        <FlatList data={items} renderItem={renderItem} keyExtractor={keyExtractor}
+          contentContainerStyle={[styles.listContent, items.length === 0 && styles.emptyList]}
+          showsVerticalScrollIndicator={false} ListEmptyComponent={renderEmpty} />
 
         {/* Remove Confirmation Modal */}
-        <Modal
-          visible={showRemoveModal}
-          transparent={true}
-          animationType="none"
-          onRequestClose={closeRemoveModal}>
-          <Animated.View 
-            style={[
-              styles.modalOverlay, 
-              {opacity: modalOpacityAnim}
-            ]}>
-            <TouchableOpacity 
-              style={StyleSheet.absoluteFill} 
-              activeOpacity={1} 
-              onPress={closeRemoveModal} 
-            />
-            <Animated.View 
-              style={[
-                styles.modalContent, 
-                {
-                  backgroundColor: colors.card,
-                  transform: [{scale: modalScaleAnim}],
-                }
-              ]}>
-              {/* Warning Icon */}
+        <Modal visible={showRemoveModal} transparent animationType="none" onRequestClose={closeRemoveModal}>
+          <Animated.View style={[styles.modalOverlay, {opacity: modalOpacityAnim}]}>
+            <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={closeRemoveModal} />
+            <Animated.View style={[styles.modalContent, {backgroundColor: colors.card, transform: [{scale: modalScaleAnim}]}]}>
               <View style={[styles.modalIconContainer, {backgroundColor: `${colors.error}15`}]}>
                 <Icon name="heart-dislike" family="Ionicons" size={32} color={colors.error} />
               </View>
-              
-              {/* Title & Message */}
-              <Text style={[styles.modalTitle, {color: colors.text}]}>
-                Remove from Favorites?
-              </Text>
+              <Text style={[styles.modalTitle, {color: colors.text}]}>Remove from Favorites?</Text>
               <Text style={[styles.modalMessage, {color: colors.textSecondary}]}>
                 Are you sure you want to remove{' '}
-                <Text style={{fontWeight: TYPOGRAPHY.weight.semibold, color: colors.text}}>
-                  {itemToRemove?.name}
-                </Text>{' '}
-                from your saved {itemToRemove?.type === 'universities' ? 'universities' : 
-                  itemToRemove?.type === 'scholarships' ? 'scholarships' : 'programs'}?
+                <Text style={{fontWeight: TYPOGRAPHY.weight.semibold, color: colors.text}}>{itemToRemove?.name}</Text>
+                {' '}from your saved {itemToRemove?.type === 'universities' ? 'universities' : itemToRemove?.type === 'scholarships' ? 'scholarships' : 'programs'}?
               </Text>
-              
-              {/* Action Buttons */}
               <View style={styles.modalButtons}>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton, {backgroundColor: colors.background, borderColor: colors.border}]}
-                  onPress={closeRemoveModal}
-                  activeOpacity={0.8}>
+                <TouchableOpacity style={[styles.modalButton, styles.cancelButton, {backgroundColor: colors.background, borderColor: colors.border}]}
+                  onPress={closeRemoveModal} activeOpacity={0.8}>
                   <Text style={[styles.cancelButtonText, {color: colors.text}]}>Keep</Text>
                 </TouchableOpacity>
-                
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.removeConfirmButton]}
-                  onPress={confirmRemove}
-                  activeOpacity={0.8}>
-                  <LinearGradient
-                    colors={['#EF4444', '#DC2626']}
-                    style={styles.removeGradient}>
+                <TouchableOpacity style={[styles.modalButton, styles.removeConfirmButton]} onPress={confirmRemove} activeOpacity={0.8}>
+                  <LinearGradient colors={['#EF4444', '#DC2626']} style={styles.removeGradient}>
                     <Icon name="trash-outline" family="Ionicons" size={18} color="#FFFFFF" />
                     <Text style={styles.removeButtonText}>Remove</Text>
                   </LinearGradient>
@@ -619,277 +120,39 @@ const FavoritesScreen: React.FC = () => {
   );
 };
 
-// ============================================================================
-// STYLES
-// ============================================================================
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-  safeArea: {
-    flex: 1,
-  },
-  // Decorative floating elements
-  floatingHeart1: {
-    position: 'absolute',
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    top: -40,
-    right: -40,
-  },
-  floatingHeart2: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    bottom: 150,
-    left: -40,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 22,
-    fontWeight: TYPOGRAPHY.weight.heavy,
-    textAlign: 'center',
-  },
-  headerIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabBar: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    padding: 4,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  tabButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 12,
-    gap: 6,
-  },
-  tabLabel: {
-    fontSize: 13,
-    fontWeight: TYPOGRAPHY.weight.medium,
-  },
-  tabLabelActive: {
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  tabCount: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
-    minWidth: 20,
-    alignItems: 'center',
-  },
-  tabCountText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 100,
-  },
-  emptyList: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  itemCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 16,
-    marginBottom: 12,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  itemAccentStrip: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-    borderTopLeftRadius: 16,
-    borderBottomLeftRadius: 16,
-  },
-  itemIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 14,
-    marginLeft: 4,
-  },
-  itemContent: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginBottom: 4,
-  },
-  itemSubtitle: {
-    fontSize: 13,
-  },
-  removeButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyIconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 8,
-  },
-  emptyText: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 24,
-  },
-  exploreButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-  exploreButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  // Remove Confirmation Modal Styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
+  container: {flex: 1, overflow: 'hidden'},
+  safeArea: {flex: 1},
+  floatingHeart1: {position: 'absolute', width: 180, height: 180, borderRadius: 90, top: -40, right: -40},
+  floatingHeart2: {position: 'absolute', width: 120, height: 120, borderRadius: 60, bottom: 150, left: -40},
+  header: {flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12},
+  backButton: {width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center'},
+  headerTitle: {flex: 1, fontSize: 22, fontWeight: TYPOGRAPHY.weight.heavy, textAlign: 'center'},
+  headerIcon: {width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center'},
+  tabBar: {flexDirection: 'row', marginHorizontal: 16, marginBottom: 16, padding: 4, borderRadius: 16, shadowColor: '#000', shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2},
+  listContent: {paddingHorizontal: 16, paddingBottom: 100},
+  emptyList: {flex: 1, justifyContent: 'center'},
+  emptyContainer: {alignItems: 'center', paddingHorizontal: 40},
+  emptyIconContainer: {width: 100, height: 100, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginBottom: 20},
+  emptyTitle: {fontSize: 20, fontWeight: TYPOGRAPHY.weight.bold, marginBottom: 8},
+  emptyText: {fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: 24},
+  exploreButton: {paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12},
+  exploreButtonText: {color: '#FFFFFF', fontSize: 15, fontWeight: TYPOGRAPHY.weight.bold},
+  modalOverlay: {flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 24},
   modalContent: {
-    width: '100%',
-    maxWidth: 340,
-    borderRadius: 24,
-    padding: 24,
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 8},
-        shadowOpacity: 0.25,
-        shadowRadius: 24,
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
+    width: '100%', maxWidth: 340, borderRadius: 24, padding: 24, alignItems: 'center',
+    ...Platform.select({ios: {shadowColor: '#000', shadowOffset: {width: 0, height: 8}, shadowOpacity: 0.25, shadowRadius: 24}, android: {elevation: 12}}),
   },
-  modalIconContainer: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  modalMessage: {
-    fontSize: 15,
-    lineHeight: 22,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    gap: 12,
-    width: '100%',
-  },
-  modalButton: {
-    flex: 1,
-    height: 48,
-    borderRadius: 14,
-    overflow: 'hidden',
-  },
-  cancelButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1.5,
-  },
-  cancelButtonText: {
-    fontSize: 15,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  removeConfirmButton: {
-    overflow: 'hidden',
-  },
-  removeGradient: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
-  },
-  removeButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
+  modalIconContainer: {width: 72, height: 72, borderRadius: 36, justifyContent: 'center', alignItems: 'center', marginBottom: 16},
+  modalTitle: {fontSize: 20, fontWeight: TYPOGRAPHY.weight.bold, marginBottom: 8, textAlign: 'center'},
+  modalMessage: {fontSize: 15, lineHeight: 22, textAlign: 'center', marginBottom: 24},
+  modalButtons: {flexDirection: 'row', gap: 12, width: '100%'},
+  modalButton: {flex: 1, height: 48, borderRadius: 14, overflow: 'hidden'},
+  cancelButton: {justifyContent: 'center', alignItems: 'center', borderWidth: 1.5},
+  cancelButtonText: {fontSize: 15, fontWeight: TYPOGRAPHY.weight.semibold},
+  removeConfirmButton: {overflow: 'hidden'},
+  removeGradient: {flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6},
+  removeButtonText: {color: '#FFFFFF', fontSize: 15, fontWeight: TYPOGRAPHY.weight.bold},
 });
 
 export default FavoritesScreen;

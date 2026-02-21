@@ -46,7 +46,8 @@ export const useScholarshipsScreen = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isFav, setIsFav] = useState(false);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showForYou, setShowForYou] = useState(false);
 
   // Update search query when route params change (e.g., from Home page search)
   useEffect(() => {
@@ -215,9 +216,43 @@ export const useScholarshipsScreen = () => {
         matchesUni = isBroad || specificUnis.includes(selectedUniversity);
       }
 
-      return matchesSearch && matchesType && matchesUni;
+      // "For You" filter: prefer scholarships that match user's profile
+      let matchesForYou = true;
+      if (showForYou && user) {
+        const eligText = scholarship.eligibility?.join(' ').toLowerCase() || '';
+
+        // Use interMarks (more relevant for scholarships) or fall back to matricMarks
+        const bestMarks = user.interMarks ?? user.matricMarks;
+        if (bestMarks !== null && bestMarks !== undefined && bestMarks > 0) {
+          const marksPercent = (bestMarks / 1100) * 100;
+          // high achievers: merit-based, international
+          if (marksPercent >= 70) {
+            matchesForYou = ['merit_based', 'international', 'government'].includes(scholarship.type);
+          } else {
+            // need-based or general
+            matchesForYou = ['need_based', 'government', 'institutional', 'special'].includes(scholarship.type);
+          }
+        }
+        // No marks data → skip type filtering, only apply province filter below
+
+        // Province filter: exclude cross-province specific scholarships
+        if (user.city) {
+          const cityLower = user.city.toLowerCase();
+          const isPunjabiCity = ['lahore', 'faisalabad', 'multan', 'rawalpindi', 'gujranwala', 'sialkot'].some(c => cityLower.includes(c));
+          const isSindhiCity = ['karachi', 'hyderabad', 'sukkur', 'larkana'].some(c => cityLower.includes(c));
+          const isKPKCity = ['peshawar', 'mardan', 'abbottabad', 'swat'].some(c => cityLower.includes(c));
+          const isBalochCity = ['quetta', 'gwadar', 'turbat'].some(c => cityLower.includes(c));
+          // Exclude scholarships tied to provinces the user isn't from
+          if (isPunjabiCity && eligText.includes('sindh only')) { matchesForYou = false; }
+          if (isSindhiCity && eligText.includes('punjab only')) { matchesForYou = false; }
+          if (!isKPKCity && eligText.includes('kpk only')) { matchesForYou = false; }
+          if (!isBalochCity && eligText.includes('balochistan only')) { matchesForYou = false; }
+        }
+      }
+
+      return matchesSearch && matchesType && matchesUni && matchesForYou;
     });
-  }, [scholarships, debouncedSearchQuery, selectedType, selectedUniversity]);
+  }, [scholarships, debouncedSearchQuery, selectedType, selectedUniversity, showForYou, user]);
 
   const openLink = useCallback((url?: string) => {
     if (url) {
@@ -259,6 +294,8 @@ export const useScholarshipsScreen = () => {
     isFav,
     showFilters,
     setShowFilters,
+    showForYou,
+    setShowForYou,
     filteredScholarships,
     universityOptions,
     // Handlers

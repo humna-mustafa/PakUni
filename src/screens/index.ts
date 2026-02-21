@@ -28,8 +28,6 @@ export {default as TermsOfServiceScreen} from './TermsOfServiceScreen';
 
 // Authentication & Onboarding screens
 export {default as AuthScreen} from './AuthScreen';
-export {default as UltraAuthScreen} from './UltraAuthScreen';
-export {default as OnboardingScreen} from './OnboardingScreen';
 export {default as UltraOnboardingScreen} from './UltraOnboardingScreen';
 export {default as PremiumSplashScreen} from './PremiumSplashScreen';
 export {default as SplashScreen} from './PremiumSplashScreen';
@@ -45,7 +43,6 @@ export {default as GuidesScreen} from './GuidesScreen';
 export {default as ToolsScreen} from './ToolsScreen';
 export {default as ResultGameScreen} from './ResultGameScreen';
 export {default as AchievementsScreen} from './AchievementsScreen';
-export {default as UltraAchievementsScreen} from './UltraAchievementsScreen';
 export {default as MoreScreen} from './MoreScreen';
 
 // Direct access to all Premium versions
@@ -70,5 +67,5 @@ export {default as PremiumMeritArchiveScreen} from './PremiumMeritArchiveScreen'
 export {default as PremiumCareerCenterScreen} from './PremiumCareerCenterScreen';
 
 // Data Contribution screens
-export {default as UltraContributeScreen} from './UltraContributeScreen';
+export {UltraContributeScreen} from './UltraContributeScreen';
 export {default as UserDataSubmissionScreen} from './UserDataSubmissionScreen';

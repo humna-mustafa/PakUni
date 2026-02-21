@@ -301,7 +301,7 @@ export const generateTestCompletionCardSVG = (
       </text>
 
       <text x="60" y="1280" font-size="16" fill="#999999" font-family="Arial" opacity="0.7">
-        Made with PakUni App • Your Gateway to Pakistani Universities
+        Made with PakUni App • Universities · Scholarships · Careers & More
       </text>
     </svg>
   `;
@@ -384,7 +384,7 @@ export const generateScholarshipCardSVG = (
 
       <!-- Download info -->
       <text x="60" y="1230" font-size="16" fill="#999999" font-family="Arial" opacity="0.7">
-        Made with PakUni App • Your Gateway to Pakistani Universities
+        Made with PakUni App • Universities · Scholarships · Careers & More
       </text>
     </svg>
   `;

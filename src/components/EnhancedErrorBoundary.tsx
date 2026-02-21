@@ -633,9 +633,60 @@ export class GlobalErrorProvider extends Component<
   }
 
   handleError = (error: Error, context?: string): void => {
+    // IMPORTANT: Silently handle background network errors
+    // These should never be shown to users - they're from preloading, config fetches, etc.
+    if (this.isBackgroundNetworkError(error)) {
+      console.warn(`Silent Background Error [${context}]:`, error.message);
+      return; // Don't show to user - just log silently
+    }
+
     console.error(`Global Error [${context || 'Unknown'}]:`, error);
     this.setState({lastError: error});
     this.props.onError?.(error, context);
+  };
+
+  /**
+   * Determine if an error is from a background operation that shouldn't show to users
+   */
+  private isBackgroundNetworkError = (error: Error): boolean => {
+    const message = (error.message || '').toLowerCase();
+    const stack = (error.stack || '').toLowerCase();
+    
+    // Network and connectivity errors
+    const networkPatterns = [
+      'network request failed',
+      'network error',
+      'failed to fetch',
+      'timeout',
+      'econnrefused',
+      'enotfound', 
+      'cannot resolve host',
+      'unable to connect',
+      'no internet',
+      'offline',
+      'io error',
+    ];
+    
+    // Image loading errors (from prefetch)
+    const imagePatterns = [
+      'image prefetch',
+      'image loading failed',
+      'image not found',
+    ];
+    
+    // API/sync errors that happen in background
+    const bgPatterns = [
+      'fetch failed',
+      'sync error',
+      'auth failure',
+      'bad authentication',
+    ];
+    
+    const allPatterns = [...networkPatterns, ...imagePatterns, ...bgPatterns];
+    
+    return allPatterns.some(pattern => 
+      message.includes(pattern) || stack.includes(pattern)
+    );
   };
 
   clearErrors = (): void => {

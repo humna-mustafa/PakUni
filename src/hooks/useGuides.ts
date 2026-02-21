@@ -4,11 +4,14 @@
 
 import {useState, useRef, useMemo, useEffect, useCallback} from 'react';
 import {Animated, Easing} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 import {GUIDES_DATA, GUIDE_CATEGORIES} from '../data/guidesData';
 import type {Guide} from '../types/guides';
 
 export const useGuides = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const route = useRoute<any>();
+  const initialCategory = route?.params?.initialCategory ?? null;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 

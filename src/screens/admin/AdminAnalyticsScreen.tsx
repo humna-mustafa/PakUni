@@ -289,7 +289,7 @@ ${analytics.topContent.searches.map((s, i) => `${i + 1}. "${s.term}": ${s.count}
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}

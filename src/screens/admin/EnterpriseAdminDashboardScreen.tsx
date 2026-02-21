@@ -401,13 +401,22 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
     },
     // === DATA MANAGEMENT & APPROVAL WORKFLOW ===
     {
+      id: 'data-corrections',
+      title: 'Fix Requests',
+      icon: 'create',
+      iconSet: 'ion',
+      screen: 'AdminDataCorrectionReview',
+      color: '#10B981',
+      description: 'Field-level data fixes',
+    },
+    {
       id: 'data-submissions',
       title: 'Submissions',
       icon: 'document-attach',
       iconSet: 'ion',
       screen: 'AdminDataSubmissions',
       color: '#4573DF',
-      description: 'User data corrections',
+      description: 'General submissions',
     },
     {
       id: 'merit-deadlines',

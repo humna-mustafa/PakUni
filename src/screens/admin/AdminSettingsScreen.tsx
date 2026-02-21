@@ -304,7 +304,7 @@ const AdminSettingsScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         {/* Header */}

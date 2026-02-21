@@ -19,6 +19,8 @@ export interface Poll {
   totalVotes: number;
   isActive: boolean;
   createdAt: string;
+  /** Shown after voting — a helpful student insight or tip derived from results */
+  insight?: string;
 }
 
 export const POLL_CATEGORIES = [
@@ -49,6 +51,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 10642,
     isActive: true,
     createdAt: '2024-01-15',
+    insight: 'NUST leads in campus life votes! Its Islamabad campus offers world-class facilities, green spaces, and a tight-knit community — great if you want the full campus experience. LUMS follows closely for its international atmosphere.',
   },
   {
     id: 'poll-2',
@@ -65,6 +68,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 14648,
     isActive: true,
     createdAt: '2024-01-20',
+    insight: 'FAST-NU tops for CS faculty with its industry-connected curriculum and strong alumni in top tech companies. If you want CS + strong job placement, FAST and NUST are your best bets. Prepare for FAST FAT / NUST NET.',
   },
   {
     id: 'poll-3',
@@ -81,6 +85,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 15345,
     isActive: true,
     createdAt: '2024-02-01',
+    insight: 'NUST is the top choice for engineering. It requires NUST NET with strong Math & Physics scores. GIKI is preferred for its intense, focused 4-year engineering program with excellent industry connections. Prepare at least 6 months in advance.',
   },
   {
     id: 'poll-4',
@@ -97,6 +102,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 8900,
     isActive: true,
     createdAt: '2024-02-10',
+    insight: 'NUST and LUMS both invest heavily in sports infrastructure. If sports matter to you, also check if a university has your specific sport. Many universities offer sports scholarships — reach out to their sports departments!',
   },
   {
     id: 'poll-5',
@@ -113,6 +119,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 14947,
     isActive: true,
     createdAt: '2024-02-15',
+    insight: 'Aga Khan University (AKU) consistently ranks #1 for medical education but is highly competitive and expensive. For public sector, KEMU (King Edward) has produced the most doctors. Remember: MDCAT is mandatory for all medical programs!',
   },
   {
     id: 'poll-6',
@@ -129,6 +136,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 18278,
     isActive: true,
     createdAt: '2024-03-01',
+    insight: 'LUMS and IBA dominate job placement rankings. Both emphasize case-based learning and leadership. If career ROI matters, LUMS graduates consistently land the highest starting salaries in Pakistan. Tip: target companies that recruit from these campuses.',
   },
   {
     id: 'poll-7',
@@ -145,6 +153,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 11622,
     isActive: true,
     createdAt: '2024-03-10',
+    insight: 'LUMS has one of the best libraries in Pakistan. Good library access matters for research and academic growth. Tip: when visiting a university, always check its digital library access (JSTOR, Scopus, etc.) before choosing.',
   },
   {
     id: 'poll-8',
@@ -161,6 +170,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 17994,
     isActive: true,
     createdAt: '2024-03-20',
+    insight: 'LUMS and IBA are Pakistan’s top business schools with multinational company partnerships. Both use LCAT/IBA test for admissions. Business from these unis can open doors to top local and international firms. Check their placement reports!',
   },
   {
     id: 'poll-9',
@@ -177,6 +187,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 11922,
     isActive: true,
     createdAt: '2024-04-01',
+    insight: 'GIKI’s hostel experience is legendary among engineering students — remote campus fosters a strong community. If you’re from another city, check hostel availability early as facilities differ widely. On-campus living often boosts grades and networking.',
   },
   {
     id: 'poll-10',
@@ -193,6 +204,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 27694,
     isActive: true,
     createdAt: '2024-04-15',
+    insight: 'NUST edges LUMS for overall best — by a small margin! The choice depends on your field: NUST for STEM/Engineering, LUMS for Business/Law/Social Sciences. Both offer need-based scholarships. Use the app’s Recommendations feature to find YOUR best fit.',
   },
   // Student Life & Admissions Polls
   {
@@ -210,6 +222,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 23058,
     isActive: true,
     createdAt: '2024-05-01',
+    insight: 'MDCAT is voted the hardest — 210 qs in 210 min with deep biology/chemistry content. NUST NET is close behind. Tip: start 6-8 months early, focus on PMC syllabus for MDCAT, and take multiple NET series for NUST to improve your score.',
   },
   {
     id: 'poll-12',
@@ -226,6 +239,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 21622,
     isActive: true,
     createdAt: '2024-05-10',
+    insight: 'Software Engineering and Data Science/AI lead by a massive margin for Pre-Engineering students. Both offer the best international career prospects and freelance income potential in Pakistan’s digital economy.',
   },
   {
     id: 'poll-13',
@@ -242,6 +256,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 18758,
     isActive: true,
     createdAt: '2024-05-15',
+    insight: 'MBBS/Doctor dominates for Pre-Medical students, but Pharm-D is growing in demand especially with international opportunities. BDS has less competition for admission but can be equally rewarding. All require MDCAT!',
   },
   {
     id: 'poll-14',
@@ -258,6 +273,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 26514,
     isActive: true,
     createdAt: '2024-05-20',
+    insight: 'Entry test prep is the most stressful phase — voted by 34% of students! Plan for this: take mock tests monthly, join a prep academy or online platform like Nearpeer, and set weekly study goals. Use our Entry Tests section for prep resources.',
   },
   {
     id: 'poll-15',
@@ -274,6 +290,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 23700,
     isActive: true,
     createdAt: '2024-06-01',
+    insight: 'Lahore and Islamabad are top student cities. Lahore has the most universities and lowest cost of living, Islamabad offers safety and NUST/COMSATS proximity. Karachi is great for IBA, AKU, and NED. Consider your budget and university proximity!',
   },
   {
     id: 'poll-16',
@@ -289,6 +306,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 19379,
     isActive: true,
     createdAt: '2024-06-10',
+    insight: '61% say a gap year IS worth it (yes or for top unis only). If your target is NUST/LUMS/FAST, a focused gap year can make a huge difference. Use it for dedicated prep, not as a holiday. Many students improve their test score by 30-40+ percentile in a gap year.',
   },
   {
     id: 'poll-17',
@@ -305,6 +323,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 25603,
     isActive: true,
     createdAt: '2024-06-15',
+    insight: 'Coding/Programming leads as the most useful skill — even non-CS students benefit. Start with Python (free on YouTube). English Communication is second — practice speaking daily. These 2 skills together can open international opportunities.',
   },
   {
     id: 'poll-18',
@@ -321,6 +340,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 21700,
     isActive: true,
     createdAt: '2024-06-20',
+    insight: 'Freelancing is the top choice for student income (38% votes). Pakistan ranks in top 5 globally for freelancing! Start with one platform (Fiverr/Upwork) and one skill. Tutoring is #2 — teach the subject you’re strongest in at PKR 1500-3000/hr.',
   },
   {
     id: 'poll-19',
@@ -336,6 +356,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 29133,
     isActive: true,
     createdAt: '2024-06-25',
+    insight: '42% say the student should choose, 30% say decide together. Research shows students perform better when they choose their own career. If parents disagree, show them career data (salary, demand, growth) — facts are more persuasive than arguments.',
   },
   {
     id: 'poll-20',
@@ -352,6 +373,7 @@ export const POLLS_DATA: Poll[] = [
     totalVotes: 24724,
     isActive: true,
     createdAt: '2024-07-01',
+    insight: 'KIPS leads for in-person prep (Punjab). Self-study with Nearpeer/Edvanced is gaining ground as it’s cheaper and flexible. Tip: hybrid works best — take few months at an academy for structure, then self-study with past papers and online resources for the final stretch.',
   },
 ];
 

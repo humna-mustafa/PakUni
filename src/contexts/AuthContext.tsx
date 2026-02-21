@@ -49,8 +49,11 @@ export interface UserProfile {
   board: string | null;
   school: string | null;
   matricMarks: number | null;
+  matricTotal: number;
   interMarks: number | null;
+  interTotal: number;
   entryTestScore: number | null;
+  entryTestTotal: number;
   targetField: string | null;
   targetUniversity: string | null;
   interests: string[];
@@ -88,6 +91,7 @@ export interface AuthContextType extends AuthState {
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<boolean>;
+  resendVerificationEmail: (email: string) => Promise<boolean>;
   
   // Profile Actions
   updateProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
@@ -145,8 +149,11 @@ const DEFAULT_USER: UserProfile = {
   board: 'Punjab Board',
   school: null,
   matricMarks: null,
+  matricTotal: 1100,
   interMarks: null,
+  interTotal: 1100,
   entryTestScore: null,
+  entryTestTotal: 200,
   targetField: null,
   targetUniversity: null,
   interests: [],
@@ -271,6 +278,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
   const initializeAuth = async () => {
     try {
+      // IMPORTANT: Clear any previous errors on app start
+      // Prevents stale error messages from showing on app launch
+      setState(prev => ({...prev, authError: null}));
+      
       // Check for local onboarding flag first
       const localOnboarding = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING);
       const isActuallyOnboarded = localOnboarding === 'true';
@@ -391,8 +402,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           board: data.board,
           school: data.school,
           matricMarks: data.matric_marks,
+          matricTotal: data.matric_total || 1100,
           interMarks: data.inter_marks,
+          interTotal: data.inter_total || 1100,
           entryTestScore: data.entry_test_score,
+          entryTestTotal: data.entry_test_total || 200,
           targetField: data.target_field,
           targetUniversity: data.target_university,
           interests: data.interests || [],
@@ -520,9 +534,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       // Sign in with Google natively (v16+ returns {type, data} instead of throwing)
       const signInResult = await GoogleSignin.signIn();
       
-      // Handle v16+ response format - cancellation is no longer thrown as error
-      if (signInResult.type !== 'success') {
+      // Handle v16+ response format
+      // In v16, signIn() returns {type: 'success', data} or {type: 'cancelled'}
+      // IMPORTANT: Only treat 'cancelled' type as user cancellation, not other failures
+      if (signInResult.type === 'cancelled') {
         throw {code: statusCodes.SIGN_IN_CANCELLED, message: 'Sign in was cancelled'};
+      }
+      if (signInResult.type !== 'success') {
+        // Non-success, non-cancelled = actual error (e.g., DEVELOPER_ERROR)
+        logger.error('Google signIn returned non-success type', {type: signInResult.type}, 'Auth');
+        throw new Error(`Google Sign-In failed (type: ${signInResult.type}). Please check app configuration.`);
       }
       
       logger.debug('Google sign-in successful, getting ID token...', null, 'Auth');
@@ -579,7 +600,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
                  (error.message && error.message.toLowerCase().includes('developer_error'))) {
         // DEVELOPER_ERROR - SHA-1 fingerprint mismatch between APK signing cert and Google Cloud Console
         // SOLUTION: Add this SHA-1 to Google Cloud Console OAuth credentials
-        const sha1Fingerprint = '2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66';
+        const sha1Fingerprint = 'AB:5C:A7:50:89:CA:51:E7:B4:E5:71:F8:CA:F0:99:1D:44:9A:C4:C1';
         errorMessage = `⚠️ Google Sign-In Setup Required\n\nTo fix this:\n1. Go to Google Cloud Console\n2. Add SHA-1: ${sha1Fingerprint}\n3. Reinstall the app\n\nAlternatively:\n• Use Email/Password\n• Continue as Guest`;
         logger.error('DEVELOPER_ERROR: SHA-1 Fingerprint Mismatch', {
           sha1: sha1Fingerprint,
@@ -940,6 +961,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }
   }, []);
 
+  const resendVerificationEmail = useCallback(async (email: string): Promise<boolean> => {
+    try {
+      const {error} = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+      if (error) throw error;
+      return true;
+    } catch (error: any) {
+      logger.error('Resend verification error', error, 'Auth');
+      return false;
+    }
+  }, []);
+
   // =========================================================================
   // PROFILE ACTIONS
   // FREE TIER OPTIMIZATION: Debounce profile updates to batch API calls
@@ -994,8 +1029,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
           if (pendingUpdates.board !== undefined) dbUpdates.board = pendingUpdates.board;
           if (pendingUpdates.school !== undefined) dbUpdates.school = pendingUpdates.school;
           if (pendingUpdates.matricMarks !== undefined) dbUpdates.matric_marks = pendingUpdates.matricMarks;
+          if (pendingUpdates.matricTotal !== undefined) dbUpdates.matric_total = pendingUpdates.matricTotal;
           if (pendingUpdates.interMarks !== undefined) dbUpdates.inter_marks = pendingUpdates.interMarks;
+          if (pendingUpdates.interTotal !== undefined) dbUpdates.inter_total = pendingUpdates.interTotal;
           if (pendingUpdates.entryTestScore !== undefined) dbUpdates.entry_test_score = pendingUpdates.entryTestScore;
+          if (pendingUpdates.entryTestTotal !== undefined) dbUpdates.entry_test_total = pendingUpdates.entryTestTotal;
           if (pendingUpdates.targetField !== undefined) dbUpdates.target_field = pendingUpdates.targetField;
           if (pendingUpdates.targetUniversity !== undefined) dbUpdates.target_university = pendingUpdates.targetUniversity;
           if (pendingUpdates.interests !== undefined) dbUpdates.interests = pendingUpdates.interests;
@@ -1188,6 +1226,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     signOut,
     deleteAccount,
     resetPassword,
+    resendVerificationEmail,
     updateProfile,
     completeOnboarding,
     addFavorite,
@@ -1206,6 +1245,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     signOut,
     deleteAccount,
     resetPassword,
+    resendVerificationEmail,
     updateProfile,
     completeOnboarding,
     addFavorite,

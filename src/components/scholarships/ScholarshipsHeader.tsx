@@ -69,8 +69,8 @@ const ScholarshipsHeader = ({
 
 const styles = StyleSheet.create({
   compactHeader: {
-    paddingHorizontal: SPACING.md,
-    paddingTop: SPACING.md,
+    paddingHorizontal: 20,
+    paddingTop: 8,
     paddingBottom: SPACING.sm,
   },
   headerTitleRow: {
@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.06)',
   },
   profileBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -125,9 +125,9 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   headerSubtitleText: {
     fontSize: TYPOGRAPHY.sizes.sm,

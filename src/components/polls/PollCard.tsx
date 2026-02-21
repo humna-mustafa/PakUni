@@ -141,6 +141,17 @@ const PollCard: React.FC<Props> = ({
         ))}
       </View>
 
+      {/* Student Insight (shown after voting) */}
+      {hasVoted && poll.insight && (
+        <View style={[styles.insightSection, {backgroundColor: `${categoryColor}10`, borderColor: `${categoryColor}25`}]}>
+          <View style={styles.insightHeader}>
+            <Icon name="bulb-outline" family="Ionicons" size={15} color={categoryColor} />
+            <Text style={[styles.insightTitle, {color: categoryColor}]}>Student Insight</Text>
+          </View>
+          <Text style={[styles.insightText, {color: colors.text}]}>{poll.insight}</Text>
+        </View>
+      )}
+
       {/* Footer */}
       <View style={styles.footer}>
         <View style={styles.stats}>
@@ -228,6 +239,12 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
     marginBottom: SPACING.md,
   },
+  insightSection: {
+    borderRadius: RADIUS.md, borderWidth: 1, padding: SPACING.sm, marginBottom: SPACING.md,
+  },
+  insightHeader: {flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6},
+  insightTitle: {fontSize: TYPOGRAPHY.sizes.xs, fontWeight: TYPOGRAPHY.weight.bold, textTransform: 'uppercase', letterSpacing: 0.5},
+  insightText: {fontSize: TYPOGRAPHY.sizes.sm, lineHeight: 20},
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

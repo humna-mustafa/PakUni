@@ -79,9 +79,9 @@ const MENU_SECTIONS: MenuSection[] = [
     icon: 'library-outline',
     items: [
       {id: 'entrytests', title: 'Entry Tests', icon: 'clipboard-outline', color: '#DC2626', screen: 'EntryTests'},
-      {id: 'guides', title: 'Guides', icon: 'library-outline', color: '#3660C9', screen: 'Guides'},
-      {id: 'studytips', title: 'Study Tips', icon: 'bulb-outline', color: '#FBBF24', screen: 'StudyTips'},
+      {id: 'guides', title: 'Study Guides', icon: 'library-outline', color: '#3660C9', screen: 'Guides'},
       {id: 'goals', title: 'My Goals', icon: 'flag-outline', color: '#10B981', screen: 'GoalSetting'},
+      {id: 'studytips', title: 'Tips & Tricks', icon: 'bulb-outline', color: '#FBBF24', screen: 'StudyTips'},
     ],
   },
   {
@@ -199,7 +199,8 @@ const MoreScreen = () => {
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor={colors.background}
+        backgroundColor="transparent"
+        translucent
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -293,7 +294,7 @@ const MoreScreen = () => {
           {isAdmin && (
             <TouchableOpacity
               style={[styles.adminCard, {backgroundColor: colors.card}]}
-              onPress={() => navigation.navigate('AdminDashboard')}
+              onPress={() => navigation.navigate('Admin', {screen: 'AdminDashboard'})}
               activeOpacity={0.8}>
               <LinearGradient
                 colors={['#3660C9', '#4573DF']}
@@ -450,9 +451,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.sm,
-    paddingBottom: SPACING.sm,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
   headerLeft: {},
   headerTitle: {
@@ -465,9 +466,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   profileButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -488,9 +489,9 @@ const styles = StyleSheet.create({
     fontWeight: TYPOGRAPHY.weight.bold,
   },
   profileImage: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   scrollContent: {
     paddingHorizontal: SPACING.md,

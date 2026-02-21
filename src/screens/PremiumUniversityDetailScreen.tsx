@@ -68,7 +68,7 @@ const PremiumUniversityDetailScreen = () => {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
       {/* Animated Header */}
       <DetailHeader
@@ -148,6 +148,21 @@ const PremiumUniversityDetailScreen = () => {
         </ErrorBoundary>
         <View style={{height: 100}} />
       </Animated.ScrollView>
+
+      {/* Fix Data FAB */}
+      <TouchableOpacity
+        style={[styles.fixDataFab, {backgroundColor: colors.card, borderColor: colors.border || '#E5E7EB'}]}
+        onPress={() =>
+          navigation.navigate('DataCorrection' as any, {
+            entityType: 'university',
+            entityId: university.id,
+            entityName: university.name,
+          })
+        }
+        activeOpacity={0.8}>
+        <Icon name="create-outline" family="Ionicons" size={16} color={colors.textSecondary} />
+        <Text style={[styles.fixDataFabText, {color: colors.textSecondary}]}>Fix Data</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -199,6 +214,27 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.sm,
     marginTop: 4,
     textAlign: 'center',
+  },
+  fixDataFab: {
+    position: 'absolute',
+    bottom: 100,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 20,
+    borderWidth: 1,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  fixDataFabText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: TYPOGRAPHY.weight.medium,
   },
 });
 

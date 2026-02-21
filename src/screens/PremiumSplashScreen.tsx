@@ -202,7 +202,7 @@ const PremiumSplashScreen: React.FC<PremiumSplashScreenProps> = memo(({
         {/* Tagline */}
         <Animated.View style={{opacity: taglineFade}}>
           <Text style={[styles.tagline, {color: colors.textSecondary}]}>
-            Your Gateway to Pakistani Universities
+            Universities · Scholarships · Careers · Guides & More 🇵🇰
           </Text>
         </Animated.View>
 

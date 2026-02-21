@@ -10,7 +10,7 @@ import { DARK_BG, LIGHT_BG } from '../../constants/brand';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/design';
 import { CategoryOption } from '../../types/contribute';
 import { CATEGORIES } from '../../constants/contribute';
-import { AnimatedPressable } from './AnimatedPressable';
+import AnimatedPressable from '../gestures/AnimatedPressable';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

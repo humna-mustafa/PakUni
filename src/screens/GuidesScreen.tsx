@@ -32,10 +32,10 @@ import {
   GuideListItem,
   GuideDetail,
   GuidesHeader,
-  EmptyState,
   SuggestCard,
   CategoryBackHeader,
 } from '../components/guides';
+import {EmptyState} from '../components/EmptyState';
 
 const GuidesScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -73,7 +73,8 @@ const GuidesScreen: React.FC = () => {
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
         barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor={colors.background}
+        backgroundColor="transparent"
+        translucent
       />
 
       {/* Decorative floating circles */}
@@ -200,7 +201,10 @@ const GuidesScreen: React.FC = () => {
                 />
               ))
             ) : (
-              <EmptyState colors={colors} />
+              <EmptyState
+                title="No guides found"
+                variant="search"
+              />
             )}
           </View>
 

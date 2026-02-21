@@ -1,4 +1,9 @@
-import React, {useState, useRef, useEffect} from 'react';
+/**
+ * PremiumCareerGuidanceScreen - Career exploration with filtering and detail modal
+ * Thin composition using extracted components and hook
+ */
+
+import React, {useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,384 +12,81 @@ import {
   TouchableOpacity,
   Modal,
   Animated,
-  Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
-import {SPACING, FONTS} from '../constants/theme';
-import {Icon} from '../components/icons';
+import {SPACING} from '../constants/theme';
 import {TYPOGRAPHY, RADIUS} from '../constants/design';
-import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
-import {useTheme} from '../contexts/ThemeContext';
-import {CAREER_FIELDS, CAREER_PATHS, CareerField} from '../data';
+import {Icon} from '../components/icons';
+import {CareerCard, CATEGORIES, getCareerCategory, getCareerDuration, getCategoryColor} from '../components/career-guidance';
+import {CAREER_PATHS, CareerField} from '../data';
+import {useCareerGuidanceScreen} from '../hooks/useCareerGuidanceScreen';
 
-const {width} = Dimensions.get('window');
-
-// Career categories
-const CATEGORIES = ['All', 'Technology', 'Healthcare', 'Business', 'Engineering', 'Creative'];
-
-// Helper to derive category from career field
-const getCareerCategory = (career: CareerField): string => {
-  const id = career.id.toLowerCase();
-  const name = career.name.toLowerCase();
-  
-  if (id.includes('software') || id.includes('data') || id.includes('cyber') || id.includes('ai') || id.includes('web') || name.includes('tech')) {
-    return 'Technology';
-  }
-  if (id.includes('medicine') || id.includes('dentistry') || id.includes('pharmacy') || id.includes('nursing') || id.includes('health') || name.includes('doctor')) {
-    return 'Healthcare';
-  }
-  if (id.includes('business') || id.includes('finance') || id.includes('banking') || id.includes('accounting') || id.includes('marketing') || id.includes('hr')) {
-    return 'Business';
-  }
-  if (id.includes('engineering') || id.includes('civil') || id.includes('mechanical') || id.includes('electrical') || id.includes('chemical')) {
-    return 'Engineering';
-  }
-  if (id.includes('design') || id.includes('art') || id.includes('media') || id.includes('fashion') || id.includes('architecture')) {
-    return 'Creative';
-  }
-  return 'Other';
-};
-
-// Helper to extract career duration from education requirements
-const getCareerDuration = (career: CareerField): string => {
-  // Use the explicit duration field if available
-  if (career.duration) {
-    return career.duration;
-  }
-
-  const educationList = career.required_education || [];
-  
-  // Look for duration patterns in education requirements
-  for (const edu of educationList) {
-    // Match patterns like "(5 years + 1 year house job)", "(4 years)", "4-5 years", etc.
-    const durationMatch = edu.match(/\((\d+(?:-\d+)?\s*years?(?:\s*\+[^)]+)?)\)/i) || 
-                          edu.match(/(\d+(?:-\d+)?\s*years?)/i);
-    if (durationMatch) {
-      return durationMatch[1].trim();
-    }
-  }
-  
-  // Default for most BS degrees
-  return '4 years';
-};
-
-// Salary bar component
-const SalaryBar = ({
-  min,
-  max,
-  label,
-  colors,
-}: {
-  min: number;
-  max: number;
-  label: string;
-  colors: any;
-}) => {
+// Salary bar sub-component
+const SalaryBar = ({min, max, label, colors}: {min: number; max: number; label: string; colors: any}) => {
   const animWidth = useRef(new Animated.Value(0)).current;
-  const maxSalary = 500000; // Max salary for scale
-
   useEffect(() => {
-    Animated.timing(animWidth, {
-      toValue: (max / maxSalary) * 100,
-      duration: 800,
-      delay: 200,
-      useNativeDriver: false,
-    }).start();
+    Animated.timing(animWidth, {toValue: (max / 500000) * 100, duration: 800, delay: 200, useNativeDriver: false}).start();
   }, [max]);
-
   return (
-    <View style={styles.salaryBar}>
-      <Text style={[styles.salaryLabel, {color: colors.textSecondary}]}>{label}</Text>
+    <View style={{marginBottom: SPACING.sm}}>
+      <Text style={{fontSize: TYPOGRAPHY.sizes.xs, color: colors.textSecondary, marginBottom: 4}}>{label}</Text>
       <View style={styles.salaryTrack}>
-        <Animated.View
-          style={[
-            styles.salaryFill,
-            {
-              width: animWidth.interpolate({
-                inputRange: [0, 100],
-                outputRange: ['0%', '100%'],
-              }),
-            },
-          ]}>
-          <LinearGradient
-            colors={['#27ae60', '#2ecc71']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.salaryGradient}
-          />
+        <Animated.View style={{height: '100%', borderRadius: 4, overflow: 'hidden', width: animWidth.interpolate({inputRange: [0, 100], outputRange: ['0%', '100%']})}}>
+          <LinearGradient colors={['#27ae60', '#2ecc71']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={{flex: 1}} />
         </Animated.View>
       </View>
-      <Text style={[styles.salaryValue, {color: colors.success}]}>
+      <Text style={{fontSize: TYPOGRAPHY.sizes.xs, fontWeight: TYPOGRAPHY.weight.semibold, color: colors.success}}>
         {min / 1000}K - {max / 1000}K
       </Text>
     </View>
   );
 };
 
-// Career card component
-const CareerCard = ({
-  career,
-  onPress,
-  index,
-  colors,
-}: {
-  career: any;
-  onPress: () => void;
-  index: number;
-  colors: any;
-}) => {
-  const slideAnim = useRef(new Animated.Value(60)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 450,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 450,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.BUTTON_PRESS,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
-    }).start();
-  };
-
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Technology':
-        return '#4573DF';
-      case 'Healthcare':
-        return '#e74c3c';
-      case 'Business':
-        return '#9b59b6';
-      case 'Engineering':
-        return '#e67e22';
-      case 'Creative':
-        return '#1abc9c';
-      default:
-        return '#27ae60';
-    }
-  };
-
-  const category = getCareerCategory(career);
-  const categoryColor = getCategoryColor(category);
-
-  const getDemandColor = (trend: string) => {
-    switch (trend) {
-      case 'rising': return '#10B981';
-      case 'stable': return '#F59E0B';
-      case 'declining': return '#EF4444';
-      default: return '#10B981';
-    }
-  };
-
-  const demandColor = getDemandColor(career.demand_trend);
-
-  return (
-    <Animated.View
-      style={[
-        {
-          transform: [{translateY: slideAnim}, {scale: scaleAnim}],
-          opacity: fadeAnim,
-        },
-      ]}>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}>
-        <View style={[styles.careerCard, {backgroundColor: colors.card}]}>
-          <LinearGradient
-            colors={[categoryColor + '10', 'transparent']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={styles.cardGradient}
-          />
-          
-          <View style={styles.cardHeader}>
-            <View style={[styles.iconContainer, {backgroundColor: (career.iconColor || categoryColor) + '20'}]}>
-              <Icon name={career.iconName || 'briefcase'} family="Ionicons" size={28} color={career.iconColor || categoryColor} />
-            </View>
-            <View style={styles.cardTitleArea}>
-              <Text style={[styles.careerName, {color: colors.text}]}>
-                {career.name}
-              </Text>
-              <View style={styles.cardMetaRow}>
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
-                  <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
-                  <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                    {getCareerDuration(career)}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.demandBadge, {backgroundColor: demandColor + '15'}]}>
-              <View style={[styles.demandDot, {backgroundColor: demandColor}]} />
-              <Text style={[styles.demandText, {color: demandColor}]}>
-                {career.demand_trend === 'rising' ? 'High' : career.demand_trend === 'stable' ? 'Stable' : 'Low'} Demand
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.cardFooter}>
-            <View style={[styles.categoryBadge, {backgroundColor: categoryColor + '15'}]}>
-              <Text style={[styles.categoryText, {color: categoryColor}]}>
-                {category}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={[styles.exploreBtn, {backgroundColor: categoryColor}]}
-              onPress={onPress}>
-              <Text style={styles.exploreBtnText}>Explore</Text>
-              <Icon name="arrow-forward" family="Ionicons" size={12} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-
 const PremiumCareerGuidanceScreen = () => {
-  const {colors, isDark} = useTheme();
-  const navigation = useNavigation();
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [selectedCareer, setSelectedCareer] = useState<any>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const headerAnim = useRef(new Animated.Value(0)).current;
-  const modalAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(headerAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  const filteredCareers = CAREER_FIELDS.filter(
-    (career: CareerField) => activeFilter === 'All' || getCareerCategory(career) === activeFilter,
-  );
-
-  const openModal = (career: CareerField) => {
-    setSelectedCareer(career);
-    setModalVisible(true);
-    Animated.spring(modalAnim, {
-      toValue: 1,
-      tension: 50,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const closeModal = () => {
-    Animated.timing(modalAnim, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      setModalVisible(false);
-      setSelectedCareer(null);
-    });
-  };
+  const {
+    navigation, colors, isDark,
+    activeFilter, setActiveFilter,
+    selectedCareer, modalVisible,
+    headerAnim, modalAnim,
+    filteredCareers, openModal, closeModal,
+  } = useCareerGuidanceScreen();
 
   return (
-    <SafeAreaView
-      style={[styles.container, {backgroundColor: colors.background}]}
-      edges={['top']}>
+    <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]} edges={['top']}>
       {/* Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            opacity: headerAnim,
-            transform: [
-              {
-                translateY: headerAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-20, 0],
-                }),
-              },
-            ],
-          },
-        ]}>
+      <Animated.View style={{opacity: headerAnim, transform: [{translateY: headerAnim.interpolate({inputRange: [0, 1], outputRange: [-20, 0]})}]}}>
         <LinearGradient
           colors={isDark ? ['#1D2127', '#134E4A', '#10B981'] : ['#10B981', '#059669', '#047857']}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={styles.header}>
+          start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.header}>
           <View style={styles.headerDecoration1} />
           <View style={styles.headerDecoration2} />
           <View style={styles.headerDecoration3} />
-          
-          {/* Back Button */}
-          <TouchableOpacity
-            style={styles.backBtn}
-            onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
             <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-          
           <View style={styles.headerEmojiContainer}>
             <Icon name="compass-outline" family="Ionicons" size={48} color="#fff" />
           </View>
           <Text style={styles.headerTitle}>Career Guidance</Text>
-          <Text style={styles.headerSubtitle}>
-            Find your perfect career path
-          </Text>
+          <Text style={styles.headerSubtitle}>Find your perfect career path</Text>
         </LinearGradient>
       </Animated.View>
 
       {/* Filters */}
       <View style={styles.filtersContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersContent}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filtersContent}>
           {CATEGORIES.map(category => {
             const isActive = activeFilter === category;
             return (
-              <TouchableOpacity
-                key={category}
-                onPress={() => setActiveFilter(category)}>
+              <TouchableOpacity key={category} onPress={() => setActiveFilter(category)}>
                 {isActive ? (
-                  <LinearGradient
-                    colors={['#1abc9c', '#16a085']}
-                    style={styles.filterChip}>
+                  <LinearGradient colors={['#1abc9c', '#16a085']} style={styles.filterChip}>
                     <Text style={styles.filterChipTextActive}>{category}</Text>
                   </LinearGradient>
                 ) : (
-                  <View
-                    style={[
-                      styles.filterChip,
-                      {backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1},
-                    ]}>
-                    <Text style={[styles.filterChipText, {color: colors.textSecondary}]}>
-                      {category}
-                    </Text>
+                  <View style={[styles.filterChip, {backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1}]}>
+                    <Text style={{fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.medium, color: colors.textSecondary}}>{category}</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -393,7 +95,7 @@ const PremiumCareerGuidanceScreen = () => {
         </ScrollView>
       </View>
 
-      {/* Results count */}
+      {/* Results Count */}
       <View style={styles.resultsBar}>
         <Text style={[styles.resultsText, {color: colors.text}]}>
           <Text style={{fontWeight: TYPOGRAPHY.weight.bold}}>{filteredCareers.length}</Text> careers found
@@ -401,77 +103,38 @@ const PremiumCareerGuidanceScreen = () => {
       </View>
 
       {/* Careers List */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.careersContainer}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.careersContainer}>
         {filteredCareers.map((career: CareerField, index: number) => (
-          <CareerCard
-            key={career.id}
-            career={career}
-            onPress={() => openModal(career)}
-            index={index}
-            colors={colors}
-          />
+          <CareerCard key={career.id} career={career} onPress={() => openModal(career)} index={index} colors={colors} />
         ))}
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
       {/* Career Detail Modal */}
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={closeModal}>
+      <Modal visible={modalVisible} transparent animationType="none" onRequestClose={closeModal}>
         <View style={styles.modalOverlay}>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            activeOpacity={1}
-            onPress={closeModal}
-          />
-          <Animated.View
-            style={[
-              styles.modalContent,
-              {
-                backgroundColor: colors.card,
-                transform: [
-                  {
-                    translateY: modalAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [600, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}>
+          <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={closeModal} />
+          <Animated.View style={[styles.modalContent, {backgroundColor: colors.card, transform: [{translateY: modalAnim.interpolate({inputRange: [0, 1], outputRange: [600, 0]})}]}]}>
             <View style={styles.modalHandle} />
-            
             {selectedCareer && (
               <ScrollView showsVerticalScrollIndicator={false}>
                 {/* Modal Header */}
                 <LinearGradient
-                  colors={
-                    getCareerCategory(selectedCareer) === 'Technology'
-                      ? ['#4573DF', '#3660C9']
-                      : getCareerCategory(selectedCareer) === 'Healthcare'
-                      ? ['#e74c3c', '#c0392b']
-                      : getCareerCategory(selectedCareer) === 'Business'
-                      ? ['#9b59b6', '#8e44ad']
-                      : ['#1abc9c', '#16a085']
-                  }
+                  colors={getCategoryColor(getCareerCategory(selectedCareer)) === '#4573DF' ? ['#4573DF', '#3660C9'] : getCategoryColor(getCareerCategory(selectedCareer)) === '#e74c3c' ? ['#e74c3c', '#c0392b'] : getCategoryColor(getCareerCategory(selectedCareer)) === '#9b59b6' ? ['#9b59b6', '#8e44ad'] : ['#1abc9c', '#16a085']}
                   style={styles.modalHeader}>
-                  <View style={styles.modalEmojiContainer}>
+                  <View style={{marginBottom: SPACING.sm}}>
                     <Icon name="briefcase-outline" family="Ionicons" size={60} color="#fff" />
                   </View>
                   <Text style={styles.modalTitle}>{selectedCareer.name}</Text>
-                  <View style={styles.modalBadges}>
+                  <View style={{flexDirection: 'row', gap: SPACING.sm}}>
                     <View style={styles.modalBadge}>
-                      <View style={styles.badgeContent}>
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Icon name="flame-outline" family="Ionicons" size={11} color="#fff" />
                         <Text style={styles.modalBadgeText}> {selectedCareer.demand_trend || 'High'} Demand</Text>
                       </View>
                     </View>
                     <View style={styles.modalBadge}>
-                      <View style={styles.badgeContent}>
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Icon name="star-outline" family="Ionicons" size={11} color="#fff" />
                         <Text style={styles.modalBadgeText}> Popular</Text>
                       </View>
@@ -484,23 +147,17 @@ const PremiumCareerGuidanceScreen = () => {
                   <View style={[styles.statCard, {backgroundColor: colors.background}]}>
                     <Icon name="school-outline" family="Ionicons" size={24} color={colors.primary} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Education</Text>
-                    <Text style={[styles.statValue, {color: colors.text}]}>
-                      {selectedCareer.required_education?.[0] || "Bachelor's"}
-                    </Text>
+                    <Text style={[styles.statValue, {color: colors.text}]}>{selectedCareer.required_education?.[0] || "Bachelor's"}</Text>
                   </View>
                   <View style={[styles.statCard, {backgroundColor: colors.background}]}>
                     <Icon name="time-outline" family="Ionicons" size={24} color={colors.primary} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Duration</Text>
-                    <Text style={[styles.statValue, {color: colors.text}]}>
-                      {getCareerDuration(selectedCareer)}
-                    </Text>
+                    <Text style={[styles.statValue, {color: colors.text}]}>{getCareerDuration(selectedCareer)}</Text>
                   </View>
                   <View style={[styles.statCard, {backgroundColor: colors.background}]}>
                     <Icon name="wallet-outline" family="Ionicons" size={24} color={colors.success} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Avg Salary</Text>
-                    <Text style={[styles.statValue, {color: colors.success}]}>
-                      {((selectedCareer.average_mid_career_salary || selectedCareer.maxSalary || 150000) / 1000).toFixed(0)}K
-                    </Text>
+                    <Text style={[styles.statValue, {color: colors.success}]}>{((selectedCareer.average_mid_career_salary || selectedCareer.maxSalary || 150000) / 1000).toFixed(0)}K</Text>
                   </View>
                 </View>
 
@@ -510,9 +167,7 @@ const PremiumCareerGuidanceScreen = () => {
                     <Icon name="reader-outline" family="Ionicons" size={18} color={colors.text} />
                     <Text style={[styles.sectionTitle, {color: colors.text}]}> About This Career</Text>
                   </View>
-                  <Text style={[styles.sectionText, {color: colors.textSecondary}]}>
-                    {selectedCareer.description}
-                  </Text>
+                  <Text style={{fontSize: TYPOGRAPHY.sizes.sm, lineHeight: 22, color: colors.textSecondary}}>{selectedCareer.description}</Text>
                 </View>
 
                 {/* Career Roadmap */}
@@ -522,13 +177,8 @@ const PremiumCareerGuidanceScreen = () => {
                     <Text style={[styles.sectionTitle, {color: colors.text}]}> Career Roadmap</Text>
                   </View>
                   {(() => {
-                    // Find matching career path from CAREER_PATHS data
                     const careerPath = CAREER_PATHS.find(p => p.field_id === selectedCareer.id);
-                    const steps = careerPath?.steps?.map((s, idx) => ({
-                      step: idx + 1,
-                      title: s.stage,
-                      duration: s.duration,
-                    })) || selectedCareer.roadmap || [
+                    const steps = careerPath?.steps?.map((s, idx) => ({step: idx + 1, title: s.stage, duration: s.duration})) || [
                       {step: 1, title: 'Complete Matric', duration: '2 years'},
                       {step: 2, title: 'FSc / Intermediate', duration: '2 years'},
                       {step: 3, title: "Bachelor's Degree", duration: getCareerDuration(selectedCareer)},
@@ -536,19 +186,17 @@ const PremiumCareerGuidanceScreen = () => {
                     ];
                     return steps.map((step: any, i: number) => (
                       <View key={i} style={styles.roadmapStep}>
-                        <View style={styles.stepTimeline}>
-                          <LinearGradient
-                            colors={['#1abc9c', '#16a085']}
-                            style={styles.stepDot}>
-                            <Text style={styles.stepNumber}>{step.step || i + 1}</Text>
+                        <View style={{alignItems: 'center', marginRight: SPACING.sm}}>
+                          <LinearGradient colors={['#1abc9c', '#16a085']} style={styles.stepDot}>
+                            <Text style={{color: '#fff', fontSize: 12, fontWeight: TYPOGRAPHY.weight.bold}}>{step.step || i + 1}</Text>
                           </LinearGradient>
-                          {i < steps.length - 1 && <View style={[styles.stepLine, {backgroundColor: '#1abc9c'}]} />}
+                          {i < steps.length - 1 && <View style={{width: 3, flex: 1, marginVertical: 4, borderRadius: 2, backgroundColor: '#1abc9c'}} />}
                         </View>
                         <View style={[styles.stepContent, {backgroundColor: colors.background}]}>
-                          <Text style={[styles.stepTitle, {color: colors.text}]}>{step.title}</Text>
-                          <View style={styles.stepDurationRow}>
+                          <Text style={{fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.semibold, color: colors.text, marginBottom: 2}}>{step.title}</Text>
+                          <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Icon name="time-outline" family="Ionicons" size={12} color={colors.textSecondary} />
-                            <Text style={[styles.stepDuration, {color: colors.textSecondary}]}> {step.duration}</Text>
+                            <Text style={{fontSize: TYPOGRAPHY.sizes.xs, color: colors.textSecondary}}> {step.duration}</Text>
                           </View>
                         </View>
                       </View>
@@ -556,19 +204,17 @@ const PremiumCareerGuidanceScreen = () => {
                   })()}
                 </View>
 
-                {/* Skills Required */}
+                {/* Skills */}
                 <View style={styles.section}>
                   <View style={styles.sectionTitleRow}>
                     <Icon name="hammer-outline" family="Ionicons" size={18} color={colors.text} />
                     <Text style={[styles.sectionTitle, {color: colors.text}]}> Skills Required</Text>
                   </View>
                   <View style={styles.skillsGrid}>
-                    {(selectedCareer.key_skills || selectedCareer.skills || ['Problem Solving', 'Communication', 'Technical Skills', 'Teamwork', 'Creativity']).map((skill: string, i: number) => (
+                    {(selectedCareer.key_skills || ['Problem Solving', 'Communication', 'Technical Skills', 'Teamwork', 'Creativity']).map((skill: string, i: number) => (
                       <View key={i} style={[styles.skillItem, {backgroundColor: colors.background}]}>
-                        <View style={styles.skillItemContent}>
-                          <Icon name="checkmark-outline" family="Ionicons" size={14} color={colors.success} />
-                          <Text style={[styles.skillItemText, {color: colors.text}]}> {skill}</Text>
-                        </View>
+                        <Icon name="checkmark-outline" family="Ionicons" size={14} color={colors.success} />
+                        <Text style={{fontSize: TYPOGRAPHY.sizes.sm, color: colors.text}}> {skill}</Text>
                       </View>
                     ))}
                   </View>
@@ -577,7 +223,7 @@ const PremiumCareerGuidanceScreen = () => {
                 {/* Motivation */}
                 <View style={[styles.motivationCard, {backgroundColor: isDark ? '#F39C1220' : '#FFF8E1'}]}>
                   <Icon name="bulb-outline" family="Ionicons" size={32} color={isDark ? '#FFD54F' : '#F57F17'} />
-                  <Text style={[styles.motivationText, {color: isDark ? '#FFD54F' : '#F57F17'}]}>
+                  <Text style={{fontSize: TYPOGRAPHY.sizes.sm, textAlign: 'center', fontWeight: TYPOGRAPHY.weight.medium, color: isDark ? '#FFD54F' : '#F57F17'}}>
                     Success in {selectedCareer.name} requires dedication and continuous learning. Start today!
                   </Text>
                 </View>
@@ -593,408 +239,44 @@ const PremiumCareerGuidanceScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  headerContainer: {},
-  header: {
-    margin: SPACING.lg,
-    paddingTop: SPACING.xl,
-    paddingBottom: SPACING.xl + SPACING.sm,
-    paddingHorizontal: SPACING.lg,
-    alignItems: 'center',
-    borderRadius: RADIUS.xxl,
-    overflow: 'hidden',
-    elevation: 8,
-    shadowColor: '#10B981',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-  },
-  headerDecoration1: {
-    position: 'absolute',
-    top: -40,
-    right: -40,
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-  },
-  headerDecoration2: {
-    position: 'absolute',
-    bottom: -30,
-    left: -30,
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-  },
-  headerDecoration3: {
-    position: 'absolute',
-    top: 30,
-    left: 40,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-  },
-  backBtn: {
-    position: 'absolute',
-    top: SPACING.md,
-    left: SPACING.md,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  headerEmojiContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: SPACING.md,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.2)',
-  },
-  headerTitle: {
-    fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: TYPOGRAPHY.weight.heavy,
-    color: '#fff',
-    marginBottom: 6,
-    letterSpacing: -0.5,
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: {width: 0, height: 1},
-    textShadowRadius: 4,
-  },
-  headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: 'rgba(255,255,255,0.95)',
-    fontWeight: TYPOGRAPHY.weight.medium,
-    letterSpacing: 0.2,
-  },
-  filtersContainer: {
-    marginTop: SPACING.sm,
-    zIndex: 10,
-  },
-  filtersContent: {
-    paddingHorizontal: SPACING.md,
-    gap: SPACING.sm,
-    flexDirection: 'row',
-  },
-  filterChip: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: RADIUS.full,
-  },
-  filterChipText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.medium,
-  },
-  filterChipTextActive: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    color: '#fff',
-  },
-  resultsBar: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-  },
-  resultsText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  careersContainer: {
-    padding: SPACING.md,
-    paddingTop: 0,
-  },
-  careerCard: {
-    borderRadius: RADIUS.lg,
-    marginBottom: SPACING.md,
-    padding: SPACING.md,
-    overflow: 'hidden',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-  },
-  cardGradient: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-  },
-  iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: SPACING.md,
-  },
-  cardTitleArea: {
-    flex: 1,
-  },
-  careerName: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 2,
-  },
-  cardMetaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 2,
-  },
-  categoryBadge: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: RADIUS.full,
-  },
-  categoryText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  demandBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: RADIUS.full,
-    gap: 4,
-  },
-  demandDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  demandText: {
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  metaText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: SPACING.sm,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.05)',
-    overflow: 'hidden',
-  },
-  exploreBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
-    borderRadius: RADIUS.full,
-    gap: 4,
-    flexShrink: 0,
-  },
-  exploreBtnText: {
-    color: '#fff',
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  // Salary bar styles
-  salaryBar: {
-    marginBottom: SPACING.sm,
-  },
-  salaryLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginBottom: 4,
-  },
-  salaryTrack: {
-    height: 8,
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 4,
-  },
-  salaryFill: {
-    height: '100%',
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  salaryGradient: {
-    flex: 1,
-  },
-  salaryValue: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    maxHeight: '90%',
-    borderTopLeftRadius: RADIUS.xxl,
-    borderTopRightRadius: RADIUS.xxl,
-    paddingTop: SPACING.sm,
-  },
-  modalHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#ccc',
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginBottom: SPACING.sm,
-  },
-  modalHeader: {
-    padding: SPACING.xl,
-    alignItems: 'center',
-  },
-  modalEmojiContainer: {
-    marginBottom: SPACING.sm,
-  },
-  badgeContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    color: '#fff',
-    marginBottom: SPACING.sm,
-  },
-  modalBadges: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-  },
-  modalBadge: {
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 4,
-    borderRadius: RADIUS.full,
-  },
-  modalBadgeText: {
-    color: '#fff',
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    padding: SPACING.md,
-    gap: SPACING.sm,
-  },
-  statCard: {
-    flex: 1,
-    alignItems: 'center',
-    padding: SPACING.sm,
-    borderRadius: RADIUS.md,
-    gap: 4,
-  },
-  statLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  statValue: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  section: {
-    paddingHorizontal: SPACING.md,
-    marginBottom: SPACING.md,
-  },
-  sectionTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  sectionText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 22,
-  },
-  roadmapStep: {
-    flexDirection: 'row',
-    marginBottom: SPACING.sm,
-  },
-  stepTimeline: {
-    alignItems: 'center',
-    marginRight: SPACING.sm,
-  },
-  stepDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepNumber: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  stepLine: {
-    width: 3,
-    flex: 1,
-    marginVertical: 4,
-    borderRadius: 2,
-  },
-  stepContent: {
-    flex: 1,
-    padding: SPACING.sm,
-    borderRadius: RADIUS.md,
-  },
-  stepTitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginBottom: 2,
-  },
-  stepDurationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  stepDuration: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  skillsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.sm,
-  },
-  skillItem: {
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 6,
-    borderRadius: RADIUS.md,
-  },
-  skillItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  skillItemText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  motivationCard: {
-    marginHorizontal: SPACING.md,
-    padding: SPACING.md,
-    borderRadius: RADIUS.lg,
-    alignItems: 'center',
-    gap: SPACING.xs,
-  },
-  motivationText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    textAlign: 'center',
-    fontWeight: TYPOGRAPHY.weight.medium,
-  },
+  container: {flex: 1},
+  header: {margin: SPACING.lg, paddingTop: SPACING.xl, paddingBottom: SPACING.xl + SPACING.sm, paddingHorizontal: SPACING.lg, alignItems: 'center', borderRadius: RADIUS.xxl, overflow: 'hidden', elevation: 8, shadowColor: '#10B981', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.25, shadowRadius: 12},
+  headerDecoration1: {position: 'absolute', top: -40, right: -40, width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(255,255,255,0.12)'},
+  headerDecoration2: {position: 'absolute', bottom: -30, left: -30, width: 100, height: 100, borderRadius: 50, backgroundColor: 'rgba(255,255,255,0.08)'},
+  headerDecoration3: {position: 'absolute', top: 30, left: 40, width: 50, height: 50, borderRadius: 25, backgroundColor: 'rgba(255,255,255,0.06)'},
+  backBtn: {position: 'absolute', top: SPACING.md, left: SPACING.md, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center', zIndex: 10},
+  headerEmojiContainer: {width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.15)', justifyContent: 'center', alignItems: 'center', marginBottom: SPACING.md, borderWidth: 2, borderColor: 'rgba(255,255,255,0.2)'},
+  headerTitle: {fontSize: TYPOGRAPHY.sizes.xxl, fontWeight: TYPOGRAPHY.weight.heavy, color: '#fff', marginBottom: 6, letterSpacing: -0.5, textShadowColor: 'rgba(0,0,0,0.2)', textShadowOffset: {width: 0, height: 1}, textShadowRadius: 4},
+  headerSubtitle: {fontSize: TYPOGRAPHY.sizes.sm, color: 'rgba(255,255,255,0.95)', fontWeight: TYPOGRAPHY.weight.medium, letterSpacing: 0.2},
+  filtersContainer: {marginTop: SPACING.sm, zIndex: 10},
+  filtersContent: {paddingHorizontal: SPACING.md, gap: SPACING.sm, flexDirection: 'row'},
+  filterChip: {paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, borderRadius: RADIUS.full},
+  filterChipTextActive: {fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.semibold, color: '#fff'},
+  resultsBar: {paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm},
+  resultsText: {fontSize: TYPOGRAPHY.sizes.sm},
+  careersContainer: {padding: SPACING.md, paddingTop: 0},
+  salaryTrack: {height: 8, backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 4, overflow: 'hidden', marginBottom: 4},
+  modalOverlay: {flex: 1, justifyContent: 'flex-end'},
+  modalBackdrop: {...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)'},
+  modalContent: {maxHeight: '90%', borderTopLeftRadius: RADIUS.xxl, borderTopRightRadius: RADIUS.xxl, paddingTop: SPACING.sm},
+  modalHandle: {width: 40, height: 4, backgroundColor: '#ccc', borderRadius: 2, alignSelf: 'center', marginBottom: SPACING.sm},
+  modalHeader: {padding: SPACING.xl, alignItems: 'center'},
+  modalTitle: {fontSize: TYPOGRAPHY.sizes.xl, fontWeight: TYPOGRAPHY.weight.bold, color: '#fff', marginBottom: SPACING.sm},
+  modalBadge: {backgroundColor: 'rgba(255,255,255,0.25)', paddingHorizontal: SPACING.sm, paddingVertical: 4, borderRadius: RADIUS.full},
+  modalBadgeText: {color: '#fff', fontSize: 11, fontWeight: TYPOGRAPHY.weight.semibold},
+  statsRow: {flexDirection: 'row', padding: SPACING.md, gap: SPACING.sm},
+  statCard: {flex: 1, alignItems: 'center', padding: SPACING.sm, borderRadius: RADIUS.md, gap: 4},
+  statLabel: {fontSize: TYPOGRAPHY.sizes.xs},
+  statValue: {fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.semibold},
+  section: {paddingHorizontal: SPACING.md, marginBottom: SPACING.md},
+  sectionTitleRow: {flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.sm},
+  sectionTitle: {fontSize: TYPOGRAPHY.sizes.md, fontWeight: TYPOGRAPHY.weight.bold},
+  roadmapStep: {flexDirection: 'row', marginBottom: SPACING.sm},
+  stepDot: {width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center'},
+  stepContent: {flex: 1, padding: SPACING.sm, borderRadius: RADIUS.md},
+  skillsGrid: {flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm},
+  skillItem: {flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.sm, paddingVertical: 6, borderRadius: RADIUS.md},
+  motivationCard: {marginHorizontal: SPACING.md, padding: SPACING.md, borderRadius: RADIUS.lg, alignItems: 'center', gap: SPACING.xs},
 });
 
 export default PremiumCareerGuidanceScreen;

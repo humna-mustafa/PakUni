@@ -268,7 +268,7 @@ const Tagline = memo<TaglineProps>(({size, color}) => {
     <Text
       style={[styles.tagline, {fontSize: roundToPixel(size), color: textColor}]}
     >
-      Your Gateway to Pakistani Universities
+      Universities · Scholarships · Careers & More
     </Text>
   );
 });

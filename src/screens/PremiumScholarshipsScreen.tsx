@@ -4,20 +4,23 @@
  */
 
 import React from 'react';
-import {View, StyleSheet, FlatList, StatusBar, RefreshControl, Platform} from 'react-native';
+import {View, Text, StyleSheet, FlatList, StatusBar, RefreshControl, Platform, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING} from '../constants/design';
 import {useScholarshipsScreen} from '../hooks/useScholarshipsScreen';
+import {Icon} from '../components/icons';
 import {
   ScholarshipCard,
   ScholarshipDetailModal,
   ScholarshipsHeader,
   ScholarshipsFilters,
-  EmptyState,
 } from '../components/scholarships';
+import {EmptyState} from '../components/EmptyState';
 import FloatingToolsButton from '../components/FloatingToolsButton';
+import {useNavigation} from '@react-navigation/native';
 
 const PremiumScholarshipsScreen = () => {
+  const navigation = useNavigation<any>();
   const {
     colors,
     isDark,
@@ -30,6 +33,8 @@ const PremiumScholarshipsScreen = () => {
     setSelectedUniversity,
     showFilters,
     setShowFilters,
+    showForYou,
+    setShowForYou,
     showDetail,
     setShowDetail,
     selectedScholarship,
@@ -79,6 +84,23 @@ const PremiumScholarshipsScreen = () => {
           universityOptions={universityOptions}
         />
 
+        {/* For You Toggle */}
+        {user && (
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => setShowForYou(!showForYou)}
+            style={[styles.forYouBanner, {
+              backgroundColor: showForYou ? (isDark ? '#1C3A2E' : '#DCFCE7') : colors.card,
+              borderColor: showForYou ? '#16A34A' : colors.border,
+            }]}>
+            <Icon name={showForYou ? 'sparkles' : 'sparkles-outline'} family="Ionicons" size={16} color={showForYou ? '#16A34A' : colors.textSecondary} />
+            <Text style={[styles.forYouText, {color: showForYou ? '#15803D' : colors.text}]}>
+              {showForYou ? 'Showing scholarships for you' : 'Show scholarships for you'}
+            </Text>
+            <Icon name={showForYou ? 'checkmark-circle' : 'chevron-forward'} family="Ionicons" size={16} color={showForYou ? '#16A34A' : colors.textSecondary} />
+          </TouchableOpacity>
+        )}
+
         <FlatList
           data={filteredScholarships}
           keyExtractor={item => item.id}
@@ -114,7 +136,14 @@ const PremiumScholarshipsScreen = () => {
               progressBackgroundColor={colors.card}
             />
           }
-          ListEmptyComponent={<EmptyState colors={colors} />}
+          ListEmptyComponent={
+            <EmptyState
+              title="No Scholarships Found"
+              subtitle="Try adjusting your filters or search query"
+              iconName="school-outline"
+              variant="search"
+            />
+          }
         />
 
         <ScholarshipDetailModal
@@ -125,6 +154,13 @@ const PremiumScholarshipsScreen = () => {
           onClose={() => setShowDetail(false)}
           onToggleFavorite={handleToggleFavorite}
           onOpenLink={openLink}
+          onFixData={(scholarshipId, scholarshipName) =>
+            navigation.navigate('DataCorrection', {
+              entityType: 'scholarship',
+              entityId: scholarshipId,
+              entityName: scholarshipName,
+            })
+          }
         />
       </SafeAreaView>
 
@@ -144,6 +180,13 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     paddingTop: 0,
     paddingBottom: 120,
+  },
+  forYouBanner: {
+    flexDirection: 'row', alignItems: 'center', marginHorizontal: SPACING.md,
+    marginBottom: SPACING.sm, padding: SPACING.sm + 2, borderRadius: 12, borderWidth: 1, gap: SPACING.sm,
+  },
+  forYouText: {
+    flex: 1, fontSize: 13, fontWeight: '600',
   },
 });
 

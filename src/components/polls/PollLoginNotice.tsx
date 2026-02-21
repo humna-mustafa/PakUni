@@ -1,5 +1,6 @@
 /**
- * PollLoginNotice - Banner prompting unauthenticated users to sign in
+ * PollLoginNotice - Optional sign-in banner (voting works for everyone)
+ * Guest users can vote - sign in to sync votes across devices
  */
 
 import React from 'react';
@@ -17,20 +18,15 @@ const PollLoginNotice: React.FC<Props> = ({colors}) => {
   const navigation = useNavigation();
 
   return (
-    <View style={[styles.container, {backgroundColor: `${colors.warning}15`}]}>
-      <Icon
-        name="information-circle-outline"
-        family="Ionicons"
-        size={20}
-        color={colors.warning}
-      />
-      <Text style={[styles.text, {color: colors.text}]}>
-        Sign in to vote and help the community make better decisions!
+    <View style={[styles.container, {backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}25`, borderWidth: 1}]}>
+      <Icon name="sync-outline" family="Ionicons" size={18} color={colors.primary} />
+      <Text style={[styles.text, {color: colors.textSecondary}]}>
+        Sign in to sync your votes across all your devices
       </Text>
       <TouchableOpacity
-        style={[styles.btn, {backgroundColor: colors.warning}]}
+        style={[styles.btn, {backgroundColor: colors.primary + '20', borderColor: colors.primary + '40', borderWidth: 1}]}
         onPress={() => navigation.navigate('Auth' as never)}>
-        <Text style={styles.btnText}>Sign In</Text>
+        <Text style={[styles.btnText, {color: colors.primary}]}>Sign In</Text>
       </TouchableOpacity>
     </View>
   );
@@ -40,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
-    padding: SPACING.md,
+    padding: SPACING.sm,
     borderRadius: RADIUS.lg,
     flexDirection: 'row',
     alignItems: 'center',
@@ -48,17 +44,16 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 12,
     fontWeight: TYPOGRAPHY.weight.medium,
   },
   btn: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs + 2,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
     borderRadius: RADIUS.md,
   },
   btnText: {
-    color: '#FFFFFF',
-    fontSize: TYPOGRAPHY.sizes.sm,
+    fontSize: 12,
     fontWeight: TYPOGRAPHY.weight.semibold,
   },
 });

@@ -2,7 +2,7 @@
  * Barrel export for contribute components
  */
 
-export { AnimatedPressable } from './AnimatedPressable';
+export { default as AnimatedPressable } from '../gestures/AnimatedPressable';
 export { SkeletonBox } from './SkeletonBox';
 export { ConfettiExplosion } from './ConfettiExplosion';
 export { VerificationBadge } from './VerificationBadge';

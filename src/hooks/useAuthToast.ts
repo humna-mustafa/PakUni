@@ -23,6 +23,7 @@ interface AuthToastHook {
   signUpWithEmail: (email: string, password: string, name: string) => Promise<boolean>;
   continueAsGuest: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<boolean>;
+  resendVerificationEmail: (email: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   
   // Validation helpers
@@ -237,6 +238,7 @@ export const useAuthToast = (): AuthToastHook => {
       if (success) {
         Haptics.success();
         toast.success('Welcome back! 🎉', 'Signed In');
+        auth.clearError(); // Clear any previous errors on success
         return true;
       }
       
@@ -263,9 +265,11 @@ export const useAuthToast = (): AuthToastHook => {
             : errorInfo.message,
           duration: 5000,
         });
+      } else {
+        // Still clear error if user cancels (prevent showing on next attempt)
+        auth.clearError();
       }
       
-      auth.clearError();
       return false;
     }
   }, [auth, toast]);
@@ -308,8 +312,27 @@ export const useAuthToast = (): AuthToastHook => {
       return false;
     } catch (error: any) {
       logger.error('Email sign-in toast error', error, 'AuthToast');
+
+      // Special handling for unverified email — auto resend verification link
+      const isNotVerified =
+        error.message?.toLowerCase().includes('not verified') ||
+        error.message?.toLowerCase().includes('not confirmed') ||
+        error.message?.toLowerCase().includes('email not confirmed');
+      if (isNotVerified) {
+        Haptics.warning();
+        // Try to resend silently
+        await auth.resendVerificationEmail(email).catch(() => null);
+        toast.show({
+          type: 'warning',
+          title: 'Email Not Verified',
+          message: "We've resent the verification link to your inbox.\n📧 Check your email (and spam folder) then try again.",
+          duration: 7000,
+        });
+        auth.clearError();
+        return false;
+      }
+
       const errorInfo = getEmailErrorInfo(error);
-      
       Haptics.error();
       toast.show({
         type: 'error',
@@ -476,6 +499,33 @@ export const useAuthToast = (): AuthToastHook => {
     }
   }, [auth, toast, validateEmail]);
 
+  const resendVerificationEmail = useCallback(async (email: string): Promise<boolean> => {
+    if (!validateEmail(email)) {
+      Haptics.warning();
+      toast.warning('Please enter a valid email address', 'Invalid Email');
+      return false;
+    }
+    try {
+      const success = await auth.resendVerificationEmail(email);
+      if (success) {
+        Haptics.success();
+        toast.show({
+          type: 'success',
+          title: 'Verification Email Sent! 📧',
+          message: 'Check your inbox for the verification link.\n💡 Also check your spam folder',
+          duration: 6000,
+        });
+      } else {
+        toast.error('Could not resend email. Please try again.', 'Error');
+      }
+      return success;
+    } catch (error: any) {
+      logger.error('Resend verification toast error', error, 'AuthToast');
+      toast.error('Could not resend email. Please try again.', 'Error');
+      return false;
+    }
+  }, [auth, toast, validateEmail]);
+
   const signOut = useCallback(async (): Promise<void> => {
     try {
       await auth.signOut();
@@ -493,6 +543,7 @@ export const useAuthToast = (): AuthToastHook => {
     signUpWithEmail,
     continueAsGuest,
     resetPassword,
+    resendVerificationEmail,
     signOut,
     validateEmail,
     validatePassword,

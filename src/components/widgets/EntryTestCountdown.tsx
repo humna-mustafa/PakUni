@@ -13,6 +13,7 @@ import {
   TextInput,
   Platform,
   Animated,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -208,6 +209,37 @@ const CountdownDigit = ({
 // DATE EDIT MODAL
 // ============================================================================
 
+const WHEEL_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const WHEEL_ITEM_H = 40;
+const WHEEL_VISIBLE = 5;
+
+const DateWheelPicker: React.FC<{items: (string|number)[]; selectedIndex: number; onSelect: (i: number) => void; colors: any}> = ({items, selectedIndex, onSelect, colors}) => {
+  const scrollRef = useRef<ScrollView>(null);
+  const onEnd = (e: any) => {
+    const idx = Math.max(0, Math.min(Math.round(e.nativeEvent.contentOffset.y / WHEEL_ITEM_H), items.length - 1));
+    if (idx !== selectedIndex) onSelect(idx);
+  };
+  return (
+    <View style={{position: 'relative', alignItems: 'center', width: '100%'}}>
+      <View style={{position: 'absolute', top: WHEEL_ITEM_H * 2, left: 2, right: 2, height: WHEEL_ITEM_H, borderRadius: 8, borderWidth: 1, borderColor: colors.primary + '40', backgroundColor: colors.primary + '10', zIndex: 1}} />
+      <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false} snapToInterval={WHEEL_ITEM_H} decelerationRate="fast"
+        onMomentumScrollEnd={onEnd} onScrollEndDrag={onEnd}
+        contentOffset={{x: 0, y: selectedIndex * WHEEL_ITEM_H}}
+        contentContainerStyle={{paddingVertical: WHEEL_ITEM_H * 2}}
+        style={{height: WHEEL_ITEM_H * WHEEL_VISIBLE}}>
+        {items.map((item, idx) => (
+          <TouchableOpacity key={idx} style={{height: WHEEL_ITEM_H, justifyContent: 'center', alignItems: 'center'}}
+            onPress={() => { onSelect(idx); scrollRef.current?.scrollTo({y: idx * WHEEL_ITEM_H, animated: true}); }}>
+            <Text style={{fontSize: idx === selectedIndex ? 16 : 13, fontWeight: idx === selectedIndex ? '700' : '400', color: idx === selectedIndex ? colors.primary : colors.textSecondary}}>
+              {typeof item === 'number' && item < 100 ? String(item).padStart(2, '0') : String(item)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
 const DateEditModal = ({
   visible,
   testName,
@@ -223,32 +255,23 @@ const DateEditModal = ({
   onSave: (date: string) => void;
   colors: any;
 }) => {
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const now = new Date();
+  const initDate = currentDate ? new Date(currentDate) : now;
+  const wheelYears = Array.from({length: 8}, (_, i) => now.getFullYear() + i);
 
-  useEffect(() => {
-    if (currentDate) {
-      const date = new Date(currentDate);
-      setDay(date.getDate().toString());
-      setMonth((date.getMonth() + 1).toString());
-      setYear(date.getFullYear().toString());
-    }
-  }, [currentDate]);
+  const [selMonth, setSelMonth] = useState(initDate.getMonth());
+  const [selDay, setSelDay] = useState(initDate.getDate() - 1);
+  const [selYearIdx, setSelYearIdx] = useState(Math.max(0, wheelYears.indexOf(initDate.getFullYear())));
+
+  const daysInMonth = new Date(wheelYears[selYearIdx], selMonth + 1, 0).getDate();
+  const days = Array.from({length: daysInMonth}, (_, i) => i + 1);
+  const clampedDay = Math.min(selDay, daysInMonth - 1);
+
+  const preview = `${String(clampedDay + 1).padStart(2, '0')} ${WHEEL_MONTHS[selMonth]} ${wheelYears[selYearIdx]}`;
 
   const handleSave = () => {
-    const dayNum = parseInt(day, 10);
-    const monthNum = parseInt(month, 10);
-    const yearNum = parseInt(year, 10);
-
-    if (
-      dayNum >= 1 && dayNum <= 31 &&
-      monthNum >= 1 && monthNum <= 12 &&
-      yearNum >= 2024 && yearNum <= 2030
-    ) {
-      const newDate = new Date(yearNum, monthNum - 1, dayNum);
-      onSave(newDate.toISOString());
-    }
+    const newDate = new Date(wheelYears[selYearIdx], selMonth, clampedDay + 1);
+    onSave(newDate.toISOString());
   };
 
   return (
@@ -268,50 +291,37 @@ const DateEditModal = ({
             Update the date for {testName} if the official date has changed
           </Text>
 
+          {/* Date preview */}
+          <View style={[styles.datePreview, {backgroundColor: colors.primary + '12'}]}>
+            <Icon name="calendar-outline" family="Ionicons" size={16} color={colors.primary} />
+            <Text style={[styles.datePreviewText, {color: colors.primary}]}>{preview}</Text>
+          </View>
+
+          {/* Wheel pickers */}
           <View style={styles.dateInputRow}>
+            <View style={[styles.dateInputGroup, {flex: 1.4}]}>
+              <Text style={[styles.dateInputLabel, {color: colors.textSecondary}]}>Month</Text>
+              <DateWheelPicker items={WHEEL_MONTHS} selectedIndex={selMonth}
+                onSelect={i => { setSelMonth(i); const max = new Date(wheelYears[selYearIdx], i + 1, 0).getDate(); if (selDay >= max) setSelDay(max - 1); }}
+                colors={colors} />
+            </View>
             <View style={styles.dateInputGroup}>
               <Text style={[styles.dateInputLabel, {color: colors.textSecondary}]}>Day</Text>
-              <TextInput
-                style={[styles.dateInput, {backgroundColor: colors.background, color: colors.text}]}
-                value={day}
-                onChangeText={setDay}
-                keyboardType="number-pad"
-                maxLength={2}
-                placeholder="DD"
-                placeholderTextColor={colors.textSecondary}
-              />
+              <DateWheelPicker items={days} selectedIndex={Math.min(selDay, days.length - 1)}
+                onSelect={setSelDay} colors={colors} />
             </View>
-            <View style={styles.dateInputGroup}>
-              <Text style={[styles.dateInputLabel, {color: colors.textSecondary}]}>Month</Text>
-              <TextInput
-                style={[styles.dateInput, {backgroundColor: colors.background, color: colors.text}]}
-                value={month}
-                onChangeText={setMonth}
-                keyboardType="number-pad"
-                maxLength={2}
-                placeholder="MM"
-                placeholderTextColor={colors.textSecondary}
-              />
-            </View>
-            <View style={styles.dateInputGroup}>
+            <View style={[styles.dateInputGroup, {flex: 1.2}]}>
               <Text style={[styles.dateInputLabel, {color: colors.textSecondary}]}>Year</Text>
-              <TextInput
-                style={[styles.dateInput, {backgroundColor: colors.background, color: colors.text}]}
-                value={year}
-                onChangeText={setYear}
-                keyboardType="number-pad"
-                maxLength={4}
-                placeholder="YYYY"
-                placeholderTextColor={colors.textSecondary}
-              />
+              <DateWheelPicker items={wheelYears} selectedIndex={selYearIdx}
+                onSelect={i => { setSelYearIdx(i); const max = new Date(wheelYears[i], selMonth + 1, 0).getDate(); if (selDay >= max) setSelDay(max - 1); }}
+                colors={colors} />
             </View>
           </View>
 
           <View style={styles.infoBox}>
             <Icon name="information-circle-outline" family="Ionicons" size={18} color={colors.primary} />
             <Text style={[styles.infoText, {color: colors.textSecondary}]}>
-              Dates may change. If our date differs from the official date, you can update it here.
-              Help us keep dates accurate through the app feedback option.
+              Scroll each column to pick a date. Dates may change — help us by reporting via app feedback.
             </Text>
           </View>
 
@@ -864,12 +874,25 @@ const styles = StyleSheet.create({
   },
   modalSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
     lineHeight: 20,
+  },
+  datePreview: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: 0,
+    marginBottom: SPACING.md,
+    padding: 10,
+    borderRadius: RADIUS.lg,
+  },
+  datePreviewText: {
+    fontSize: 15,
+    fontWeight: TYPOGRAPHY.weight.semibold,
   },
   dateInputRow: {
     flexDirection: 'row',
-    gap: SPACING.md,
+    gap: SPACING.sm,
     marginBottom: SPACING.md,
   },
   dateInputGroup: {
@@ -879,6 +902,7 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weight.semibold,
     marginBottom: 6,
+    textAlign: 'center',
   },
   dateInput: {
     borderRadius: RADIUS.lg,

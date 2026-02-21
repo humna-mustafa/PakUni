@@ -317,13 +317,37 @@ export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children})
   const [visible, setVisible] = useState(false);
   const [config, setConfig] = useState<ToastConfig>({message: ''});
 
-  const show = (newConfig: ToastConfig) => {
-    setConfig(newConfig);
-    setVisible(true);
-  };
-
   const hide = () => {
     setVisible(false);
+  };
+
+  /**
+   * Filter background network/connectivity errors that users should never see.
+   * Only suppresses transient infrastructure errors, NOT user-facing auth errors.
+   */
+  const isBackgroundError = (message: string): boolean => {
+    const msg = message.toLowerCase();
+    const backgroundPatterns = [
+      // Network connectivity errors only
+      'network request failed',
+      'network error',
+      'failed to fetch',
+      'econnrefused',
+      'cannot resolve host',
+      'unable to connect',
+      'io error',
+    ];
+    return backgroundPatterns.some(pattern => msg.includes(pattern));
+  };
+
+  const show = (newConfig: ToastConfig) => {
+    // Filter background errors from being shown via show() with type 'error'
+    if (newConfig.type === 'error' && newConfig.message && isBackgroundError(newConfig.message)) {
+      console.warn(`[Silent Error Suppressed]: ${newConfig.message}`);
+      return;
+    }
+    setConfig(newConfig);
+    setVisible(true);
   };
 
   const success = (message: string, title?: string) => {
@@ -331,6 +355,11 @@ export const ToastProvider: React.FC<{children: React.ReactNode}> = ({children})
   };
 
   const error = (message: string, title?: string) => {
+    // Filter out background errors
+    if (isBackgroundError(message)) {
+      console.warn(`[Silent Error Suppressed]: ${message}`);
+      return;
+    }
     show({type: 'error', message, title});
   };
 

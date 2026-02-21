@@ -13,8 +13,31 @@ export type {SortOption, UniversityType} from './useUniversities';
 export {useMeritCalculation} from './useMeritCalculation';
 export type {MarksInput, CalculationResult} from './useMeritCalculation';
 
-export {useScholarships} from './useScholarships';
-export type {ScholarshipData, ScholarshipType} from './useScholarships';
+export {useScholarshipsScreen} from './useScholarshipsScreen';
+export {useEntryTestsScreen} from './useEntryTestsScreen';
+export {useUniversitiesScreen} from './useUniversitiesScreen';
+export type {UniversityItem} from './useUniversitiesScreen';
+export {useProfileScreen} from './useProfileScreen';
+export {useHomeScreen} from './useHomeScreen';
+export {useCareerExplorerKids} from './useCareerExplorerKids';
+export {useCareerRoadmaps} from './useCareerRoadmaps';
+export {useRecommendationsScreen} from './useRecommendationsScreen';
+export {useMeritArchiveScreen} from './useMeritArchiveScreen';
+export {useSubjectGuideScreen} from './useSubjectGuideScreen';
+export {useAchievementsScreen} from './useAchievementsScreen';
+export {useOnboardingScreen} from './useOnboardingScreen';
+export {useResultGameScreen} from './useResultGameScreen';
+export {useSettingsScreen} from './useSettingsScreen';
+export {useKidsHubScreen} from './useKidsHubScreen';
+export {useCareerGuidanceScreen} from './useCareerGuidanceScreen';
+export {useDataSubmissionScreen} from './useDataSubmissionScreen';
+export {useAuthScreen} from './useAuthScreen';
+export type {AuthMode} from './useAuthScreen';
+export {useCompareScreen} from './useCompareScreen';
+export {useInterestQuizScreen} from './useInterestQuizScreen';
+export {useDeadlinesScreen} from './useDeadlinesScreen';
+export {useStudyTipsScreen} from './useStudyTipsScreen';
+export {useFavoritesScreen} from './useFavoritesScreen';
 
 // ============================================================================
 // ACCESSIBILITY HOOKS

@@ -278,7 +278,8 @@ const PremiumCareerCenterScreen: React.FC = () => {
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={isDark ? '#1D2127' : '#10B981'}
+        backgroundColor="transparent"
+        translucent
       />
 
       <SafeAreaView style={styles.safeArea} edges={['top']}>

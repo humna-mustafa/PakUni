@@ -17,9 +17,6 @@ export { default as UniversityLogo, preloadUniversityLogos, clearLogoCache } fro
 export { default as AppText } from './AppText';
 
 // Loading & Animation
-export { default as AnimatedLoader } from './AnimatedLoader';
-export { LoadingSpinner } from './LoadingSpinner';
-export { default as SkeletonLoader } from './SkeletonLoader';
 export {
   UniversityCardSkeleton,
   ScholarshipCardSkeleton,
@@ -37,7 +34,6 @@ export {
 export { default as OptimizedImage } from './OptimizedImage';
 
 // Search
-export { default as SearchBar } from './SearchBar';
 export { default as SearchableDropdown } from './SearchableDropdown';
 export { default as SectionHeader } from './SectionHeader';
 
@@ -55,7 +51,7 @@ export { default as NotificationBell, type Notification, type NotificationType }
 // Error Handling
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as EnhancedErrorBoundary, GlobalErrorProvider } from './EnhancedErrorBoundary';
-export { default as AdminRouteGuard } from './AdminRouteGuard';
+
 export { default as EnhancedErrorToast } from './EnhancedErrorToast';
 
 // Access Control
@@ -379,7 +375,6 @@ export {
   ScholarshipDetailModal,
   ScholarshipsHeader,
   ScholarshipsFilters,
-  EmptyState as ScholarshipsEmptyState,
 } from './scholarships';
 
 // =============================================================================
@@ -391,7 +386,6 @@ export {
   GuideListItem,
   GuideDetail,
   GuidesHeader,
-  EmptyState as GuidesEmptyState,
   SuggestCard,
   CategoryBackHeader,
 } from './guides';

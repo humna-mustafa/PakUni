@@ -1,0 +1,2 @@
+src/screens/NotificationsScreen.tsx(246,4): error TS1128: Declaration or statement expected.
+src/screens/NotificationsScreen.tsx(246,5): error TS1128: Declaration or statement expected.

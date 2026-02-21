@@ -19,7 +19,7 @@ import { DARK_BG, LIGHT_BG, SEMANTIC } from '../../constants/brand';
 import { SPACING, RADIUS, TYPOGRAPHY } from '../../constants/design';
 import { CategoryOption, EntityData } from '../../types/contribute';
 import { useEntitySearch } from '../../hooks/useEntitySearch';
-import { AnimatedPressable } from './AnimatedPressable';
+import AnimatedPressable from '../gestures/AnimatedPressable';
 import { VerificationBadge } from './VerificationBadge';
 
 interface EntitySelectionStepProps {

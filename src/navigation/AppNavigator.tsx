@@ -11,57 +11,65 @@ import {
   FadeScreenOptions,
 } from './transitions';
 
-// Auth & Onboarding Screens
+// ─── Auth & Onboarding ─────────────────────────────────────────────────────
 import AuthScreen from '../screens/AuthScreen';
 import UltraOnboardingScreen from '../screens/UltraOnboardingScreen';
 
-// Premium Screens - Main
+// ─── Tab Screens ────────────────────────────────────────────────────────────
 import PremiumHomeScreen from '../screens/PremiumHomeScreen';
 import PremiumUniversitiesScreen from '../screens/PremiumUniversitiesScreen';
-import PremiumCalculatorScreen from '../screens/PremiumCalculatorScreen';
 import PremiumScholarshipsScreen from '../screens/PremiumScholarshipsScreen';
-import PremiumProfileScreen from '../screens/PremiumProfileScreen';
-import PremiumUniversityDetailScreen from '../screens/PremiumUniversityDetailScreen';
-
-// Premium Screens - Feature
-import PremiumCompareScreen from '../screens/PremiumCompareScreen';
-import PremiumEntryTestsScreen from '../screens/PremiumEntryTestsScreen';
-import PremiumCareerGuidanceScreen from '../screens/PremiumCareerGuidanceScreen';
-import PremiumRecommendationsScreen from '../screens/PremiumRecommendationsScreen';
-import PremiumCareerCenterScreen from '../screens/PremiumCareerCenterScreen';
-import CareerDetailScreen from '../screens/CareerDetailScreen';
-
-// Premium Screens - Kids Zone
-import PremiumKidsHubScreen from '../screens/PremiumKidsHubScreen';
-import CareerExplorerKidsScreen from '../screens/CareerExplorerKidsScreen';
-import PremiumInterestQuizScreen from '../screens/PremiumInterestQuizScreen';
-import PremiumGoalSettingScreen from '../screens/PremiumGoalSettingScreen';
-import SubjectGuideScreen from '../screens/SubjectGuideScreen';
-import PremiumCareerRoadmapsScreen from '../screens/PremiumCareerRoadmapsScreen';
-import PremiumStudyTipsScreen from '../screens/PremiumStudyTipsScreen';
-import PremiumPollsScreen from '../screens/PremiumPollsScreen';
-import PremiumDeadlinesScreen from '../screens/PremiumDeadlinesScreen';
-import PremiumMeritArchiveScreen from '../screens/PremiumMeritArchiveScreen';
-
-// New Feature Screens
-import GuidesScreen from '../screens/GuidesScreen';
-import ToolsScreen from '../screens/ToolsScreen';
-import ResultGameScreen from '../screens/ResultGameScreen';
-import AchievementsScreen from '../screens/AchievementsScreen';
 import MoreScreen from '../screens/MoreScreen';
 
-// Legal Screens
-import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
-import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
-import FAQScreen from '../screens/FAQScreen';
+// ─── University Flow ────────────────────────────────────────────────────────
+import PremiumUniversityDetailScreen from '../screens/PremiumUniversityDetailScreen';
+import PremiumCompareScreen from '../screens/PremiumCompareScreen';
+import PremiumCalculatorScreen from '../screens/PremiumCalculatorScreen';
+import PremiumEntryTestsScreen from '../screens/PremiumEntryTestsScreen';
+import PremiumMeritArchiveScreen from '../screens/PremiumMeritArchiveScreen';
+import PremiumDeadlinesScreen from '../screens/PremiumDeadlinesScreen';
 
-// User Feature Screens
+// ─── Career Flow ────────────────────────────────────────────────────────────
+import PremiumCareerCenterScreen from '../screens/PremiumCareerCenterScreen';
+import CareerDetailScreen from '../screens/CareerDetailScreen';
+import PremiumCareerGuidanceScreen from '../screens/PremiumCareerGuidanceScreen';
+import PremiumRecommendationsScreen from '../screens/PremiumRecommendationsScreen';
+import PremiumCareerRoadmapsScreen from '../screens/PremiumCareerRoadmapsScreen';
+import PremiumInterestQuizScreen from '../screens/PremiumInterestQuizScreen';
+
+// ─── Study & Learning ───────────────────────────────────────────────────────
+import GuidesScreen from '../screens/GuidesScreen';
+import PremiumStudyTipsScreen from '../screens/PremiumStudyTipsScreen';
+import PremiumGoalSettingScreen from '../screens/PremiumGoalSettingScreen';
+import SubjectGuideScreen from '../screens/SubjectGuideScreen';
+
+// ─── Kids Zone ──────────────────────────────────────────────────────────────
+import PremiumKidsHubScreen from '../screens/PremiumKidsHubScreen';
+import CareerExplorerKidsScreen from '../screens/CareerExplorerKidsScreen';
+
+// ─── Engagement & Social ────────────────────────────────────────────────────
+import PremiumPollsScreen from '../screens/PremiumPollsScreen';
+import ResultGameScreen from '../screens/ResultGameScreen';
+import AchievementsScreen from '../screens/AchievementsScreen';
+import ToolsScreen from '../screens/ToolsScreen';
+
+// ─── User Account ───────────────────────────────────────────────────────────
+import PremiumProfileScreen from '../screens/PremiumProfileScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ContactSupportScreen from '../screens/ContactSupportScreen';
 
-// Admin Screens
+// ─── Legal ──────────────────────────────────────────────────────────────────
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
+import FAQScreen from '../screens/FAQScreen';
+
+// ─── Data Contribution ──────────────────────────────────────────────────────
+import { UltraContributeScreen } from '../screens/UltraContributeScreen';
+import DataCorrectionScreen from '../screens/DataCorrectionScreen';
+
+// ─── Admin Screens ──────────────────────────────────────────────────────────
 import {
   AdminDashboardScreen,
   AdminUsersScreen,
@@ -75,31 +83,28 @@ import {
   AdminNotificationsScreen,
   AdminErrorReportsScreen,
   AdminDataManagementScreen,
-  // EnterpriseAdminDashboardScreen removed - AdminDashboard wraps it
   AdminTursoDataManagementScreen,
   AdminTursoNotificationsScreen,
   AdminSystemHealthScreen,
-  // Advanced Admin Screens
   AdminBulkOperationsScreen,
   AdminAppConfigScreen,
   AdminActivityDashboardScreen,
   AdminContentModerationScreen,
-  // Data Management & Approval Workflow
   AdminDataSubmissionsScreen,
   AdminAutoApprovalRulesScreen,
   AdminMeritDeadlinesScreen,
   AdminNotificationTriggersScreen,
   AdminApprovalAnalyticsScreen,
+  AdminDataCorrectionReviewScreen,
 } from '../screens/admin';
 
-// User Feature Screens - Data Submission
-import UserDataSubmissionScreen from '../screens/UserDataSubmissionScreen';
-import { UltraContributeScreen } from '../screens/UltraContributeScreen';
-
-// Components
+// ─── Components & Contexts ──────────────────────────────────────────────────
 import {ErrorBoundary, PremiumTabBar, withAdminGuard} from '../components';
+import {useTheme} from '../contexts/ThemeContext';
+import {useAuth} from '../contexts/AuthContext';
+import type {NavigatorScreenParams} from '@react-navigation/native';
 
-// Wrap admin screens with role guards
+// ─── Admin Role Guards ──────────────────────────────────────────────────────
 const GuardedAdminDashboardScreen = withAdminGuard(AdminDashboardScreen);
 const GuardedAdminUsersScreen = withAdminGuard(AdminUsersScreen, ['admin', 'super_admin']);
 const GuardedAdminContentScreen = withAdminGuard(AdminContentScreen);
@@ -124,64 +129,20 @@ const GuardedAdminAutoApprovalRulesScreen = withAdminGuard(AdminAutoApprovalRule
 const GuardedAdminMeritDeadlinesScreen = withAdminGuard(AdminMeritDeadlinesScreen);
 const GuardedAdminNotificationTriggersScreen = withAdminGuard(AdminNotificationTriggersScreen, ['admin', 'super_admin']);
 const GuardedAdminApprovalAnalyticsScreen = withAdminGuard(AdminApprovalAnalyticsScreen);
+const GuardedAdminDataCorrectionReviewScreen = withAdminGuard(AdminDataCorrectionReviewScreen);
 
-// Contexts
-import {useTheme} from '../contexts/ThemeContext';
-import {useAuth} from '../contexts/AuthContext';
-
-
-import type {NavigatorScreenParams} from '@react-navigation/native';
+// =============================================================================
+// TYPE DEFINITIONS — Organized by flow hierarchy
+// =============================================================================
 
 export type TabParamList = {
   Home: undefined;
   Universities: {searchQuery?: string} | undefined;
   Scholarships: {searchQuery?: string} | undefined;
   More: undefined;
-  Profile: undefined;
 };
 
-export type RootStackParamList = {
-  // Auth Flow
-  Auth: undefined;
-  Onboarding: undefined;
-  // Main App
-  MainTabs: NavigatorScreenParams<TabParamList> | undefined;
-  UniversityDetail: {universityId: string};
-  CareerDetail: {careerId: string};
-  Calculator: undefined;
-  Compare: undefined;
-  EntryTests: undefined;
-  CareerGuidance: undefined;
-  CareerCenter: undefined;
-  Recommendations: undefined;
-  CareerExplorerKids: undefined;
-  InterestQuiz: undefined;
-  GoalSetting: undefined;
-  SubjectGuide: undefined;
-  KidsHub: undefined;
-  CareerRoadmaps: undefined;
-  StudyTips: undefined;
-  Polls: undefined;
-  Deadlines: undefined;
-  MeritArchive: undefined;
-  PrivacyPolicy: undefined;
-  TermsOfService: undefined;
-  FAQ: undefined;
-  // New Feature Screens
-  Guides: undefined;
-  Tools: undefined;
-  ResultGame: undefined;
-  Achievements: undefined;
-  // Shared Achievement/Card Deep Links (for viral sharing)
-  SharedAchievement: {achievementId: string};
-  SharedCard: {cardType: string; cardId: string};
-  // User Feature Screens
-  Profile: undefined;
-  Notifications: undefined;
-  Favorites: undefined;
-  Settings: undefined;
-  ContactSupport: undefined;
-  // Admin Screens
+export type AdminStackParamList = {
   AdminDashboard: undefined;
   AdminUsers: undefined;
   AdminContent: undefined;
@@ -194,30 +155,135 @@ export type RootStackParamList = {
   AdminNotifications: undefined;
   AdminErrorReports: undefined;
   AdminDataManagement: undefined;
-  // Turso Admin Screens
   AdminTursoDataManagement: undefined;
   AdminTursoNotifications: undefined;
   AdminSystemHealth: undefined;
-  // Advanced Admin Screens
   AdminBulkOperations: undefined;
   AdminAppConfig: undefined;
   AdminActivityDashboard: undefined;
   AdminContentModeration: undefined;
-  // Data Management & Approval Workflow
   AdminDataSubmissions: undefined;
   AdminAutoApprovalRules: undefined;
   AdminMeritDeadlines: undefined;
   AdminNotificationTriggers: undefined;
   AdminApprovalAnalytics: undefined;
-  // User Screens
-  SubmitDataCorrection: {type?: string; entityName?: string; fieldName?: string; currentValue?: string; showHistory?: boolean} | undefined;
+  AdminDataCorrectionReview: undefined;
 };
 
+export type RootStackParamList = {
+  // Auth Flow
+  Auth: undefined;
+  Onboarding: undefined;
+
+  // Main App
+  MainTabs: NavigatorScreenParams<TabParamList> | undefined;
+
+  // University Flow
+  UniversityDetail: {universityId: string};
+  Calculator: undefined;
+  Compare: undefined;
+  EntryTests: undefined;
+  MeritArchive: undefined;
+  Deadlines: undefined;
+
+  // Career Flow
+  CareerCenter: undefined;
+  CareerDetail: {careerId: string};
+  CareerGuidance: undefined;
+  Recommendations: undefined;
+  CareerRoadmaps: undefined;
+  InterestQuiz: undefined;
+
+  // Study & Learning
+  Guides: {initialCategory?: string} | undefined;
+  StudyTips: undefined;
+  GoalSetting: undefined;
+  SubjectGuide: undefined;
+
+  // Kids Zone
+  KidsHub: undefined;
+  CareerExplorerKids: undefined;
+
+  // Engagement
+  Polls: undefined;
+  ResultGame: undefined;
+  Achievements: undefined;
+  Tools: undefined;
+
+  // User Account
+  Profile: undefined;
+  Notifications: undefined;
+  Favorites: undefined;
+  Settings: undefined;
+  ContactSupport: undefined;
+
+  // Legal
+  PrivacyPolicy: undefined;
+  TermsOfService: undefined;
+  FAQ: undefined;
+
+  // Data Contribution
+  SubmitDataCorrection: {type?: string; entityName?: string; fieldName?: string; currentValue?: string; showHistory?: boolean} | undefined;
+  DataCorrection: {entityType: string; entityId: string; entityName?: string; prefillField?: string};
+
+  // Shared Deep Links
+  SharedAchievement: {achievementId: string};
+  SharedCard: {cardType: string; cardId: string};
+
+  // Admin (nested stack)
+  Admin: NavigatorScreenParams<AdminStackParamList> | undefined;
+};
+
+// =============================================================================
+// NAVIGATORS
+// =============================================================================
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const AdminStackNav = createNativeStackNavigator<AdminStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const renderPremiumTabBar = (props: BottomTabBarProps) => <PremiumTabBar {...props} />;
 
+// ─── Admin Stack (nested) ───────────────────────────────────────────────────
+const AdminStack = () => {
+  const {colors} = useTheme();
+  return (
+    <AdminStackNav.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+        contentStyle: {backgroundColor: colors.background},
+      }}>
+      <AdminStackNav.Screen name="AdminDashboard" component={GuardedAdminDashboardScreen} />
+      <AdminStackNav.Screen name="AdminUsers" component={GuardedAdminUsersScreen} />
+      <AdminStackNav.Screen name="AdminContent" component={GuardedAdminContentScreen} />
+      <AdminStackNav.Screen name="AdminReports" component={GuardedAdminReportsScreen} />
+      <AdminStackNav.Screen name="AdminAnnouncements" component={GuardedAdminAnnouncementsScreen} />
+      <AdminStackNav.Screen name="AdminFeedback" component={GuardedAdminFeedbackScreen} />
+      <AdminStackNav.Screen name="AdminAnalytics" component={GuardedAdminAnalyticsScreen} />
+      <AdminStackNav.Screen name="AdminSettings" component={GuardedAdminSettingsScreen} />
+      <AdminStackNav.Screen name="AdminAuditLogs" component={GuardedAdminAuditLogsScreen} />
+      <AdminStackNav.Screen name="AdminNotifications" component={GuardedAdminNotificationsScreen} />
+      <AdminStackNav.Screen name="AdminErrorReports" component={GuardedAdminErrorReportsScreen} />
+      <AdminStackNav.Screen name="AdminDataManagement" component={GuardedAdminDataManagementScreen} />
+      <AdminStackNav.Screen name="AdminTursoDataManagement" component={GuardedAdminTursoDataManagementScreen} />
+      <AdminStackNav.Screen name="AdminTursoNotifications" component={GuardedAdminTursoNotificationsScreen} />
+      <AdminStackNav.Screen name="AdminSystemHealth" component={GuardedAdminSystemHealthScreen} />
+      <AdminStackNav.Screen name="AdminBulkOperations" component={GuardedAdminBulkOperationsScreen} />
+      <AdminStackNav.Screen name="AdminAppConfig" component={GuardedAdminAppConfigScreen} />
+      <AdminStackNav.Screen name="AdminActivityDashboard" component={GuardedAdminActivityDashboardScreen} />
+      <AdminStackNav.Screen name="AdminContentModeration" component={GuardedAdminContentModerationScreen} />
+      <AdminStackNav.Screen name="AdminDataSubmissions" component={GuardedAdminDataSubmissionsScreen} />
+      <AdminStackNav.Screen name="AdminAutoApprovalRules" component={GuardedAdminAutoApprovalRulesScreen} />
+      <AdminStackNav.Screen name="AdminMeritDeadlines" component={GuardedAdminMeritDeadlinesScreen} />
+      <AdminStackNav.Screen name="AdminNotificationTriggers" component={GuardedAdminNotificationTriggersScreen} />
+      <AdminStackNav.Screen name="AdminApprovalAnalytics" component={GuardedAdminApprovalAnalyticsScreen} />
+      <AdminStackNav.Screen name="AdminDataCorrectionReview" component={GuardedAdminDataCorrectionReviewScreen} />
+    </AdminStackNav.Navigator>
+  );
+};
+
+// ─── Main Tabs ──────────────────────────────────────────────────────────────
 const MainTabs = () => {
   const {colors} = useTheme();
   
@@ -372,7 +438,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
               animation: 'fade',
             }}
           />
-          {/* Detail screens - Scale fade for immersive feel */}
+          {/* ─── Detail & University Flow ────────────────────── */}
           <Stack.Screen
             name="UniversityDetail"
             component={PremiumUniversityDetailScreen}
@@ -406,10 +472,17 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="CareerGuidance"
-            component={PremiumCareerGuidanceScreen}
+            name="MeritArchive"
+            component={PremiumMeritArchiveScreen}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="Deadlines"
+            component={PremiumDeadlinesScreen}
+            options={{headerShown: false}}
+          />
+
+          {/* ─── Career Flow ──────────────────────────────────── */}
           <Stack.Screen
             name="CareerCenter"
             component={PremiumCareerCenterScreen}
@@ -421,18 +494,35 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             options={{headerShown: false}}
           />
           <Stack.Screen
+            name="CareerGuidance"
+            component={PremiumCareerGuidanceScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
             name="Recommendations"
             component={PremiumRecommendationsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="CareerExplorerKids"
-            component={CareerExplorerKidsScreen}
-            options={{title: 'Career Explorer'}}
+            name="CareerRoadmaps"
+            component={PremiumCareerRoadmapsScreen}
+            options={{headerShown: false}}
           />
           <Stack.Screen
             name="InterestQuiz"
             component={PremiumInterestQuizScreen}
+            options={{headerShown: false}}
+          />
+
+          {/* ─── Study & Learning ─────────────────────────────── */}
+          <Stack.Screen
+            name="Guides"
+            component={GuidesScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="StudyTips"
+            component={PremiumStudyTipsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -445,60 +535,23 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={SubjectGuideScreen}
             options={{title: 'Subject Guide'}}
           />
+
+          {/* ─── Kids Zone ────────────────────────────────────── */}
           <Stack.Screen
             name="KidsHub"
             component={PremiumKidsHubScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="CareerRoadmaps"
-            component={PremiumCareerRoadmapsScreen}
-            options={{headerShown: false}}
+            name="CareerExplorerKids"
+            component={CareerExplorerKidsScreen}
+            options={{title: 'Career Explorer'}}
           />
-          <Stack.Screen
-            name="StudyTips"
-            component={PremiumStudyTipsScreen}
-            options={{headerShown: false}}
-          />
+
+          {/* ─── Engagement & Tools ───────────────────────────── */}
           <Stack.Screen
             name="Polls"
             component={PremiumPollsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Deadlines"
-            component={PremiumDeadlinesScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="MeritArchive"
-            component={PremiumMeritArchiveScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="PrivacyPolicy"
-            component={PrivacyPolicyScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TermsOfService"
-            component={TermsOfServiceScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="FAQ"
-            component={FAQScreen}
-            options={{headerShown: false}}
-          />
-          {/* New Feature Screens */}
-          <Stack.Screen
-            name="Guides"
-            component={GuidesScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Tools"
-            component={ToolsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -511,7 +564,12 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={AchievementsScreen}
             options={{headerShown: false}}
           />
-          {/* User Feature Screens */}
+          <Stack.Screen
+            name="Tools"
+            component={ToolsScreen}
+            options={{headerShown: false}}
+          />
+          {/* ─── User Account ──────────────────────────────────── */}
           <Stack.Screen
             name="Profile"
             component={PremiumProfileScreen}
@@ -537,135 +595,41 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({linking}) => {
             component={ContactSupportScreen}
             options={{headerShown: false}}
           />
-          {/* Admin Screens - Protected with role guards */}
+
+          {/* ─── Legal ────────────────────────────────────────── */}
           <Stack.Screen
-            name="AdminDashboard"
-            component={GuardedAdminDashboardScreen}
+            name="PrivacyPolicy"
+            component={PrivacyPolicyScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="AdminUsers"
-            component={GuardedAdminUsersScreen}
+            name="TermsOfService"
+            component={TermsOfServiceScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="AdminContent"
-            component={GuardedAdminContentScreen}
+            name="FAQ"
+            component={FAQScreen}
             options={{headerShown: false}}
           />
+
+          {/* ─── Admin (nested stack) ─────────────────────────── */}
           <Stack.Screen
-            name="AdminReports"
-            component={GuardedAdminReportsScreen}
+            name="Admin"
+            component={AdminStack}
             options={{headerShown: false}}
           />
-          <Stack.Screen
-            name="AdminAnnouncements"
-            component={GuardedAdminAnnouncementsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminFeedback"
-            component={GuardedAdminFeedbackScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminAnalytics"
-            component={GuardedAdminAnalyticsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminSettings"
-            component={GuardedAdminSettingsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminAuditLogs"
-            component={GuardedAdminAuditLogsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminNotifications"
-            component={GuardedAdminNotificationsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminErrorReports"
-            component={GuardedAdminErrorReportsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminDataManagement"
-            component={GuardedAdminDataManagementScreen}
-            options={{headerShown: false}}
-          />
-          {/* Turso Admin Screens - Protected */}
-          <Stack.Screen
-            name="AdminTursoDataManagement"
-            component={GuardedAdminTursoDataManagementScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminTursoNotifications"
-            component={GuardedAdminTursoNotificationsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminSystemHealth"
-            component={GuardedAdminSystemHealthScreen}
-            options={{headerShown: false}}
-          />
-          {/* Advanced Admin Screens - Protected */}
-          <Stack.Screen
-            name="AdminBulkOperations"
-            component={GuardedAdminBulkOperationsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminAppConfig"
-            component={GuardedAdminAppConfigScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminActivityDashboard"
-            component={GuardedAdminActivityDashboardScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminContentModeration"
-            component={GuardedAdminContentModerationScreen}
-            options={{headerShown: false}}
-          />
-          {/* Data Management & Approval Workflow - Protected */}
-          <Stack.Screen
-            name="AdminDataSubmissions"
-            component={GuardedAdminDataSubmissionsScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminAutoApprovalRules"
-            component={GuardedAdminAutoApprovalRulesScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminMeritDeadlines"
-            component={GuardedAdminMeritDeadlinesScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminNotificationTriggers"
-            component={GuardedAdminNotificationTriggersScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="AdminApprovalAnalytics"
-            component={GuardedAdminApprovalAnalyticsScreen}
-            options={{headerShown: false}}
-          />
-          {/* User Data Submission - Ultra Contribute Screen */}
+
+          {/* ─── Data Contribution ────────────────────────────── */}
           <Stack.Screen
             name="SubmitDataCorrection"
             component={UltraContributeScreen}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DataCorrection"
+            component={DataCorrectionScreen}
+            options={{...ModalScreenOptions, headerShown: false}}
           />
         </Stack.Navigator>
       </NavigationContainer>

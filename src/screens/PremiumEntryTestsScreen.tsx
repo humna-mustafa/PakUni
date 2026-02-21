@@ -1,544 +1,59 @@
-import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-  Animated,
-  Dimensions,
-  TextInput,
-  Alert,
-  Linking,
-} from 'react-native';
+/**
+ * PremiumEntryTestsScreen - Thin composition layer
+ * All logic in useEntryTestsScreen hook, UI in entryTests/ components
+ */
+
+import React from 'react';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SPACING, FONTS} from '../constants/theme';
-import {TYPOGRAPHY, RADIUS, ANIMATION, STATUS_COLORS, getUrgencyColor} from '../constants/design';
-import {ANIMATION_SCALES, SPRING_CONFIGS} from '../constants/ui';
-import {useTheme} from '../contexts/ThemeContext';
-import {ENTRY_TESTS_DATA, EntryTestData, EntryTestVariant} from '../data';
-import {Icon} from '../components/icons';
-import {logger} from '../utils/logger';
+import {SPACING, TYPOGRAPHY} from '../constants/design';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
-import {getEntryTestBrandColors} from '../data/entryTests';
-import {useDebouncedValue} from '../hooks/useDebounce';
-
-// Storage key for custom test dates
-const CUSTOM_TEST_DATES_KEY = '@pakuni_custom_test_dates';
-
-const {width} = Dimensions.get('window');
-
-// Filter options
-const CATEGORIES = ['All', 'Engineering', 'Medical', 'Business', 'General'];
-
-// Helper to get primary category from applicable_for array
-const getTestCategory = (test: EntryTestData): string => {
-  const applicableFor = test.applicable_for || [];
-  if (applicableFor.some(a => a.toLowerCase().includes('engineering'))) return 'Engineering';
-  if (applicableFor.some(a => a.toLowerCase().includes('medical') || a.toLowerCase().includes('mbbs'))) return 'Medical';
-  if (applicableFor.some(a => a.toLowerCase().includes('business') || a.toLowerCase().includes('mba'))) return 'Business';
-  return 'General';
-};
-
-// Helper to calculate days until test
-const getDaysUntil = (dateString: string): number | null => {
-  if (!dateString || dateString === 'TBA') return null;
-  
-  // Try to parse various date formats
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  
-  // Try parsing formats like "July 2025", "15 July 2025", "2025-07-15"
-  let testDate = new Date(dateString);
-  
-  if (isNaN(testDate.getTime())) {
-    // Try Month Year format
-    const monthYearMatch = dateString.match(/(\w+)\s+(\d{4})/);
-    if (monthYearMatch) {
-      testDate = new Date(`${monthYearMatch[1]} 1, ${monthYearMatch[2]}`);
-    }
-  }
-  
-  if (isNaN(testDate.getTime())) return null;
-  
-  const diffTime = testDate.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
-};
-
-// Custom Test Countdown Component
-const TestCountdownWidget = ({
-  test,
-  customDate,
-  onEditDate,
-  colors,
-  isDark,
-}: {
-  test: EntryTestData;
-  customDate?: string;
-  onEditDate: () => void;
-  colors: any;
-  isDark: boolean;
-}) => {
-  const displayDate = customDate || test.test_date;
-  const daysUntil = getDaysUntil(displayDate || '');
-  
-  if (daysUntil === null || daysUntil < 0) {
-    return (
-      <TouchableOpacity onPress={onEditDate}>
-        <View style={[styles.countdownWidget, {backgroundColor: STATUS_COLORS.backgrounds.info}]}>
-          <Icon name="calendar-outline" family="Ionicons" size={24} color={colors.primary} />
-          <View style={styles.countdownContent}>
-            <Text style={[styles.countdownLabel, {color: colors.textSecondary}]}>Test Date</Text>
-            <Text style={[styles.countdownDate, {color: colors.text}]}>
-              {customDate ? customDate : 'Tap to set date'}
-            </Text>
-          </View>
-          <Icon name="pencil-outline" family="Ionicons" size={18} color={colors.primary} />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-  
-  const urgencyColor = getUrgencyColor(daysUntil);
-  
-  return (
-    <TouchableOpacity onPress={onEditDate}>
-      <View style={[styles.countdownWidget, {backgroundColor: urgencyColor + '15'}]}>
-        <View style={[styles.countdownBadge, {backgroundColor: urgencyColor}]}>
-          <Text style={styles.countdownDays}>{daysUntil}</Text>
-          <Text style={styles.countdownDaysLabel}>days</Text>
-        </View>
-        <View style={styles.countdownContent}>
-          <Text style={[styles.countdownLabel, {color: colors.textSecondary}]}>
-            {daysUntil <= 7 ? 'Time is running out!' : daysUntil <= 30 ? 'Coming up soon!' : 'On track'}
-          </Text>
-          <Text style={[styles.countdownDate, {color: colors.text}]}>{displayDate}</Text>
-          {customDate && (
-            <Text style={[styles.customDateLabel, {color: urgencyColor}]}>Custom date</Text>
-          )}
-        </View>
-        <Icon name="pencil-outline" family="Ionicons" size={18} color={urgencyColor} />
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-// Helper: get a short field tag from applicable_for
-const getFieldTag = (test: EntryTestData): string => {
-  const fields = test.applicable_for || [];
-  if (fields.some(f => f.toLowerCase().includes('mbbs') || f.toLowerCase().includes('medical'))) return 'Medical';
-  if (fields.some(f => f.toLowerCase().includes('engineering'))) return 'Engineering';
-  if (fields.some(f => f.toLowerCase().includes('computer') || f.toLowerCase().includes('software') || f.toLowerCase().includes('ai'))) return 'CS / IT';
-  if (fields.some(f => f.toLowerCase().includes('business') || f.toLowerCase().includes('bba') || f.toLowerCase().includes('mba'))) return 'Business';
-  if (fields.some(f => f.toLowerCase().includes('law') || f.toLowerCase().includes('llb'))) return 'Law';
-  if (fields.some(f => f.toLowerCase().includes('phd') || f.toLowerCase().includes('ms') || f.toLowerCase().includes('mphil'))) return 'Graduate';
-  return fields[0] || 'General';
-};
-
-// Helper: format test date to short readable form
-const getShortDate = (dateString: string): string => {
-  if (!dateString || dateString === 'TBA') return 'TBA';
-  try {
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return dateString;
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${months[d.getMonth()]} ${d.getFullYear()}`;
-  } catch {
-    return dateString;
-  }
-};
-
-// Simplified animated test card — shows: name, conducting body, date, one field tag
-const TestCard = ({
-  test,
-  onPress,
-  index,
-  colors,
-}: {
-  test: EntryTestData;
-  onPress: () => void;
-  index: number;
-  colors: any;
-}) => {
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 400,
-        delay: index * 80,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
-        delay: index * 80,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: ANIMATION_SCALES.PRESS,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.snappy,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      ...SPRING_CONFIGS.responsive,
-    }).start();
-  };
-
-  const brandColors = getEntryTestBrandColors(test.name);
-  const fieldTag = getFieldTag(test);
-  const shortDate = getShortDate(test.test_date);
-
-  return (
-    <Animated.View
-      style={[
-        {
-          transform: [{translateY: slideAnim}, {scale: scaleAnim}],
-          opacity: fadeAnim,
-        },
-      ]}>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}>
-        <View style={[styles.testCard, {backgroundColor: colors.card}]}>
-          <View style={[styles.categoryStrip, {backgroundColor: brandColors.primary}]} />
-          
-          <View style={styles.cardContent}>
-            <View style={styles.cardHeader}>
-              <View style={[styles.iconContainer, {backgroundColor: brandColors.primary + '20'}]}>
-                <Text style={{fontSize: 16, fontWeight: '800', color: brandColors.primary}}>
-                  {test.name.substring(0, 3).toUpperCase()}
-                </Text>
-              </View>
-              <View style={styles.cardTitleContainer}>
-                <Text style={[styles.testName, {color: colors.text}]} numberOfLines={1}>
-                  {test.name}
-                </Text>
-                <Text style={{color: colors.textSecondary, fontSize: 12}} numberOfLines={1}>
-                  {test.conducting_body}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.cardFooter}>
-              <View style={styles.metaItem}>
-                <Icon name="calendar-outline" family="Ionicons" size={14} color={colors.textSecondary} />
-                <Text style={[styles.metaText, {color: colors.textSecondary}]}>
-                  {shortDate}
-                </Text>
-              </View>
-              <View style={[styles.categoryBadge, {backgroundColor: brandColors.primary + '18'}]}>
-                <Text style={[styles.categoryText, {color: brandColors.primary}]}>
-                  {fieldTag}
-                </Text>
-              </View>
-              <View style={[styles.viewBtn, {backgroundColor: brandColors.primary}]}>
-                <Text style={styles.viewBtnText}>Details</Text>
-                <Icon name="arrow-forward" family="Ionicons" size={12} color="#FFFFFF" containerStyle={{marginLeft: 4}} />
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-
-// Animated filter chip
-const FilterChip = ({
-  label,
-  isActive,
-  onPress,
-  colors,
-}: {
-  label: string;
-  isActive: boolean;
-  onPress: () => void;
-  colors: any;
-}) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handlePress = () => {
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: ANIMATION_SCALES.ICON_PRESS,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        ...SPRING_CONFIGS.snappy,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    onPress();
-  };
-
-  return (
-    <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-      <TouchableOpacity onPress={handlePress}>
-        {isActive ? (
-          <LinearGradient
-            colors={[colors.primary, colors.primaryDark || colors.primary]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={styles.filterChip}>
-            <Text style={styles.filterChipTextActive}>{label}</Text>
-          </LinearGradient>
-        ) : (
-          <View
-            style={[
-              styles.filterChip,
-              {backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1},
-            ]}>
-            <Text style={[styles.filterChipText, {color: colors.textSecondary}]}>
-              {label}
-            </Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
+import {Icon} from '../components/icons';
+import {useEntryTestsScreen} from '../hooks/useEntryTestsScreen';
+import {
+  TestCard,
+  TestDetailModal,
+  DatePickerModal,
+  EntryTestsHeader,
+  FilterChip,
+  CATEGORIES,
+} from '../components/entryTests';
+import {useNavigation} from '@react-navigation/native';
 
 const PremiumEntryTestsScreen = () => {
-  const {colors, isDark} = useTheme();
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
-  const [selectedTest, setSelectedTest] = useState<any>(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [customDates, setCustomDates] = useState<{[key: string]: string}>({});
-  const [dateModalVisible, setDateModalVisible] = useState(false);
-  const [editingTestId, setEditingTestId] = useState<string | null>(null);
-  const [dateInput, setDateInput] = useState('');
-
-  const headerAnim = useRef(new Animated.Value(0)).current;
-  const modalAnim = useRef(new Animated.Value(0)).current;
-
-  // Load custom dates from storage
-  useEffect(() => {
-    const loadCustomDates = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(CUSTOM_TEST_DATES_KEY);
-        if (stored) {
-          setCustomDates(JSON.parse(stored));
-        }
-      } catch (error) {
-        logger.error('Error loading custom dates', error, 'EntryTests');
-      }
-    };
-    loadCustomDates();
-  }, []);
-
-  // Save custom date
-  const saveCustomDate = useCallback(async (testId: string, date: string) => {
-    try {
-      const newDates = {...customDates, [testId]: date};
-      setCustomDates(newDates);
-      await AsyncStorage.setItem(CUSTOM_TEST_DATES_KEY, JSON.stringify(newDates));
-    } catch (error) {
-      logger.error('Error saving custom date', error, 'EntryTests');
-    }
-  }, [customDates]);
-
-  // Clear custom date
-  const clearCustomDate = useCallback(async (testId: string) => {
-    try {
-      const newDates = {...customDates};
-      delete newDates[testId];
-      setCustomDates(newDates);
-      await AsyncStorage.setItem(CUSTOM_TEST_DATES_KEY, JSON.stringify(newDates));
-    } catch (error) {
-      logger.error('Error clearing custom date', error, 'EntryTests');
-    }
-  }, [customDates]);
-
-  // Open date edit modal
-  const openDateModal = (testId: string, currentDate?: string) => {
-    setEditingTestId(testId);
-    setDateInput(currentDate || '');
-    setDateModalVisible(true);
-  };
-
-  // Handle date save
-  const handleSaveDate = () => {
-    if (!editingTestId) return;
-    
-    if (dateInput.trim()) {
-      saveCustomDate(editingTestId, dateInput.trim());
-      Alert.alert('Date Saved! ✅', `Your test countdown will now use: ${dateInput.trim()}`);
-    }
-    setDateModalVisible(false);
-    setEditingTestId(null);
-    setDateInput('');
-  };
-
-  // Handle clear date
-  const handleClearDate = () => {
-    if (!editingTestId) return;
-    
-    Alert.alert(
-      'Reset to Default?',
-      'This will remove your custom date and use the official test date.',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {
-          text: 'Reset',
-          style: 'destructive',
-          onPress: () => {
-            clearCustomDate(editingTestId);
-            setDateModalVisible(false);
-            setEditingTestId(null);
-            setDateInput('');
-          },
-        },
-      ]
-    );
-  };
-
-  useEffect(() => {
-    Animated.timing(headerAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  const filteredTests = useMemo(() => {
-    return ENTRY_TESTS_DATA.filter(test => {
-      // Category filter
-      const matchesCategory = activeFilter === 'All' || getTestCategory(test) === activeFilter;
-      if (!matchesCategory) return false;
-
-      // Text search filter
-      const query = debouncedSearchQuery.toLowerCase().trim();
-      if (!query) return true;
-
-      const nameLower = test.name.toLowerCase();
-      const fullNameLower = (test.full_name || '').toLowerCase();
-      const bodyLower = test.conducting_body.toLowerCase();
-      const descLower = (test.description || '').toLowerCase();
-      const applicableLower = (test.applicable_for || []).join(' ').toLowerCase();
-
-      // Direct text match
-      if (
-        nameLower.includes(query) ||
-        fullNameLower.includes(query) ||
-        bodyLower.includes(query) ||
-        descLower.includes(query) ||
-        applicableLower.includes(query)
-      ) return true;
-
-      // Abbreviation / word-prefix match
-      const nameWords = nameLower.split(/[\s,\-()]+/);
-      if (nameWords.some(w => w.startsWith(query))) return true;
-
-      const bodyWords = bodyLower.split(/[\s,\-()]+/);
-      if (bodyWords.some(w => w.startsWith(query))) return true;
-
-      // Build abbreviation from full name words
-      const fullNameWords = fullNameLower.split(/[\s,\-()]+/).filter(w => w.length > 0);
-      const abbr = fullNameWords.map(w => w[0]).join('');
-      if (abbr.startsWith(query)) return true;
-
-      // Search through variants (e.g., NAT-IE, NAT-IM)
-      if (test.variants && test.variants.length > 0) {
-        const variantMatch = test.variants.some((variant: EntryTestVariant) => {
-          const variantNameLower = variant.name.toLowerCase();
-          const variantFullNameLower = (variant.full_name || '').toLowerCase();
-          const variantApplicableLower = (variant.applicable_for || []).join(' ').toLowerCase();
-          
-          return (
-            variantNameLower.includes(query) ||
-            variantFullNameLower.includes(query) ||
-            variantApplicableLower.includes(query) ||
-            variantNameLower.split(/[\s,\-()]+/).some(w => w.startsWith(query))
-          );
-        });
-        if (variantMatch) return true;
-      }
-
-      return false;
-    });
-  }, [activeFilter, debouncedSearchQuery]);
-
-  const openModal = (test: any) => {
-    setSelectedTest(test);
-    setModalVisible(true);
-    Animated.spring(modalAnim, {
-      toValue: 1,
-      tension: 50,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const closeModal = () => {
-    Animated.timing(modalAnim, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      setModalVisible(false);
-      setSelectedTest(null);
-    });
-  };
+  const navigation = useNavigation<any>();
+  const {
+    colors,
+    isDark,
+    activeFilter,
+    setActiveFilter,
+    searchQuery,
+    setSearchQuery,
+    filteredTests,
+    selectedTest,
+    modalVisible,
+    modalAnim,
+    openModal,
+    closeModal,
+    openRegistrationUrl,
+    customDates,
+    dateModalVisible,
+    editingTestId,
+    dateInput,
+    setDateInput,
+    setDateModalVisible,
+    openDateModal,
+    handleSaveDate,
+    handleClearDate,
+    headerAnim,
+  } = useEntryTestsScreen();
 
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}
       edges={['top']}>
-      {/* Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            opacity: headerAnim,
-            transform: [
-              {
-                translateY: headerAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-20, 0],
-                }),
-              },
-            ],
-          },
-        ]}>
-        <LinearGradient
-          colors={isDark ? ['#8e44ad', '#6c3483'] : ['#9b59b6', '#8e44ad']}
-          style={styles.header}>
-          <View style={styles.headerDecoration1} />
-          <View style={styles.headerDecoration2} />
-          <View style={styles.headerIconContainer}>
-            <Icon name="clipboard-outline" family="Ionicons" size={50} color="#FFFFFF" />
-          </View>
-          <Text style={styles.headerTitle}>Entry Tests</Text>
-          <Text style={styles.headerSubtitle}>
-            Prepare for university admission tests
-          </Text>
-        </LinearGradient>
-      </Animated.View>
+      <EntryTestsHeader headerAnim={headerAnim} isDark={isDark} />
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <PremiumSearchBar
           value={searchQuery}
@@ -550,7 +65,6 @@ const PremiumEntryTestsScreen = () => {
         />
       </View>
 
-      {/* Category Filters */}
       <View style={styles.filtersContainer}>
         <ScrollView
           horizontal
@@ -568,14 +82,17 @@ const PremiumEntryTestsScreen = () => {
         </ScrollView>
       </View>
 
-      {/* Results count */}
       <View style={styles.resultsBar}>
         <Text style={[styles.resultsText, {color: colors.textSecondary}]}>
           {filteredTests.length} {filteredTests.length === 1 ? 'test' : 'tests'} found
         </Text>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Deadlines' as never)}
+          style={[styles.deadlinesLink, {backgroundColor: colors.card, borderColor: '#EF444440'}]}>
+          <Icon name="calendar-outline" family="Ionicons" size={14} color="#EF4444" />
+          <Text style={[styles.deadlinesLinkText, {color: '#EF4444'}]}>View Deadlines</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Tests List */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.testsContainer}>
@@ -591,343 +108,35 @@ const PremiumEntryTestsScreen = () => {
         <View style={{height: SPACING.xxl * 2}} />
       </ScrollView>
 
-      {/* Test Detail Modal */}
-      <Modal
+      <TestDetailModal
         visible={modalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <TouchableOpacity
-            style={styles.modalBackdrop}
-            activeOpacity={1}
-            onPress={closeModal}
-          />
-          <Animated.View
-            style={[
-              styles.modalContent,
-              {
-                backgroundColor: colors.card,
-                transform: [
-                  {
-                    translateY: modalAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [600, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}>
-            <View style={styles.modalHandle} />
-            
-            {selectedTest && (
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Modal Header */}
-                <LinearGradient
-                  colors={getEntryTestBrandColors(selectedTest.name).gradient}
-                  style={styles.modalHeader}>
-                  <TouchableOpacity
-                    style={styles.modalBackButton}
-                    onPress={closeModal}
-                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-                    <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
-                  </TouchableOpacity>
-                  <Icon name="document-text-outline" family="Ionicons" size={60} color="#FFFFFF" />
-                  <Text style={styles.modalTitle}>{selectedTest.name}</Text>
-                  <Text style={styles.modalSubtitle}>
-                    {selectedTest.full_name || selectedTest.name}
-                  </Text>
-                  {selectedTest.status_notes && (
-                    <View style={styles.modalStatusBadge}>
-                      <Text style={styles.modalStatusText}>{selectedTest.status_notes}</Text>
-                    </View>
-                  )}
-                </LinearGradient>
+        test={selectedTest}
+        modalAnim={modalAnim}
+        colors={colors}
+        isDark={isDark}
+        customDate={selectedTest ? customDates[selectedTest.id] : undefined}
+        onClose={closeModal}
+        onEditDate={openDateModal}
+        onRegister={openRegistrationUrl}
+        onFixData={(testId, testName) =>
+          navigation.navigate('DataCorrection', {
+            entityType: 'entry_test',
+            entityId: testId,
+            entityName: testName,
+          })
+        }
+      />
 
-                {/* Countdown Widget */}
-                <View style={styles.countdownContainer}>
-                  <TestCountdownWidget
-                    test={selectedTest}
-                    customDate={customDates[selectedTest.id]}
-                    onEditDate={() => openDateModal(selectedTest.id, customDates[selectedTest.id])}
-                    colors={colors}
-                    isDark={isDark}
-                  />
-                </View>
-
-                {/* Quick Info */}
-                <View style={styles.quickInfo}>
-                  <View style={[styles.infoCard, {backgroundColor: colors.background}]}>
-                    <Icon name="calendar-outline" family="Ionicons" size={24} color={colors.primary} />
-                    <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Date</Text>
-                    <Text style={[styles.infoValue, {color: colors.text}]}>
-                      {selectedTest.test_date || 'TBA'}
-                    </Text>
-                  </View>
-                  <View style={[styles.infoCard, {backgroundColor: colors.background}]}>
-                    <Icon name="cash-outline" family="Ionicons" size={24} color={colors.primary} />
-                    <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Fee</Text>
-                    <Text style={[styles.infoValue, {color: colors.text}]}>
-                      {selectedTest.fee || 'Varies'}
-                    </Text>
-                  </View>
-                  <View style={[styles.infoCard, {backgroundColor: colors.background}]}>
-                    <Icon name="time-outline" family="Ionicons" size={24} color={colors.primary} />
-                    <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Duration</Text>
-                    <Text style={[styles.infoValue, {color: colors.text}]}>
-                      {selectedTest.test_format?.duration_minutes 
-                        ? `${Math.floor(selectedTest.test_format.duration_minutes / 60)}h ${selectedTest.test_format.duration_minutes % 60 > 0 ? `${selectedTest.test_format.duration_minutes % 60}m` : ''}`
-                        : 'Varies'}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Description */}
-                <View style={styles.section}>
-                  <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-                    <Icon name="reader-outline" family="Ionicons" size={18} color={colors.text} />
-                    <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>About This Test</Text>
-                  </View>
-                  <Text style={[styles.sectionText, {color: colors.textSecondary}]}>
-                    {selectedTest.description}
-                  </Text>
-                </View>
-
-                {/* Test Format */}
-                {selectedTest.test_format && (
-                  <View style={styles.section}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-                      <Icon name="list-outline" family="Ionicons" size={18} color={colors.text} />
-                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Test Format</Text>
-                    </View>
-                    <View style={[styles.infoCard, {backgroundColor: colors.background, marginBottom: SPACING.sm}]}>
-                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Total Marks: {selectedTest.test_format.total_marks}</Text>
-                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Questions: {selectedTest.test_format.total_questions}</Text>
-                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>Duration: {selectedTest.test_format.duration_minutes} mins</Text>
-                      <Text style={[styles.infoLabel, {color: colors.textSecondary}]}>
-                        Negative Marking: {selectedTest.test_format.negative_marking ? 'Yes' : 'No'}
-                      </Text>
-                    </View>
-                    {selectedTest.test_format.sections.map((section: any, i: number) => (
-                      <View key={i} style={styles.formatItem}>
-                        <View style={[styles.formatDot, {backgroundColor: colors.primary}]} />
-                        <Text style={[styles.formatText, {color: colors.textSecondary}]}>
-                          {section.name}: {section.questions} Questions ({section.marks} Marks)
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
-
-                {/* Eligibility */}
-                {selectedTest.eligibility && (
-                  <View style={styles.section}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-                      <Icon name="checkmark-circle-outline" family="Ionicons" size={18} color={colors.text} />
-                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Eligibility</Text>
-                    </View>
-                    <View style={[styles.eligibilityCard, {backgroundColor: colors.background}]}>
-                      {Array.isArray(selectedTest.eligibility) ? (
-                        selectedTest.eligibility.map((item: string, i: number) => (
-                          <View key={i} style={{flexDirection: 'row', marginBottom: 4}}>
-                            <Text style={{color: colors.primary, marginRight: 8}}>•</Text>
-                            <Text style={[styles.eligibilityText, {color: colors.textSecondary, flex: 1}]}>
-                              {item}
-                            </Text>
-                          </View>
-                        ))
-                      ) : (
-                        <Text style={[styles.eligibilityText, {color: colors.textSecondary}]}>
-                          {selectedTest.eligibility}
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                )}
-
-                {/* Application Steps */}
-                {selectedTest.application_steps && (
-                  <View style={styles.section}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-                      <Icon name="walk-outline" family="Ionicons" size={18} color={colors.text} />
-                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>How to Apply</Text>
-                    </View>
-                    {selectedTest.application_steps.map((step: string, i: number) => (
-                      <View key={i} style={styles.formatItem}>
-                        <View style={[styles.formatDot, {backgroundColor: colors.success}]} />
-                        <Text style={[styles.formatText, {color: colors.textSecondary}]}>
-                          {step}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
-
-                {/* Test Variants */}
-                {selectedTest.variants && selectedTest.variants.length > 0 && (
-                  <View style={styles.section}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm}}>
-                      <Icon name="git-branch-outline" family="Ionicons" size={18} color={colors.text} />
-                      <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>
-                        Test Variants ({selectedTest.variants.length})
-                      </Text>
-                    </View>
-                    <Text style={[styles.sectionText, {color: colors.textSecondary, marginBottom: SPACING.sm}]}>
-                      This test has multiple variants. Choose based on your field of study:
-                    </Text>
-                    {selectedTest.variants.map((variant: EntryTestVariant, vi: number) => {
-                      const variantBrandColors = getEntryTestBrandColors(variant.name);
-                      return (
-                        <View
-                          key={variant.id}
-                          style={[styles.variantCard, {backgroundColor: colors.background, borderLeftColor: variantBrandColors.primary}]}>
-                          <View style={styles.variantHeader}>
-                            <View style={[styles.variantBadge, {backgroundColor: variantBrandColors.primary + '20'}]}>
-                              <Text style={[styles.variantBadgeText, {color: variantBrandColors.primary}]}>
-                                {variant.name}
-                              </Text>
-                            </View>
-                          </View>
-                          <Text style={[styles.variantTitle, {color: colors.text}]}>
-                            {variant.full_name}
-                          </Text>
-                          <Text style={[styles.variantDescription, {color: colors.textSecondary}]}>
-                            {variant.description}
-                          </Text>
-                          <Text style={[styles.variantFieldLabel, {color: colors.textSecondary}]}>
-                            For: {variant.applicable_for.join(', ')}
-                          </Text>
-                          {variant.eligibility && variant.eligibility.length > 0 && (
-                            <View style={{marginTop: 6}}>
-                              {variant.eligibility.map((e: string, ei: number) => (
-                                <View key={ei} style={{flexDirection: 'row', marginBottom: 2}}>
-                                  <Text style={{color: variantBrandColors.primary, marginRight: 6}}>•</Text>
-                                  <Text style={[{fontSize: 12, color: colors.textSecondary, flex: 1}]}>{e}</Text>
-                                </View>
-                              ))}
-                            </View>
-                          )}
-                          <View style={styles.variantSections}>
-                            <Text style={[styles.variantSectionsTitle, {color: colors.text}]}>Question Pattern:</Text>
-                            {variant.test_format.sections.map((sec, si: number) => (
-                              <View key={si} style={styles.variantSectionRow}>
-                                <View style={[styles.formatDot, {backgroundColor: variantBrandColors.primary}]} />
-                                <Text style={[{fontSize: 12, color: colors.textSecondary, flex: 1}]}>
-                                  {sec.name}: {sec.questions}Q ({sec.marks} marks)
-                                </Text>
-                              </View>
-                            ))}
-                          </View>
-                        </View>
-                      );
-                    })}
-                  </View>
-                )}
-
-                {/* Tips */}
-                <View style={[styles.tipsCard, {backgroundColor: STATUS_COLORS.backgrounds.warning}]}>
-                  <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.xs}}>
-                    <Icon name="bulb-outline" family="Ionicons" size={20} color={colors.warning} />
-                    <Text style={[styles.tipsTitle, {marginBottom: 0, color: colors.warning}]}>Preparation Tips</Text>
-                  </View>
-                  <Text style={[styles.tipsText, {color: colors.warning}]}>
-                    {selectedTest.tips || 'Start preparing at least 3-6 months before the test. Practice previous papers and focus on weak areas.'}
-                  </Text>
-                </View>
-
-                <TouchableOpacity 
-                  style={styles.registerButton}
-                  onPress={() => {
-                    if (selectedTest.website) {
-                      Linking.openURL(selectedTest.website).catch(err => {
-                        logger.error('Error opening registration URL', err, 'EntryTests');
-                        Alert.alert('Error', 'Unable to open registration website. Please visit: ' + selectedTest.website);
-                      });
-                    } else {
-                      Alert.alert('Website Not Available', 'Registration website is not available for this test.');
-                    }
-                  }}>
-                  <LinearGradient
-                    colors={[STATUS_COLORS.urgency.safe, '#059669']}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
-                    style={styles.registerGradient}>
-                    <Text style={styles.registerText}>Register Now</Text>
-                    <Icon name="arrow-forward" family="Ionicons" size={16} color="#FFFFFF" containerStyle={{marginLeft: 6}} />
-                  </LinearGradient>
-                </TouchableOpacity>
-
-                <View style={{height: SPACING.xxl}} />
-              </ScrollView>
-            )}
-          </Animated.View>
-        </View>
-      </Modal>
-
-      {/* Custom Date Picker Modal */}
-      <Modal
+      <DatePickerModal
         visible={dateModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setDateModalVisible(false)}>
-        <View style={styles.dateModalOverlay}>
-          <View style={[styles.dateModalContent, {backgroundColor: colors.card}]}>
-            <View style={styles.dateModalHeader}>
-              <Icon name="calendar-outline" family="Ionicons" size={32} color={colors.primary} />
-              <Text style={[styles.dateModalTitle, {color: colors.text}]}>Set Custom Test Date</Text>
-              <Text style={[styles.dateModalSubtitle, {color: colors.textSecondary}]}>
-                Enter your expected test date (e.g., "July 15, 2025")
-              </Text>
-            </View>
-
-            <TextInput
-              style={[
-                styles.dateInput,
-                {
-                  backgroundColor: colors.background,
-                  color: colors.text,
-                  borderColor: colors.border,
-                },
-              ]}
-              placeholder="Enter date (e.g., July 15, 2025)"
-              placeholderTextColor={colors.textSecondary}
-              value={dateInput}
-              onChangeText={setDateInput}
-              autoFocus
-            />
-
-            <Text style={[styles.dateHint, {color: colors.textSecondary}]}>
-              Tip: Set your personal test date if official dates haven't been announced yet, or if you want to track a specific session.
-            </Text>
-
-            <View style={styles.dateModalButtons}>
-              <TouchableOpacity
-                style={[styles.dateModalButton, styles.cancelButton, {borderColor: colors.border}]}
-                onPress={() => setDateModalVisible(false)}>
-                <Text style={[styles.cancelButtonText, {color: colors.textSecondary}]}>Cancel</Text>
-              </TouchableOpacity>
-
-              {customDates[editingTestId || ''] && (
-                <TouchableOpacity
-                  style={[styles.dateModalButton, styles.clearButton]}
-                  onPress={handleClearDate}>
-                  <Text style={styles.clearButtonText}>Reset</Text>
-                </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={[styles.dateModalButton, styles.saveButton]}
-                onPress={handleSaveDate}>
-                <LinearGradient
-                  colors={[STATUS_COLORS.urgency.safe, '#059669']}
-                  style={styles.saveButtonGradient}>
-                  <Text style={styles.saveButtonText}>Save Date</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        colors={colors}
+        dateInput={dateInput}
+        onChangeText={setDateInput}
+        hasCustomDate={!!customDates[editingTestId || '']}
+        onSave={handleSaveDate}
+        onClear={handleClearDate}
+        onClose={() => setDateModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -935,48 +144,6 @@ const PremiumEntryTestsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerContainer: {},
-  header: {
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.xl,
-    paddingHorizontal: SPACING.md,
-    alignItems: 'center',
-    borderBottomLeftRadius: RADIUS.xxl,
-    borderBottomRightRadius: RADIUS.xxl,
-    overflow: 'hidden',
-  },
-  headerDecoration1: {
-    position: 'absolute',
-    top: -30,
-    right: -30,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
-  headerDecoration2: {
-    position: 'absolute',
-    bottom: -20,
-    left: -20,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-  },
-  headerIconContainer: {
-    marginBottom: SPACING.xs,
-  },
-  headerTitle: {
-    fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    color: '#fff',
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: 'rgba(255,255,255,0.9)',
-    textAlign: 'center',
   },
   searchContainer: {
     paddingHorizontal: SPACING.md,
@@ -995,432 +162,26 @@ const styles = StyleSheet.create({
   resultsBar: {
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   resultsText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weight.medium,
   },
-  filterChip: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    borderRadius: RADIUS.full,
+  deadlinesLink: {
+    flexDirection: 'row', alignItems: 'center', gap: 4,
+    paddingHorizontal: SPACING.sm, paddingVertical: 4,
+    borderRadius: 20, borderWidth: 1,
   },
-  filterChipText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.medium,
-  },
-  filterChipTextActive: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+  deadlinesLinkText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weight.semibold,
-    color: '#fff',
   },
   testsContainer: {
     padding: SPACING.md,
     paddingTop: SPACING.md,
-  },
-  testCard: {
-    borderRadius: RADIUS.lg,
-    marginBottom: SPACING.sm,
-    overflow: 'hidden',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-  },
-  categoryStrip: {
-    height: 4,
-  },
-  cardContent: {
-    padding: SPACING.md,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.sm,
-  },
-  iconContainer: {
-    width: 46,
-    height: 46,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: SPACING.sm,
-  },
-  cardTitleContainer: {
-    flex: 1,
-  },
-  testName: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: 4,
-  },
-  categoryBadge: {
-    alignSelf: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    marginRight: SPACING.sm,
-  },
-  categoryText: {
-    fontSize: 11,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: SPACING.md,
-    gap: 4,
-  },
-  metaText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  viewBtn: {
-    marginLeft: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 5,
-    borderRadius: RADIUS.full,
-  },
-  viewBtnText: {
-    color: '#fff',
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    maxHeight: '90%',
-    borderTopLeftRadius: RADIUS.xxl,
-    borderTopRightRadius: RADIUS.xxl,
-    paddingTop: SPACING.sm,
-  },
-  modalHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#ccc',
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginBottom: SPACING.sm,
-  },
-  modalHeader: {
-    padding: SPACING.xl,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  modalBackButton: {
-    position: 'absolute',
-    top: SPACING.md,
-    left: SPACING.md,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-  },
-  modalTitle: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    color: '#fff',
-    marginBottom: 4,
-  },
-  modalSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: 'rgba(255,255,255,0.9)',
-    textAlign: 'center',
-  },
-  modalStatusBadge: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginTop: 12,
-  },
-  modalStatusText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  quickInfo: {
-    flexDirection: 'row',
-    padding: SPACING.md,
-    gap: SPACING.sm,
-  },
-  infoCard: {
-    flex: 1,
-    alignItems: 'center',
-    padding: SPACING.sm,
-    borderRadius: RADIUS.md,
-  },
-  infoLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-  },
-  infoValue: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  section: {
-    paddingHorizontal: SPACING.md,
-    marginBottom: SPACING.md,
-  },
-  sectionTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginBottom: SPACING.sm,
-  },
-  sectionText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 22,
-  },
-  formatItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  formatDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: SPACING.sm,
-  },
-  formatText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-  },
-  eligibilityCard: {
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-  },
-  eligibilityText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 20,
-  },
-  tipsCard: {
-    marginHorizontal: SPACING.md,
-    padding: SPACING.md,
-    borderRadius: RADIUS.lg,
-    marginBottom: SPACING.md,
-  },
-  tipsTitle: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginBottom: SPACING.xs,
-    color: '#F57F17',
-  },
-  tipsText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    lineHeight: 20,
-  },
-  registerButton: {
-    marginHorizontal: SPACING.md,
-    borderRadius: RADIUS.lg,
-    overflow: 'hidden',
-  },
-  registerGradient: {
-    paddingVertical: SPACING.md,
-    alignItems: 'center',
-  },
-  registerText: {
-    color: '#fff',
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  // Countdown Widget Styles
-  countdownContainer: {
-    paddingHorizontal: SPACING.md,
-    paddingTop: SPACING.md,
-  },
-  countdownWidget: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.md,
-    borderRadius: RADIUS.lg,
-    gap: SPACING.md,
-  },
-  countdownBadge: {
-    width: 60,
-    height: 60,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  countdownDays: {
-    fontSize: 24,
-    fontWeight: TYPOGRAPHY.weight.heavy,
-    color: '#FFFFFF',
-  },
-  countdownDaysLabel: {
-    fontSize: 10,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    color: '#FFFFFF',
-    textTransform: 'uppercase',
-  },
-  countdownContent: {
-    flex: 1,
-  },
-  countdownLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    marginBottom: 2,
-  },
-  countdownDate: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  customDateLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    fontWeight: TYPOGRAPHY.weight.medium,
-    marginTop: 2,
-  },
-  // Date Modal Styles
-  dateModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: SPACING.md,
-  },
-  dateModalContent: {
-    width: '100%',
-    maxWidth: 400,
-    borderRadius: RADIUS.xl,
-    padding: SPACING.lg,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-  },
-  dateModalHeader: {
-    alignItems: 'center',
-    marginBottom: SPACING.lg,
-  },
-  dateModalTitle: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    fontWeight: TYPOGRAPHY.weight.bold,
-    marginTop: SPACING.sm,
-    textAlign: 'center',
-  },
-  dateModalSubtitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    textAlign: 'center',
-    marginTop: SPACING.xs,
-  },
-  dateInput: {
-    borderWidth: 1,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    fontSize: TYPOGRAPHY.sizes.md,
-    marginBottom: SPACING.md,
-  },
-  dateHint: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    lineHeight: 18,
-    marginBottom: SPACING.lg,
-  },
-  dateModalButtons: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-  },
-  dateModalButton: {
-    flex: 1,
-    borderRadius: RADIUS.md,
-    overflow: 'hidden',
-  },
-  cancelButton: {
-    borderWidth: 1,
-    paddingVertical: SPACING.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cancelButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-  },
-  clearButton: {
-    backgroundColor: STATUS_COLORS.backgrounds.error,
-    paddingVertical: SPACING.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  clearButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    color: STATUS_COLORS.urgency.critical,
-  },
-  saveButton: {},
-  saveButtonGradient: {
-    paddingVertical: SPACING.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  saveButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    color: '#FFFFFF',
-  },
-  // Variant card styles
-  variantCard: {
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    marginBottom: SPACING.sm,
-    borderLeftWidth: 4,
-  },
-  variantHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  variantBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: RADIUS.full,
-  },
-  variantBadgeText: {
-    fontSize: 12,
-    fontWeight: TYPOGRAPHY.weight.bold,
-  },
-  variantTitle: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginBottom: 4,
-  },
-  variantDescription: {
-    fontSize: 12,
-    lineHeight: 18,
-    marginBottom: 4,
-  },
-  variantFieldLabel: {
-    fontSize: 11,
-    fontStyle: 'italic',
-  },
-  variantSections: {
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  variantSectionsTitle: {
-    fontSize: 12,
-    fontWeight: TYPOGRAPHY.weight.semibold,
-    marginBottom: 4,
-  },
-  variantSectionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 3,
   },
 });
 
