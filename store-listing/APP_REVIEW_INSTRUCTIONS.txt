@@ -1,0 +1,67 @@
+# Google Play Store - App Review Instructions
+
+## Test Account Credentials (ADMIN ACCESS)
+
+**Email:** playstore.reviewer@pakuni.app
+**Password:** PakUni@Review2026
+**Role:** Admin (Full Access)
+
+## How to Sign In
+
+1. Open the app
+2. On the welcome screen, tap "Sign In with Email"
+3. Enter the email and password above
+4. Tap "Sign In"
+
+## Alternative: Guest Mode
+
+The app also supports "Continue as Guest" mode:
+1. Open the app
+2. Tap "Continue as Guest" on the welcome screen
+3. You can browse all features without signing in
+
+**Note:** Some features like "Favorites" require a signed-in account. Use the test credentials above to access all features.
+
+## Features Available for Review
+
+### Without Account (Guest Mode):
+- Browse 200+ universities
+- View university details (fees, programs, admission info)
+- Browse scholarships
+- Use merit calculator
+- View career paths guidance
+- Search and filter universities
+
+### With Test Account:
+- All Guest features PLUS:
+- Save favorites (universities, scholarships)
+- View personalized recommendations
+- Access full profile settings
+- Save merit calculations
+
+### Admin Features (Full Access):
+- All user features PLUS:
+- Admin dashboard access
+- Content management capabilities
+- Data refresh controls
+- Full app configuration access
+
+## App Navigation
+
+**Home Screen:** Featured universities, quick access to all sections
+**Universities Tab:** Browse, search, and filter all 200+ HEC-recognized universities
+**Scholarships Tab:** View available scholarships with eligibility criteria
+**Profile Tab:** Account settings, favorites, saved data
+
+## No Additional Requirements
+
+- No paid subscriptions required
+- No in-app purchases
+- No location access needed for core features
+- No external device required
+- All data is freely accessible
+
+## Contact
+
+For any review-related questions:
+**Email:** pakuni.app@gmail.com
