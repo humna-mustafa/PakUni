@@ -1,0 +1,235 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Modern gradient with texture feel -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E5AB8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3D67C8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4573DF;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Pakistan Green accent (from flag) -->
+    <linearGradient id="greenAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#01411C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0A5C2E;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Brand gradient for title -->
+    <linearGradient id="brandTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Organic light overlay -->
+    <radialGradient id="lightGlow" cx="30%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.12" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Subtle shadow -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.25"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Strong shadow for emphasis -->
+    <filter id="strongShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Noise texture for organic feel -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="discrete" tableValues="0 0 0.02"/>
+      </feComponentTransfer>
+      <feBlend mode="overlay" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  
+  <!-- Background with subtle texture -->
+  <rect width="1024" height="500" fill="url(#bgGradient)"/>
+  <rect width="1024" height="500" fill="url(#bgGradient)" filter="url(#noise)" opacity="0.4"/>
+  
+  <!-- Organic light overlay (asymmetric for human touch) -->
+  <ellipse cx="820" cy="120" rx="180" ry="140" fill="url(#lightGlow)"/>
+  <ellipse cx="200" cy="380" rx="120" ry="95" fill="url(#lightGlow)"/>
+  
+  <!-- Pakistan Flag Inspired Element (Subtle) -->
+  <g opacity="0.08">
+    <rect x="-50" y="0" width="220" height="500" fill="#01411C" transform="rotate(-8)"/>
+    <circle cx="120" cy="120" r="45" fill="#ffffff"/>
+    <path d="M 140 105 L 155 120 L 140 135 L 125 127 L 125 113 Z" fill="#ffffff"/>
+  </g>
+  
+  <!-- Left Section - Iconic Visual Element -->
+  <g filter="url(#strongShadow)">
+    <!-- Modern Graduation Cap Icon (Larger, more prominent) -->
+    <g transform="translate(70, 150)">
+      <!-- Cap board - organic angles -->
+      <path d="M 130 80 L 200 50 L 270 80 L 200 110 Z" fill="#FFD700" stroke="#FFA500" stroke-width="3"/>
+      <!-- Tassel -->
+      <line x1="200" y1="80" x2="200" y2="130" stroke="#FFA500" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="200" cy="135" r="8" fill="#FFA500"/>
+      <!-- Cap base with Pakistan green -->
+      <ellipse cx="200" cy="85" rx="45" ry="15" fill="#01411C" opacity="0.9"/>
+      <ellipse cx="200" cy="80" rx="48" ry="16" fill="#0A5C2E"/>
+      <!-- Shine effect -->
+      <ellipse cx="185" cy="65" rx="15" ry="8" fill="#FFFFFF" opacity="0.4"/>
+    </g>
+    
+    <!-- University Book Stack -->
+    <g transform="translate(70, 280)">
+      <!-- Book 3 (bottom) -->
+      <rect x="155" y="85" width="90" height="20" rx="2" fill="#0A5C2E" opacity="0.85"/>
+      <rect x="157" y="87" width="4" height="16" fill="#ffffff" opacity="0.3"/>
+      <!-- Book 2 (middle) -->
+      <rect x="150" y="65" width="100" height="20" rx="2" fill="#4573DF"/>
+      <rect x="152" y="67" width="4" height="16" fill="#E8EFFC" opacity="0.5"/>
+      <text x="165" y="79" font-family="Georgia, serif" font-size="10" fill="#ffffff" font-weight="600">NUST</text>
+      <!-- Book 1 (top) -->
+      <rect x="160" y="48" width="80" height="17" rx="2" fill="#FFD700"/>
+      <rect x="162" y="50" width="3" height="13" fill="#FFA500"/>
+      <text x="170" y="60" font-family="Georgia, serif" font-size="9" fill="#2E5AB8" font-weight="700">HEC</text>
+    </g>
+  </g>
+  
+  <!-- Right Section - Content with proper hierarchy -->
+  <g filter="url(#strongShadow)">
+    <!-- Main Brand Title with PROPER BRAND gradient -->
+    <text x="360" y="135" font-family="'Segoe UI', Roboto, -apple-system, sans-serif" font-size="82" font-weight="800" fill="url(#brandTextGradient)" letter-spacing="-2">
+      PakUni
+    </text>
+    <!-- Subtle brand underline -->
+    <rect x="360" y="145" width="140" height="4" rx="2" fill="#FFD700" opacity="0.6"/>
+    <rect x="505" y="145" width="60" height="4" rx="2" fill="#0A5C2E" opacity="0.5"/>
+  </g>
+  
+  <g>
+    <!-- Tagline with better typography -->
+    <text x="360" y="185" font-family="'Segoe UI', system-ui, sans-serif" font-size="28" font-weight="500" fill="#FFFFFF" letter-spacing="0.5" opacity="0.95">
+      Pakistan's Premier University Guide
+    </text>
+    
+    <!-- Value Props - Clean Design, No Emojis -->
+    <g transform="translate(360, 225)">
+      <!-- Row 1 -->
+      <g filter="url(#softShadow)">
+        <!-- Feature 1 -->
+        <rect x="0" y="0" width="155" height="42" rx="21" fill="#FFFFFF" opacity="0.98"/>
+        <circle cx="24" cy="21" r="12" fill="#4573DF"/>
+        <text x="44" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#1E293B">
+          200+ Unis
+        </text>
+        
+        <!-- Feature 2 -->
+        <rect x="170" y="0" width="190" height="42" rx="21" fill="#FFFFFF" opacity="0.98"/>
+        <circle cx="194" cy="21" r="12" fill="#4573DF"/>
+        <text x="214" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#1E293B">
+          Merit Calculator
+        </text>
+        
+        <!-- Feature 3 -->
+        <rect x="375" y="0" width="170" height="42" rx="21" fill="#FFFFFF" opacity="0.98"/>
+        <circle cx="399" cy="21" r="12" fill="#4573DF"/>
+        <text x="419" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#1E293B">
+          Scholarships
+        </text>
+      </g>
+      
+      <!-- Row 2 with Pakistan Green accent -->
+      <g filter="url(#softShadow)" transform="translate(0, 55)">
+        <!-- Feature 4 -->
+        <rect x="0" y="0" width="175" height="42" rx="21" fill="url(#greenAccent)" opacity="0.95"/>
+        <circle cx="24" cy="21" r="11" fill="#FFD700"/>
+        <text x="44" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">
+          ECAT/MDCAT
+        </text>
+        
+        <!-- Feature 5 -->
+        <rect x="190" y="0" width="170" height="42" rx="21" fill="url(#greenAccent)" opacity="0.95"/>
+        <circle cx="214" cy="21" r="11" fill="#FFD700"/>
+        <text x="234" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">
+          Career Guide
+        </text>
+        
+        <!-- Feature 6 -->
+        <rect x="375" y="0" width="170" height="42" rx="21" fill="url(#greenAccent)" opacity="0.95"/>
+        <circle cx="399" cy="21" r="11" fill="#FFD700"/>
+        <text x="419" y="27" font-family="'Segoe UI', sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">
+          HEC Verified
+        </text>
+      </g>
+    </g>
+    
+    <!-- Supporting text with better contrast -->
+    <text x="360" y="385" font-family="'Segoe UI', system-ui, sans-serif" font-size="23" font-weight="400" fill="#FFFFFF" opacity="0.92" letter-spacing="0.3">
+      Complete Admission Assistant • Class of 2026
+    </text>
+    
+    <!-- Social Proof - More professional -->
+    <g transform="translate(360, 405)">
+      <!-- Gold star for premium feel -->
+      <g transform="translate(0, 0)">
+        <path d="M 15 5 L 18 14 L 27 14 L 20 19 L 23 28 L 15 22 L 7 28 L 10 19 L 3 14 L 12 14 Z" fill="#FFD700" filter="url(#softShadow)"/>
+        <path d="M 45 5 L 48 14 L 57 14 L 50 19 L 53 28 L 45 22 L 37 28 L 40 19 L 33 14 L 42 14 Z" fill="#FFD700"/>
+        <path d="M 75 5 L 78 14 L 87 14 L 80 19 L 83 28 L 75 22 L 67 28 L 70 19 L 63 14 L 72 14 Z" fill="#FFD700"/>
+        <path d="M 105 5 L 108 14 L 117 14 L 110 19 L 113 28 L 105 22 L 97 28 L 100 19 L 93 14 L 102 14 Z" fill="#FFD700"/>
+        <path d="M 135 5 L 138 14 L 147 14 L 140 19 L 143 28 L 135 22 L 127 28 L 130 19 L 123 14 L 132 14 Z" fill="#FFD700"/>
+      </g>
+      <text x="160" y="22" font-family="'Segoe UI', system-ui, sans-serif" font-size="19" font-weight="600" fill="#FFFFFF" opacity="0.9">
+        50,000+ Students Trust PakUni
+      </text>
+    </g>
+  </g>
+  
+  <!-- Subtle decorative accents (not generic shapes) -->
+  <g opacity="0.08">
+    <!-- Organic lines in background -->
+    <path d="M 800 50 Q 850 100 820 150 T 900 250" stroke="#ffffff" stroke-width="2" fill="none"/>
+    <path d="M 900 320 Q 920 360 880 400 T 950 480" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+    <!-- Scattered dots for depth (hand-placed, not perfect grid) -->
+    <circle cx="750" cy="90" r="3" fill="#ffffff"/>
+    <circle cx="820" cy="140" r="2" fill="#ffffff"/>
+    <circle cx="880" cy="180" r="2.5" fill="#ffffff"/>
+    <circle cx="760" cy="360" r="2" fill="#ffffff"/>
+    <circle cx="910" cy="410" r="3" fill="#ffffff"/>
+  </g>
+  
+  <!-- Pakistan flag colors accent bar (more sophisticated) -->
+  <g>
+    <!-- Green bar with gradient -->
+    <rect x="0" y="485" width="680" height="15" fill="url(#greenAccent)"/>
+    <!-- White separator -->
+    <rect x="680" y="485" width="8" height="15" fill="#FFFFFF" opacity="0.9"/>
+    <!-- Gold accent -->
+    <rect x="688" y="485" width="336" height="15" fill="#FFD700" opacity="0.3"/>
+    <!-- Subtle highlight on top -->
+    <rect x="0" y="485" width="1024" height="2" fill="#FFFFFF" opacity="0.15"/>
+  </g>
+  
+  <!-- Minimal corner accents -->
+  <g opacity="0.12">
+    <!-- Top right corner accent -->
+    <path d="M 1024 0 L 1024 80 L 1000 80 L 1000 60 L 950 60 L 950 40 L 1000 40 L 1000 0 Z" fill="#FFFFFF"/>
+    <!-- Bottom left organic shape -->
+    <ellipse cx="60" cy="480" rx="40" ry="25" fill="#FFD700"/>
+  </g>
+
+</svg>

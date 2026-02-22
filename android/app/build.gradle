@@ -103,10 +103,10 @@ android {
         // Expose BuildConfig fields from .env
         resValue "string", "build_config_package", "com.pakuni"
         
-        // Target arm64-v8a for physical devices only (removes x86_64 emulator build)
-        // Add 'x86_64' back if you need emulator support
+        // Support all architectures for Play Store (AAB splits per device)
+        // arm64-v8a = modern phones, x86_64 = emulators/Chromebooks, armeabi-v7a = older 32-bit phones
         ndk {
-            abiFilters 'arm64-v8a'
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
         }
     }
 
