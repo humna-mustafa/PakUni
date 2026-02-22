@@ -160,11 +160,9 @@
       <!-- Feature 2: Merit Calculator -->
       <rect x="190" y="0" width="195" height="48" rx="24" fill="url(#pillGrad)"/>
       <rect x="202" y="10" width="28" height="28" rx="14" fill="#4573DF"/>
-      <!-- Calculator icon: grid pattern -->
-      <rect x="209" y="16" width="5" height="5" rx="1" fill="#FFFFFF"/>
-      <rect x="216" y="16" width="5" height="5" rx="1" fill="#FFFFFF"/>
-      <rect x="209" y="23" width="5" height="5" rx="1" fill="#FFFFFF"/>
-      <rect x="216" y="23" width="5" height="5" rx="1" fill="#FFFFFF"/>
+      <!-- Clean calculator icon -->
+      <rect x="210" y="17" width="12" height="14" rx="2" fill="#FFFFFF"/>
+      <rect x="212" y="19" width="8" height="3" fill="#4573DF"/>
       <text x="242" y="31" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#1E293B">
         Merit Calculator
       </text>
@@ -172,8 +170,9 @@
       <!-- Feature 3: Scholarships -->
       <rect x="400" y="0" width="175" height="48" rx="24" fill="url(#pillGrad)"/>
       <rect x="412" y="10" width="28" height="28" rx="14" fill="#4573DF"/>
-      <!-- Money/Scholarship icon: ₨ symbol style -->
-      <text x="426" y="30" font-family="'Segoe UI', sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">₨</text>
+      <!-- Clean money/coin icon -->
+      <circle cx="426" cy="24" r="7" fill="#FFFFFF"/>
+      <text x="426" y="28" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="700" fill="#4573DF" text-anchor="middle">Rs</text>
       <text x="452" y="31" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#1E293B">
         Scholarships
       </text>
@@ -186,9 +185,10 @@
       <!-- Feature 4: ECAT/MDCAT -->
       <rect x="0" y="0" width="175" height="48" rx="24" fill="url(#greenAccent)"/>
       <rect x="12" y="10" width="28" height="28" rx="14" fill="#FFFFFF" opacity="0.25"/>
-      <!-- Pencil/Test icon -->
-      <path d="M22 30 L30 18 L33 21 L25 33 Z" fill="#FFFFFF" opacity="0.9"/>
-      <rect x="30" y="16" width="4" height="4" rx="1" fill="#FFFFFF" opacity="0.9" transform="rotate(45, 32, 18)"/>
+      <!-- Clean document/test icon -->
+      <rect x="20" y="17" width="12" height="14" rx="1" fill="#FFFFFF"/>
+      <line x1="22" y1="21" x2="30" y2="21" stroke="#059669" stroke-width="1.5"/>
+      <line x1="22" y1="25" x2="28" y2="25" stroke="#059669" stroke-width="1.5"/>
       <text x="50" y="31" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">
         ECAT / MDCAT
       </text>
@@ -196,8 +196,9 @@
       <!-- Feature 5: Career Paths -->
       <rect x="190" y="0" width="175" height="48" rx="24" fill="url(#greenAccent)"/>
       <rect x="202" y="10" width="28" height="28" rx="14" fill="#FFFFFF" opacity="0.25"/>
-      <!-- Arrow/Path icon -->
-      <path d="M212 28 L222 28 M218 24 L222 28 L218 32" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Clean trending up arrow icon -->
+      <polyline points="210,28 215,22 220,25 225,19" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="222,19 225,19 225,22" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="242" y="31" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">
         Career Paths
       </text>
@@ -205,9 +206,10 @@
       <!-- Feature 6: AI Smart Match -->
       <rect x="380" y="0" width="195" height="48" rx="24" fill="url(#greenAccent)"/>
       <rect x="392" y="10" width="28" height="28" rx="14" fill="#FFFFFF" opacity="0.25"/>
-      <!-- AI/Brain icon -->
-      <circle cx="406" cy="24" r="6" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
-      <path d="M403 22 L405 24 L403 26 M409 22 L407 24 L409 26" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- Clean sparkle/magic icon -->
+      <path d="M406 18 L406 30 M400 24 L412 24" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="402" cy="20" r="1.5" fill="#FFFFFF"/>
+      <circle cx="410" cy="28" r="1.5" fill="#FFFFFF"/>
       <text x="432" y="31" font-family="'Segoe UI', sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">
         AI Smart Match
       </text>
