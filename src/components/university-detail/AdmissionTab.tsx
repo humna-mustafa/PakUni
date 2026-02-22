@@ -71,7 +71,7 @@ const AdmissionTab: React.FC<AdmissionTabProps> = ({
       {university?.admission_url && (
         <TouchableOpacity activeOpacity={0.9} onPress={() => openLink(university?.admission_url)}>
           <LinearGradient
-            colors={GRADIENTS.primary}
+            colors={GRADIENTS.primary.colors}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={styles.admissionBanner}>

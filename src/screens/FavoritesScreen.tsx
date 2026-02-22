@@ -84,7 +84,12 @@ const FavoritesScreen: React.FC = () => {
         {/* List */}
         <FlatList data={items} renderItem={renderItem} keyExtractor={keyExtractor}
           contentContainerStyle={[styles.listContent, items.length === 0 && styles.emptyList]}
-          showsVerticalScrollIndicator={false} ListEmptyComponent={renderEmpty} />
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={8}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          removeClippedSubviews={Platform.OS === 'android'}
+          ListEmptyComponent={renderEmpty} />
 
         {/* Remove Confirmation Modal */}
         <Modal visible={showRemoveModal} transparent animationType="none" onRequestClose={closeRemoveModal}>

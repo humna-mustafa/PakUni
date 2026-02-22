@@ -28,12 +28,12 @@ import { logger } from '../../utils/logger';
 import { TYPOGRAPHY } from '../../constants/design';
 import { tursoAdminService, TursoStats, DatabaseHealth } from '../../services/tursoAdmin';
 import { adminService } from '../../services/admin';
-import type { RootStackParamList } from '../../navigation/AppNavigator';
+import type { RootStackParamList, AdminStackParamList } from '../../navigation/AppNavigator';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-// Extract admin screen names from RootStackParamList for type safety
-type AdminScreenName = Extract<keyof RootStackParamList, `Admin${string}`>;
+// Extract admin screen names from AdminStackParamList for type safety
+type AdminScreenName = keyof AdminStackParamList;
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = (SCREEN_WIDTH - 48) / 2;
@@ -616,7 +616,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
           <TouchableOpacity
             key={action.id}
             style={[styles.quickActionCard, { backgroundColor: colors.card }]}
-            onPress={() => navigation.navigate(action.screen)}
+            onPress={() => (navigation as any).navigate(action.screen)}
             activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityLabel={`${action.title}, ${action.description}${action.badge ? `, ${action.badge} pending items` : ''}`}
@@ -717,7 +717,7 @@ const EnterpriseAdminDashboardScreen: React.FC = () => {
           </View>
           <TouchableOpacity
             style={styles.headerButton}
-            onPress={() => navigation.navigate('AdminSettings')}
+            onPress={() => (navigation as any).navigate('AdminSettings')}
           >
             <Icon name="settings-outline" size={24} color="#FFFFFF" />
           </TouchableOpacity>

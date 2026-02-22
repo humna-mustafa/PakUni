@@ -155,7 +155,7 @@ const ScholarshipsTab: React.FC<ScholarshipsTabProps> = ({
                       ? ['#10B981', '#059669']
                       : tuitionCoverage >= 75
                       ? ['#F59E0B', '#D97706']
-                      : GRADIENTS.primary
+                      : GRADIENTS.primary.colors
                   }
                   style={styles.coverageBadge}>
                   <Text style={styles.coverageText}>{tuitionCoverage}%</Text>
@@ -192,7 +192,7 @@ const ScholarshipsTab: React.FC<ScholarshipsTabProps> = ({
                 {scholarship?.website && (
                   <TouchableOpacity activeOpacity={0.8} onPress={() => openLink(scholarship.website)}>
                     <LinearGradient
-                      colors={GRADIENTS.primary}
+                      colors={GRADIENTS.primary.colors}
                       start={{x: 0, y: 0}}
                       end={{x: 1, y: 0}}
                       style={styles.applyBtn}>

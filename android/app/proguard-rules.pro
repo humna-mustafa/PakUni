@@ -69,13 +69,42 @@
 -keep class com.google.android.gms.** { *; }
 -keep class com.reactnativegooglesignin.** { *; }
 
+# ==========================================
+# CRITICAL: Keep BuildConfig for react-native-config
+# R8/ProGuard obfuscates class names, but react-native-config
+# uses Java reflection to read BuildConfig fields (SUPABASE_URL etc.)
+# Without this rule, Config.* returns undefined in release builds!
+# ==========================================
+-keep class com.pakuni.BuildConfig { *; }
+-keepclassmembers class com.pakuni.BuildConfig { *; }
+
+# react-native-config native module
+-keep class com.lugg.RNCConfig.** { *; }
+-keep class com.lugg.ReactNativeConfig.** { *; }
+
+# OkHttp - Keep classes (not just suppress warnings)
+-keep class okhttp3.** { *; }
+-keep class okio.** { *; }
+
+# react-native-url-polyfill
+-keep class com.nickreactor.** { *; }
+
 # Supabase / libSQL
 -keep class io.github.nickreactor.** { *; }
 -keep class tech.turso.** { *; }
 
-# Firebase
+# Firebase App Indexing
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.measurement.** { *; }
+
+# ==========================================
+# Google Play Core (In-App Review & Updates)
+# ==========================================
+-keep class com.google.android.play.core.** { *; }
+-keep class com.google.android.play.core.review.** { *; }
+-keep class com.google.android.play.core.appupdate.** { *; }
+-keep class com.google.android.play.core.tasks.** { *; }
+-dontwarn com.google.android.play.core.**
 
 # ==========================================
 # General Android ProGuard Rules

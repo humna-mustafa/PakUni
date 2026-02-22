@@ -269,16 +269,16 @@ const AdminStack = () => {
       <AdminStackNav.Screen name="AdminTursoDataManagement" component={GuardedAdminTursoDataManagementScreen} />
       <AdminStackNav.Screen name="AdminTursoNotifications" component={GuardedAdminTursoNotificationsScreen} />
       <AdminStackNav.Screen name="AdminSystemHealth" component={GuardedAdminSystemHealthScreen} />
-      <AdminStackNav.Screen name="AdminBulkOperations" component={GuardedAdminBulkOperationsScreen} />
-      <AdminStackNav.Screen name="AdminAppConfig" component={GuardedAdminAppConfigScreen} />
-      <AdminStackNav.Screen name="AdminActivityDashboard" component={GuardedAdminActivityDashboardScreen} />
-      <AdminStackNav.Screen name="AdminContentModeration" component={GuardedAdminContentModerationScreen} />
-      <AdminStackNav.Screen name="AdminDataSubmissions" component={GuardedAdminDataSubmissionsScreen} />
-      <AdminStackNav.Screen name="AdminAutoApprovalRules" component={GuardedAdminAutoApprovalRulesScreen} />
-      <AdminStackNav.Screen name="AdminMeritDeadlines" component={GuardedAdminMeritDeadlinesScreen} />
-      <AdminStackNav.Screen name="AdminNotificationTriggers" component={GuardedAdminNotificationTriggersScreen} />
-      <AdminStackNav.Screen name="AdminApprovalAnalytics" component={GuardedAdminApprovalAnalyticsScreen} />
-      <AdminStackNav.Screen name="AdminDataCorrectionReview" component={GuardedAdminDataCorrectionReviewScreen} />
+      <AdminStackNav.Screen name="AdminBulkOperations" component={GuardedAdminBulkOperationsScreen as any} />
+      <AdminStackNav.Screen name="AdminAppConfig" component={GuardedAdminAppConfigScreen as any} />
+      <AdminStackNav.Screen name="AdminActivityDashboard" component={GuardedAdminActivityDashboardScreen as any} />
+      <AdminStackNav.Screen name="AdminContentModeration" component={GuardedAdminContentModerationScreen as any} />
+      <AdminStackNav.Screen name="AdminDataSubmissions" component={GuardedAdminDataSubmissionsScreen as any} />
+      <AdminStackNav.Screen name="AdminAutoApprovalRules" component={GuardedAdminAutoApprovalRulesScreen as any} />
+      <AdminStackNav.Screen name="AdminMeritDeadlines" component={GuardedAdminMeritDeadlinesScreen as any} />
+      <AdminStackNav.Screen name="AdminNotificationTriggers" component={GuardedAdminNotificationTriggersScreen as any} />
+      <AdminStackNav.Screen name="AdminApprovalAnalytics" component={GuardedAdminApprovalAnalyticsScreen as any} />
+      <AdminStackNav.Screen name="AdminDataCorrectionReview" component={GuardedAdminDataCorrectionReviewScreen as any} />
     </AdminStackNav.Navigator>
   );
 };

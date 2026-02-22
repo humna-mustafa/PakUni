@@ -31,22 +31,26 @@ interface Props {
   index: number;
 }
 
-const UniversityCard = ({item, onPress, onToggleFavorite, isFavorite, colors, isDark, index}: Props) => {
+const UniversityCard = React.memo(({item, onPress, onToggleFavorite, isFavorite, colors, isDark, index}: Props) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
+  // Cap entrance animation to first 10 visible items for FlashList cell recycling
+  const shouldAnimate = index < 10;
+  const fadeAnim = useRef(new Animated.Value(shouldAnimate ? 0 : 1)).current;
+  const slideAnim = useRef(new Animated.Value(shouldAnimate ? 20 : 0)).current;
 
   useEffect(() => {
+    if (!shouldAnimate) return;
+    const delay = Math.min(index * 40, 350);
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 400,
-        delay: index * 50,
+        duration: 300,
+        delay,
         useNativeDriver: true,
       }),
       Animated.spring(slideAnim, {
         toValue: 0,
-        delay: index * 50,
+        delay,
         ...ANIMATION.spring.gentle,
         useNativeDriver: true,
       }),
@@ -225,7 +229,9 @@ const UniversityCard = ({item, onPress, onToggleFavorite, isFavorite, colors, is
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
+
+UniversityCard.displayName = 'UniversityCard';
 
 const styles = StyleSheet.create({
   card: {

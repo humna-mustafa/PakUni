@@ -532,7 +532,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       }
       
       // Sign in with Google natively (v16+ returns {type, data} instead of throwing)
-      const signInResult = await GoogleSignin.signIn();
+      const signInResult: any = await GoogleSignin.signIn();
       
       // Handle v16+ response format
       // In v16, signIn() returns {type: 'success', data} or {type: 'cancelled'}
@@ -556,7 +556,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         try {
           const tokens = await GoogleSignin.getTokens();
           idToken = tokens.idToken;
-        } catch (tokenError) {
+        } catch (tokenError: any) {
           logger.debug('getTokens() failed', tokenError, 'Auth');
         }
       }
@@ -567,18 +567,68 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
 
       logger.debug('Signing in to Supabase with Google ID token...', null, 'Auth');
       
-      // Use signInWithIdToken - the correct API for native mobile Google auth → Supabase
-      const {data, error} = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken,
-      });
+      // CRITICAL FIX: Wait for Android's network layer to stabilize after
+      // returning from Google Sign-In Activity. The Activity transition causes
+      // brief network unavailability (~100-500ms), leading to "Network request failed".
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Retry wrapper for network resilience during activity transitions.
+      // IMPORTANT: Supabase auth-js v2 catches network errors internally and
+      // returns them in {error} instead of throwing. We must check the returned
+      // error object, not rely on try/catch.
+      const MAX_RETRIES = 4;
+      const RETRY_DELAY = 2500;
+      let data: any = null;
+      let error: any = null;
+
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        logger.debug(`Supabase signInWithIdToken attempt ${attempt}/${MAX_RETRIES}`, null, 'Auth');
+        
+        try {
+          const result = await supabase.auth.signInWithIdToken({
+            provider: 'google',
+            token: idToken!,
+          });
+          data = result.data;
+          error = result.error;
+        } catch (thrownError: any) {
+          // Some versions may still throw - handle both patterns
+          error = thrownError;
+          data = null;
+        }
+
+        // Check if error is network-related (retryable)
+        if (error) {
+          const errMsg = (error?.message || error?.msg || '').toLowerCase();
+          const isNetworkError = errMsg.includes('network') ||
+                                 errMsg.includes('fetch') ||
+                                 errMsg.includes('request failed') ||
+                                 errMsg.includes('retryable') ||
+                                 errMsg.includes('timeout') ||
+                                 errMsg.includes('abort') ||
+                                 error?.name === 'AuthRetryableFetchError';
+          
+          if (isNetworkError && attempt < MAX_RETRIES) {
+            logger.debug(`Network error on attempt ${attempt}, retrying in ${RETRY_DELAY}ms: ${errMsg}`, null, 'Auth');
+            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            continue;
+          }
+        }
+        
+        // Success or non-retryable error - stop retrying
+        break;
+      }
       
       if (error) {
-        logger.error('Supabase signInWithIdToken failed', error, 'Auth');
+        logger.error('Supabase signInWithIdToken failed after all retries', {
+          message: error?.message,
+          name: error?.name,
+          status: error?.status,
+        }, 'Auth');
         throw error;
       }
 
-      if (data.user) {
+      if (data?.user) {
         logger.info('Supabase sign-in successful', {email: data.user.email}, 'Auth');
         await loadUserProfile(data.user.id, 'google', true); // true = new login
         return true;

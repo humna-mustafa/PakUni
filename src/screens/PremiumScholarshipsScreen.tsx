@@ -67,7 +67,7 @@ const PremiumScholarshipsScreen = () => {
           filteredCount={filteredScholarships.length}
           showFilters={showFilters}
           onToggleFilters={() => setShowFilters(!showFilters)}
-          user={user}
+          avatarUrl={user?.avatarUrl}
           getUserInitials={getUserInitials}
           onProfilePress={navigateToProfile}
         />
@@ -153,7 +153,7 @@ const PremiumScholarshipsScreen = () => {
           isFav={isFav}
           onClose={() => setShowDetail(false)}
           onToggleFavorite={handleToggleFavorite}
-          onOpenLink={openLink}
+          openLink={openLink}
           onFixData={(scholarshipId, scholarshipName) =>
             navigation.navigate('DataCorrection', {
               entityType: 'scholarship',

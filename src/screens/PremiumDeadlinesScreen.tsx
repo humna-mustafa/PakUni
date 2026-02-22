@@ -3,15 +3,18 @@
  * Thin composition using DeadlineCard + useDeadlinesScreen
  */
 
-import React from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, StatusBar} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, Animated, StatusBar, Platform} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {TYPOGRAPHY, SPACING, RADIUS} from '../constants/design';
 import {Icon} from '../components/icons';
 import {DeadlineCard} from '../components/deadlines';
+import {EmptyState} from '../components/EmptyState';
 import {useDeadlinesScreen} from '../hooks/useDeadlinesScreen';
 import {PROGRAM_CATEGORIES} from '../data/deadlines';
+import type {AdmissionDeadline} from '../data/deadlines';
+import {ScrollView} from 'react-native';
 
 const PremiumDeadlinesScreen = () => {
   const {
@@ -64,78 +67,123 @@ const PremiumDeadlinesScreen = () => {
           </LinearGradient>
         </Animated.View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          {/* Personalization Banner */}
-          {isPersonalized && (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => setShowPersonalized(!showPersonalized)}
-              style={[styles.personalizationBanner, {
-                backgroundColor: showPersonalized ? (isDark ? '#1C3A2E' : '#DCFCE7') : colors.card,
-                borderColor: showPersonalized ? '#16A34A' : colors.border,
-              }]}>
-              <Icon name={showPersonalized ? 'sparkles' : 'sparkles-outline'} family="Ionicons" size={18} color={showPersonalized ? '#16A34A' : colors.textSecondary} />
-              <View style={styles.personalizationText}>
-                <Text style={[styles.personalizationTitle, {color: showPersonalized ? '#15803D' : colors.text}]}>
-                  {showPersonalized ? `For You: ${userFieldLabel} deadlines` : 'Show For You deadlines'}
-                </Text>
-                <Text style={[styles.personalizationSub, {color: colors.textSecondary}]}>
-                  {showPersonalized ? (userName ? `Based on your profile, ${userName}` : 'Based on your profile') : 'Tap to filter by your field'}
-                </Text>
+        {/* Header */}
+        <Animated.View style={[styles.headerContainer, {opacity: headerAnim, transform: [{translateY: headerAnim.interpolate({inputRange: [0, 1], outputRange: [-20, 0]})}]}]}>
+          <LinearGradient
+            colors={isDark ? ['#DC2626', '#B91C1C', '#991B1B'] : ['#EF4444', '#DC2626', '#B91C1C']}
+            start={{x: 0, y: 0}} end={{x: 1, y: 1}} style={styles.header}>
+            <View style={styles.headerDecoCircle1} />
+            <View style={styles.headerDecoCircle2} />
+            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" family="Ionicons" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <View style={styles.headerContent}>
+              <View style={styles.headerIconCircle}>
+                <Icon name="calendar-outline" family="Ionicons" size={32} color="#FFFFFF" />
               </View>
-              <Icon name={showPersonalized ? 'checkmark-circle' : 'chevron-forward'} family="Ionicons" size={18} color={showPersonalized ? '#16A34A' : colors.textSecondary} />
-            </TouchableOpacity>
-          )}
-
-          {/* Filters */}
-          <View style={styles.filtersContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryContainer}>
-              {PROGRAM_CATEGORIES.map(category => (
-                <TouchableOpacity key={category.id}
-                  style={[styles.categoryChip, {
-                    backgroundColor: selectedCategory === category.id ? colors.primary : colors.card,
-                    borderColor: selectedCategory === category.id ? colors.primary : colors.border,
-                    opacity: showPersonalized ? 0.5 : 1,
-                  }]}
-                  onPress={() => { setShowPersonalized(false); setSelectedCategory(category.id); }} activeOpacity={0.8}
-                  disabled={showPersonalized}>
-                  <Icon name={category.iconName} family="Ionicons" size={14} color={selectedCategory === category.id ? '#FFFFFF' : colors.textSecondary} />
-                  <Text style={[styles.categoryChipText, {color: selectedCategory === category.id ? '#FFFFFF' : colors.text}]}>{category.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity
-              style={[styles.followingToggle, {backgroundColor: showFollowedOnly ? colors.primary : colors.card, borderColor: showFollowedOnly ? colors.primary : colors.border}]}
-              onPress={() => setShowFollowedOnly(!showFollowedOnly)} activeOpacity={0.8}>
-              <Icon name={showFollowedOnly ? 'notifications' : 'notifications-outline'} family="Ionicons" size={16} color={showFollowedOnly ? '#FFFFFF' : colors.textSecondary} />
-              <Text style={[styles.followingToggleText, {color: showFollowedOnly ? '#FFFFFF' : colors.text}]}>Following ({followedUniversities.length})</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Deadlines List */}
-          <View style={styles.deadlinesList}>
-            {filteredDeadlines.map((deadline, index) => (
-              <DeadlineCard key={deadline.id} deadline={deadline}
-                isFollowed={followedUniversities.includes(deadline.universityId)}
-                onFollowToggle={handleFollowToggle} onApply={handleApply}
-                relatedEntryTests={getRelatedEntryTests(deadline)}
-                onEntryTestPress={handleEntryTestPress}
-                colors={colors} isDark={isDark} index={index} />
-            ))}
-          </View>
-
-          {/* Empty State */}
-          {filteredDeadlines.length === 0 && (
-            <View style={styles.emptyState}>
-              <Icon name="calendar-outline" family="Ionicons" size={48} color={colors.textSecondary} />
-              <Text style={[styles.emptyTitle, {color: colors.text}]}>No Deadlines Found</Text>
-              <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
-                {showFollowedOnly ? 'Follow universities to see their deadlines here' : 'No deadlines match your filters'}
-              </Text>
+              <Text style={styles.headerTitle}>Admission Deadlines</Text>
+              <Text style={styles.headerSubtitle}>Never miss an application deadline</Text>
             </View>
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={styles.statValue}>{stats.openCount}</Text>
+                <Text style={styles.statLabel}>Open Now</Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={[styles.statValue, {color: '#FCD34D'}]}>{stats.closingSoonCount}</Text>
+                <Text style={styles.statLabel}>Closing Soon</Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={styles.statValue}>{stats.upcomingCount}</Text>
+                <Text style={styles.statLabel}>Upcoming</Text>
+              </View>
+            </View>
+          </LinearGradient>
+        </Animated.View>
+
+        <FlatList<AdmissionDeadline>
+          data={filteredDeadlines}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => (
+            <DeadlineCard
+              deadline={item}
+              isFollowed={followedUniversities.includes(item.universityId)}
+              onFollowToggle={handleFollowToggle}
+              onApply={handleApply}
+              relatedEntryTests={getRelatedEntryTests(item)}
+              onEntryTestPress={handleEntryTestPress}
+              colors={colors}
+              isDark={isDark}
+              index={index}
+            />
           )}
-          <View style={{height: 100}} />
-        </ScrollView>
+          contentContainerStyle={styles.deadlinesList}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={6}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          removeClippedSubviews={Platform.OS === 'android'}
+          ListHeaderComponent={
+            <>
+              {/* Personalization Banner */}
+              {isPersonalized && (
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={() => setShowPersonalized(!showPersonalized)}
+                  style={[styles.personalizationBanner, {
+                    backgroundColor: showPersonalized ? (isDark ? '#1C3A2E' : '#DCFCE7') : colors.card,
+                    borderColor: showPersonalized ? '#16A34A' : colors.border,
+                  }]}>
+                  <Icon name={showPersonalized ? 'sparkles' : 'sparkles-outline'} family="Ionicons" size={18} color={showPersonalized ? '#16A34A' : colors.textSecondary} />
+                  <View style={styles.personalizationText}>
+                    <Text style={[styles.personalizationTitle, {color: showPersonalized ? '#15803D' : colors.text}]}>
+                      {showPersonalized ? `For You: ${userFieldLabel} deadlines` : 'Show For You deadlines'}
+                    </Text>
+                    <Text style={[styles.personalizationSub, {color: colors.textSecondary}]}>
+                      {showPersonalized ? (userName ? `Based on your profile, ${userName}` : 'Based on your profile') : 'Tap to filter by your field'}
+                    </Text>
+                  </View>
+                  <Icon name={showPersonalized ? 'checkmark-circle' : 'chevron-forward'} family="Ionicons" size={18} color={showPersonalized ? '#16A34A' : colors.textSecondary} />
+                </TouchableOpacity>
+              )}
+
+              {/* Filters */}
+              <View style={styles.filtersContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryContainer}>
+                  {PROGRAM_CATEGORIES.map(category => (
+                    <TouchableOpacity key={category.id}
+                      style={[styles.categoryChip, {
+                        backgroundColor: selectedCategory === category.id ? colors.primary : colors.card,
+                        borderColor: selectedCategory === category.id ? colors.primary : colors.border,
+                        opacity: showPersonalized ? 0.5 : 1,
+                      }]}
+                      onPress={() => { setShowPersonalized(false); setSelectedCategory(category.id); }} activeOpacity={0.8}
+                      disabled={showPersonalized}>
+                      <Icon name={category.iconName} family="Ionicons" size={14} color={selectedCategory === category.id ? '#FFFFFF' : colors.textSecondary} />
+                      <Text style={[styles.categoryChipText, {color: selectedCategory === category.id ? '#FFFFFF' : colors.text}]}>{category.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+                <TouchableOpacity
+                  style={[styles.followingToggle, {backgroundColor: showFollowedOnly ? colors.primary : colors.card, borderColor: showFollowedOnly ? colors.primary : colors.border}]}
+                  onPress={() => setShowFollowedOnly(!showFollowedOnly)} activeOpacity={0.8}>
+                  <Icon name={showFollowedOnly ? 'notifications' : 'notifications-outline'} family="Ionicons" size={16} color={showFollowedOnly ? '#FFFFFF' : colors.textSecondary} />
+                  <Text style={[styles.followingToggleText, {color: showFollowedOnly ? '#FFFFFF' : colors.text}]}>Following ({followedUniversities.length})</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+          ListEmptyComponent={
+            <EmptyState
+              title="No Deadlines Found"
+              subtitle={showFollowedOnly ? 'Follow universities to see their deadlines here' : 'No deadlines match your filters'}
+              iconName="calendar-outline"
+              variant="search"
+            />
+          }
+        />
       </SafeAreaView>
     </View>
   );
@@ -168,7 +216,7 @@ const styles = StyleSheet.create({
   categoryChipText: {fontSize: TYPOGRAPHY.sizes.xs, fontWeight: TYPOGRAPHY.weight.semibold},
   followingToggle: {flexDirection: 'row', alignItems: 'center', marginHorizontal: SPACING.lg, paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, borderRadius: RADIUS.md, borderWidth: 1, gap: SPACING.xs, alignSelf: 'flex-start'},
   followingToggleText: {fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.semibold},
-  deadlinesList: {paddingHorizontal: SPACING.lg, gap: SPACING.md},
+  deadlinesList: {paddingHorizontal: SPACING.lg, paddingBottom: 120},
   emptyState: {alignItems: 'center', paddingVertical: SPACING.xxl * 2, paddingHorizontal: SPACING.xl},
   emptyTitle: {fontSize: TYPOGRAPHY.sizes.lg, fontWeight: TYPOGRAPHY.weight.bold, marginTop: SPACING.md, marginBottom: SPACING.xs},
   emptyText: {fontSize: TYPOGRAPHY.sizes.sm, textAlign: 'center'},

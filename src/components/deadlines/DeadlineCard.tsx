@@ -53,13 +53,17 @@ const getStatusConfig = (status: string, daysLeft: number, colors: any) => {
 const DeadlineCard: React.FC<DeadlineCardProps> = React.memo(({
   deadline, isFollowed, onFollowToggle, onApply, onEntryTestPress, relatedEntryTests, colors, isDark, index,
 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
+  // Cap entrance animation to first 6 visible items for FlatList cell recycling
+  const shouldAnimate = index < 6;
+  const fadeAnim = useRef(new Animated.Value(shouldAnimate ? 0 : 1)).current;
+  const slideAnim = useRef(new Animated.Value(shouldAnimate ? 20 : 0)).current;
 
   useEffect(() => {
+    if (!shouldAnimate) return;
+    const delay = Math.min(index * 60, 300);
     Animated.parallel([
-      Animated.timing(fadeAnim, {toValue: 1, duration: 400, delay: index * 80, useNativeDriver: true}),
-      Animated.spring(slideAnim, {toValue: 0, delay: index * 80, tension: 50, friction: 8, useNativeDriver: true}),
+      Animated.timing(fadeAnim, {toValue: 1, duration: 300, delay, useNativeDriver: true}),
+      Animated.spring(slideAnim, {toValue: 0, delay, tension: 50, friction: 8, useNativeDriver: true}),
     ]).start();
   }, [index]);
 
@@ -184,7 +188,7 @@ const DeadlineCard: React.FC<DeadlineCardProps> = React.memo(({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: RADIUS.xl, padding: SPACING.lg, position: 'relative',
+    borderRadius: RADIUS.xl, padding: SPACING.lg, marginBottom: SPACING.md, position: 'relative',
     ...Platform.select({
       ios: {shadowColor: '#000', shadowOffset: {width: 0, height: 2}, shadowOpacity: 0.08, shadowRadius: 12},
       android: {elevation: 3},

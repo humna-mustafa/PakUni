@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Google App Indexing Actions
+    Makes PakUni content discoverable in Google Search results.
+    When users search for Pakistani universities, merit calculators, etc.,
+    Google can show deep links directly to relevant in-app content.
+-->
+<actions>
+    <!-- Search for universities within the app -->
+    <action intentName="actions.intent.OPEN_APP_FEATURE">
+        <fulfillment urlTemplate="pakuni://university/{?name}">
+            <parameter-mapping
+                urlParameter="name"
+                intentParameter="feature" />
+        </fulfillment>
+    </action>
+    
+    <!-- View university details -->
+    <action intentName="actions.intent.GET_THING">
+        <fulfillment urlTemplate="https://pakuni.app/university/{id}">
+            <parameter-mapping
+                urlParameter="id"
+                intentParameter="thing.name"
+                required="true" />
+        </fulfillment>
+    </action>
+</actions>

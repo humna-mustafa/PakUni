@@ -119,7 +119,7 @@ const ContactSupportScreen: React.FC = () => {
           <TouchableOpacity style={[styles.rateCard, {backgroundColor: colors.card}]} onPress={handleRateApp} activeOpacity={0.8}>
             <LinearGradient colors={['#F59E0B', '#D97706']} start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={styles.rateCardGradient}>
               <View style={styles.rateContent}>
-                <Text style={styles.rateTitle}>Enjoying PakUni? ⭐</Text>
+                <Text style={styles.rateTitle}>Enjoying PakUni?</Text>
                 <Text style={styles.rateSubtitle}>Rate us on the App Store to help other students find us!</Text>
               </View>
               <Icon name="star" family="Ionicons" size={32} color="#FFFFFF" />

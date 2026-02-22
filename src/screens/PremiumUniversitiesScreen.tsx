@@ -76,7 +76,7 @@ const PremiumUniversitiesScreen = () => {
           selectedProvince={selectedProvince}
           setSelectedProvince={setSelectedProvince}
           selectedType={selectedType}
-          setSelectedType={setSelectedType}
+          setSelectedType={setSelectedType as (v: string) => void}
         />
       ) : null,
     [colors, showFilters, sortBy, selectedProvince, selectedType, setSortBy, setSelectedProvince, setSelectedType],
@@ -152,19 +152,19 @@ const PremiumUniversitiesScreen = () => {
         {loading ? (
           <UniversitiesListSkeleton />
         ) : (
-          <FlashList
+          <FlashList<UniversityItem>
             data={filteredUniversities}
-            keyExtractor={item => item.short_name}
+            keyExtractor={(item: UniversityItem) => item.short_name}
             renderItem={renderUniversityCard}
             ListHeaderComponent={renderHeader}
             contentContainerStyle={styles.listContent}
+            estimatedItemSize={140}
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="always"
             removeClippedSubviews={false}
-            estimatedItemSize={120}
-            onViewableItemsChanged={onViewableItemsChanged.current}
-            viewabilityConfig={viewabilityConfig.current}
+            onViewableItemsChanged={onViewableItemsChanged.current as any}
+            viewabilityConfig={viewabilityConfig.current as any}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

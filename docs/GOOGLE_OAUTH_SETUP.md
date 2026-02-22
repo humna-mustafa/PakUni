@@ -11,15 +11,13 @@ No redirect URIs needed - authentication happens natively on the device!
 
 ## Android SHA-1 Fingerprints
 
-### Debug Build
+### Both Debug & Release (same keystore)
 ```
-5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
+AB:5C:A7:50:89:CA:51:E7:B4:E5:71:F8:CA:F0:99:1D:44:9A:C4:C1
 ```
 
-### Release Build  
-```
-2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66
-```
+> **Note**: Both debug and release builds use the same `pakuni-release.keystore`,
+> so only ONE Android OAuth client is needed in Google Cloud Console.
 
 ## Required Steps in Google Cloud Console
 
@@ -28,17 +26,12 @@ No redirect URIs needed - authentication happens natively on the device!
 2. Click **+ CREATE CREDENTIALS** > **OAuth client ID**
 3. Select **Android** as Application type
 
-**For Debug Builds:**
-   - **Name**: `PakUni Android Debug`
+**For PakUni Android (debug + release use same keystore):**
+   - **Name**: `PakUni Android`
    - **Package name**: `com.pakuni`
-   - **SHA-1 certificate fingerprint**: `5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25`
+   - **SHA-1 certificate fingerprint**: `AB:5C:A7:50:89:CA:51:E7:B4:E5:71:F8:CA:F0:99:1D:44:9A:C4:C1`
 
-**For Release Builds:**
-   - **Name**: `PakUni Android Release`
-   - **Package name**: `com.pakuni`
-   - **SHA-1 certificate fingerprint**: `2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66`
-
-5. Click **CREATE** for each
+5. Click **CREATE**
 
 ### Step 2: Verify Web Client ID in Supabase Dashboard
 1. Go to [Supabase Dashboard - Auth Providers](https://supabase.com/dashboard/project/therewjnnidxlddgkaca/auth/providers)
@@ -114,11 +107,11 @@ npx react-native run-android
   5. Wait 5-10 minutes for changes to propagate
   6. Clean and rebuild: `cd android && ./gradlew clean && cd .. && npx react-native run-android`
 
-### Current SHA-1 Fingerprints (January 2026)
+### Current SHA-1 Fingerprint (February 2026 - Production Keystore)
 ```
-Debug:   5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25
-Release: 2D:63:FE:E0:E1:E8:25:D3:3B:4B:FE:8A:48:99:C3:7A:C6:D5:D1:66
+Debug + Release: AB:5C:A7:50:89:CA:51:E7:B4:E5:71:F8:CA:F0:99:1D:44:9A:C4:C1
 ```
+> Both variants use `pakuni-release.keystore` — only one SHA-1 to register.
 
 ### "Google Play Services not available"
 - **Cause**: Device doesn't have Google Play Services

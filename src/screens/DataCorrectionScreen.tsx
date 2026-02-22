@@ -58,8 +58,8 @@ const ENTITY_META: Record<CorrectionEntityType, { label: string; icon: string; c
 };
 
 // Priority suggestion based on field key
-const URGENT_FIELDS = ['registration_deadline', 'application_deadline', 'test_date', 'deadline'];
-const HIGH_FIELDS = ['fee', 'website', 'phone', 'email', 'merit_percentage'];
+const URGENT_FIELDS = ['registration_deadline', 'application_deadline', 'applicationDeadline', 'test_date', 'entryTestDate', 'deadline'];
+const HIGH_FIELDS = ['fee', 'website', 'phone', 'email', 'merit_percentage', 'closingMerit', 'openingMerit', 'tuition_fee'];
 
 function suggestPriority(changedFields: string[]): 'low' | 'medium' | 'high' | 'urgent' {
   if (changedFields.some(f => URGENT_FIELDS.includes(f))) { return 'urgent'; }
@@ -90,8 +90,8 @@ const DataCorrectionScreen: React.FC = () => {
   const [step, setStep] = useState<'edit' | 'reason' | 'preview'>('edit');
   const [submittedId, setSubmittedId] = useState<string | null>(null);
 
-  const meta = ENTITY_META[entityType] || ENTITY_META.university;
-  const fieldDefs = ENTITY_FIELDS_MAP[entityType] || [];
+  const meta = ENTITY_META[entityType as CorrectionEntityType] || ENTITY_META.university;
+  const fieldDefs = ENTITY_FIELDS_MAP[entityType as CorrectionEntityType] || [];
 
   const successAnim = useRef(new Animated.Value(0)).current;
 
@@ -103,7 +103,7 @@ const DataCorrectionScreen: React.FC = () => {
   const loadEntityData = async () => {
     setLoading(true);
     try {
-      const data = await dataCorrectionService.fetchEntityData(entityType, entityId);
+      const data = await dataCorrectionService.fetchEntityData(entityType as CorrectionEntityType, entityId);
       setEntityData(data);
       if (prefillField) {
         setActiveEditField(prefillField);
@@ -171,7 +171,7 @@ const DataCorrectionScreen: React.FC = () => {
       const priority = suggestPriority(computedChanges.map(c => c.fieldKey));
       const result = await dataCorrectionService.submitCorrection(
         {
-          entityType,
+          entityType: entityType as CorrectionEntityType,
           entityId,
           entityDisplayName: entityData?.displayName || initialEntityName || entityId,
           corrections: computedChanges,
@@ -180,7 +180,7 @@ const DataCorrectionScreen: React.FC = () => {
         },
         {
           id: user.id,
-          name: user.full_name || user.email || 'Anonymous',
+          name: user.fullName || user.email || 'Anonymous',
           email: user.email || null,
         },
         priority,
@@ -439,7 +439,7 @@ const DataCorrectionScreen: React.FC = () => {
       <UniversalHeader
         title={`Fix ${meta.label} Data`}
         onBack={() => navigation.goBack()}
-        rightComponent={
+        rightContent={
           hasChanges ? (
             <TouchableOpacity
               onPress={() => setStep(step === 'edit' ? 'reason' : 'edit')}
@@ -515,7 +515,7 @@ const DataCorrectionScreen: React.FC = () => {
               {step === 'edit' && (
                 <>
                   {/* Fields list */}
-                  {fieldDefs.map(field => renderFieldCard(field))}
+                  {fieldDefs.map((field: FieldDefinition) => renderFieldCard(field))}
 
                   {/* Change summary */}
                   {renderChangeSummary()}

@@ -162,7 +162,7 @@ const TestDetailModal = ({
                     Negative Marking: {test.test_format.negative_marking ? 'Yes' : 'No'}
                   </Text>
                 </View>
-                {test.test_format.sections.map((section: any, i: number) => (
+                {(test.test_format.sections ?? []).map((section: any, i: number) => (
                   <View key={i} style={styles.formatItem}>
                     <View style={[styles.formatDot, {backgroundColor: colors.primary}]} />
                     <Text style={[styles.formatText, {color: colors.textSecondary}]}>
@@ -245,7 +245,7 @@ const TestDetailModal = ({
                         {variant.description}
                       </Text>
                       <Text style={[styles.variantFieldLabel, {color: colors.textSecondary}]}>
-                        For: {variant.applicable_for.join(', ')}
+                        For: {(variant.applicable_for ?? []).join(', ')}
                       </Text>
                       {variant.eligibility && variant.eligibility.length > 0 && (
                         <View style={{marginTop: 6}}>
@@ -261,7 +261,7 @@ const TestDetailModal = ({
                         <Text style={[styles.variantSectionsTitle, {color: colors.text}]}>
                           Question Pattern:
                         </Text>
-                        {variant.test_format.sections.map((sec, si: number) => (
+                        {(variant.test_format?.sections ?? []).map((sec, si: number) => (
                           <View key={si} style={styles.variantSectionRow}>
                             <View style={[styles.formatDot, {backgroundColor: variantBrandColors.primary}]} />
                             <Text style={{fontSize: 12, color: colors.textSecondary, flex: 1}}>

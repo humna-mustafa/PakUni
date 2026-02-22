@@ -19,23 +19,27 @@ interface Props {
   colors: any;
 }
 
-const TestCard = ({test, onPress, index, colors}: Props) => {
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+const TestCard = React.memo(({test, onPress, index, colors}: Props) => {
+  // Cap entrance animation delay to first 8 visible items for FlatList compatibility
+  const shouldAnimate = index < 8;
+  const slideAnim = useRef(new Animated.Value(shouldAnimate ? 30 : 0)).current;
+  const fadeAnim = useRef(new Animated.Value(shouldAnimate ? 0 : 1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    if (!shouldAnimate) return;
+    const delay = Math.min(index * 60, 400);
     Animated.parallel([
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 400,
-        delay: index * 80,
+        duration: 300,
+        delay,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 400,
-        delay: index * 80,
+        duration: 300,
+        delay,
         useNativeDriver: true,
       }),
     ]).start();
@@ -108,7 +112,9 @@ const TestCard = ({test, onPress, index, colors}: Props) => {
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
+
+TestCard.displayName = 'TestCard';
 
 const styles = StyleSheet.create({
   card: {
@@ -188,3 +194,4 @@ const styles = StyleSheet.create({
 });
 
 export default TestCard;
+// TestCard is wrapped in React.memo for FlatList cell recycling efficiency

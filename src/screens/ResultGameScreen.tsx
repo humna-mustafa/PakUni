@@ -30,7 +30,7 @@ const ResultGameScreen: React.FC = () => {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: SPACING.lg}}>
           {/* Hero */}
           <LinearGradient colors={['#4573DF', '#6366F1']} style={styles.heroCard}>
-            <View style={styles.heroEmoji}><Text style={{fontSize: 40}}>🎓</Text></View>
+            <View style={styles.heroEmoji}><Icon name="school" family="Ionicons" size={40} color="#FFFFFF" /></View>
             <Text style={styles.heroTitle}>Admission Chance Calculator</Text>
             <Text style={styles.heroSub}>Enter your marks and entry test score to see your chances at top Pakistani universities!</Text>
           </LinearGradient>
@@ -77,9 +77,9 @@ const ResultGameScreen: React.FC = () => {
                       <Text style={{fontSize: TYPOGRAPHY.sizes.xs, fontWeight: TYPOGRAPHY.weight.semibold, color: r.program.difficulty === 'Very Hard' ? '#EF4444' : r.program.difficulty === 'Hard' ? '#F59E0B' : r.program.difficulty === 'Medium' ? '#4573DF' : '#10B981'}}>{r.program.difficulty}</Text>
                     </View>
                   </View>
-                  {r.recommendations.length > 0 && (
+                  {(r.recommendations?.length ?? 0) > 0 && (
                     <View style={{marginTop: SPACING.sm, paddingTop: SPACING.sm, borderTopWidth: 1, borderTopColor: 'rgba(0,0,0,0.05)'}}>
-                      {r.recommendations.slice(0, 2).map((rec, i) => (
+                      {(r.recommendations ?? []).slice(0, 2).map((rec, i) => (
                         <View key={i} style={{flexDirection: 'row', alignItems: 'flex-start', gap: 6, marginBottom: 4}}>
                           <Icon name="bulb-outline" size={12} color="#F59E0B" />
                           <Text style={{flex: 1, fontSize: TYPOGRAPHY.sizes.xs, lineHeight: 16, color: h.colors.textSecondary}}>{rec}</Text>

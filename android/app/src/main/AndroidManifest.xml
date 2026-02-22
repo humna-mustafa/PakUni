@@ -5,8 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
-    <!-- Declare features (optional but improves Play Store filtering) -->
+    <!-- Declare features (improves Play Store filtering & device compatibility) -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
 
     <!-- Queries for deep linking and external apps (Android 11+) -->
     <queries>
@@ -18,6 +19,11 @@
         <intent>
             <action android:name="android.intent.action.SENDTO" />
             <data android:scheme="mailto" />
+        </intent>
+        <!-- Play Store In-App Review/Update API -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
         </intent>
     </queries>
 
@@ -34,7 +40,13 @@
       android:usesCleartextTraffic="${usesCleartextTraffic}"
       android:supportsRtl="true"
       android:hardwareAccelerated="true"
-      tools:targetApi="34">
+      android:largeHeap="true"
+      tools:targetApi="35">
+
+      <!-- === PLAY STORE ASO: App Indexing metadata === -->
+      <meta-data android:name="com.google.android.gms.version"
+          android:value="@integer/google_play_services_version" />
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -42,10 +54,13 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
+
+        <!-- Main launcher -->
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+
         <!-- Deep link for OAuth callback -->
         <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
@@ -53,6 +68,7 @@
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="pakuni" android:host="auth" />
         </intent-filter>
+
         <!-- HTTPS deep link for Supabase OAuth redirect -->
         <intent-filter android:autoVerify="true">
             <action android:name="android.intent.action.VIEW" />
@@ -62,6 +78,49 @@
                   android:host="therewjnnidxlddgkaca.supabase.co"
                   android:pathPrefix="/auth/v1/callback" />
         </intent-filter>
+
+        <!-- === PLAY STORE ASO: Content deep links for Google Search indexing === -->
+        <!-- These make university/scholarship pages appear in Google Search results -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https"
+                  android:host="pakuni.app"
+                  android:pathPrefix="/university" />
+            <data android:scheme="https"
+                  android:host="pakuni.app"
+                  android:pathPrefix="/scholarship" />
+            <data android:scheme="https"
+                  android:host="pakuni.app"
+                  android:pathPrefix="/merit" />
+            <data android:scheme="https"
+                  android:host="pakuni.app"
+                  android:pathPrefix="/career" />
+            <data android:scheme="https"
+                  android:host="pakuni.app"
+                  android:pathPrefix="/test" />
+        </intent-filter>
+
+        <!-- Custom scheme deep links for sharing & referral -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="pakuni"
+                  android:host="university" />
+            <data android:scheme="pakuni"
+                  android:host="scholarship" />
+            <data android:scheme="pakuni"
+                  android:host="merit" />
+            <data android:scheme="pakuni"
+                  android:host="career" />
+        </intent-filter>
+
+        <!-- Google App Indexing: Enable search action for app content -->
+        <meta-data android:name="com.google.android.actions"
+            android:resource="@xml/actions" />
+
       </activity>
     </application>
 </manifest>

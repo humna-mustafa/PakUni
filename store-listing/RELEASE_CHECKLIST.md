@@ -1,162 +1,91 @@
-# 🚀 Google Play Store Release Checklist
+# 🚀 PakUni v1.3.0 — Play Store Release Checklist (ASO Optimized)
 
-## ✅ Pre-Release Checklist - ALL COMPLETE
+## ✅ Build Configuration — ALL OPTIMIZED
+- [x] R8/ProGuard **ENABLED** for release builds (20-40% smaller APK)
+- [x] AAB bundle splits: ABI + density + language
+- [x] PNG crunching enabled for release
+- [x] Production keystore (`pakuni-release.keystore`)
+- [x] Release signing configured
+- [x] Version code: **10**
+- [x] Version name: **1.3.0**
+- [x] Target SDK: **35** (Android 15)
+- [x] Min SDK: **24** (Android 7.0)
+- [x] Hermes engine enabled
+- [x] New Architecture enabled
+- [x] arm64-v8a + x86_64 architectures
 
-### ✅ App Configuration
-- [x] Production keystore generated (`pakuni-release.keystore`)
-- [x] Release signing configured in `build.gradle`
-- [x] ProGuard enabled with proper rules
-- [x] Version code: 4
-- [x] Version name: 1.2.1
-- [x] Target SDK: 36 (Android 15)
-- [x] Min SDK: 24 (Android 7.0)
+## ✅ Play Store Ranking Optimizations
+- [x] Google Play In-App Review API (`play:review:2.0.2`)
+- [x] Google Play In-App Updates API (`play:app-update:2.1.0`)
+- [x] Firebase App Indexing (`firebase-appindexing:20.0.0`)
+- [x] Content deep links (university, scholarship, merit, career, test)
+- [x] Google Actions XML (`actions.xml`) for search integration
+- [x] `useInAppReview` hook for smart review prompts
+- [x] ProGuard rules for all Play Core libraries
+- [x] Market intent queries for Play Store
 
-### ✅ Android Manifest Compliance
+## ✅ AndroidManifest Compliance
 - [x] `android:allowBackup="true"` with backup rules
 - [x] `android:dataExtractionRules` for Android 12+
 - [x] `android:networkSecurityConfig` for secure connections
-- [x] Proper permission declarations (only INTERNET required)
-- [x] Intent filters for deep linking
-- [x] `<queries>` for Android 11+ package visibility
+- [x] `android:supportsRtl="true"` (Urdu support)
+- [x] `android:largeHeap="true"` (prevents OOM)
+- [x] `tools:targetApi="35"` (matches targetSdk)
+- [x] Content deep link intent filters with `autoVerify="true"`
+- [x] Custom scheme deep links (pakuni://)
+- [x] `<queries>` for Android 11+ (HTTPS, mailto, market)
 
-### ✅ Privacy & Legal
+## ✅ Privacy & Legal
 - [x] Privacy Policy screen in app
 - [x] Terms of Service screen in app
-- [x] Privacy Policy HTML for hosting (`store-listing/privacy-policy.html`)
+- [x] Privacy Policy HTML (`store-listing/privacy-policy.html`)
 - [x] Data Safety declaration prepared
 - [x] COPPA compliance (13+ audience, no ads)
 
-### ✅ Build Outputs Ready
-- [x] **AAB (for Play Store):** `android/app/build/outputs/bundle/release/app-release.aab` (26.23 MB)
-- [x] **APK (for testing):** `android/app/build/outputs/apk/release/app-release.apk` (34.94 MB)
-
-### ⏳ Store Listing Assets (Create Before Submission)
-- [x] App icon (512x512) - configured in mipmap folders
-- [x] Store listing description prepared
-- [x] Short description (80 chars) prepared
-- [ ] Feature graphic (1024x500) - **CREATE BEFORE SUBMISSION**
-- [ ] Screenshots (1080x1920) - **TAKE 8 SCREENSHOTS**
-- [ ] Privacy Policy hosted URL - **HOST ON WEBSITE**
+## ✅ Store Listing (ASO-Optimized)
+- [x] App name: 30 chars, keyword-optimized
+- [x] Short description: 78/80 chars, 6 keywords
+- [x] Full description: 3,850/4,000 chars, 50+ keywords
+- [x] Urdu (ur-PK) localization prepared
+- [x] Release notes: Fresh v1.3.0
+- [x] Tags: 5 high-impact keywords
+- [x] Target countries: Pakistan + Gulf + UK/US/Canada
+- [x] A/B testing variants planned
+- [x] Screenshot strategy (8 screens with captions)
+- [x] Feature graphic design spec
 
 ---
 
-## Build Release APK/AAB
+## ⏳ BEFORE SUBMISSION — DO THESE NOW
 
-### Option 1: Build APK (for testing)
-```bash
-cd android
-./gradlew assembleRelease
-```
-APK location: `android/app/build/outputs/apk/release/app-release.apk`
-
-### Option 2: Build AAB (required for Play Store)
+### Build
 ```bash
 cd android
 ./gradlew bundleRelease
 ```
-AAB location: `android/app/build/outputs/bundle/release/app-release.aab`
+AAB: `android/app/build/outputs/bundle/release/app-release.aab`
 
----
+### Assets to Create
+- [ ] **Feature graphic** (1024x500 PNG) — follow design spec in PLAY_STORE_LISTING.md
+- [ ] **8 screenshots** (1080x1920) — order per screenshot strategy
+- [ ] **Host privacy policy** at https://pakuni.app/privacy-policy
+- [ ] **Digital Asset Links** at https://pakuni.app/.well-known/assetlinks.json
 
-## Google Play Console Steps
-
-### 1. Create Developer Account
-- Go to: https://play.google.com/console
-- Pay one-time $25 registration fee
-- Complete identity verification
-
-### 2. Create New App
-1. Click "Create app"
-2. App name: **PakUni - Pakistan Universities Guide**
-3. Default language: **English (United States)**
-4. App type: **App**
-5. Category: **Education**
-6. Free or paid: **Free**
-
-### 3. Store Listing
-1. **App details**
-   - Short description (from PLAY_STORE_LISTING.md)
-   - Full description (from PLAY_STORE_LISTING.md)
-   
-2. **Graphics**
-   - App icon: 512x512 PNG
-   - Feature graphic: 1024x500 PNG/JPEG
-   - Phone screenshots: At least 2 (recommended 8)
-   
-3. **Categorization**
-   - Category: Education
-   - Tags: pakistan universities, merit calculator, scholarships
-
-### 4. Content Rating
-Answer the questionnaire:
-- Violence: None
-- Sexual content: None
-- Profanity: None
-- Ads: None
-- User interaction: Users can share externally
-- Target age: 13+
-
-**Expected Rating:** Everyone (PEGI 3)
-
-### 5. Data Safety
-Use `DATA_SAFETY_DECLARATION.md` to complete the form:
-- Data types collected
-- Data sharing practices
-- Security practices
-- Data deletion available: Yes
-
-### 6. App Content
-1. Privacy Policy URL (required)
-2. Target audience: 13+
-3. News app: No
-4. Contains ads: No
-
-### 7. Pricing & Distribution
-- Price: Free
-- Countries: All (or Pakistan only initially)
-- Contains ads: No
-
-### 8. Upload AAB
-1. Go to Production > Create new release
-2. Upload `app-release.aab`
-3. Add release notes
-4. Review and submit
-
----
-
-## Post-Submission
-
-### Timeline
-- Initial review: 1-3 days (new apps may take up to 7 days)
-- Policy violations: Fix and resubmit
-
-### Common Rejection Reasons to Avoid
-1. ❌ Missing Privacy Policy URL
-2. ❌ Incorrect data safety declaration
-3. ❌ App crashes on launch
-4. ❌ Broken features/links
-5. ❌ Inappropriate content rating
-6. ❌ Copyright violations (university logos used properly ✅)
-
-### After Approval
-1. Monitor crash reports in Play Console
-2. Respond to user reviews
-3. Plan next version updates
-4. Monitor Android Vitals for performance
-
----
-
-## Keystore Backup (CRITICAL!)
-
-⚠️ **BACKUP YOUR KEYSTORE!** If lost, you cannot update the app.
-
-1. Copy `android/app/pakuni-release.keystore` to secure location
-2. Store credentials securely:
-   - Store password: `PakUni2026Secure`
-   - Key alias: `pakuni-key`
-   - Key password: `PakUni2026Secure`
-
-**NEVER commit keystore or passwords to git!**
+### Play Console Setup
+1. [ ] Create app → "PakUni - Pakistan Universities"
+2. [ ] Category: Education
+3. [ ] Upload AAB
+4. [ ] Paste short description (from PLAY_STORE_LISTING.md)
+5. [ ] Paste full description (from PLAY_STORE_LISTING.md)
+6. [ ] Upload feature graphic + screenshots
+7. [ ] Complete content rating questionnaire
+8. [ ] Complete Data Safety form (from DATA_SAFETY_DECLARATION.md)
+9. [ ] Set Privacy Policy URL
+10. [ ] Add Urdu (ur-PK) translation
+11. [ ] Create custom store listing variant for A/B test
+12. [ ] Enable pre-launch report
+13. [ ] Select target countries (Pakistan + diaspora countries)
+14. [ ] Submit for review
 
 ---
 
@@ -165,18 +94,33 @@ Use `DATA_SAFETY_DECLARATION.md` to complete the form:
 | Item | Value |
 |------|-------|
 | Package Name | com.pakuni |
-| Version Code | 4 |
-| Version Name | 1.2.1 |
-| Target SDK | 36 |
+| Version Code | 10 |
+| Version Name | 1.3.0 |
+| Target SDK | 35 |
 | Min SDK | 24 |
 | Key Alias | pakuni-key |
 | Keystore | pakuni-release.keystore |
+| ProGuard | ENABLED |
+| R8 | ENABLED |
+| Bundle Splits | ABI + Density + Language |
+| In-App Review | useInAppReview hook |
+| Deep Links | pakuni.app/university, /scholarship, /merit, /career, /test |
+| Play Store URL | https://play.google.com/store/apps/details?id=com.pakuni |
 
 ---
 
-## Resources
+## Post-Launch Monitoring
 
-- [Google Play Console](https://play.google.com/console)
-- [Play Store Policy](https://play.google.com/about/developer-content-policy/)
-- [Data Safety Guide](https://support.google.com/googleplay/android-developer/answer/10787469)
-- [Content Rating Guide](https://support.google.com/googleplay/android-developer/answer/9859655)
+### Week 1
+- [ ] Check pre-launch report for crashes
+- [ ] Monitor Android Vitals dashboard
+- [ ] Respond to all reviews within 24 hours
+- [ ] Verify deep links appear in Google Search Console
+- [ ] Check install numbers daily
+
+### Month 1
+- [ ] Run A/B test on short description
+- [ ] Run A/B test on screenshots
+- [ ] Analyze keyword ranking positions
+- [ ] Release minor update (v1.3.1) for freshness signal
+- [ ] Share in student communities for download velocity

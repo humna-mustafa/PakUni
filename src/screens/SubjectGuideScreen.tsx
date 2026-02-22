@@ -109,7 +109,7 @@ const SubjectGuideScreen = () => {
                     <Text style={[styles.subjectName, {color: colors.text}]} numberOfLines={1}>{subject.name}</Text>
                     <View style={[styles.difficultyBadge, {backgroundColor: getDifficultyColor(subject.difficulty) + '20'}]}>
                       <Text style={[styles.difficultyText, {color: getDifficultyColor(subject.difficulty)}]}>
-                        {subject.difficulty.charAt(0).toUpperCase() + subject.difficulty.slice(1)}
+                        {subject.difficulty ? subject.difficulty.charAt(0).toUpperCase() + subject.difficulty.slice(1) : 'N/A'}
                       </Text>
                     </View>
                   </View>

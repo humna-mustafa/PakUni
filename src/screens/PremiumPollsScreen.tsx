@@ -26,13 +26,17 @@ import type {Poll} from '../data/polls';
 
 const sharePoll = async (poll: Poll) => {
   Haptics.light();
+  if (!poll.options?.length || !poll.totalVotes) return;
+
   const sorted = [...poll.options]
     .sort((a, b) => b.votes - a.votes)
     .map(o => ({
       name: o.shortName || o.name,
       votes: o.votes,
-      percentage: (o.votes / poll.totalVotes) * 100,
+      percentage: poll.totalVotes > 0 ? (o.votes / poll.totalVotes) * 100 : 0,
     }));
+
+  if (!sorted.length) return;
 
   await sharePollResults({
     question: poll.question,

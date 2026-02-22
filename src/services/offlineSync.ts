@@ -326,7 +326,7 @@ class OfflineSyncService {
         break;
       }
       case 'saveCalculation': {
-        const success = await hybridDataService.saveCalculation(payload);
+        const success = await hybridDataService.saveCalculation(payload as any);
         if (!success) throw new Error('saveCalculation failed');
         break;
       }

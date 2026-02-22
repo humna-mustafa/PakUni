@@ -35,14 +35,14 @@ import {
 } from '../../services/dataSubmissions';
 
 const SUBMISSION_TYPES: { value: SubmissionType; label: string }[] = [
-  { value: 'merit_update', label: '📊 Merit Updates' },
-  { value: 'date_correction', label: '📅 Date Corrections' },
-  { value: 'entry_test_update', label: '📝 Entry Test Updates' },
-  { value: 'university_info', label: '🏛️ University Info' },
-  { value: 'scholarship_info', label: '💰 Scholarship Info' },
-  { value: 'program_info', label: '📚 Program Info' },
-  { value: 'fee_update', label: '💵 Fee Updates' },
-  { value: 'other', label: '📋 Other' },
+  { value: 'merit_update', label: 'Merit Updates' },
+  { value: 'date_correction', label: 'Date Corrections' },
+  { value: 'entry_test_update', label: 'Entry Test Updates' },
+  { value: 'university_info', label: 'University Info' },
+  { value: 'scholarship_info', label: 'Scholarship Info' },
+  { value: 'program_info', label: 'Program Info' },
+  { value: 'fee_update', label: 'Fee Updates' },
+  { value: 'other', label: 'Other' },
 ];
 
 type AuthProvider = 'google' | 'email' | 'guest';
@@ -408,9 +408,12 @@ export const AdminAutoApprovalRulesScreen: React.FC<{ navigation: any }> = ({ na
             
             {/* Auth Provider Section */}
             <View style={[styles.sectionDivider, { borderTopColor: isDark ? '#272C34' : '#E5E7EB' }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                🔐 Authentication Provider Settings
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+                <Icon name="lock-closed" size={20} color={colors.primary} />
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  Authentication Provider Settings
+                </Text>
+              </View>
               <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>
                 Control which user types can have submissions auto-approved
               </Text>

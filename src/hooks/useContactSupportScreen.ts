@@ -276,7 +276,7 @@ export const useContactSupportScreen = () => {
         '📋 Scholarship Eligibility Guide',
         'Common eligibility requirements for Pakistani scholarships:\n\n📚 Academic Requirements:\n• Minimum 60-80% marks (varies by scholarship)\n• HEC-recognized degree/institution\n• Specific GPA requirements for graduate programs\n\n💰 Financial Criteria:\n• Family income below threshold (need-based)\n• Income certificate from relevant authority\n\n📄 Common Documents:\n• CNIC/B-Form\n• Academic transcripts\n• Income certificate\n• Domicile certificate\n\n🎯 Tip: Apply early and check deadlines! Each scholarship has different requirements.',
         [
-          {text: 'View Scholarships', onPress: () => navigation.navigate('MainTabs' as never, {screen: 'Scholarships'})},
+          {text: 'View Scholarships', onPress: () => (navigation as any).navigate('MainTabs', {screen: 'Scholarships'})},
           {text: 'OK', style: 'cancel'},
         ],
       );

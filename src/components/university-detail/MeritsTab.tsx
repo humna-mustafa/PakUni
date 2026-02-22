@@ -266,7 +266,7 @@ const MeritsTab: React.FC<MeritsTabProps> = ({meritSummary, universityId, colors
                         </View>
 
                         <View style={styles.yearMeritsContainer}>
-                          {programYears
+                          {[...programYears]
                             .sort((a, b) => (b?.year || 0) - (a?.year || 0))
                             .slice(0, 5)
                             .map((yearData, idx) => {
@@ -341,7 +341,7 @@ const MeritsTab: React.FC<MeritsTabProps> = ({meritSummary, universityId, colors
                     </View>
 
                     <View style={styles.yearMeritsContainer}>
-                      {programYears
+                      {[...programYears]
                         .sort((a, b) => (b?.year || 0) - (a?.year || 0))
                         .slice(0, 5)
                         .map((yearData, idx) => {

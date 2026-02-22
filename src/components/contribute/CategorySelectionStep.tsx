@@ -62,8 +62,8 @@ const CategorySelectionStepComponent: React.FC<CategorySelectionStepProps> = ({
               style={[
                 styles.categoryCard,
                 { backgroundColor: isDark ? DARK_BG.card : LIGHT_BG.card },
-                isSelected && { borderColor: category.gradient[0], borderWidth: 2 },
-              ]}>
+                isSelected ? { borderColor: category.gradient[0], borderWidth: 2 } : undefined,
+              ] as any}>
               <LinearGradient
                 colors={category.gradient}
                 style={styles.categoryIconContainer}>

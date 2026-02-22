@@ -57,7 +57,7 @@ const NotificationItem = memo<NotificationItemProps>(({
   // Refs to avoid stale closures in PanResponder
   const isReadRef = useRef(notification.read);
   isReadRef.current = notification.read;
-  const deleteRef = useRef<() => void>();
+  const deleteRef = useRef<(() => void) | undefined>(undefined);
 
   useEffect(() => {
     const delay = Math.min(index * 50, 300);
@@ -560,6 +560,10 @@ const NotificationsScreen: React.FC = () => {
             filteredNotifications.length === 0 && styles.emptyList,
           ]}
           showsVerticalScrollIndicator={false}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          removeClippedSubviews={Platform.OS === 'android'}
           ListEmptyComponent={renderEmpty}
           ListHeaderComponent={notifications.length > 0 ? () => (
             <View style={styles.swipeHint}>

@@ -69,7 +69,7 @@ const CareerDetailScreen = () => {
   const {colors, isDark} = useTheme();
   const navigation = useNavigation();
   const route = useRoute<CareerDetailRouteProps>();
-  const {careerId} = route.params;
+  const {careerId} = route.params ?? {};
 
   // Find career from CAREER_FIELDS
   const career = CAREER_FIELDS.find(c => c.id === careerId);
@@ -115,91 +115,120 @@ const CareerDetailScreen = () => {
           <View style={[styles.statCard, {backgroundColor: colors.card}]}>
             <Icon name="trending-up" family="Ionicons" size={24} color="#27ae60" />
             <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Demand</Text>
-            <Text style={[styles.statValue, {color: colors.text}]}>{career.demand_trend}</Text>
+            <Text style={[styles.statValue, {color: colors.text}]}>{career.demand_trend || 'N/A'}</Text>
           </View>
           <View style={[styles.statCard, {backgroundColor: colors.card}]}>
             <Icon name="cash" family="Ionicons" size={24} color="#2E7D32" />
             <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Starting</Text>
             <Text style={[styles.statValue, {color: colors.text}]}>
-              {career.average_starting_salary.toLocaleString()} PKR
+              {(career.average_starting_salary ?? 0).toLocaleString()} PKR
             </Text>
           </View>
           <View style={[styles.statCard, {backgroundColor: colors.card}]}>
             <Icon name="star" family="Ionicons" size={24} color="#FF9800" />
             <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Senior</Text>
             <Text style={[styles.statValue, {color: colors.text}]}>
-              {career.average_senior_salary.toLocaleString()} PKR
+              {(career.average_senior_salary ?? 0).toLocaleString()} PKR
             </Text>
           </View>
         </View>
 
         {/* Salary Range */}
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>💰 Salary Range in Pakistan</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="cash" family="Ionicons" size={22} color="#2E7D32" />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Salary Range in Pakistan</Text>
+          </View>
           <View style={styles.salaryBars}>
-            <SalaryBar label="Starting" value={career.average_starting_salary} max={500000} color="#4CAF50" />
-            <SalaryBar label="Mid-level" value={career.average_mid_career_salary} max={500000} color="#2196F3" />
-            <SalaryBar label="Senior" value={career.average_senior_salary} max={500000} color="#9C27B0" />
+            <SalaryBar label="Starting" value={career.average_starting_salary ?? 0} max={500000} color="#4CAF50" />
+            <SalaryBar label="Mid-level" value={career.average_mid_career_salary ?? 0} max={500000} color="#2196F3" />
+            <SalaryBar label="Senior" value={career.average_senior_salary ?? 0} max={500000} color="#9C27B0" />
           </View>
         </View>
 
         {/* Education Requirements */}
+        {(career.required_education ?? []).length > 0 && (
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>📚 Education Required</Text>
-          {career.required_education.map((edu, index) => (
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="school" family="Ionicons" size={22} color={careerColor} />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Education Required</Text>
+          </View>
+          {(career.required_education ?? []).map((edu, index) => (
             <View key={index} style={styles.listItem}>
               <Icon name="checkmark-circle" family="Ionicons" size={20} color="#27ae60" />
               <Text style={[styles.listText, {color: colors.textSecondary}]}>{edu}</Text>
             </View>
           ))}
         </View>
+        )}
 
         {/* Key Skills */}
+        {(career.key_skills ?? []).length > 0 && (
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>🎯 Key Skills</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="star" family="Ionicons" size={22} color={careerColor} />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Key Skills</Text>
+          </View>
           <View style={styles.skillsContainer}>
-            {career.key_skills.map((skill, index) => (
+            {(career.key_skills ?? []).map((skill, index) => (
               <View key={index} style={[styles.skillChip, {backgroundColor: careerColor + '20', borderColor: careerColor}]}>
                 <Text style={[styles.skillText, {color: careerColor}]}>{skill}</Text>
               </View>
             ))}
           </View>
         </View>
+        )}
 
         {/* Top Employers */}
+        {(career.top_employers ?? []).length > 0 && (
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>🏢 Top Employers in Pakistan</Text>
-          {career.top_employers.map((employer, index) => (
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="business" family="Ionicons" size={22} color={careerColor} />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Top Employers in Pakistan</Text>
+          </View>
+          {(career.top_employers ?? []).map((employer, index) => (
             <View key={index} style={styles.listItem}>
               <Icon name="business" family="Ionicons" size={20} color={careerColor} />
               <Text style={[styles.listText, {color: colors.textSecondary}]}>{employer}</Text>
             </View>
           ))}
         </View>
+        )}
 
         {/* Job Titles */}
+        {(career.job_titles ?? []).length > 0 && (
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>👔 Common Job Titles</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="briefcase" family="Ionicons" size={22} color={careerColor} />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Common Job Titles</Text>
+          </View>
           <View style={styles.skillsContainer}>
-            {career.job_titles.map((title, index) => (
+            {(career.job_titles ?? []).map((title, index) => (
               <View key={index} style={[styles.jobChip, {backgroundColor: colors.background}]}>
                 <Text style={[styles.jobText, {color: colors.text}]}>{title}</Text>
               </View>
             ))}
           </View>
         </View>
+        )}
 
         {/* Pros & Cons */}
         <View style={styles.prosConsContainer}>
           <View style={[styles.prosCard, {backgroundColor: '#E8F5E9'}]}>
-            <Text style={styles.prosTitle}>✅ Pros</Text>
-            {career.pros.map((pro, index) => (
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.sm}}>
+              <Icon name="checkmark-circle" family="Ionicons" size={20} color="#2E7D32" />
+              <Text style={[styles.prosTitle, {marginBottom: 0}]}>Pros</Text>
+            </View>
+            {(career.pros ?? []).map((pro, index) => (
               <Text key={index} style={styles.proItem}>• {pro}</Text>
             ))}
           </View>
           <View style={[styles.consCard, {backgroundColor: '#FFEBEE'}]}>
-            <Text style={styles.consTitle}>⚠️ Cons</Text>
-            {career.cons.map((con, index) => (
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.sm}}>
+              <Icon name="warning" family="Ionicons" size={20} color="#C62828" />
+              <Text style={[styles.consTitle, {marginBottom: 0}]}>Cons</Text>
+            </View>
+            {(career.cons ?? []).map((con, index) => (
               <Text key={index} style={styles.conItem}>• {con}</Text>
             ))}
           </View>
@@ -207,8 +236,11 @@ const CareerDetailScreen = () => {
 
         {/* Future Outlook */}
         <View style={[styles.section, {backgroundColor: colors.card}]}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>🔮 Future Outlook</Text>
-          <Text style={[styles.outlookText, {color: colors.textSecondary}]}>{career.future_outlook}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.md}}>
+            <Icon name="trending-up" family="Ionicons" size={22} color={careerColor} />
+            <Text style={[styles.sectionTitle, {color: colors.text, marginBottom: 0}]}>Future Outlook</Text>
+          </View>
+          <Text style={[styles.outlookText, {color: colors.textSecondary}]}>{career.future_outlook || 'Outlook information coming soon.'}</Text>
         </View>
 
         {/* Fix Data */}

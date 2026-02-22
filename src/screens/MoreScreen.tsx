@@ -325,7 +325,7 @@ const MoreScreen = () => {
                 <Icon name="create" family="Ionicons" size={24} color="#FFFFFF" />
               </View>
               <View style={styles.contributeCardContent}>
-                <Text style={styles.contributeCardTitle}>🔧 Report Wrong Data</Text>
+                <Text style={styles.contributeCardTitle}>Report Wrong Data</Text>
                 <Text style={styles.contributeCardSubtitle}>
                   Found incorrect fee, merit or date? Fix it now!
                 </Text>

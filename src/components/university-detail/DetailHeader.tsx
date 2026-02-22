@@ -57,7 +57,7 @@ const DetailHeader: React.FC<DetailHeaderProps> = ({
         colors={
           university?.type === 'public'
             ? ['#10B981', '#059669', '#047857']
-            : GRADIENTS.primary
+            : GRADIENTS.primary.colors
         }
         start={{x: 0, y: 0}}
         end={{x: 1, y: 1}}

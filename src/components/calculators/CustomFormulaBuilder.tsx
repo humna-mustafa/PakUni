@@ -122,12 +122,10 @@ const WeightSlider: React.FC<WeightSliderProps> = ({
   // Long-press support for continuous +/- at 1-unit increments
   const startContinuous = (direction: 'up' | 'down') => {
     intervalRef.current = setInterval(() => {
-      onChange((prev: number) => {
-        const current = typeof prev === 'number' ? prev : value;
-        return direction === 'up'
-          ? Math.min(100, current + 1)
-          : Math.max(0, current - 1);
-      });
+      const newVal = direction === 'up'
+        ? Math.min(100, value + 1)
+        : Math.max(0, value - 1);
+      onChange(newVal);
     }, 80);
   };
 

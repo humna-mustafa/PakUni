@@ -3,8 +3,8 @@
  * All logic in useEntryTestsScreen hook, UI in entryTests/ components
  */
 
-import React from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, Platform, RefreshControl} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SPACING, TYPOGRAPHY} from '../constants/design';
 import {PremiumSearchBar} from '../components/PremiumSearchBar';
@@ -18,7 +18,9 @@ import {
   FilterChip,
   CATEGORIES,
 } from '../components/entryTests';
+import {EmptyState} from '../components/EmptyState';
 import {useNavigation} from '@react-navigation/native';
+import type {EntryTestData} from '../data';
 
 const PremiumEntryTestsScreen = () => {
   const navigation = useNavigation<any>();
@@ -93,20 +95,35 @@ const PremiumEntryTestsScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.testsContainer}>
-        {filteredTests.map((test, index) => (
+      <FlatList
+        data={filteredTests}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => (
           <TestCard
-            key={test.id}
-            test={test}
-            onPress={() => openModal(test)}
+            key={item.id}
+            test={item}
+            onPress={() => openModal(item)}
             index={index}
             colors={colors}
           />
-        ))}
-        <View style={{height: SPACING.xxl * 2}} />
-      </ScrollView>
+        )}
+        contentContainerStyle={styles.testsContainer}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={8}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        removeClippedSubviews={Platform.OS === 'android'}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        ListEmptyComponent={
+          <EmptyState
+            title="No Entry Tests Found"
+            subtitle="Try adjusting your search or filters"
+            iconName="clipboard-outline"
+            variant="search"
+          />
+        }
+      />
 
       <TestDetailModal
         visible={modalVisible}
@@ -182,6 +199,7 @@ const styles = StyleSheet.create({
   testsContainer: {
     padding: SPACING.md,
     paddingTop: SPACING.md,
+    paddingBottom: 120,
   },
 });
 

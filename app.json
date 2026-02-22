@@ -1,8 +1,8 @@
 {
   "name": "PakUni",
-  "displayName": "PakUni - Pakistan Universities Guide",
-  "version": "1.2.4",
-  "description": "Your complete guide to Pakistani universities, merit calculation, scholarships, and career guidance. Designed for students from Matric to PhD.",
+  "displayName": "PakUni - Pakistan Universities",
+  "version": "1.3.0",
+  "description": "Pakistan's #1 university admission guide 2026. Merit calculator, scholarships database, ECAT MDCAT preparation, HEC university rankings, career guidance. 200+ universities. Free, no ads.",
   "author": {
     "name": "PakUni Team",
     "email": "support@pakuni.app"
@@ -17,7 +17,19 @@
     "ECAT",
     "MDCAT",
     "admissions",
-    "career guidance"
+    "career guidance",
+    "NUST",
+    "FAST",
+    "COMSATS",
+    "UET",
+    "LUMS",
+    "entry test",
+    "aggregate calculator",
+    "university ranking",
+    "pakistan education",
+    "FSc",
+    "O Level",
+    "A Level"
   ],
   "license": "Proprietary",
   "homepage": "https://pakuni.app",
@@ -27,7 +39,7 @@
   },
   "android": {
     "package": "com.pakuni",
-    "versionCode": 5,
+    "versionCode": 10,
     "permissions": [
       "INTERNET",
       "ACCESS_NETWORK_STATE"
@@ -36,7 +48,7 @@
   },
   "ios": {
     "bundleIdentifier": "com.pakuni.app",
-    "buildNumber": "5"
+    "buildNumber": "10"
   },
   "privacy": {
     "policyUrl": "https://pakuni.app/privacy-policy",
@@ -51,6 +63,6 @@
   "category": "Education",
   "targetAudience": {
     "ageRange": "13+",
-    "countries": ["Pakistan"]
+    "countries": ["Pakistan", "United Arab Emirates", "Saudi Arabia", "United Kingdom", "United States", "Canada", "Qatar", "Bahrain", "Kuwait", "Oman"]
   }
 }

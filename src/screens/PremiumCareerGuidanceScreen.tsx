@@ -3,15 +3,17 @@
  * Thin composition using extracted components and hook
  */
 
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
+  FlatList,
   TouchableOpacity,
   Modal,
   Animated,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -103,12 +105,26 @@ const PremiumCareerGuidanceScreen = () => {
       </View>
 
       {/* Careers List */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.careersContainer}>
-        {filteredCareers.map((career: CareerField, index: number) => (
-          <CareerCard key={career.id} career={career} onPress={() => openModal(career)} index={index} colors={colors} />
-        ))}
-        <View style={{height: SPACING.xxl * 2}} />
-      </ScrollView>
+      <FlatList<CareerField>
+        data={filteredCareers}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => (
+          <CareerCard key={item.id} career={item} onPress={() => openModal(item)} index={index} colors={colors} />
+        )}
+        contentContainerStyle={styles.careersContainer}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={8}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        removeClippedSubviews={Platform.OS === 'android'}
+        keyboardDismissMode="on-drag"
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Icon name="compass-outline" family="Ionicons" size={48} color={colors.textSecondary} />
+            <Text style={[styles.emptyText, {color: colors.textSecondary}]}>No careers found</Text>
+          </View>
+        }
+      />
 
       {/* Career Detail Modal */}
       <Modal visible={modalVisible} transparent animationType="none" onRequestClose={closeModal}>
@@ -157,7 +173,7 @@ const PremiumCareerGuidanceScreen = () => {
                   <View style={[styles.statCard, {backgroundColor: colors.background}]}>
                     <Icon name="wallet-outline" family="Ionicons" size={24} color={colors.success} />
                     <Text style={[styles.statLabel, {color: colors.textSecondary}]}>Avg Salary</Text>
-                    <Text style={[styles.statValue, {color: colors.success}]}>{((selectedCareer.average_mid_career_salary || selectedCareer.maxSalary || 150000) / 1000).toFixed(0)}K</Text>
+                    <Text style={[styles.statValue, {color: colors.success}]}>{(((selectedCareer as any).average_mid_career_salary || (selectedCareer as any).maxSalary || 150000) / 1000).toFixed(0)}K</Text>
                   </View>
                 </View>
 
@@ -254,7 +270,9 @@ const styles = StyleSheet.create({
   filterChipTextActive: {fontSize: TYPOGRAPHY.sizes.sm, fontWeight: TYPOGRAPHY.weight.semibold, color: '#fff'},
   resultsBar: {paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm},
   resultsText: {fontSize: TYPOGRAPHY.sizes.sm},
-  careersContainer: {padding: SPACING.md, paddingTop: 0},
+  careersContainer: {padding: SPACING.md, paddingTop: 0, paddingBottom: 120},
+  emptyContainer: {alignItems: 'center', paddingVertical: SPACING.xxl * 2},
+  emptyText: {fontSize: TYPOGRAPHY.sizes.md, marginTop: SPACING.md},
   salaryTrack: {height: 8, backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 4, overflow: 'hidden', marginBottom: 4},
   modalOverlay: {flex: 1, justifyContent: 'flex-end'},
   modalBackdrop: {...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.5)'},

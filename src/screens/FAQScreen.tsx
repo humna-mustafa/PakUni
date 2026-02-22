@@ -9,6 +9,7 @@ import {
   View,
   Text,
   StyleSheet,
+  FlatList,
   ScrollView,
   TouchableOpacity,
   Animated,
@@ -447,13 +448,11 @@ const FAQScreen: React.FC = () => {
       </View>
 
       {/* FAQ List */}
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}>
-        {filteredFAQs.map((item, index) => (
+      <FlatList
+        data={filteredFAQs}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => (
           <AnimatedFAQItem
-            key={item.id}
             item={item}
             index={index}
             isExpanded={expandedItems.has(item.id)}
@@ -461,32 +460,42 @@ const FAQScreen: React.FC = () => {
             getCategoryColor={getCategoryColor}
             colors={colors}
           />
-        ))}
-
-        {/* Contact Section */}
-        <Animated.View 
-          style={[
-            styles.contactCard, 
-            {backgroundColor: colors.card},
-            {transform: [{translateY: floatTranslateY}]},
-          ]}>
-          <View style={[styles.contactIcon, {backgroundColor: '#4573DF20'}]}>
-            <Icon name="chatbubbles" family="Ionicons" size={24} color="#4573DF" />
-          </View>
-          <Text style={[styles.contactTitle, {color: colors.text}]}>Still have questions?</Text>
-          <Text style={[styles.contactText, {color: colors.textSecondary}]}>
-            Can't find what you're looking for? Contact our support team.
-          </Text>
-          <TouchableOpacity
-            style={[styles.contactButton, {backgroundColor: colors.primary}]}
-            onPress={() => navigation.navigate('ContactSupport' as never)}>
-            <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
-            <Text style={styles.contactButtonText}>Contact Support</Text>
-          </TouchableOpacity>
-        </Animated.View>
-
-        <View style={{height: 40}} />
-      </ScrollView>
+        )}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        ListFooterComponent={
+          <>
+            {/* Contact Section */}
+            <Animated.View 
+              style={[
+                styles.contactCard, 
+                {backgroundColor: colors.card},
+                {transform: [{translateY: floatTranslateY}]},
+              ]}>
+              <View style={[styles.contactIcon, {backgroundColor: '#4573DF20'}]}>
+                <Icon name="chatbubbles" family="Ionicons" size={24} color="#4573DF" />
+              </View>
+              <Text style={[styles.contactTitle, {color: colors.text}]}>Still have questions?</Text>
+              <Text style={[styles.contactText, {color: colors.textSecondary}]}>
+                Can't find what you're looking for? Contact our support team.
+              </Text>
+              <TouchableOpacity
+                style={[styles.contactButton, {backgroundColor: colors.primary}]}
+                onPress={() => navigation.navigate('ContactSupport' as never)}>
+                <Icon name="mail" family="Ionicons" size={18} color="#FFFFFF" />
+                <Text style={styles.contactButtonText}>Contact Support</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            <View style={{height: 40}} />
+          </>
+        }
+      />
     </SafeAreaView>
   );
 };

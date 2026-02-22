@@ -61,7 +61,7 @@ const ProgramsTab: React.FC<ProgramsTabProps> = ({
                   ? ['#4573DF', '#3660C9']
                   : program.field === 'Business'
                   ? ['#10B981', '#059669']
-                  : GRADIENTS.primary
+                  : GRADIENTS.primary.colors
               }
               style={styles.programIcon}>
               <Icon

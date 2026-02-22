@@ -461,7 +461,7 @@ const AdminErrorReportsScreen: React.FC = () => {
               <View style={styles.emptyState}>
                 <Icon name="checkmark-circle-outline" family="Ionicons" size={64} color="#10B981" />
                 <Text style={[styles.emptyTitle, {color: colors.text}]}>
-                  All Clear! 🎉
+                  All Clear!
                 </Text>
                 <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
                   No error reports to show

@@ -57,14 +57,14 @@ const PRIORITY_COLORS: Record<SubmissionPriority, string> = {
 };
 
 const TYPE_LABELS: Record<SubmissionType, string> = {
-  merit_update: '📊 Merit Update',
-  date_correction: '📅 Date Correction',
-  entry_test_update: '📝 Entry Test',
-  university_info: '🏛️ University Info',
-  scholarship_info: '💰 Scholarship',
-  program_info: '📚 Program Info',
-  fee_update: '💵 Fee Update',
-  other: '📋 Other',
+  merit_update: 'Merit Update',
+  date_correction: 'Date Correction',
+  entry_test_update: 'Entry Test',
+  university_info: 'University Info',
+  scholarship_info: 'Scholarship',
+  program_info: 'Program Info',
+  fee_update: 'Fee Update',
+  other: 'Other',
 };
 
 interface SubmissionWithImpact extends DataSubmission {
@@ -374,7 +374,7 @@ export const AdminDataSubmissionsScreen: React.FC<{ navigation: any }> = ({ navi
                     styles.filterChipText,
                     { color: sortBy === sort ? '#FFFFFF' : colors.text }
                   ]}>
-                    {sort === 'priority' ? '🔥' : sort === 'date' ? '📅' : '⭐'} {sort.charAt(0).toUpperCase() + sort.slice(1)}
+                    {sort.charAt(0).toUpperCase() + sort.slice(1)}
                   </Text>
                 </TouchableOpacity>
               ))}

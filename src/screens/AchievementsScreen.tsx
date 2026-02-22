@@ -61,10 +61,10 @@ const AchievementsScreen = () => {
           <Text style={styles.headerTitle}>My Achievements</Text>
           <Text style={styles.headerSubtitle}>Add your milestones & share with friends</Text>
           <Animated.View style={[styles.floatingSparkle1, {transform: [{translateY: floatTranslateY}]}]}>
-            <Text style={{fontSize: 16}}>✨</Text>
+            <Icon name="sparkles" family="Ionicons" size={16} color="rgba(255,255,255,0.8)" />
           </Animated.View>
           <Animated.View style={[styles.floatingSparkle2, {transform: [{translateY: Animated.multiply(floatTranslateY, -1)}]}]}>
-            <Text style={{fontSize: 14}}>⭐</Text>
+            <Icon name="star" family="Ionicons" size={14} color="rgba(255,255,255,0.7)" />
           </Animated.View>
         </LinearGradient>
       </Animated.View>
@@ -88,7 +88,10 @@ const AchievementsScreen = () => {
 
         {/* Add New */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, {color: colors.text}]}>➕ Add Achievement</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+            <Icon name="add-circle" family="Ionicons" size={20} color={colors.primary} />
+            <Text style={[styles.sectionTitle, {color: colors.text}]}>Add Achievement</Text>
+          </View>
           <Text style={[styles.sectionSubtitle, {color: colors.textSecondary}]}>Select what you achieved, fill the details, and share!</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.templatesContainer}>
             {ACHIEVEMENT_TEMPLATES.map((template, index) => (

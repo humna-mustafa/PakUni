@@ -153,7 +153,7 @@ const EntitySelectionStepComponent: React.FC<EntitySelectionStepProps> = ({
             <AnimatedPressable
               key={entity.id}
               onPress={() => handleSelectEntity(entity)}
-              style={[styles.suggestionItem, { backgroundColor: colors.card }]}>
+              style={[styles.suggestionItem, { backgroundColor: colors.card }] as any}>
               <View style={[styles.entityAvatar, { backgroundColor: colors.primary + '20' }]}>
                 <Icon name="school" size={18} color={colors.primary} />
               </View>
@@ -183,7 +183,7 @@ const EntitySelectionStepComponent: React.FC<EntitySelectionStepProps> = ({
               verified: false,
             })
           }
-          style={[styles.manualEntryCard, { backgroundColor: colors.card }]}>
+          style={[styles.manualEntryCard, { backgroundColor: colors.card }] as any}>
           <View style={[styles.entityAvatar, { backgroundColor: SEMANTIC.warningBg }]}>
             <Icon name="add" size={20} color={SEMANTIC.warning} />
           </View>

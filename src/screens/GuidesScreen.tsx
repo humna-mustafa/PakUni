@@ -15,7 +15,7 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
+  FlatList,
   Animated,
   StatusBar,
 } from 'react-native';
@@ -121,98 +121,111 @@ const GuidesScreen: React.FC = () => {
           />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Categories Section - Hidden when searching or category is selected */}
-          {!selectedCategory && !searchQuery && (
+        <FlatList
+          data={filteredGuides}
+          keyExtractor={item => item.id}
+          renderItem={({item, index}) => (
             <View style={styles.section}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 12,
-                }}>
-                <Icon
-                  name="library-outline"
-                  size={20}
-                  color={colors.primary}
-                />
-                <Text
-                  style={[
-                    styles.sectionTitle,
-                    {color: colors.text, marginLeft: 8},
-                  ]}>
-                  Categories
-                </Text>
-              </View>
-              <View style={styles.categoriesGrid}>
-                {categories.map((category, index) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
-                    onPress={() => setSelectedCategory(category.id)}
-                    colors={colors}
-                    index={index}
-                  />
-                ))}
-              </View>
+              <GuideListItem
+                guide={item}
+                onPress={() => setSelectedGuide(item)}
+                colors={colors}
+                index={index}
+              />
             </View>
           )}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={8}
+          maxToRenderPerBatch={10}
+          windowSize={7}
+          contentContainerStyle={{paddingBottom: 120}}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          ListHeaderComponent={
+            <>
+              {/* Categories Section - Hidden when searching or category is selected */}
+              {!selectedCategory && !searchQuery && (
+                <View style={styles.section}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 12,
+                    }}>
+                    <Icon
+                      name="library-outline"
+                      size={20}
+                      color={colors.primary}
+                    />
+                    <Text
+                      style={[
+                        styles.sectionTitle,
+                        {color: colors.text, marginLeft: 8},
+                      ]}>
+                      Categories
+                    </Text>
+                  </View>
+                  <View style={styles.categoriesGrid}>
+                    {categories.map((category, index) => (
+                      <CategoryCard
+                        key={category.id}
+                        category={category}
+                        onPress={() => setSelectedCategory(category.id)}
+                        colors={colors}
+                        index={index}
+                      />
+                    ))}
+                  </View>
+                </View>
+              )}
 
-          {/* Selected Category Header */}
-          {selectedCategory && selectedCategoryData && (
-            <CategoryBackHeader
-              colors={colors}
-              categoryTitle={selectedCategoryData.title}
-              onBack={clearCategory}
-            />
-          )}
-
-          {/* Guides List */}
-          <View style={styles.section}>
-            {!selectedCategory && (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 12,
-                }}>
-                <Icon
-                  name="book-outline"
-                  size={20}
-                  color={colors.primary}
-                />
-                <Text
-                  style={[
-                    styles.sectionTitle,
-                    {color: colors.text, marginLeft: 8},
-                  ]}>
-                  {searchQuery ? 'Search Results' : 'Popular Guides'}
-                </Text>
-              </View>
-            )}
-            {filteredGuides.length > 0 ? (
-              filteredGuides.map((guide, index) => (
-                <GuideListItem
-                  key={guide.id}
-                  guide={guide}
-                  onPress={() => setSelectedGuide(guide)}
+              {/* Selected Category Header */}
+              {selectedCategory && selectedCategoryData && (
+                <CategoryBackHeader
                   colors={colors}
-                  index={index}
+                  categoryTitle={selectedCategoryData.title}
+                  onBack={clearCategory}
                 />
-              ))
-            ) : (
+              )}
+
+              {/* Section Title */}
+              {!selectedCategory && filteredGuides.length > 0 && (
+                <View style={[styles.section, {marginBottom: 0}]}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 12,
+                    }}>
+                    <Icon
+                      name="book-outline"
+                      size={20}
+                      color={colors.primary}
+                    />
+                    <Text
+                      style={[
+                        styles.sectionTitle,
+                        {color: colors.text, marginLeft: 8},
+                      ]}>
+                      {searchQuery ? 'Search Results' : 'Popular Guides'}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </>
+          }
+          ListEmptyComponent={
+            <View style={styles.section}>
               <EmptyState
                 title="No guides found"
                 variant="search"
               />
-            )}
-          </View>
-
-          {/* Suggest Guide Card */}
-          <SuggestCard colors={colors} floatTranslateY={floatTranslateY} />
-
-          <View style={{height: 100}} />
-        </ScrollView>
+            </View>
+          }
+          ListFooterComponent={
+            <SuggestCard colors={colors} floatTranslateY={floatTranslateY} />
+          }
+        />
       </SafeAreaView>
     </View>
   );

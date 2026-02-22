@@ -126,6 +126,7 @@ function PremiumFlashListInner<T>({
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       // Performance optimizations
+      estimatedItemSize={120}
       drawDistance={500}
       {...props}
     />

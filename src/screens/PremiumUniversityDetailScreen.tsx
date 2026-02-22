@@ -125,7 +125,7 @@ const PremiumUniversityDetailScreen = () => {
             <ProgramsTab university={university} programs={universityPrograms} colors={colors} isDark={isDark} />
           )}
           {activeTab === 'merits' && (
-            <MeritsTab meritSummary={meritSummary} universityId={university?.id} colors={colors} isDark={isDark} />
+            <MeritsTab meritSummary={meritSummary} universityId={String(university?.id)} colors={colors} isDark={isDark} />
           )}
           {activeTab === 'admission' && (
             <AdmissionTab
@@ -153,9 +153,9 @@ const PremiumUniversityDetailScreen = () => {
       <TouchableOpacity
         style={[styles.fixDataFab, {backgroundColor: colors.card, borderColor: colors.border || '#E5E7EB'}]}
         onPress={() =>
-          navigation.navigate('DataCorrection' as any, {
+          (navigation as any).navigate('DataCorrection', {
             entityType: 'university',
-            entityId: university.id,
+            entityId: String(university.id),
             entityName: university.name,
           })
         }

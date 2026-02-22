@@ -430,7 +430,10 @@ const AdminDataCorrectionReviewScreen: React.FC<{ navigation: any }> = ({ naviga
             </View>
 
             {/* Field-level before/after */}
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>📋 Field Changes ({changes.length})</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+              <Icon name="clipboard-outline" size={20} color={meta.color} />
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Field Changes ({changes.length})</Text>
+            </View>
             {changes.map(change => (
               <View key={change.fieldKey} style={[styles.diffCard, { backgroundColor: colors.card, borderColor: meta.color + '44' }]}>
                 <Text style={[styles.diffFieldName, { color: meta.color }]}>{change.fieldLabel}</Text>
@@ -456,7 +459,10 @@ const AdminDataCorrectionReviewScreen: React.FC<{ navigation: any }> = ({ naviga
 
             {/* Reason */}
             <View style={[styles.sectionCard, { backgroundColor: colors.card }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>💬 Reason for Correction</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+                <Icon name="chatbubble-outline" size={20} color={colors.primary} />
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Reason for Correction</Text>
+              </View>
               <Text style={[styles.reasonText, { color: colors.textSecondary }]}>
                 {selectedCorrection.overall_reason}
               </Text>
@@ -471,7 +477,10 @@ const AdminDataCorrectionReviewScreen: React.FC<{ navigation: any }> = ({ naviga
             {/* Admin notes */}
             {isPending && (
               <View style={[styles.sectionCard, { backgroundColor: colors.card }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>📝 Admin Notes</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+                  <Icon name="create-outline" size={20} color={colors.primary} />
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>Admin Notes</Text>
+                </View>
                 <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>
                   Required if rejecting. Optional for approval.
                 </Text>
@@ -499,7 +508,10 @@ const AdminDataCorrectionReviewScreen: React.FC<{ navigation: any }> = ({ naviga
             {(showSQL || isApproved) && (
               <View style={[styles.sectionCard, { backgroundColor: '#0F172A', borderColor: '#1E3A5F' }]}>
                 <View style={styles.sqlHeader}>
-                  <Text style={[styles.sqlTitle, { color: '#94A3B8' }]}>🖥️ Apply to Turso Database</Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+                    <Icon name="terminal-outline" size={16} color="#60A5FA" />
+                    <Text style={[styles.sqlTitle, { color: '#94A3B8' }]}>Apply to Turso Database</Text>
+                  </View>
                   <TouchableOpacity
                     onPress={copySQL}
                     style={[styles.copyBtn, { backgroundColor: '#1E3A5F' }]}>

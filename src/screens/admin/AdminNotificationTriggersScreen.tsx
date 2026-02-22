@@ -441,7 +441,10 @@ export const AdminNotificationTriggersScreen: React.FC<{ navigation: any }> = ({
             
             <View style={styles.divider} />
             
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>📱 Notification Content</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+              <Icon name="notifications-outline" size={20} color={colors.primary} />
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Notification Content</Text>
+            </View>
             
             <Text style={[styles.inputLabel, { color: colors.text }]}>Title Template *</Text>
             <TextInput

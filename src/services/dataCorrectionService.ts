@@ -78,6 +78,9 @@ export const UNIVERSITY_FIELDS: FieldDefinition[] = [
   { key: 'ranking_national', label: 'National Ranking', type: 'number' },
   { key: 'admission_url', label: 'Admissions URL', type: 'url' },
   { key: 'address', label: 'Address', type: 'textarea' },
+  { key: 'tuition_fee', label: 'Tuition Fee (PKR/semester)', type: 'number', hint: 'Average tuition per semester' },
+  { key: 'hostel_fee', label: 'Hostel Fee (PKR/semester)', type: 'number' },
+  { key: 'admission_fee', label: 'Admission Fee (PKR)', type: 'number' },
   { key: 'description', label: 'Description', type: 'textarea', maxLength: 500 },
 ];
 
@@ -119,16 +122,19 @@ export const CAREER_FIELDS_DEF: FieldDefinition[] = [
 ];
 
 // --- Deadline Fields ---
+// NOTE: Keys use camelCase to match actual AdmissionDeadline data structure
 export const DEADLINE_FIELDS: FieldDefinition[] = [
   { key: 'title', label: 'Deadline Title', type: 'text', required: true },
+  { key: 'universityName', label: 'University Name', type: 'text' },
   { key: 'description', label: 'Description', type: 'textarea' },
-  { key: 'application_start_date', label: 'Application Start Date', type: 'date' },
-  { key: 'application_deadline', label: 'Application Deadline', type: 'date', required: true },
-  { key: 'entry_test_date', label: 'Entry Test Date', type: 'date' },
-  { key: 'result_date', label: 'Result Date', type: 'date' },
-  { key: 'class_start_date', label: 'Class Start Date', type: 'date' },
+  { key: 'applicationStartDate', label: 'Application Start Date', type: 'date' },
+  { key: 'applicationDeadline', label: 'Application Deadline', type: 'date', required: true },
+  { key: 'entryTestDate', label: 'Entry Test Date', type: 'date' },
+  { key: 'resultDate', label: 'Result Date', type: 'date' },
+  { key: 'classStartDate', label: 'Class Start Date', type: 'date' },
   { key: 'fee', label: 'Fee (PKR)', type: 'number' },
   { key: 'link', label: 'More Info URL', type: 'url' },
+  { key: 'status', label: 'Status', type: 'select', options: ['upcoming', 'open', 'closing-soon', 'closed'] },
 ];
 
 // Map entity type to its fields
@@ -146,13 +152,14 @@ export const ENTITY_FIELDS_MAP: Record<CorrectionEntityType, FieldDefinition[]> 
     { key: 'description', label: 'Description', type: 'textarea', maxLength: 400 },
   ],
   merit_archive: [
-    { key: 'university_name', label: 'University Name', type: 'text' },
-    { key: 'program_name', label: 'Program Name', type: 'text' },
+    { key: 'universityName', label: 'University Name', type: 'text' },
+    { key: 'programName', label: 'Program Name', type: 'text' },
     { key: 'year', label: 'Year', type: 'number', required: true },
-    { key: 'merit_percentage', label: 'Merit % (Opening)', type: 'number', required: true },
-    { key: 'closing_merit', label: 'Merit % (Closing)', type: 'number' },
-    { key: 'seats_available', label: 'Seats Available', type: 'number' },
-    { key: 'notes', label: 'Notes', type: 'textarea' },
+    { key: 'openingMerit', label: 'Opening Merit %', type: 'number' },
+    { key: 'closingMerit', label: 'Closing Merit %', type: 'number', required: true },
+    { key: 'totalSeats', label: 'Total Seats', type: 'number' },
+    { key: 'campus', label: 'Campus', type: 'text' },
+    { key: 'category', label: 'Category', type: 'text', hint: 'e.g. Open Merit, Self-Finance' },
   ],
 };
 
@@ -250,7 +257,12 @@ class DataCorrectionService {
       switch (entityType) {
         case 'university': {
           const unis = await hybridDataService.getUniversities();
-          const uni = unis.find(u => u.id === entityId || (u as any).id === entityId);
+          const idStr = String(entityId).toLowerCase();
+          const uni = unis.find(u =>
+            String(u.id) === String(entityId) ||
+            u.short_name?.toLowerCase() === idStr ||
+            u.name?.toLowerCase() === idStr
+          );
           if (uni) {
             data = { ...(uni as any) };
             displayName = (uni as any).name || entityId;
@@ -259,7 +271,10 @@ class DataCorrectionService {
         }
         case 'scholarship': {
           const schs = await hybridDataService.getScholarships();
-          const sch = schs.find(s => (s as any).id === entityId);
+          const sch = schs.find(s =>
+            String((s as any).id) === String(entityId) ||
+            (s as any).name?.toLowerCase() === String(entityId).toLowerCase()
+          );
           if (sch) {
             data = { ...(sch as any) };
             displayName = (sch as any).name || entityId;
@@ -268,7 +283,10 @@ class DataCorrectionService {
         }
         case 'entry_test': {
           const tests = await hybridDataService.getEntryTests();
-          const test = tests.find(t => (t as any).id === entityId);
+          const test = tests.find(t =>
+            String((t as any).id) === String(entityId) ||
+            (t as any).name?.toLowerCase() === String(entityId).toLowerCase()
+          );
           if (test) {
             data = { ...(test as any) };
             displayName = (test as any).name || entityId;
@@ -286,10 +304,37 @@ class DataCorrectionService {
         }
         case 'deadline': {
           const deadlines = await hybridDataService.getDeadlines();
-          const dl = deadlines.find(d => (d as any).id === entityId);
+          const dl = deadlines.find(d =>
+            String((d as any).id) === String(entityId) ||
+            (d as any).title?.toLowerCase() === String(entityId).toLowerCase()
+          );
           if (dl) {
             data = { ...(dl as any) };
             displayName = (dl as any).title || entityId;
+          }
+          break;
+        }
+        case 'merit_archive': {
+          const records = await hybridDataService.getMeritArchive();
+          const record = records.find(r =>
+            String((r as any).id) === String(entityId) ||
+            (r as any).universityId === entityId
+          );
+          if (record) {
+            data = { ...(record as any) };
+            displayName = `${(record as any).universityName || ''} - ${(record as any).programName || ''}`.trim() || entityId;
+          }
+          break;
+        }
+        case 'program': {
+          const programs = await hybridDataService.getPrograms();
+          const prog = programs.find(p =>
+            String((p as any).id) === String(entityId) ||
+            (p as any).name?.toLowerCase() === String(entityId).toLowerCase()
+          );
+          if (prog) {
+            data = { ...(prog as any) };
+            displayName = (prog as any).name || entityId;
           }
           break;
         }

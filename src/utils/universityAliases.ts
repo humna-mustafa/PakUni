@@ -50,13 +50,13 @@ export const UNIVERSITY_ALIASES: Record<string, string[]> = {
   'UHS': ['uhs', 'health sciences', 'health sciences lahore'],
   
   // UOL - The University of Lahore
-  'UOL': ['uol', 'university of lahore', 'lahore uni'],
+  'UOL': ['uol', 'university of lahore', 'lahore uni', 'lahore university'],
   
   // USINDH - University of Sindh
   'USINDH': ['usindh', 'sindh university', 'university of sindh', 'sindh'],
   
   // GCU - Government College University, Lahore
-  'GCU': ['gcu', 'gcu lahore', 'government college', 'government college university'],
+  'GCU': ['gcu', 'gcu lahore', 'government college', 'government college university', 'government college lahore'],
   
   // RIPHAH - Riphah International University
   'RIPHAH': ['riphah', 'riphah university', 'riphah international'],
@@ -184,12 +184,6 @@ export const UNIVERSITY_ALIASES: Record<string, string[]> = {
   // FUUAST - Federal Urdu University of Arts, Science and Technology
   'FUUAST': ['fuuast', 'federal urdu', 'urdu university'],
   
-  // GCU - Government College University Lahore
-  'GCU': ['gcu', 'gcu lahore', 'government college', 'government college lahore'],
-  
-  // RIPHAH - Riphah International University
-  'RIPHAH': ['riphah', 'riphah university', 'riphah international'],
-  
   // CUST - Capital University of Science and Technology
   'CUST': ['cust', 'capital university', 'capital science'],
   
@@ -202,11 +196,6 @@ export const UNIVERSITY_ALIASES: Record<string, string[]> = {
   // AU - Air University (alternate entry)
   'AU': ['air university'],
   
-  // UOL - University of Lahore
-  'UOL': ['uol', 'university of lahore', 'lahore university'],
-  
-  // UHS - University of Health Sciences
-  'UHS': ['uhs', 'health sciences', 'health sciences lahore'],
 };
 
 // Map of alternate names/aliases to actual university short_names in universities.ts

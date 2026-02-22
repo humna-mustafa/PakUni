@@ -295,11 +295,12 @@ export class EnhancedErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     try {
       // Report to Supabase error_reports table via errorReportingService
       await errorReportingService.reportError(error, {
-        category: 'ui_crash',
-        severity: 'high',
-        context: 'ErrorBoundary',
-        additionalData: {
-          componentStack: errorInfo.componentStack,
+        userAction: 'ui_crash',
+        componentStack: errorInfo.componentStack ?? undefined,
+        additionalContext: {
+          category: 'ui_crash',
+          severity: 'high',
+          context: 'ErrorBoundary',
           platform: Platform.OS,
           platformVersion: Platform.Version,
         },

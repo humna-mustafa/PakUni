@@ -318,6 +318,9 @@ const getMeritBasedScore = (
     session: latestRecord.session,
     trend,
     chanceLevel,
+    userMerit: userPercentage,
+    gapToMerit: userPercentage - closingMerit,
+    confidenceLevel: latestRecord.year >= new Date().getFullYear() - 1 ? 'high' : latestRecord.year >= new Date().getFullYear() - 3 ? 'medium' : 'low',
   };
   
   return { score: Math.min(100, Math.max(0, score)), insight };
@@ -437,13 +440,13 @@ export const getRecommendations = (
 
   // === QUOTA DETECTION ===
   const userQuotaIds = detectPotentialQuotas({
-    gender: criteria.gender,
+    gender: criteria.gender === 'other' ? undefined : criteria.gender,
     province: criteria.province,
-    isHafizQuran: criteria.isHafizQuran,
-    isSportsPlayer: criteria.isSportsPlayer,
+    isHafiz: criteria.isHafizQuran,
+    hasSportsAchievement: criteria.isSportsPlayer,
     isDisabled: criteria.isDisabled,
-    isArmyDependent: criteria.isArmyDependent,
-    isNRP: criteria.isNRP,
+    fatherInArmedForces: criteria.isArmyDependent,
+    isOverseasPakistani: criteria.isNRP,
   });
   const currentYear = new Date().getFullYear();
 
@@ -653,7 +656,7 @@ export const getRecommendations = (
       const parts: string[] = [];
       if (mcFormula.matric > 0) parts.push(`Matric ${Math.round(mcFormula.matric * 100)}%`);
       if (mcFormula.inter > 0) parts.push(`FSc ${Math.round(mcFormula.inter * 100)}%`);
-      if (mcFormula.entryTest > 0 && entryTestPct !== null) parts.push(`${mcFormula.testName ?? 'Test'} ${Math.round(mcFormula.entryTest * 100)}%`);
+      if (mcFormula.entryTest > 0 && entryTestPct !== null) parts.push(`${(mcFormula as any).testName ?? mcFormula.entryTestNote ?? 'Test'} ${Math.round(mcFormula.entryTest * 100)}%`);
       formulaDesc = parts.join(' + ');
     } else {
       const legacy = calculateUniversityMerit(matricPct, interPct, entryTestPct, uni.short_name);
@@ -699,7 +702,7 @@ export const getRecommendations = (
     if (userQuotaIds.length > 0) {
       const programKeywordsForQuota = programKeywords.length > 0 ? programKeywords : [''];
       for (const keyword of programKeywordsForQuota.slice(0, 3)) {
-        const bestQuota = getBestQuotaRecord(uni.short_name, keyword, userQuotaIds, currentYear);
+        const bestQuota = getBestQuotaRecord(uni.short_name, keyword, userQuotaIds.map((q: any) => typeof q === 'string' ? q : q.id), currentYear);
         if (bestQuota) {
           const alreadyAdded = quotaOpportunities.some(q => q.quotaType === bestQuota.quotaType);
           if (!alreadyAdded) {
@@ -734,7 +737,7 @@ export const getRecommendations = (
       semesterFee = {
         openMerit: firstFee.openMerit,
         selfFinance: firstFee.selfFinance,
-        formatted: formatFeeShort(firstFee.openMerit ?? firstFee.selfFinance ?? firstFee.regular),
+        formatted: formatFeeShort(firstFee.openMerit ?? firstFee.selfFinance ?? firstFee.regular ?? 0),
       };
     }
 

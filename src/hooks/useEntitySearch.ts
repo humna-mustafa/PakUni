@@ -32,16 +32,25 @@ export function useEntitySearch(category: CategoryOption | null) {
       if (category?.id === 'scholarship_info') {
         const scholarships = await hybridDataService.getScholarships();
         items = scholarships.slice(0, 6).map(s => ({
-          id: s.id || s.name.toLowerCase().replace(/\s+/g, '_'),
+          id: String(s.id || s.name.toLowerCase().replace(/\s+/g, '_')),
           name: s.name,
           type: (s as any).type || 'Scholarship',
           location: s.provider || '',
           verified: true,
         }));
+      } else if (category?.id === 'date_correction') {
+        const deadlines = await hybridDataService.getDeadlines();
+        items = deadlines.slice(0, 6).map(d => ({
+          id: String((d as any).id || (d as any).title?.toLowerCase().replace(/\s+/g, '_')),
+          name: (d as any).title || 'Untitled Deadline',
+          type: (d as any).programType || 'Deadline',
+          location: (d as any).universityName || '',
+          verified: true,
+        }));
       } else if (category?.id === 'entry_test_update') {
         const entryTests = await hybridDataService.getEntryTests();
         items = entryTests.slice(0, 6).map(t => ({
-          id: t.id || t.name.toLowerCase().replace(/\s+/g, '_'),
+          id: String(t.id || t.name.toLowerCase().replace(/\s+/g, '_')),
           name: t.name,
           type: 'Entry Test',
           location: t.conducting_body || '',
@@ -53,7 +62,7 @@ export function useEntitySearch(category: CategoryOption | null) {
         const popular = universities.filter(u => popularShortNames.includes(u.short_name));
         const others = universities.filter(u => !popularShortNames.includes(u.short_name)).slice(0, 6 - popular.length);
         items = [...popular.slice(0, 6), ...others].slice(0, 6).map(u => ({
-          id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
+          id: String(u.id),
           name: u.name,
           type: u.type || 'University',
           location: (u as any).city || '',
@@ -107,10 +116,34 @@ export function useEntitySearch(category: CategoryOption | null) {
             })
             .slice(0, 12)
             .map(s => ({
-              id: s.id || s.name.toLowerCase().replace(/\s+/g, '_'),
+              id: String(s.id || s.name.toLowerCase().replace(/\s+/g, '_')),
               name: s.name,
               type: (s as any).type || 'Scholarship',
               location: s.provider || '',
+              verified: true,
+            }));
+        } else if (category?.id === 'date_correction') {
+          const deadlines = await hybridDataService.getDeadlines();
+          matched = deadlines
+            .filter(d => {
+              const dData = d as any;
+              return (
+                matchesQuery(dData.title, query) ||
+                matchesQuery(dData.universityName, query) ||
+                matchesQuery(dData.universityShortName, query) ||
+                matchesQuery(dData.id, query) ||
+                matchesQuery(dData.description, query) ||
+                matchesQuery(dData.programType, query) ||
+                matchesQuery(dData.degreeLevel, query) ||
+                (dData.id && dData.id.split('-').some((part: string) => part.toLowerCase().includes(query)))
+              );
+            })
+            .slice(0, 12)
+            .map(d => ({
+              id: String((d as any).id || (d as any).title?.toLowerCase().replace(/\s+/g, '_')),
+              name: (d as any).title || 'Untitled Deadline',
+              type: (d as any).programType || 'Deadline',
+              location: (d as any).universityName || '',
               verified: true,
             }));
         } else if (category?.id === 'entry_test_update') {
@@ -135,7 +168,7 @@ export function useEntitySearch(category: CategoryOption | null) {
             })
             .slice(0, 12)
             .map(t => ({
-              id: t.id || t.name.toLowerCase().replace(/\s+/g, '_'),
+              id: String(t.id || t.name.toLowerCase().replace(/\s+/g, '_')),
               name: `${t.name}${t.full_name ? ` (${t.full_name})` : ''}`,
               type: 'Entry Test',
               location: t.conducting_body || '',
@@ -165,7 +198,7 @@ export function useEntitySearch(category: CategoryOption | null) {
             })
             .slice(0, 12)
             .map(u => ({
-              id: u.short_name || u.name.toLowerCase().replace(/\s+/g, '_'),
+              id: String(u.id),
               name: u.name,
               type: u.type || 'University',
               location: (u as any).city || (u as any).location || '',

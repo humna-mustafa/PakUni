@@ -22,7 +22,7 @@ interface ScholarshipCardProps {
   index: number;
 }
 
-const ScholarshipCard = ({
+const ScholarshipCard = React.memo(({
   item,
   colors,
   isDark,
@@ -31,12 +31,15 @@ const ScholarshipCard = ({
   isFavorited,
   index,
 }: ScholarshipCardProps) => {
-  const scaleAnim = useRef(new Animated.Value(0)).current;
+  // Cap entrance animation to first 8 visible items for FlatList cell recycling
+  const shouldAnimate = index < 8;
+  const scaleAnim = useRef(new Animated.Value(shouldAnimate ? 0 : 1)).current;
   const pressAnim = useRef(new Animated.Value(1)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
+  const slideAnim = useRef(new Animated.Value(shouldAnimate ? 30 : 0)).current;
 
   useEffect(() => {
-    const delay = index * 60;
+    if (!shouldAnimate) return;
+    const delay = Math.min(index * 50, 350);
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: 1,
@@ -47,7 +50,7 @@ const ScholarshipCard = ({
       }),
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 400,
+        duration: 300,
         delay,
         useNativeDriver: true,
       }),
@@ -203,7 +206,9 @@ const ScholarshipCard = ({
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
+
+ScholarshipCard.displayName = 'ScholarshipCard';
 
 const styles = StyleSheet.create({
   cardWrapper: {

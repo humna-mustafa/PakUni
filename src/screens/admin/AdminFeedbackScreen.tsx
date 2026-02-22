@@ -478,7 +478,7 @@ const AdminFeedbackScreen: React.FC = () => {
                         <View style={styles.metadataRow}>
                           <Text style={[styles.metadataLabel, {color: colors.textSecondary}]}>Would Recommend:</Text>
                           <Text style={[styles.metadataValue, {color: (selectedFeedback as any).metadata.wouldRecommend ? '#10B981' : '#EF4444'}]}>
-                            {(selectedFeedback as any).metadata.wouldRecommend ? '👍 Yes' : '👎 No'}
+                            {(selectedFeedback as any).metadata.wouldRecommend ? 'Yes' : 'No'}
                           </Text>
                         </View>
                       )}
