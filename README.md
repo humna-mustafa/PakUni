@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="./docs/screenshots/pakuni-logo.png" alt="PakUni Logo" width="120" height="120" style="border-radius: 24px;"/>
-</p>
+
 
 <h1 align="center">🎓 PakUni - Pakistan University Guide</h1>
 
@@ -11,10 +9,8 @@
 
 <p align="center">
   <a href="#features">Features</a> •
-  <a href="#screenshots">Screenshots</a> •
   <a href="#installation">Installation</a> •
   <a href="#tech-stack">Tech Stack</a> •
-  <a href="#architecture">Architecture</a> •
   <a href="#contributing">Contributing</a>
 </p>
 
